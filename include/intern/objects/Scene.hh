@@ -86,7 +86,6 @@ public:
 
             mouse.update();
             cv::imshow(windowName, frame);
-            std::cout << mouse.pos << "\n";
 
             // processing uptil now takes time, so instead of naively delaying by the target fps, account for the time already taken
             float sleep_duration_ = 1000.0 / this->FPS;
@@ -99,6 +98,8 @@ public:
                 running = false;
                 break;
             }
+
+            std::cout << std::endl;
         }
     }
 
