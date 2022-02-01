@@ -1,0 +1,64 @@
+/*
+ *                                  MIT License
+ *
+ *                               Copyright (c) 2022
+ *
+ *       Project homepage: <https://github.com/strangeQuark1041/samarium/>
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the Software), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *     copies of the Software, and to permit persons to whom the Software is
+ *            furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ *                copies or substantial portions of the Software.
+ *
+ *    THE SOFTWARE IS PROVIDED AS IS, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *     AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *                                   SOFTWARE.
+ *
+ *  For more information, please refer to <https://opensource.org/licenses/MIT/>
+ */
+
+#pragma once
+
+#include <filesystem>
+#include <source_location>
+#include <string_view>
+#include <iomanip>
+
+#include <fmt/color.h>
+#include <fmt/format.h>
+#include <fmt/ranges.h>
+
+namespace sm::util
+{
+inline void print(const auto&... args)
+{
+    // recursive call using pack expansion syntax
+    (fmt::print("{} ", args), ...);
+    fmt::print("\n");
+}
+
+inline void log(const std::string_view message)
+{
+    const std::source_location location = std::source_location::current();
+    fmt::print(fg(fmt::color::steel_blue) | fmt::emphasis::bold, "[{}:{}: {}]: ",
+               std::filesystem::path(location.file_name()).filename().string(),
+               location.line(), location.function_name());
+    print(message);
+}
+
+inline void error(const auto&... args)
+{
+    fmt::print(stderr, fg(fmt::color::red) | fmt::emphasis::bold, "Error: ");
+    (fmt::print(stderr, fg(fmt::color::red) | fmt::emphasis::bold, "{}", args), ...);
+    fmt::print(stderr, "\n");
+}
+} // namespace sm::util

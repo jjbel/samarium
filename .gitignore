@@ -1,0 +1,11 @@
+bin/
+
+/lib/
+
+build/
+
+.vscode/
+
+__pycache__/
+
+*.tga

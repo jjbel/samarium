@@ -1,0 +1,201 @@
+/*
+ *                                  MIT License
+ *
+ *                               Copyright (c) 2022
+ *
+ *       Project homepage: <https://github.com/strangeQuark1041/samarium/>
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the Software), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *     copies of the Software, and to permit persons to whom the Software is
+ *            furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ *                copies or substantial portions of the Software.
+ *
+ *    THE SOFTWARE IS PROVIDED AS IS, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *     AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *                                   SOFTWARE.
+ *
+ *  For more information, please refer to <https://opensource.org/licenses/MIT/>
+ */
+
+#pragma once
+
+#include "fmt/format.h"
+
+#include "math.hpp"
+
+namespace sm
+{
+template <util::number T> class Vector2_t
+{
+  public:
+    T x;
+    T y;
+
+    constexpr Vector2_t() noexcept : x{}, y{} {}
+
+    constexpr Vector2_t(T x_, T y_) noexcept : x{ x_ }, y{ y_ } {}
+
+    constexpr auto length() const noexcept { return std::sqrt(x * x + y * y); }
+    constexpr auto length_sq() const noexcept { return x * x + y * y; }
+    constexpr auto angle() const noexcept { return std::atan2(y, x); }
+
+    constexpr auto operator+=(const Vector2_t& rhs) noexcept
+    {
+        this->x += rhs.x;
+        this->y += rhs.y;
+        return *this;
+    }
+
+    constexpr auto operator-=(const Vector2_t& rhs) noexcept
+    {
+        this->x -= rhs.x;
+        this->y -= rhs.y;
+        return *this;
+    }
+
+    constexpr auto operator*=(const Vector2_t& rhs) noexcept
+    {
+        this->x *= rhs.x;
+        this->y *= rhs.y;
+        return *this;
+    }
+
+    constexpr auto operator*=(T rhs) noexcept
+    {
+        this->x *= rhs;
+        this->y *= rhs;
+        return *this;
+    }
+
+    constexpr auto operator/=(const Vector2_t& rhs) noexcept
+    {
+        this->x /= rhs.x;
+        this->y /= rhs.y;
+        return *this;
+    }
+
+    constexpr auto operator/=(T rhs) noexcept
+    {
+        this->x /= rhs;
+        this->y /= rhs;
+        return *this;
+    }
+
+    template <util::number U> constexpr auto cast() const
+    {
+        return Vector2_t<U>{ static_cast<U>(this->x), static_cast<U>(this->y) };
+    }
+};
+
+template <util::floating_point T>
+[[nodiscard]] constexpr inline bool operator==(const Vector2_t<T>& lhs,
+                                               const Vector2_t<T>& rhs) noexcept
+{
+    return math::equals(lhs.x, rhs.x) && math::equals(lhs.y, rhs.y);
+}
+
+template <util::integral T>
+[[nodiscard]] constexpr inline bool operator==(const Vector2_t<T>& lhs,
+                                               const Vector2_t<T>& rhs) noexcept
+{
+    return lhs.x == rhs.x && lhs.y == rhs.y;
+}
+
+template <util::number T>
+[[nodiscard]] constexpr inline bool operator!=(const Vector2_t<T>& lhs,
+                                               const Vector2_t<T>& rhs)
+{
+    return !operator==(lhs, rhs);
+}
+
+template <util::number T>
+[[nodiscard]] constexpr inline auto operator+(Vector2_t<T> lhs,
+                                              const Vector2_t<T>& rhs) noexcept
+{
+    lhs += rhs;
+    return lhs;
+}
+
+template <util::number T>
+[[nodiscard]] constexpr inline auto operator-(Vector2_t<T> lhs,
+                                              const Vector2_t<T>& rhs) noexcept
+{
+    lhs -= rhs;
+    return lhs;
+}
+
+template <util::number T>
+[[nodiscard]] constexpr inline auto operator*(Vector2_t<T> lhs,
+                                              const Vector2_t<T>& rhs) noexcept
+{
+    lhs *= rhs;
+    return lhs;
+}
+
+template <util::number T>
+[[nodiscard]] constexpr inline auto operator*(Vector2_t<T> lhs, T rhs) noexcept
+{
+    lhs *= rhs;
+    return lhs;
+}
+
+template <util::number T>
+[[nodiscard]] constexpr inline auto operator*(T lhs, Vector2_t<T> rhs) noexcept
+{
+    rhs *= lhs;
+    return rhs;
+}
+
+template <util::number T>
+[[nodiscard]] constexpr inline auto operator/(Vector2_t<T> lhs,
+                                              const Vector2_t<T>& rhs) noexcept
+{
+    lhs /= rhs;
+    return lhs;
+}
+
+template <util::number T>
+[[nodiscard]] constexpr inline auto operator/(Vector2_t<T> lhs, T rhs) noexcept
+{
+    lhs /= rhs;
+    return lhs;
+}
+
+using Vector2 = Vector2_t<double>;
+
+namespace literals
+{
+consteval auto operator"" _x(long double x)
+{
+    return Vector2{ static_cast<double>(x), 0 };
+}
+consteval auto operator"" _y(long double y)
+{
+    return Vector2{ 0, static_cast<double>(y) };
+}
+} // namespace literals
+} // namespace sm
+
+template <sm::util::number T> class fmt::formatter<sm::Vector2_t<T>>
+{
+  public:
+    constexpr inline auto parse(format_parse_context& ctx) { return ctx.begin(); }
+
+    template <typename FormatContext>
+    auto format(const sm::Vector2_t<T>& p, FormatContext& ctx)
+    {
+        return format_to(ctx.out(),
+                         (std::is_floating_point<T>::value ? "Vec[{:>6.2f}, {:>6.2f}]"
+                                                           : "Vec[{:>4}, {:>4}]"),
+                         p.x, p.y);
+    }
+};
