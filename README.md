@@ -95,7 +95,7 @@ Create a directory `build` and open your terminal in it:
 conan install .. --build=missing # install dependencies
 cmake .. # cmake
 cmake --build . # compile
-./example # run the program
+./bin/example # run the program
 ```
 
 ## Documentation
