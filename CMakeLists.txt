@@ -7,6 +7,9 @@ list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 include(modern_project_structure)
 ensure_entry_point()
 
+include(ccache)
+use_ccache()
+
 add_subdirectory(src)
 
 option(SAMARIUM_TESTS "Create tests for samarium" ON)
