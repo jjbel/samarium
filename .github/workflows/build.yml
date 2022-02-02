@@ -21,8 +21,16 @@ jobs:
       - name: Install Conan
         id: conan
         uses: turtlebrowser/get-conan@main
-      - name: Check Tool Versions
+
+      - name: Create build directory
+        run: mkdir -p build
+      - name: Install Conan dependencies
+        working-directory: ./build
         run: |
-          conan --version
-          cmake --version
-          g++   --version
+          conan install ..
+      - name: CMake
+        working-directory: ./build
+        run: cmake ..
+      - name: CMake Build
+        working-directory: ./build
+        run: cmake --build .
