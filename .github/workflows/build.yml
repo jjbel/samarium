@@ -27,7 +27,8 @@ jobs:
       - name: Install Conan dependencies
         working-directory: ./build
         run: |
-          sed -i 's/libstdc++/libstdc++11/' ~/.conan/profiles/default
+          conan profile new default --detect
+          conan profile update settings.compiler.libcxx=libstdc++11 default
           conan install .. --build=missing
       - name: CMake
         working-directory: ./build

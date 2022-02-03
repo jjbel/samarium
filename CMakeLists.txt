@@ -10,6 +10,10 @@ ensure_entry_point()
 include(ccache)
 use_ccache()
 
+# set restrictive compilation warnings
+include(compiler_warnings)
+set_project_warnings(samarium)
+
 add_subdirectory(src)
 
 option(SAMARIUM_TESTS "Create tests for samarium" ON)
@@ -24,6 +28,3 @@ if(SAMARIUM_EXAMPLE)
     add_subdirectory(examples)
 endif()
 
-# set restrictive compilation warnings
-include(compiler_warnings)
-set_project_warnings(samarium)
