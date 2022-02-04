@@ -22,7 +22,7 @@ jobs:
         id: conan
         uses: turtlebrowser/get-conan@main
       - name: Install other deps
-        run: sudo apt-get install valgrind find
+        run: sudo apt-get install valgrind
       - name: Check Tool Versions
         run: |
           conan    --version
