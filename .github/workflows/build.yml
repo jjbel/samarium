@@ -4,8 +4,7 @@ jobs:
   Build:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
       - name: List files in the repository
         run: |
           ls -AlhR ${{ github.workspace }}
@@ -33,7 +32,15 @@ jobs:
 
       - name: Setup Build Environment
         run: mkdir -p build
+      - name: Cache Conan dependencies
+        id: cache-conan-packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.conan/data
+          key: conan-packages-${{ hashFiles('conanfile.txt') }}
+
       - name: Install Conan dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
         working-directory: ./build
         run: |
           conan profile new default --detect
