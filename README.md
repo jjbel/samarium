@@ -1,10 +1,10 @@
 <h1 align="center">Samarium</h1>
 
 <p align="center">
-    <!-- <img alt="Github Action" src="https://github.com/strangeQuark1041/samarium/actions/workflows/build.yml/badge.svg"> -->
+    <img alt="Github Action" src="https://github.com/strangeQuark1041/samarium/actions/workflows/build.yml/badge.svg">
     <img alt="Lines of Code" src="https://img.shields.io/tokei/lines/github/strangeQuark1041/samarium">
     <img alt="Repo Size" src="https://img.shields.io/github/repo-size/strangeQuark1041/samarium">
-    <img alt="Unlicense" src="https://img.shields.io/badge/License-Unlicense-lightgrey">
+    <img alt="MIT License" src="https://img.shields.io/badge/License-Unlicense-lightgrey">
     <br>
     Samarium is an open-source 2d physics simulation package written in modern C++.
 </p>
