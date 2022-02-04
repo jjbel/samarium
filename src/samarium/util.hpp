@@ -32,6 +32,7 @@
 #include <concepts>
 #include <iterator>
 
+#include "types.hpp"
 #include "util.hpp"
 
 namespace sm::util
@@ -98,26 +99,26 @@ concept Container_t = requires(ContainerType a, const ContainerType b)
 
 size_t constexpr strlen(const char* str) { return *str ? 1u + strlen(str + 1) : 0u; }
 
-// template <char ch> consteval uint8_t from_hex()
+// template <char ch> consteval u8 from_hex()
 // {
 //     if constexpr ('0' <= ch && ch <= '9') return ch - '0';
 //     if constexpr ('a' <= ch && ch <= 'f') return ch - 'a' + 10;
 //     if constexpr ('A' <= ch && ch <= 'F') return ch - 'a' + 10;
 //     throw std::logic_error("hex character must be 0-9, a-f, or A-F");
 // }
-consteval uint8_t hex_to_int_safe(char ch)
+consteval u8 hex_to_int_safe(char ch)
 {
-    if ('0' <= ch && ch <= '9') return static_cast<uint8_t>(ch - '0');
-    if ('a' <= ch && ch <= 'f') return static_cast<uint8_t>(ch - 'a' + 10);
-    if ('A' <= ch && ch <= 'F') return static_cast<uint8_t>(ch - 'A' + 10);
+    if ('0' <= ch && ch <= '9') return static_cast<u8>(ch - '0');
+    if ('a' <= ch && ch <= 'f') return static_cast<u8>(ch - 'a' + 10);
+    if ('A' <= ch && ch <= 'F') return static_cast<u8>(ch - 'A' + 10);
     throw std::logic_error("hex character must be 0-9, a-f, or A-F");
 }
 
-uint8_t hex_to_int(char ch)
+u8 hex_to_int(char ch)
 {
-    if ('0' <= ch && ch <= '9') return static_cast<uint8_t>(ch - '0');
-    if ('a' <= ch && ch <= 'f') return static_cast<uint8_t>(ch - 'a' + 10);
-    if ('A' <= ch && ch <= 'F') return static_cast<uint8_t>(ch - 'A' + 10);
+    if ('0' <= ch && ch <= '9') return static_cast<u8>(ch - '0');
+    if ('a' <= ch && ch <= 'f') return static_cast<u8>(ch - 'a' + 10);
+    if ('A' <= ch && ch <= 'F') return static_cast<u8>(ch - 'A' + 10);
     throw std::logic_error("hex character must be 0-9, a-f, or A-F");
 }
 

@@ -36,6 +36,7 @@
 #include "fmt/format.h"
 
 #include "math.hpp"
+#include "types.hpp"
 #include "util.hpp"
 
 namespace sm
@@ -60,27 +61,27 @@ constexpr inline class hex_t
 class Color
 {
   public:
-    uint8_t r;
-    uint8_t g;
-    uint8_t b;
-    uint8_t a;
+    u8 r;
+    u8 g;
+    u8 b;
+    u8 a;
 
     constexpr Color() noexcept : r{}, g{}, b{}, a{ 255u } {}
 
-    constexpr Color(uint8_t red, uint8_t green, uint8_t blue) noexcept
+    constexpr Color(u8 red, u8 green, u8 blue) noexcept
         : r(red), g(green), b(blue), a(255u)
     {
     }
 
-    constexpr Color(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha) noexcept
+    constexpr Color(u8 red, u8 green, u8 blue, u8 alpha) noexcept
         : r(red), g(green), b(blue), a(alpha)
     {
     }
 
     // constexpr Color(uint32_t n) noexcept
-    //     : r(static_cast<uint8_t>((n >> 24) & 0xFF)),
-    //       g(static_cast<uint8_t>((n >> 16) & 0xFF)),
-    //       b(static_cast<uint8_t>((n >> 8) & 0xFF)), a(static_cast<uint8_t>(n & 0xFF))
+    //     : r(static_cast<u8>((n >> 24) & 0xFF)),
+    //       g(static_cast<u8>((n >> 16) & 0xFF)),
+    //       b(static_cast<u8>((n >> 8) & 0xFF)), a(static_cast<u8>(n & 0xFF))
     // {
     // }
 
@@ -91,16 +92,16 @@ class Color
         if (length != 7 && length != 9)
             throw std::logic_error("Hex string must be 7 or 9 characters long");
 
-        this->r = static_cast<uint8_t>(16 * util::hex_to_int_safe(str[1]) +
+        this->r = static_cast<u8>(16 * util::hex_to_int_safe(str[1]) +
                                        util::hex_to_int_safe(str[2]));
-        this->g = static_cast<uint8_t>(16 * util::hex_to_int_safe(str[3]) +
+        this->g = static_cast<u8>(16 * util::hex_to_int_safe(str[3]) +
                                        util::hex_to_int_safe(str[4]));
-        this->b = static_cast<uint8_t>(16 * util::hex_to_int_safe(str[5]) +
+        this->b = static_cast<u8>(16 * util::hex_to_int_safe(str[5]) +
                                        util::hex_to_int_safe(str[6]));
 
         if (length == 7) this->a = 255u;
         else
-            this->a = static_cast<uint8_t>(16 * util::hex_to_int_safe(str[7]) +
+            this->a = static_cast<u8>(16 * util::hex_to_int_safe(str[7]) +
                                            util::hex_to_int_safe(str[8]));
     }
 
@@ -110,38 +111,38 @@ class Color
         // const double under     = this->a / 255.0;
         // const double over      = that.a / 255.0;
         // const double new_alpha = over + under * (1. - over);
-        // this->r = static_cast<uint8_t>(that.r * over + this->r * under * (1. - over));
-        // this->g = static_cast<uint8_t>(that.g * over + this->g * under * (1. - over));
-        // this->b = static_cast<uint8_t>(that.b * over + this->b * under * (1. - over));
-        // this->a = static_cast<uint8_t>(new_alpha * 255.);
+        // this->r = static_cast<u8>(that.r * over + this->r * under * (1. - over));
+        // this->g = static_cast<u8>(that.g * over + this->g * under * (1. - over));
+        // this->b = static_cast<u8>(that.b * over + this->b * under * (1. - over));
+        // this->a = static_cast<u8>(new_alpha * 255.);
         const auto alpha = 1.0 / 255 * that.a;
-        r = static_cast<uint8_t>(that.a / 255.0 * that.r + (1.0 - alpha) * r);
-        g = static_cast<uint8_t>(that.a / 255.0 * that.g + (1.0 - alpha) * g);
-        b = static_cast<uint8_t>(that.a / 255.0 * that.b + (1.0 - alpha) * b);
-        a = static_cast<uint8_t>((a / 255.0 + (1.0 - a / 255.0) * (alpha)) * 255);
+        r = static_cast<u8>(that.a / 255.0 * that.r + (1.0 - alpha) * r);
+        g = static_cast<u8>(that.a / 255.0 * that.g + (1.0 - alpha) * g);
+        b = static_cast<u8>(that.a / 255.0 * that.b + (1.0 - alpha) * b);
+        a = static_cast<u8>((a / 255.0 + (1.0 - a / 255.0) * (alpha)) * 255);
     }
 
-    template <util::integral T = uint8_t>
+    template <util::integral T = u8>
     auto data(RGB_t /* color_format */) const noexcept
     {
         return std::array{ static_cast<T>(this->r), static_cast<T>(this->g),
                            static_cast<T>(this->b) };
     }
 
-    template <util::integral T = uint8_t>
+    template <util::integral T = u8>
     auto data(RGBA_t /* color_format */) const noexcept
     {
         return std::array{ static_cast<T>(this->r), static_cast<T>(this->g),
                            static_cast<T>(this->b), static_cast<T>(this->a) };
     }
 
-    template <util::integral T = uint8_t>
+    template <util::integral T = u8>
     auto data(BGR_t /* color_format */) const noexcept
     {
         return std::array{ static_cast<T>(b), static_cast<T>(g), static_cast<T>(r) };
     }
 
-    template <util::integral T = uint8_t>
+    template <util::integral T = u8>
     auto data(BGRA_t /* color_format */) const noexcept
     {
         return std::array{ static_cast<T>(b), static_cast<T>(g), static_cast<T>(r),

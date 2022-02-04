@@ -78,18 +78,22 @@ auto write(const Image& image,
         32
     };
 
-    const auto [pixels, length] = image.formatted_data(sm::BGR);
+    // const auto [pixels, length] = image.formatted_data(sm::BGR);
+    const auto data = image.formatted_data(sm::BGR);
 
     if (std::ofstream out_file{ file_path })
     {
         out_file.write(reinterpret_cast<const char*>(&tga_header[0]), 18);
-        out_file.write(reinterpret_cast<const char*>(pixels),
-                       static_cast<std::streamsize>(length));
+        out_file.write(reinterpret_cast<const char*>(&data[0]),
+                       static_cast<std::streamsize>(data.size()));
+        fmt::print("Size: {};\n", static_cast<std::streamsize>(data.size()));
         return true;
     }
     else
+    {
         fmt::print(stderr, fg(fmt::color::red) | fmt::emphasis::bold,
                    "Error: unable to open \"{}\"\n", file_path);
+    }
 
     return false;
 }

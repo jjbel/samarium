@@ -10,21 +10,27 @@ ensure_entry_point()
 include(ccache)
 use_ccache()
 
+add_subdirectory(src)
+
 # set restrictive compilation warnings
 include(compiler_warnings)
 set_project_warnings(samarium)
-
-add_subdirectory(src)
-
-option(SAMARIUM_TESTS "Create tests for samarium" ON)
-if(SAMARIUM_TESTS)
-    add_subdirectory(test)
-    enable_testing()
-    add_test(NAME SamariumTests COMMAND samarium_tests)
-endif()
+set(CMAKE_BUILD_TYPE RelWithDebInfo)
 
 option(SAMARIUM_EXAMPLE "Create an example executable from this file" OFF)
 if(SAMARIUM_EXAMPLE)
     add_subdirectory(examples)
+endif()
+
+option(SAMARIUM_TESTS "Create tests for samarium" ON)
+if(SAMARIUM_TESTS)
+    include(CTest)
+    add_subdirectory(test)
+    enable_testing()
+
+    add_test(NAME SamariumTestsMain COMMAND samarium_tests)
+
+    include(valgrind)
+    use_valgrind(SamariumMemTests ./test/bin/samarium_tests)
 endif()
 

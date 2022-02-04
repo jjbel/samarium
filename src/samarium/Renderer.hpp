@@ -66,7 +66,10 @@ class Renderer
             this->image | ranges::views::chunk(static_cast<long int>(this->chunk_size));
     }
 
-    void add_drawer(auto&& drawer) { this->draw_funcs.emplace_back(drawer); }
+
+    template <typename T>
+    requires std::invocable<T, Vector2, Transform>
+    void add_drawer(T&& drawer) { this->draw_funcs.emplace_back(drawer); }
 
     void render();
 
@@ -74,8 +77,7 @@ class Renderer
     std::vector<Drawer_t> draw_funcs;
     size_t thread_count;
     size_t chunk_size;
-    ranges::invoke_result_t<ranges::views::chunk_base_fn, sm::Image&, unsigned long>
-        chunks;
+    ranges::invoke_result_t<ranges::views::chunk_base_fn, sm::Image&, size_t> chunks;
     std::mutex mut;
     boost::asio::thread_pool pool;
 };

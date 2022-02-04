@@ -21,14 +21,24 @@ jobs:
       - name: Install Conan
         id: conan
         uses: turtlebrowser/get-conan@main
+      - name: Install other deps
+        run: sudo apt-get install valgrind find
+      - name: Check Tool Versions
+        run: |
+          conan    --version
+          cmake    --version
+          c++      --version
+          valgrind --version
+          find     --version
 
-      - name: Create build directory
+      - name: Setup Build Environment
         run: mkdir -p build
       - name: Install Conan dependencies
         working-directory: ./build
         run: |
           conan profile new default --detect
           conan profile update settings.compiler.libcxx=libstdc++11 default
+          export CONAN_SYSREQUIRES_MODE=enabled
           conan install .. --build=missing
       - name: CMake
         working-directory: ./build
@@ -36,3 +46,6 @@ jobs:
       - name: CMake Build
         working-directory: ./build
         run: cmake --build .
+      - name: CTest
+        working-directory: ./build
+        run: ctest

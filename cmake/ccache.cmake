@@ -26,14 +26,17 @@
 
 # from https://crascit.com/2016/04/09/using-ccache-with-cmake/#h-improved-functionality-from-cmake-3-4
 
+cmake_minimum_required(VERSION 3.16)
+
 function(use_ccache)
     find_program(CCACHE_PROGRAM ccache)
     if(CCACHE_PROGRAM)
+        message(STATUS "ccache found: ${CCACHE_PROGRAM}")
         # Set up wrapper scripts
         set(C_LAUNCHER   "${CCACHE_PROGRAM}")
         set(CXX_LAUNCHER "${CCACHE_PROGRAM}")
-        configure_file(launch-c.in   launch-c)
-        configure_file(launch-cxx.in launch-cxx)
+        configure_file(./cmake/launch-c.in   launch-c)
+        configure_file(./cmake/launch-cxx.in launch-cxx)
         execute_process(COMMAND chmod a+rx
                         "${CMAKE_BINARY_DIR}/launch-c"
                         "${CMAKE_BINARY_DIR}/launch-cxx"
@@ -52,4 +55,4 @@ function(use_ccache)
             set(CMAKE_CXX_COMPILER_LAUNCHER "${CMAKE_BINARY_DIR}/launch-cxx")
         endif()
     endif()
-endfunction(use_ccache)
+endfunction()
