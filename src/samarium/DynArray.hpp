@@ -111,8 +111,8 @@ template <typename T> class DynArray
     }
 
   private:
-    T* data;
     const size_t m_size;
+    T* data;
 };
 
 // template <typename T>

@@ -119,7 +119,7 @@ using Image = Field<Color>;
 
 template <> template <> auto Image::formatted_data(RGBA_t) const
 {
-    return std::span{ reinterpret_cast<const u8* const>(this->data.begin()),
+    return std::span{ reinterpret_cast<const u8* const>(this->data.cbegin()),
                       this->size() * 4 };
 }
 
@@ -137,14 +137,4 @@ template <> template <ColorFormat Format> auto Image::formatted_data(Format form
 
     return std::span{ reinterpret_cast<const u8* const>(fmt_data.begin()), length };
 }
-
-// template <typename T> inline bool operator==(const Field<T>& lhs, const Field<T>& rhs)
-// {
-//     return lhs.dims == rhs.dims && std::equal(lhs.cbegin(), lhs.cend(), rhs.cbegin());
-// }
-
-// template <typename T> inline bool operator!=(const Field<T>& lhs, const Field<T>& rhs)
-// {
-//     return !operator==(lhs, rhs);
-// }
 } // namespace sm

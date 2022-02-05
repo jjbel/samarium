@@ -32,7 +32,7 @@
 
 cmake_minimum_required(VERSION 3.16)
 
-function(set_project_warnings project_name)
+function(set_project_warnings)
     option(WARNINGS_AS_ERRORS "Treat compiler warnings as errors" OFF)
 
     set(MSVC_WARNINGS
@@ -81,8 +81,8 @@ function(set_project_warnings project_name)
     )
 
     if(WARNINGS_AS_ERRORS)
-    set(CLANG_WARNINGS ${CLANG_WARNINGS} -Werror)
-    set(MSVC_WARNINGS ${MSVC_WARNINGS} /WX)
+        set(CLANG_WARNINGS ${CLANG_WARNINGS} -Werror)
+        set(MSVC_WARNINGS ${MSVC_WARNINGS} /WX)
     endif()
 
     set(GCC_WARNINGS
@@ -91,19 +91,21 @@ function(set_project_warnings project_name)
         -Wduplicated-cond # warn if if / else chain has duplicated conditions
         -Wduplicated-branches # warn if if / else branches have duplicated code
         -Wlogical-op # warn about logical operations being used where bitwise were probably wanted
-        -Wno-useless-cast # warn if you perform a cast to the same type
+        -Wuseless-cast # warn if you perform a cast to the same type
     )
 
     if(MSVC)
-    set(PROJECT_WARNINGS ${MSVC_WARNINGS})
+        set(PROJECT_WARNINGS ${MSVC_WARNINGS})
     elseif(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
-    set(PROJECT_WARNINGS ${CLANG_WARNINGS})
+        set(PROJECT_WARNINGS ${CLANG_WARNINGS})
     elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    set(PROJECT_WARNINGS ${GCC_WARNINGS})
+        set(PROJECT_WARNINGS ${GCC_WARNINGS})
     else()
-    message(AUTHOR_WARNING "No compiler warnings set for '${CMAKE_CXX_COMPILER_ID}' compiler.")
+        message(AUTHOR_WARNING "No compiler warnings set for '${CMAKE_CXX_COMPILER_ID}' compiler.")
     endif()
 
     # target_compile_options(${project_name} PRIVATE ${PROJECT_WARNINGS})
+    # add_compile_options(${PROJECT_WARNINGS})
+    set(WARNINGS ${PROJECT_WARNINGS} PARENT_SCOPE)
 
 endfunction()

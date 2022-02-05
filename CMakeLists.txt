@@ -14,7 +14,10 @@ add_subdirectory(src)
 
 # set restrictive compilation warnings
 include(compiler_warnings)
-set_project_warnings(samarium)
+set_project_warnings()
+message(STATUS "booo:: ${WARNINGS}")
+add_compile_options(${WARNINGS})
+
 set(CMAKE_BUILD_TYPE RelWithDebInfo)
 
 option(SAMARIUM_EXAMPLE "Create an example executable from this file" OFF)
@@ -28,9 +31,8 @@ if(SAMARIUM_TESTS)
     add_subdirectory(test)
     enable_testing()
 
-    add_test(NAME SamariumTestsMain COMMAND samarium_tests)
+    add_test(NAME SamariumTests COMMAND samarium_tests)
 
-    include(valgrind)
-    use_valgrind(SamariumMemTests ./test/bin/samarium_tests)
+    # include(valgrind)
+    # use_valgrind(SamariumTestsMem ./test/bin/samarium_tests_mem)
 endif()
-
