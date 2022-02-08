@@ -36,68 +36,7 @@
 #include "util.hpp"
 
 namespace sm::util
-{
-template <typename T>
-concept integral = std::is_integral_v<T>;
-
-template <typename T>
-concept floating_point = std::is_floating_point_v<T>;
-
-template <typename T>
-concept number = integral<T> || floating_point<T>;
-
-template <typename T, typename... U>
-concept IsAnyOf = (std::same_as<T, U> || ...);
-
-template <class ContainerType>
-concept Container_t = requires(ContainerType a, const ContainerType b)
-{
-    requires std::regular<ContainerType>;
-    requires std::swappable<ContainerType>;
-    requires std::destructible<typename ContainerType::value_type>;
-    requires std::same_as<typename ContainerType::reference,
-                          typename ContainerType::value_type&>;
-    requires std::same_as<typename ContainerType::const_reference,
-                          const typename ContainerType::value_type&>;
-    requires std::forward_iterator<typename ContainerType::iterator>;
-    requires std::forward_iterator<typename ContainerType::const_iterator>;
-    requires std::signed_integral<typename ContainerType::difference_type>;
-    requires std::same_as<
-        typename ContainerType::difference_type,
-        typename std::iterator_traits<typename ContainerType::iterator>::difference_type>;
-    requires std::same_as<typename ContainerType::difference_type,
-                          typename std::iterator_traits<
-                              typename ContainerType::const_iterator>::difference_type>;
-    {
-        a.begin()
-        } -> std::same_as<typename ContainerType::iterator>;
-    {
-        a.end()
-        } -> std::same_as<typename ContainerType::iterator>;
-    {
-        b.begin()
-        } -> std::same_as<typename ContainerType::const_iterator>;
-    {
-        b.end()
-        } -> std::same_as<typename ContainerType::const_iterator>;
-    {
-        a.cbegin()
-        } -> std::same_as<typename ContainerType::const_iterator>;
-    {
-        a.cend()
-        } -> std::same_as<typename ContainerType::const_iterator>;
-    {
-        a.size()
-        } -> std::same_as<typename ContainerType::size_type>;
-    {
-        a.max_size()
-        } -> std::same_as<typename ContainerType::size_type>;
-    {
-        a.empty()
-        } -> std::same_as<bool>;
-};
-
-size_t constexpr strlen(const char* str) { return *str ? 1u + strlen(str + 1) : 0u; }
+{size_t constexpr strlen(const char* str) { return *str ? 1u + strlen(str + 1) : 0u; }
 
 // template <char ch> consteval u8 from_hex()
 // {
@@ -114,21 +53,24 @@ consteval u8 hex_to_int_safe(char ch)
     throw std::logic_error("hex character must be 0-9, a-f, or A-F");
 }
 
-u8 hex_to_int(char ch)
-{
-    if ('0' <= ch && ch <= '9') return static_cast<u8>(ch - '0');
-    if ('a' <= ch && ch <= 'f') return static_cast<u8>(ch - 'a' + 10);
-    if ('A' <= ch && ch <= 'F') return static_cast<u8>(ch - 'A' + 10);
-    throw std::logic_error("hex character must be 0-9, a-f, or A-F");
-}
+// u8 hex_to_int(char ch)
+// {
+//     if ('0' <= ch && ch <= '9') return static_cast<u8>(ch - '0');
+//     if ('a' <= ch && ch <= 'f') return static_cast<u8>(ch - 'a' + 10);
+//     if ('A' <= ch && ch <= 'F') return static_cast<u8>(ch - 'A' + 10);
+//     throw std::logic_error("hex character must be 0-9, a-f, or A-F");
+// }
 
 class Stopwatch
 {
   public:
-    const std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+    std::chrono::steady_clock::time_point start{ std::chrono::steady_clock::now() };
+
+    auto reset() { start = std::chrono::steady_clock::now(); }
+
     auto time() const
     {
-        auto finish = std::chrono::steady_clock::now();
+        const auto finish = std::chrono::steady_clock::now();
         return 1000 *
                std::chrono::duration_cast<std::chrono::duration<double>>(finish - start)
                    .count();

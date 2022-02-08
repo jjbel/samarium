@@ -28,12 +28,37 @@
 
 #pragma once
 
-#include "Image.hpp"
-#include "print.hpp"
+#include "Extents.hpp"
 
-namespace sm::file
+namespace sm::interp
 {
-bool export_to(const Image& image,
-               std::string file_path      = "",
-               const bool shouldOverwrite = false);
-} // namespace sm::file
+template <typename T>
+[[nodiscard]] constexpr inline auto in_range(T value, Extents<T> range)
+{
+    return range.contains(value);
+}
+
+template <typename T>
+[[nodiscard]] constexpr inline auto clamp(T value, Extents<T> range) noexcept
+{
+    return range.clamp(value);
+}
+
+template <typename T, typename U>
+[[nodiscard]] constexpr inline auto lerp(T value, Extents<U> range)
+{
+    return range.lerp(value);
+}
+
+// https://stackoverflow.com/questions/1969240/mapping-a-range-of-values-to-another
+
+template <typename T, typename U, bool shouldClamp = false>
+[[nodiscard]] constexpr inline auto
+map_range(T value, T from_min, T from_max, U to_min, U to_max)
+{
+    if constexpr (shouldClamp) value = clamp(value, from_min, from_max);
+    const auto fromRange = from_max - from_min;
+    const auto toRange   = to_max - to_min;
+    return from_min + (value - from_min) * toRange / fromRange;
+}
+} // namespace sm::interp

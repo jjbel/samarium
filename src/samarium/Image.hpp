@@ -31,7 +31,10 @@
 #include <algorithm>
 #include <concepts>
 #include <iterator>
+#include <memory>
 #include <utility>
+
+// #include <range/v3/all.hpp>
 
 #include "Color.hpp"
 #include "DynArray.hpp"
@@ -41,20 +44,17 @@
 
 namespace sm
 {
-using Indices    = Vector2_t<size_t>;
-using Dimensions = Vector2_t<size_t>;
-
 constexpr inline auto dims4K  = Dimensions{ 3840u, 2160u };
 constexpr inline auto dimsHD  = Dimensions{ 1280u, 720u };
 constexpr inline auto dimsFHD = Dimensions{ 1920u, 1080u };
 constexpr inline auto dimsP2  = Dimensions{ 2048u, 1024u };
 
-auto convert1dto2d(Dimensions dims, size_t index)
+constexpr inline auto convert_1d_to_2d(Dimensions dims, size_t index)
 {
     return Indices(index % dims.x, index / dims.x);
 }
 
-auto convert2dto1d(Dimensions dims, Indices coordinates)
+constexpr inline auto convert_2d_to_1d(Dimensions dims, Indices coordinates)
 {
     return coordinates.y * dims.x + coordinates.x;
 }
@@ -63,13 +63,13 @@ template <typename T> class Field
 {
   public:
     // Container types
-    // using value_type      = T;
-    // using reference       = T&;
-    // using const_reference = const T&;
-    // using iterator        = T*;
-    // using const_iterator  = T const*;
-    // using difference_type = std::ptrdiff_t;
-    // using size_type       = std::size_t;
+    using value_type      = T;
+    using reference       = T&;
+    using const_reference = const T&;
+    using iterator        = T*;
+    using const_iterator  = T const*;
+    using difference_type = std::ptrdiff_t;
+    using size_type       = std::size_t;
 
     // Public members
     const Dimensions dims;
@@ -104,37 +104,43 @@ template <typename T> class Field
     auto begin() const { return this->data.cbegin(); }
     auto end() const { return this->data.cend(); }
 
-    auto cbegin() const { return const_iterator(&this->data[0]); }
-    auto cend() const { return const_iterator(&this->data[this->size()]); }
+    auto cbegin() const { return this->data.cbegin(); }
+    auto cend() const { return this->data.cend(); }
 
     auto size() const { return this->data.size(); }
     auto max_size() const { return this->data.size(); } // for stl compatibility
     auto empty() const { return this->data.size() == 0; }
 
-    // const auto view_data() const { return this->data; }
-    template <ColorFormat Format> auto formatted_data(Format) const;
+    auto rect() const { return Rect<size_t>{ Indices{}, dims - Indices{ 1, 1 } }; }
+    auto enumerate()
+    {
+        auto a = std::to_array({1, 2, 3, 4});
+        auto b = std::to_array({1, 2, 3, 4});
+        // return ranges::v3::view::zip(a, b);
+    }
+
+    template <ColorFormat Format> inline auto formatted_data(Format) const;
 };
 
 using Image = Field<Color>;
 
-template <> template <> auto Image::formatted_data(RGBA_t) const
+// Since data is already stored as RGBA, no need to convert it, directly return it
+template <> template <> inline auto Image::formatted_data(RGBA_t) const
 {
-    return std::span{ reinterpret_cast<const u8* const>(this->data.cbegin()),
-                      this->size() * 4 };
+    return std::span{ this->data.cbegin(), this->size() * 4 };
 }
 
-template <> template <ColorFormat Format> auto Image::formatted_data(Format format) const
+template <>
+template <ColorFormat Format>
+inline auto Image::formatted_data(Format format) const
 {
-    using type        = decltype(Color().data(format));
-    const auto length = type().size() * this->size();
-    auto fmt_data     = DynArray<type>(length);
+    const auto format_length = Format::length;
+    auto fmt_data            = DynArray<std::array<u8, format_length>>(this->size());
+    // fmt::print("length: {}\n", this->cend() - this->cbegin());
 
-    for (size_t index = 0; index != this->size(); ++index)
-    {
-        const auto temp = this->data[index].data(format);
-        fmt_data[index] = temp;
-    }
+    std::transform(this->begin(), this->end(), fmt_data.begin(),
+                   [format](auto color) { return color.get_formatted(format); });
 
-    return std::span{ reinterpret_cast<const u8* const>(fmt_data.begin()), length };
+    return fmt_data;
 }
 } // namespace sm

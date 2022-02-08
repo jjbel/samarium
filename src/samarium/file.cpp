@@ -26,14 +26,60 @@
  *  For more information, please refer to <https://opensource.org/licenses/MIT/>
  */
 
-#pragma once
+#include <array>
+#include <date/date.h>
+#include <filesystem>
+#include <fstream>
 
 #include "Image.hpp"
 #include "print.hpp"
 
 namespace sm::file
 {
-bool export_to(const Image& image,
-               std::string file_path      = "",
-               const bool shouldOverwrite = false);
+bool export_to(const Image& image, std::string file_path, const bool shouldOverwrite)
+{
+    namespace fs = std::filesystem;
+
+    file_path = file_path.length() == 0
+                    ? date::format("%F_%T.tga", std::chrono::system_clock::now())
+                    : file_path;
+
+    if (fs::exists(fs::path(file_path)) and !shouldOverwrite)
+    {
+        util::error('\'', file_path,
+                    "' already exists.\nPass `true` as last argument of "
+                    "sm::util::write() to overwrite\n");
+        return false;
+    }
+
+    const std::array<unsigned char, 18> tga_header = {
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        static_cast<unsigned char>(255 & image.dims.x),
+        static_cast<unsigned char>(255 & (image.dims.x >> 8)),
+        static_cast<unsigned char>(255 & image.dims.y),
+        static_cast<unsigned char>(255 & (image.dims.y >> 8)),
+        24,
+        32
+    };
+
+    const auto data = image.formatted_data(sm::BGR);
+    sm::util::print("\n\n", data.size());
+
+    std::ofstream{ file_path }
+        .write(reinterpret_cast<const char*>(&tga_header[0]), 18)
+        .write(reinterpret_cast<const char*>(&data[0]),
+               static_cast<std::streamsize>(data.size() * data[0].size()));
+    return true;
+}
 } // namespace sm::file

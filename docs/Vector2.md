@@ -1,7 +1,7 @@
 # `sm::math::Vector2_t`
 
 ```cpp
-template <sm::util::number T> class sm::Vector2_t;
+template <sm::concepts::number T> class sm::Vector2_t;
 using sm::Vector2 = Vector2_t<double>;
 ```
 

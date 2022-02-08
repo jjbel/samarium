@@ -41,19 +41,27 @@
 
 namespace sm
 {
-constexpr inline class RGB_t
+constexpr inline struct RGB_t
 {
+    constexpr static auto length = 3;
 } RGB{};
-constexpr inline class RGBA_t
+
+constexpr inline struct RGBA_t
 {
+    constexpr static auto length = 4;
 } RGBA{};
-constexpr inline class BGR_t
+
+constexpr inline struct BGR_t
 {
+    constexpr static auto length = 3;
 } BGR{};
-constexpr inline class BGRA_t
+
+constexpr inline struct BGRA_t
 {
+    constexpr static auto length = 4;
 } BGRA{};
-constexpr inline class hex_t
+
+constexpr inline struct hex_t
 {
 } hex{};
 
@@ -78,14 +86,7 @@ class Color
     {
     }
 
-    // constexpr Color(uint32_t n) noexcept
-    //     : r(static_cast<u8>((n >> 24) & 0xFF)),
-    //       g(static_cast<u8>((n >> 16) & 0xFF)),
-    //       b(static_cast<u8>((n >> 8) & 0xFF)), a(static_cast<u8>(n & 0xFF))
-    // {
-    // }
-
-    consteval Color(const char* str)
+    consteval explicit Color(const char* str)
     {
         const auto length = util::strlen(str);
         if (str[0] != '#') throw std::logic_error("Hex string must start with #");
@@ -93,20 +94,20 @@ class Color
             throw std::logic_error("Hex string must be 7 or 9 characters long");
 
         this->r = static_cast<u8>(16 * util::hex_to_int_safe(str[1]) +
-                                       util::hex_to_int_safe(str[2]));
+                                  util::hex_to_int_safe(str[2]));
         this->g = static_cast<u8>(16 * util::hex_to_int_safe(str[3]) +
-                                       util::hex_to_int_safe(str[4]));
+                                  util::hex_to_int_safe(str[4]));
         this->b = static_cast<u8>(16 * util::hex_to_int_safe(str[5]) +
-                                       util::hex_to_int_safe(str[6]));
+                                  util::hex_to_int_safe(str[6]));
 
         if (length == 7) this->a = 255u;
         else
             this->a = static_cast<u8>(16 * util::hex_to_int_safe(str[7]) +
-                                           util::hex_to_int_safe(str[8]));
+                                      util::hex_to_int_safe(str[8]));
     }
 
     // https://en.m.wikipedia.org/wiki/Alpha_compositing
-    constexpr auto add_alpha_over(Color that) noexcept
+    [[nodiscard]] constexpr auto add_alpha_over(Color that) noexcept
     {
         // const double under     = this->a / 255.0;
         // const double over      = that.a / 255.0;
@@ -116,34 +117,39 @@ class Color
         // this->b = static_cast<u8>(that.b * over + this->b * under * (1. - over));
         // this->a = static_cast<u8>(new_alpha * 255.);
         const auto alpha = 1.0 / 255 * that.a;
-        r = static_cast<u8>(that.a / 255.0 * that.r + (1.0 - alpha) * r);
-        g = static_cast<u8>(that.a / 255.0 * that.g + (1.0 - alpha) * g);
-        b = static_cast<u8>(that.a / 255.0 * that.b + (1.0 - alpha) * b);
+        r                = static_cast<u8>(that.a / 255.0 * that.r + (1.0 - alpha) * r);
+        g                = static_cast<u8>(that.a / 255.0 * that.g + (1.0 - alpha) * g);
+        b                = static_cast<u8>(that.a / 255.0 * that.b + (1.0 - alpha) * b);
         a = static_cast<u8>((a / 255.0 + (1.0 - a / 255.0) * (alpha)) * 255);
     }
 
-    template <util::integral T = u8>
-    auto data(RGB_t /* color_format */) const noexcept
+    [[nodiscard]] constexpr auto with_alpha(u8 alpha) const
+    {
+        return Color{ r, g, b, alpha };
+    }
+
+    template <concepts::integral T = u8>
+    [[nodiscard]] auto get_formatted(RGB_t /* color_format */) const noexcept
     {
         return std::array{ static_cast<T>(this->r), static_cast<T>(this->g),
                            static_cast<T>(this->b) };
     }
 
-    template <util::integral T = u8>
-    auto data(RGBA_t /* color_format */) const noexcept
+    template <concepts::integral T = u8>
+    [[nodiscard]] auto get_formatted(RGBA_t /* color_format */) const noexcept
     {
         return std::array{ static_cast<T>(this->r), static_cast<T>(this->g),
                            static_cast<T>(this->b), static_cast<T>(this->a) };
     }
 
-    template <util::integral T = u8>
-    auto data(BGR_t /* color_format */) const noexcept
+    template <concepts::integral T = u8>
+    [[nodiscard]] auto get_formatted(BGR_t /* color_format */) const noexcept
     {
         return std::array{ static_cast<T>(b), static_cast<T>(g), static_cast<T>(r) };
     }
 
-    template <util::integral T = u8>
-    auto data(BGRA_t /* color_format */) const noexcept
+    template <concepts::integral T = u8>
+    [[nodiscard]] auto get_formatted(BGRA_t /* color_format */) const noexcept
     {
         return std::array{ static_cast<T>(b), static_cast<T>(g), static_cast<T>(r),
                            static_cast<T>(a) };
@@ -162,9 +168,8 @@ template <Color color> consteval auto operator""_c() { return color; }
 
 } // namespace literals
 
-
 template <typename T>
-concept ColorFormat = util::IsAnyOf<T, RGB_t, RGBA_t, BGR_t, BGRA_t>;
+concept ColorFormat = concepts::IsAnyOf<T, RGB_t, RGBA_t, BGR_t, BGRA_t>;
 } // namespace sm
 
 

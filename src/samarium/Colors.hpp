@@ -32,6 +32,7 @@
 
 namespace sm::colors
 {
+constexpr inline auto transparent          = Color("#00000000");
 constexpr inline auto black                = Color("#000000");
 constexpr inline auto silver               = Color("#c0c0c0");
 constexpr inline auto gray                 = Color("#808080");

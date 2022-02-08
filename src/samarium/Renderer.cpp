@@ -27,6 +27,7 @@
  */
 
 #include "boost/asio/post.hpp"
+#include <execution>
 #include <utility>
 
 #include "Renderer.hpp"
@@ -35,27 +36,6 @@ namespace sm
 {
 void Renderer::render()
 {
-    const auto funcs = std::move(this->draw_funcs); // make a local copy
-    auto s           = std::string("Hello");
-
-    for (size_t i = 0; const auto& chunk : this->chunks)
-    {
-        const auto task = [&, i, funcs]
-        {
-            // std::this_thread::sleep_for(std::chrono::milliseconds(100));
-
-
-            const auto lock = std::lock_guard(mut);
-            s += fmt::format("\nthread {:>2}: ", i);
-        };
-
-        boost::asio::post(pool, task);
-
-        ++i;
-    }
-
-    pool.join();
-    draw_funcs = std::vector<Drawer_t>{};
-    sm::util::print(s);
+    // std::for_each(this->image.begin(), this->image.end(), [](auto& pixel) {});
 }
 } // namespace sm

@@ -107,7 +107,7 @@ template <typename T> class DynArray
     ~DynArray()
     {
         delete[] data;
-        fmt::print("Called DynArray destructor\n");
+        // fmt::print("Called DynArray destructor\n");
     }
 
   private:

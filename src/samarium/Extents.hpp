@@ -28,12 +28,39 @@
 
 #pragma once
 
-#include "Image.hpp"
-#include "print.hpp"
+#include "math.hpp"
 
-namespace sm::file
+namespace sm
 {
-bool export_to(const Image& image,
-               std::string file_path      = "",
-               const bool shouldOverwrite = false);
-} // namespace sm::file
+template <concepts::arithmetic T> class Extents
+{
+  public:
+    constexpr Extents(T a, T b)
+    {
+        std::tie(m_min, m_max) = (a < b) ? std::pair{ a, b } : std::pair{ b, a };
+    }
+    
+    [[nodiscard]] constexpr auto min() const { return m_min; }
+    [[nodiscard]] constexpr auto max() const { return m_max; }
+
+    [[nodiscard]] constexpr auto contains(T value) const
+    {
+        return m_min <= value and value <= m_max;
+    }
+
+    [[nodiscard]] constexpr auto clamp(T value) const
+    {
+        return value < m_min ? m_min : value > m_max ? m_max : value;
+    }
+
+    template <concepts::floating_point U>
+    [[nodiscard]] constexpr auto lerp(U factor) const
+    {
+        return m_min * (static_cast<U>(1.) - factor) + m_max * factor;
+    }
+
+  private:
+    T m_min;
+    T m_max;
+};
+} // namespace sm

@@ -30,34 +30,30 @@
 
 #include <cmath>
 
-#include "util.hpp"
+#include "concepts.hpp"
 
 namespace sm::math
 {
 constexpr inline auto PI      = 3.14159265358979323846;
 constexpr inline auto EPSILON = 1.e-4;
 
-template <util::floating_point T> constexpr auto equals(T a, T b) noexcept
+template <concepts::floating_point T>
+[[nodiscard]] constexpr auto equals(T a, T b) noexcept
 {
     return std::abs(a - b) <= EPSILON;
 }
 
-template <typename T> constexpr inline auto min(T value0, T value1) noexcept
+template <typename T> [[nodiscard]] constexpr inline auto min(T value0, T value1) noexcept
 {
     if (value0 < value1) return value0;
     else
         return value1;
 }
 
-template <typename T> constexpr inline auto max(T value0, T value1) noexcept
+template <typename T> [[nodiscard]] constexpr inline auto max(T value0, T value1) noexcept
 {
     if (value0 > value1) return value0;
     else
         return value1;
-}
-
-template <typename T> constexpr inline auto clamp(T value, T min, T max) noexcept
-{
-    return value < min ? min : value > max ? max : value;
 }
 } // namespace sm::math

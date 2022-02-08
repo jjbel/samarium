@@ -32,15 +32,15 @@ jobs:
 
       - name: Setup Build Environment
         run: mkdir -p build
-      - name: Cache Conan dependencies
-        id: cache-conan-packages
-        uses: actions/cache@v2
-        with:
-          path: ~/.conan/data
-          key: conan-packages-${{ hashFiles('conanfile.txt') }}
+      # - name: Cache Conan dependencies
+      #   id: cache-conan-packages
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: ~/.conan/data
+      #     key: conan-packages-${{ hashFiles('conanfile.txt') }}
 
       - name: Install Conan dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
+        # if: steps.cache.outputs.cache-hit != 'true'
         working-directory: ./build
         run: |
           conan profile new default --detect
