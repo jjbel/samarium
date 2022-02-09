@@ -86,7 +86,7 @@ class Color
     {
     }
 
-    consteval explicit Color(const char* str)
+    consteval Color(const char* str)
     {
         const auto length = util::strlen(str);
         if (str[0] != '#') throw std::logic_error("Hex string must start with #");

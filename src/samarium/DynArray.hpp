@@ -73,19 +73,19 @@ template <typename T> class DynArray
 
     T& operator[](size_t index)
     {
-        if (index >= this->m_size)
-            throw std::out_of_range(
-                fmt::format("sm::DynArray: index {} out of range for m_size {}", index,
-                            this->m_size));
+        // if (index >= this->m_size)
+        //     throw std::out_of_range(
+        //         fmt::format("sm::DynArray: index {} out of range for m_size {}", index,
+        //                     this->m_size));
         return this->data[index];
     }
 
     const T& operator[](size_t index) const
     {
-        if (index >= this->m_size)
-            throw std::out_of_range(
-                fmt::format("sm::DynArray: index {} out of range for m_size {}", index,
-                            this->m_size));
+        // if (index >= this->m_size)
+        //     throw std::out_of_range(
+        //         fmt::format("sm::DynArray: index {} out of range for m_size {}", index,
+        //                     this->m_size));
         return this->data[index];
     }
 

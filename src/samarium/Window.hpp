@@ -28,46 +28,46 @@
 
 #pragma once
 
-#include <tuple>
-
-#include "math.hpp"
+#include "SFML/Graphics.hpp"
 
 namespace sm
 {
-template <concepts::arithmetic T> class Extents
+class Window
 {
+    sf::Image im;
+    sf::Texture sftexture;
+    sf::Sprite sfbufferSprite;
+    sf::RenderWindow window;
+
   public:
-    static class find_min_max_t
-    {
-    } find_min_max;
+    size_t frame = 0;
 
-    constexpr Extents(T min, T max) : m_min{ min }, m_max{ max } {}
-    constexpr Extents(T a, T b, find_min_max_t)
+    Window(const Image& image, const std::string& name, int framerate)
+        : window(sf::VideoMode(image.dims.x, image.dims.y), name)
     {
-        std::tie(m_min, m_max) = (a < b) ? std::pair{ a, b } : std::pair{ b, a };
+        im.create(image.dims.x, image.dims.y,
+                  reinterpret_cast<const sf::Uint8*>(&image[0]));
+        sftexture.loadFromImage(im);
+        sfbufferSprite.setTexture(sftexture, true);
+        window.setFramerateLimit(framerate);
     }
 
-    [[nodiscard]] constexpr auto min() const { return m_min; }
-    [[nodiscard]] constexpr auto max() const { return m_max; }
+    auto is_open() const { return window.isOpen(); }
 
-    [[nodiscard]] constexpr auto contains(T value) const
+    auto get_input()
     {
-        return m_min <= value and value <= m_max;
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed) window.close();
+        }
     }
 
-    [[nodiscard]] constexpr auto clamp(T value) const
+    auto display()
     {
-        return value < m_min ? m_min : value > m_max ? m_max : value;
+        window.draw(sfbufferSprite);
+        window.display();
+        ++frame;
     }
-
-    template <concepts::floating_point U>
-    [[nodiscard]] constexpr auto lerp(U factor) const
-    {
-        return m_min * (static_cast<U>(1.) - factor) + m_max * factor;
-    }
-
-  private:
-    T m_min;
-    T m_max;
 };
 } // namespace sm

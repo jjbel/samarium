@@ -52,13 +52,38 @@ template <typename T, typename U>
 
 // https://stackoverflow.com/questions/1969240/mapping-a-range-of-values-to-another
 
-template <typename T, typename U, bool shouldClamp = false>
-[[nodiscard]] constexpr inline auto
-map_range(T value, T from_min, T from_max, U to_min, U to_max)
+template <typename T, typename U>
+[[nodiscard]] constexpr inline auto map_range(T value, Extents<T> from, Extents<U> to)
 {
-    if constexpr (shouldClamp) value = clamp(value, from_min, from_max);
-    const auto fromRange = from_max - from_min;
-    const auto toRange   = to_max - to_min;
-    return from_min + (value - from_min) * toRange / fromRange;
+    return from.min() +
+           (value - from.min()) * (to.max() - to.min()) / (from.max() - from.min());
+}
+
+template <typename T, typename U>
+[[nodiscard]] constexpr inline auto
+map_range_clamp(T value, Extents<T> from, Extents<U> to)
+{
+    return from.min() + (clamp(value, {from.min(), from.max()}) - from.min()) *
+                            (to.max() - to.min()) / (from.max() - from.min());
+}
+
+template <typename T, typename U>
+[[nodiscard]] constexpr inline auto make_mapper(Extents<T> from, Extents<U> to)
+{
+    return [from_min = from.min(), from_max = from.max(),
+            from_range = from.max() - from.min(), to_range = to.max() - to.min()](T value)
+    {
+        return from_min + (value - from_min) * to_range / from_range;
+    };
+}
+
+template <typename T, typename U>
+[[nodiscard]] constexpr inline auto make_clamped_mapper(Extents<T> from, Extents<U> to)
+{
+    return [from_min = from.min(), from_max = from.max(),
+            from_range = from.max() - from.min(), to_range = to.max() - to.min()](T value)
+    {
+        return from_min + (clamp(value, {from_min, from_max}) - from_min) * to_range / from_range;
+    };
 }
 } // namespace sm::interp
