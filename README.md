@@ -24,7 +24,7 @@
 
 ```sh
 git clone https://github.com/strangeQuark1041/samarium.git
-conan create samarium
+conan create samarium --build=missing
 ```
 
 ## Prerequistes
@@ -44,7 +44,7 @@ For example gcc11 at least.
 
 ```sh
 git clone https://github.com/strangeQuark1041/samarium.git
-conan create samarium
+conan create samarium --build=missing
 ```
 
 ## Example
