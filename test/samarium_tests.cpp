@@ -13,7 +13,7 @@ using sm::util::print;
 int main()
 {
     using namespace sm::literals;
-    auto image  = sm::Image{ { 100, 100 }, "#12c2e9"_c };
+    auto image  = sm::Image{ sm::dimsFHD, "#12c2e9"_c };
     auto mapper = sm::interp::make_clamped_mapper(sm::Extents{ 0ul, image.dims.x },
                                                   sm::Extents{ 0, 255 });
     auto fn     = [dims = image.dims, mapper](sm::Indices i)
@@ -35,17 +35,20 @@ int main()
 
 
     // sm::file::export_to(im, "temp1.tga", true);
-    auto win = sm::Window{ image, "Hello Moto", 60 };
+    auto win = sm::Window{ image.dims, "Hello Moto" };
 
     w.reset();
     while (win.is_open())
     {
         win.get_input();
         image[{ 10, 10 }] = sm::colors::black;
-        // window.clear();
+        image[{ 10, 11 }] = sm::colors::black;
+        image[{ 10, 12 }] = sm::colors::black;
+        image[{ 11, 12 }] = sm::colors::black;
+        image[{ 12, 12 }] = sm::colors::black;
+        win.draw(image);
         win.display();
     }
     auto d = w.time() / 1.e3;
     fmt::print("Frames: {}, time: {}, fr: {}\n", win.frame, d, win.frame / d);
-    print((sm::Vector2(1, 3) - sm::Vector2(3, -6)).length());
 }

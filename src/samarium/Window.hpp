@@ -40,15 +40,14 @@ class Window
     sf::RenderWindow window;
 
   public:
-    size_t frame = 0;
+    size_t frame;
 
-    Window(const Image& image, const std::string& name, int framerate)
-        : window(sf::VideoMode(image.dims.x, image.dims.y), name)
+    Window(Dimensions dims, const std::string& name, int framerate = 64)
+        : window(
+              sf::VideoMode(static_cast<uint32_t>(dims.x), static_cast<uint32_t>(dims.y)),
+              name),
+          frame{ 0 }
     {
-        im.create(image.dims.x, image.dims.y,
-                  reinterpret_cast<const sf::Uint8*>(&image[0]));
-        sftexture.loadFromImage(im);
-        sfbufferSprite.setTexture(sftexture, true);
         window.setFramerateLimit(framerate);
     }
 
@@ -61,6 +60,14 @@ class Window
         {
             if (event.type == sf::Event::Closed) window.close();
         }
+    }
+
+    auto draw(const Image& image)
+    {
+        im.create(image.dims.x, image.dims.y,
+                  reinterpret_cast<const sf::Uint8*>(&image[0]));
+        sftexture.loadFromImage(im);
+        sfbufferSprite.setTexture(sftexture, true);
     }
 
     auto display()
