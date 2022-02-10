@@ -66,7 +66,7 @@ jobs:
         uses: turtlebrowser/get-conan@main
 
       - name: Install other deps
-        run: sudo apt-get update && sudo apt-get install valgrind libtbb-dev
+        run: sudo apt-get update && sudo apt-get install valgrind libtbb-dev libudev-dev
         
       - name: Check Tool Versions
         run: |
