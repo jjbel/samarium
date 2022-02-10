@@ -36,7 +36,11 @@
 #include "util.hpp"
 
 namespace sm::util
-{size_t constexpr strlen(const char* str) { return *str ? 1u + strlen(str + 1) : 0u; }
+{
+[[nodiscard]] consteval size_t strlen(const char* str)
+{
+    return *str ? 1u + strlen(str + 1) : 0u;
+}
 
 // template <char ch> consteval u8 from_hex()
 // {

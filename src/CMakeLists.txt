@@ -13,3 +13,8 @@ add_library(samarium "samarium/Renderer.cpp" "samarium/file.cpp")
 
 target_link_libraries(samarium PRIVATE ${CONAN_LIBS})
 target_link_libraries(samarium PRIVATE TBB::tbb)
+
+if(WARNINGS)
+    target_compile_options(samarium PUBLIC ${WARNINGS})
+endif()
+

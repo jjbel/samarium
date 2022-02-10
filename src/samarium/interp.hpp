@@ -32,6 +32,16 @@
 
 namespace sm::interp
 {
+[[nodiscard]] constexpr inline auto smooth_step()
+{
+    return [](auto x) { return x * x * (3. - 2. * x); };
+}
+
+[[nodiscard]] constexpr inline auto smoother_step()
+{
+    return [](auto x) { return x * x * x * (x * (x * 6. - 15.) + 10.); };
+}
+
 template <typename T>
 [[nodiscard]] constexpr inline auto in_range(T value, Extents<T> range)
 {
@@ -44,46 +54,51 @@ template <typename T>
     return range.clamp(value);
 }
 
-template <typename T, typename U>
-[[nodiscard]] constexpr inline auto lerp(T value, Extents<U> range)
+template <typename T>
+[[nodiscard]] constexpr inline auto lerp(double factor, Extents<T> range)
 {
-    return range.lerp(value);
+    return range.lerp(factor);
+}
+
+template <typename T>
+[[nodiscard]] constexpr inline auto lerp_inverse(double value, Extents<T> range)
+{
+    return range.lerp_inverse(value);
 }
 
 // https://stackoverflow.com/questions/1969240/mapping-a-range-of-values-to-another
 
-template <typename T, typename U>
-[[nodiscard]] constexpr inline auto map_range(T value, Extents<T> from, Extents<U> to)
+template <typename From_t, typename To_t>
+[[nodiscard]] constexpr inline auto map_range(From_t value, Extents<From_t> from, Extents<To_t> to)
 {
-    return from.min() +
-           (value - from.min()) * (to.max() - to.min()) / (from.max() - from.min());
+    return from.min +
+           (value - from.min) * to.size() / from.size();
 }
 
 template <typename T, typename U>
 [[nodiscard]] constexpr inline auto
 map_range_clamp(T value, Extents<T> from, Extents<U> to)
 {
-    return from.min() + (clamp(value, {from.min(), from.max()}) - from.min()) *
-                            (to.max() - to.min()) / (from.max() - from.min());
+    return from.min + (from.clamp(value) - from.min) *
+                            to.size() / from.size();
 }
 
 template <typename T, typename U>
 [[nodiscard]] constexpr inline auto make_mapper(Extents<T> from, Extents<U> to)
 {
-    return [from_min = from.min(), from_max = from.max(),
-            from_range = from.max() - from.min(), to_range = to.max() - to.min()](T value)
-    {
-        return from_min + (value - from_min) * to_range / from_range;
-    };
+    return [from_min = from.min, from_max = from.max(),
+            from_range = from.max() - from.min, to_range = to.size()](T value)
+    { return from_min + (value - from_min) * to_range / from_range; };
 }
 
 template <typename T, typename U>
 [[nodiscard]] constexpr inline auto make_clamped_mapper(Extents<T> from, Extents<U> to)
 {
-    return [from_min = from.min(), from_max = from.max(),
-            from_range = from.max() - from.min(), to_range = to.max() - to.min()](T value)
+    return [from_min = from.min, from_max = from.max(),
+            from_range = from.max() - from.min, to_range = to.max() - to.min](T value)
     {
-        return from_min + (clamp(value, {from_min, from_max}) - from_min) * to_range / from_range;
+        return from_min +
+               (clamp(value, { from_min, from_max }) - from_min) * to_range / from_range;
     };
 }
 } // namespace sm::interp

@@ -41,81 +41,60 @@
 
 namespace sm
 {
-constexpr inline struct RGB_t
+struct RGB_t
 {
-    constexpr static auto length = 3;
-} RGB{};
-
-constexpr inline struct RGBA_t
+    constexpr static auto length = size_t{ 3 };
+};
+struct RGBA_t
 {
-    constexpr static auto length = 4;
-} RGBA{};
-
-constexpr inline struct BGR_t
+    constexpr static auto length = size_t{ 4 };
+};
+struct BGR_t
 {
-    constexpr static auto length = 3;
-} BGR{};
-
-constexpr inline struct BGRA_t
+    constexpr static auto length = size_t{ 3 };
+};
+struct BGRA_t
 {
-    constexpr static auto length = 4;
-} BGRA{};
+    constexpr static auto length = size_t{ 4 };
+};
 
-constexpr inline struct hex_t
-{
-} hex{};
-
+constexpr inline auto rgb  = RGB_t{};
+constexpr inline auto rgba = RGBA_t{};
+constexpr inline auto bgr  = BGR_t{};
+constexpr inline auto bgra = BGRA_t{};
 
 class Color
 {
   public:
-    u8 r;
-    u8 g;
-    u8 b;
-    u8 a;
+    u8 r{};
+    u8 g{};
+    u8 b{};
+    u8 a{ 255u };
 
-    constexpr Color() noexcept : r{}, g{}, b{}, a{ 255u } {}
-
-    constexpr Color(u8 red, u8 green, u8 blue) noexcept
-        : r(red), g(green), b(blue), a(255u)
-    {
-    }
-
-    constexpr Color(u8 red, u8 green, u8 blue, u8 alpha) noexcept
-        : r(red), g(green), b(blue), a(alpha)
-    {
-    }
-
-    consteval Color(const char* str)
+    static consteval auto from_hex(const char* str)
     {
         const auto length = util::strlen(str);
         if (str[0] != '#') throw std::logic_error("Hex string must start with #");
-        if (length != 7 && length != 9)
+        if (length != 7u && length != 9u)
             throw std::logic_error("Hex string must be 7 or 9 characters long");
 
-        this->r = static_cast<u8>(16 * util::hex_to_int_safe(str[1]) +
-                                  util::hex_to_int_safe(str[2]));
-        this->g = static_cast<u8>(16 * util::hex_to_int_safe(str[3]) +
-                                  util::hex_to_int_safe(str[4]));
-        this->b = static_cast<u8>(16 * util::hex_to_int_safe(str[5]) +
-                                  util::hex_to_int_safe(str[6]));
+        u8 r = static_cast<u8>(16 * util::hex_to_int_safe(str[1]) +
+                               util::hex_to_int_safe(str[2]));
+        u8 g = static_cast<u8>(16 * util::hex_to_int_safe(str[3]) +
+                               util::hex_to_int_safe(str[4]));
+        u8 b = static_cast<u8>(16 * util::hex_to_int_safe(str[5]) +
+                               util::hex_to_int_safe(str[6]));
 
-        if (length == 7) this->a = 255u;
-        else
-            this->a = static_cast<u8>(16 * util::hex_to_int_safe(str[7]) +
-                                      util::hex_to_int_safe(str[8]));
+        u8 a = length == 7u ? 255u
+                            : static_cast<u8>(16 * util::hex_to_int_safe(str[7]) +
+                                              util::hex_to_int_safe(str[8]));
+        return Color{ r, g, b, a };
     }
 
     // https://en.m.wikipedia.org/wiki/Alpha_compositing
+
     [[nodiscard]] constexpr auto add_alpha_over(Color that) noexcept
     {
-        // const double under     = this->a / 255.0;
-        // const double over      = that.a / 255.0;
-        // const double new_alpha = over + under * (1. - over);
-        // this->r = static_cast<u8>(that.r * over + this->r * under * (1. - over));
-        // this->g = static_cast<u8>(that.g * over + this->g * under * (1. - over));
-        // this->b = static_cast<u8>(that.b * over + this->b * under * (1. - over));
-        // this->a = static_cast<u8>(new_alpha * 255.);
         const auto alpha = 1.0 / 255 * that.a;
         r                = static_cast<u8>(that.a / 255.0 * that.r + (1.0 - alpha) * r);
         g                = static_cast<u8>(that.a / 255.0 * that.g + (1.0 - alpha) * g);
@@ -164,7 +143,7 @@ class Color
 
 namespace literals
 {
-template <Color color> consteval auto operator""_c() { return color; }
+consteval inline auto operator""_c(const char* str) { return Color::from_hex(str); }
 
 } // namespace literals
 

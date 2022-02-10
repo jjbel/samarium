@@ -37,37 +37,37 @@ namespace sm
 template <concepts::arithmetic T> class Extents
 {
   public:
-    static class find_min_max_t
-    {
-    } find_min_max;
+    T min{};
+    T max{};
 
-    constexpr Extents(T min, T max) : m_min{ min }, m_max{ max } {}
-    constexpr Extents(T a, T b, find_min_max_t)
+    [[nodiscard]] static constexpr auto find_min_max(T a, T b)
     {
-        std::tie(m_min, m_max) = (a < b) ? std::pair{ a, b } : std::pair{ b, a };
+        return (a < b) ? Extents{ a, b } : Extents{ b, a };
     }
 
-    [[nodiscard]] constexpr auto min() const { return m_min; }
-    [[nodiscard]] constexpr auto max() const { return m_max; }
+    [[nodiscard]] constexpr auto size() const
+    {
+        return max - min;
+    }
 
     [[nodiscard]] constexpr auto contains(T value) const
     {
-        return m_min <= value and value <= m_max;
+        return min <= value and value <= max;
     }
 
     [[nodiscard]] constexpr auto clamp(T value) const
     {
-        return value < m_min ? m_min : value > m_max ? m_max : value;
+        return value < min ? min : value > max ? max : value;
     }
 
-    template <concepts::floating_point U>
-    [[nodiscard]] constexpr auto lerp(U factor) const
+    [[nodiscard]] constexpr auto lerp(double factor) const
     {
-        return m_min * (static_cast<U>(1.) - factor) + m_max * factor;
+        return min * (1. - factor) + max * factor;
     }
 
-  private:
-    T m_min;
-    T m_max;
+    [[nodiscard]] constexpr double lerp_inverse(T value) const
+    {
+        return (value - min) / this->size();
+    }
 };
 } // namespace sm

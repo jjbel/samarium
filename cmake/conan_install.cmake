@@ -24,47 +24,20 @@
 
 # For more information, please refer to <https://opensource.org/licenses/MIT/>
 
-cmake_minimum_required(VERSION 3.16)
-project(samarium_dev LANGUAGES CXX)
+function(conan_install CONAN_BUILD_TYPE)
+    if(NOT EXISTS ${CMAKE_BINARY_DIR}/conan.lock)
+        include(conan)
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+        set(CMAKE_BUILD_TYPE ${CONAN_BUILD_TYPE})
+        conan_cmake_autodetect(settings)
 
-# make sure that the file is being used as an entry point
-include(modern_project_structure)
-ensure_entry_point()
-
-option(RUN_CONAN "Run Conan through CMake itself" ON)
-if(RUN_CONAN)
-    include(conan_install)
-    conan_install("Release")
-endif()
-
-include(ccache)
-use_ccache()
-
-add_subdirectory(src)
-
-# set restrictive compilation warnings
-include(compiler_warnings)
-set_project_warnings()
-message(STATUS "Compiler options: ${WARNINGS}")
-add_compile_options(${WARNINGS})
-
-set(CMAKE_BUILD_TYPE RelWithDebInfo)
-
-option(SAMARIUM_EXAMPLE "Create an example executable from this file" OFF)
-if(SAMARIUM_EXAMPLE)
-    add_subdirectory(examples)
-endif()
-
-option(SAMARIUM_TESTS "Create tests for samarium" ON)
-if(SAMARIUM_TESTS)
-    include(CTest)
-    add_subdirectory(test)
-    enable_testing()
-
-    add_test(NAME SamariumTests COMMAND samarium_tests)
-
-    # include(valgrind)
-    # use_valgrind(SamariumTestsMem ./test/bin/samarium_tests_mem)
-endif()
+        message(STATUS "Installing Conan dependenices... (this may take a few minutes)")
+        conan_cmake_install(PATH_OR_REFERENCE ${CMAKE_SOURCE_DIR}
+                            BUILD missing
+                            REMOTE conancenter
+                            SETTINGS ${settings}
+                            OUTPUT_QUIET)
+    else()
+        message(STATUS "Conan dependencies already installed")
+    endif()
+endfunction(conan_install)

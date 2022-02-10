@@ -56,4 +56,12 @@ template <typename T> [[nodiscard]] constexpr inline auto max(T value0, T value1
     else
         return value1;
 }
+
+template <u32 n> [[nodiscard]] constexpr inline auto power(auto x)
+{
+    if constexpr (n == 0) return 1;
+    // if constexpr (n == 1) return x;
+
+    return x * power<n-1>(x);
+}
 } // namespace sm::math

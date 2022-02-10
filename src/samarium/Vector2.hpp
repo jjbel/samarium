@@ -37,12 +37,8 @@ namespace sm
 template <concepts::number T> class Vector2_t
 {
   public:
-    T x;
-    T y;
-
-    constexpr Vector2_t() noexcept : x{}, y{} {}
-
-    constexpr Vector2_t(T x_, T y_) noexcept : x{ x_ }, y{ y_ } {}
+    T x{};
+    T y{};
 
     constexpr auto length() const noexcept { return std::sqrt(x * x + y * y); }
     constexpr auto length_sq() const noexcept { return x * x + y * y; }

@@ -73,7 +73,7 @@ bool export_to(const Image& image, std::string file_path, const bool shouldOverw
         32
     };
 
-    const auto data = image.formatted_data(sm::BGR);
+    const auto data = image.formatted_data(sm::bgr);
     sm::util::print("\n\n", data.size());
 
     std::ofstream{ file_path }

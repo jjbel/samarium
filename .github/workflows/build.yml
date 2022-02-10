@@ -1,5 +1,17 @@
 name: CTest
-on: [push]
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: '0 7 * * *'
+
+env:
+  # Path to the CMake build directory.
+  build: '${{ github.workspace }}/build'
+
 jobs:
   Build:
     runs-on: ubuntu-latest

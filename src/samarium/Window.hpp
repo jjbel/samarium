@@ -28,6 +28,9 @@
 
 #pragma once
 
+#include <chrono>
+#include <thread>
+
 #include "SFML/Graphics.hpp"
 
 namespace sm
@@ -40,13 +43,13 @@ class Window
     sf::RenderWindow window;
 
   public:
-    size_t frame;
+    size_t frame_counter;
 
-    Window(Dimensions dims, const std::string& name, int framerate = 64)
+    Window(Dimensions dims, const std::string& name, uint32_t framerate = 65536)
         : window(
               sf::VideoMode(static_cast<uint32_t>(dims.x), static_cast<uint32_t>(dims.y)),
               name),
-          frame{ 0 }
+          frame_counter{ 0 }
     {
         window.setFramerateLimit(framerate);
     }
@@ -64,7 +67,8 @@ class Window
 
     auto draw(const Image& image)
     {
-        im.create(image.dims.x, image.dims.y,
+        im.create(static_cast<uint32_t>(image.dims.x),
+                  static_cast<uint32_t>(image.dims.y),
                   reinterpret_cast<const sf::Uint8*>(&image[0]));
         sftexture.loadFromImage(im);
         sfbufferSprite.setTexture(sftexture, true);
@@ -74,7 +78,8 @@ class Window
     {
         window.draw(sfbufferSprite);
         window.display();
-        ++frame;
+        ++frame_counter;
+        // std::this_thread::sleep_for(std::chrono::milliseconds{ 16 });
     }
 };
 } // namespace sm
