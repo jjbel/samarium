@@ -85,10 +85,12 @@ jobs:
           key: conan-packages-${{ hashFiles('conanfile.txt') }}
 
       - name: Configure Conan
+        if: steps.cache-conan-packages.cache-hit != 'true'
         working-directory: ./build
         run: |
           conan profile new default --detect
           conan profile update settings.compiler.libcxx=libstdc++11 default
+          conan install ..
       - name: CMake
         run: cmake -B build
       - name: CMake Build

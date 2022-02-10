@@ -78,16 +78,16 @@ class Color
         if (length != 7u && length != 9u)
             throw std::logic_error("Hex string must be 7 or 9 characters long");
 
-        u8 r = static_cast<u8>(16 * util::hex_to_int_safe(str[1]) +
-                               util::hex_to_int_safe(str[2]));
-        u8 g = static_cast<u8>(16 * util::hex_to_int_safe(str[3]) +
-                               util::hex_to_int_safe(str[4]));
-        u8 b = static_cast<u8>(16 * util::hex_to_int_safe(str[5]) +
-                               util::hex_to_int_safe(str[6]));
+        const auto r = static_cast<u8>(16 * util::hex_to_int_safe(str[1]) +
+                                       util::hex_to_int_safe(str[2]));
+        const auto g = static_cast<u8>(16 * util::hex_to_int_safe(str[3]) +
+                                       util::hex_to_int_safe(str[4]));
+        const auto b = static_cast<u8>(16 * util::hex_to_int_safe(str[5]) +
+                                       util::hex_to_int_safe(str[6]));
 
-        u8 a = length == 7u ? 255u
-                            : static_cast<u8>(16 * util::hex_to_int_safe(str[7]) +
-                                              util::hex_to_int_safe(str[8]));
+        const auto a = length == 7u ? 255u
+                                    : static_cast<u8>(16 * util::hex_to_int_safe(str[7]) +
+                                                      util::hex_to_int_safe(str[8]));
         return Color{ r, g, b, a };
     }
 
@@ -99,7 +99,7 @@ class Color
         r                = static_cast<u8>(that.a / 255.0 * that.r + (1.0 - alpha) * r);
         g                = static_cast<u8>(that.a / 255.0 * that.g + (1.0 - alpha) * g);
         b                = static_cast<u8>(that.a / 255.0 * that.b + (1.0 - alpha) * b);
-        a = static_cast<u8>((a / 255.0 + (1.0 - a / 255.0) * (alpha)) * 255);
+        a                = static_cast<u8>((a / 255.0 + (1.0 - a / 255.0) * alpha) * 255);
     }
 
     [[nodiscard]] constexpr auto with_alpha(u8 alpha) const
@@ -136,10 +136,7 @@ class Color
 };
 
 [[nodiscard]] constexpr inline bool operator==(const Color& lhs,
-                                               const Color& rhs) noexcept
-{
-    return lhs.r == rhs.r && lhs.g == rhs.g && lhs.b == rhs.b && lhs.a == rhs.a;
-}
+                                               const Color& rhs) noexcept = default;
 
 namespace literals
 {
