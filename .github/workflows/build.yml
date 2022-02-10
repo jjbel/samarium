@@ -6,17 +6,19 @@ on:
   pull_request:
     branches: [ main ]
   schedule:
-    - cron: '0 7 * * *'
+    - cron: '0 7 * * *' # run at 7am everyday to keep fresh
 
 env:
   # Path to the CMake build directory.
   build: '${{ github.workspace }}/build'
+  config: 'Debug'
+  CONAN_SYSREQUIRES_MODE: 'enabled'
 
 jobs:
   Build:
     runs-on: ubuntu-latest
     env:
-      SONAR_SCANNER_VERSION: 4.4.0.2170
+      SONAR_SCANNER_VERSION: 4.6.2.2472
       SONAR_SERVER_URL: "https://sonarcloud.io"
       BUILD_WRAPPER_OUT_DIR: build_wrapper_output_directory # Directory where build-wrapper output will be placed
     steps:
@@ -65,36 +67,71 @@ jobs:
           cmake    --version
           c++      --version
           valgrind --version
-          find     --version
 
       - name: Setup Build Environment
         run: mkdir -p build
-      # - name: Cache Conan dependencies
-      #   id: cache-conan-packages
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: ~/.conan/data
-      #     key: conan-packages-${{ hashFiles('conanfile.txt') }}
+      - name: Cache Conan dependencies
+        id: cache-conan-packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.conan/data
+          key: conan-packages-${{ hashFiles('conanfile.txt') }}
 
-      - name: Install Conan dependencies
-        # if: steps.cache.outputs.cache-hit != 'true'
+      - name: Configure Conan
         working-directory: ./build
         run: |
           conan profile new default --detect
           conan profile update settings.compiler.libcxx=libstdc++11 default
-          export CONAN_SYSREQUIRES_MODE=enabled
-          conan install .. --build=missing
       - name: CMake
-        working-directory: ./build
-        run: cmake ..
+        run: cmake -B build
       - name: CMake Build
         run: build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }}  cmake --build build
-      # - name: CTest
-      #   working-directory: ./build
-      #   run: ctest -vv
+      - name: CTest
+        working-directory: ./build
+        run: ctest -vv
       - name: Run sonar-scanner
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           sonar-scanner --define sonar.host.url="${{ env.SONAR_SERVER_URL }}" --define sonar.cfamily.build-wrapper-output="${{ env.BUILD_WRAPPER_OUT_DIR }}"
+
+  analyze:
+      name: Analyze
+      runs-on: windows-latest
+
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v2
+
+        - name: Configure CMake
+          run: cmake -B ${{ env.build }} -DCMAKE_BUILD_TYPE=${{ env.config }}
+
+        # Build is not required unless generated source files are used
+        # - name: Build CMake
+        #   run: cmake --build ${{ env.build }} --config ${{ env.config }}
+
+        - name: Run MSVC Code Analysis
+          uses: microsoft/msvc-code-analysis-action@v0.1.0
+          # Provide a unique ID to access the sarif output path
+          id: run-analysis
+          with:
+            cmakeBuildDirectory: ${{ env.build }}
+            buildConfiguration: ${{ env.config }}
+            # Ruleset file that will determine what checks will be run
+            ruleset: NativeRecommendedRules.ruleset
+            # Paths to ignore analysis of CMake targets and includes
+            # ignoredPaths: ${{ github.workspace }}/dependencies;${{ github.workspace }}/test
+
+        # Upload SARIF file to GitHub Code Scanning Alerts
+        - name: Upload SARIF to GitHub
+          uses: github/codeql-action/upload-sarif@v1
+          with:
+            sarif_file: ${{ steps.run-analysis.outputs.sarif }}
+
+        # Upload SARIF file as an Artifact to download and view
+        - name: Upload SARIF as an Artifact
+          uses: actions/upload-artifact@v2
+          with:
+            name: sarif-file
+            path: ${{ steps.run-analysis.outputs.sarif }}

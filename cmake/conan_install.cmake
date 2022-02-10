@@ -24,11 +24,10 @@
 
 # For more information, please refer to <https://opensource.org/licenses/MIT/>
 
-function(conan_install CONAN_BUILD_TYPE)
+function(conan_install)
     if(NOT EXISTS ${CMAKE_BINARY_DIR}/conan.lock)
         include(conan)
 
-        set(CMAKE_BUILD_TYPE ${CONAN_BUILD_TYPE})
         conan_cmake_autodetect(settings)
 
         message(STATUS "Installing Conan dependenices... (this may take a few minutes)")

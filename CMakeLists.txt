@@ -33,10 +33,14 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 include(modern_project_structure)
 ensure_entry_point()
 
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "Release")
+endif()
+
 option(RUN_CONAN "Run Conan through CMake itself" ON)
 if(RUN_CONAN)
     include(conan_install)
-    conan_install("Release")
+    conan_install()
 endif()
 
 include(ccache)
@@ -49,8 +53,6 @@ include(compiler_warnings)
 set_project_warnings()
 message(STATUS "Compiler options: ${WARNINGS}")
 add_compile_options(${WARNINGS})
-
-set(CMAKE_BUILD_TYPE RelWithDebInfo)
 
 option(SAMARIUM_EXAMPLE "Create an example executable from this file" OFF)
 if(SAMARIUM_EXAMPLE)
