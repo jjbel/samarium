@@ -113,7 +113,7 @@ template <typename T> class Field
 
     auto rect() const { return Rect<size_t>{ Indices{}, dims - Indices{ 1, 1 } }; }
 
-    template <ColorFormat Format> auto formatted_data(Format) const;
+    template <color_format_concept Format> auto formatted_data(Format) const;
 };
 
 using Image = Field<Color>;
@@ -125,7 +125,7 @@ template <> template <> inline auto Image::formatted_data(RGBA_t) const
 }
 
 template <>
-template <ColorFormat Format>
+template <color_format_concept Format>
 inline auto Image::formatted_data(Format format) const
 {
     const auto format_length = Format::length;

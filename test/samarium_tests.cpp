@@ -13,8 +13,8 @@ namespace si = sm::interp;
 
 int main()
 {
-    // using namespace sm::literals;
-    // auto image  = sm::Image{ sm::dimsFHD, "#12c2e9"_c };
+    using namespace sm::literals;
+    auto image  = sm::Image{ sm::dimsFHD, "#1202e9"_c };
     // auto mapper = sm::interp::make_clamped_mapper(sm::Extents{ 0ul, image.dims.x },
     //                                               sm::Extents{ 0, 255 });
     // auto fn     = [dims = image.dims, mapper](sm::Indices i)
@@ -35,9 +35,9 @@ int main()
 
 
     // w.print();
+    print("#1202e9"_c);
 
-
-    // // sm::file::export_to(im, "temp1.tga", true);
+    sm::file::export_to(image, "temp1.tga", true);
     // auto win = sm::Window{ image.dims, "Hello Moto" };
 
     // w.reset();

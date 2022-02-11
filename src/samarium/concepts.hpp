@@ -61,7 +61,7 @@ concept arithmetic = requires(T a, T b)
 };
 
 template <typename T, typename... U>
-concept IsAnyOf = (std::same_as<T, U> || ...);
+concept is_any_of = (std::same_as<T, U> || ...);
 
 template <class ContainerType>
 concept Container_t = requires(ContainerType a, const ContainerType b)

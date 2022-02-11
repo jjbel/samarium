@@ -140,12 +140,12 @@ class Color
 
 namespace literals
 {
-consteval inline auto operator""_c(const char* str) { return Color::from_hex(str); }
+consteval inline auto operator""_c(const char* str, size_t size) { return Color::from_hex(str); }
 
 } // namespace literals
 
 template <typename T>
-concept ColorFormat = concepts::IsAnyOf<T, RGB_t, RGBA_t, BGR_t, BGRA_t>;
+concept color_format_concept = concepts::is_any_of<T, RGB_t, RGBA_t, BGR_t, BGRA_t>;
 } // namespace sm
 
 
