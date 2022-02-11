@@ -75,14 +75,14 @@ jobs:
           c++      --version
           valgrind --version
 
-      # - name: Setup Build Environment
-      #   run: mkdir -p build
-      # - name: Cache Conan dependencies
-      #   id: cache-conan-packages
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: ~/.conan/data
-      #     key: conan-packages-${{ hashFiles('conanfile.txt') }}
+      - name: Setup Build Environment
+        run: mkdir -p build
+      - name: Cache Conan dependencies
+        id: cache-conan-packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.conan/data
+          key: conan-packages-${{ hashFiles('conanfile.txt') }}
 
       - name: Configure Conan
         # if: steps.cache-conan-packages.cache-hit != 'true'
