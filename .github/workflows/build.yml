@@ -66,7 +66,7 @@ jobs:
         uses: turtlebrowser/get-conan@main
 
       - name: Install other deps
-        run: sudo apt-get update && sudo apt-get install valgrind libtbb-dev libsfml-dev libxcb-xrm-dev # install sfml too, to bring other dependencies with it
+        run: sudo apt-get update && sudo apt-get install valgrind libtbb-dev libsfml-dev libudev-dev libxcb-xrm-dev mesa-common-dev libgl1-mesa-dev libdrm-dev libxxf86vm-dev libxt-dev xutils-dev xcb libx11-xcb-dev libxcb-glx0 libxcb-glx0-dev xorg-dev libxcb-dri2-0-dev # install sfml too, to bring other dependencies with it
 
       - name: Check Tool Versions
         run: |
@@ -75,17 +75,17 @@ jobs:
           c++      --version
           valgrind --version
 
-      - name: Setup Build Environment
-        run: mkdir -p build
-      - name: Cache Conan dependencies
-        id: cache-conan-packages
-        uses: actions/cache@v2
-        with:
-          path: ~/.conan/data
-          key: conan-packages-${{ hashFiles('conanfile.txt') }}
+      # - name: Setup Build Environment
+      #   run: mkdir -p build
+      # - name: Cache Conan dependencies
+      #   id: cache-conan-packages
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: ~/.conan/data
+      #     key: conan-packages-${{ hashFiles('conanfile.txt') }}
 
       - name: Configure Conan
-        if: steps.cache-conan-packages.cache-hit != 'true'
+        # if: steps.cache-conan-packages.cache-hit != 'true'
         working-directory: ./build
         run: |
           conan profile new default --detect
