@@ -85,7 +85,7 @@ class Color
         const auto b = static_cast<u8>(16 * util::hex_to_int_safe(str[5]) +
                                        util::hex_to_int_safe(str[6]));
 
-        const auto a = length == 7u ? 255u
+        const auto a = length == 7u ? u8{ 255 }
                                     : static_cast<u8>(16 * util::hex_to_int_safe(str[7]) +
                                                       util::hex_to_int_safe(str[8]));
         return Color{ r, g, b, a };
@@ -133,10 +133,10 @@ class Color
         return std::array{ static_cast<T>(b), static_cast<T>(g), static_cast<T>(r),
                            static_cast<T>(a) };
     }
-};
 
-[[nodiscard]] constexpr inline bool operator==(const Color& lhs,
-                                               const Color& rhs) noexcept = default;
+    [[nodiscard]] constexpr friend bool operator==(const Color& lhs,
+                                                   const Color& rhs) noexcept = default;
+};
 
 namespace literals
 {
@@ -152,9 +152,10 @@ concept ColorFormat = concepts::IsAnyOf<T, RGB_t, RGBA_t, BGR_t, BGRA_t>;
 template <> class fmt::formatter<sm::Color>
 {
   public:
-    constexpr inline auto parse(format_parse_context& ctx) { return ctx.begin(); }
+    constexpr auto parse(format_parse_context& ctx) const { return ctx.begin(); }
 
-    template <typename FormatContext> auto format(const sm::Color& p, FormatContext& ctx)
+    template <typename FormatContext>
+    auto format(const sm::Color& p, FormatContext& ctx) //
     {
         return format_to(ctx.out(),
                          "\x1b[38;2;{0};{1};{2}mCol\x1b[0m[{0}, {1}, {2}, {3}]", p.r, p.g,

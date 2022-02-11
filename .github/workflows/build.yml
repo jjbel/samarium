@@ -66,8 +66,8 @@ jobs:
         uses: turtlebrowser/get-conan@main
 
       - name: Install other deps
-        run: sudo apt-get update && sudo apt-get install valgrind libtbb-dev libudev-dev
-        
+        run: sudo apt-get update && sudo apt-get install valgrind libtbb-dev libudev-dev libgl1-mesa-dev
+
       - name: Check Tool Versions
         run: |
           conan    --version
@@ -90,7 +90,7 @@ jobs:
         run: |
           conan profile new default --detect
           conan profile update settings.compiler.libcxx=libstdc++11 default
-          conan install ..
+          conan install .. --build=missing
       - name: CMake
         run: cmake -B build
       - name: CMake Build

@@ -112,14 +112,8 @@ template <typename T> class Field
     auto empty() const { return this->data.size() == 0; }
 
     auto rect() const { return Rect<size_t>{ Indices{}, dims - Indices{ 1, 1 } }; }
-    auto enumerate()
-    {
-        auto a = std::to_array({1, 2, 3, 4});
-        auto b = std::to_array({1, 2, 3, 4});
-        // return ranges::v3::view::zip(a, b);
-    }
 
-    template <ColorFormat Format> inline auto formatted_data(Format) const;
+    template <ColorFormat Format> auto formatted_data(Format) const;
 };
 
 using Image = Field<Color>;

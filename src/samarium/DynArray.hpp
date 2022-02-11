@@ -54,77 +54,67 @@ template <typename T> class DynArray
         std::fill(&this->data[0], &this->data[size_], init_value);
     }
 
-    DynArray(const DynArray& field) : m_size(field.m_size), data(new T[field.m_size]{})
+    DynArray(const DynArray& arr) : m_size(arr.m_size), data(new T[arr.m_size]{})
     {
-        std::copy(field.begin(), field.end(), this->data);
+        std::copy(arr.begin(), arr.end(), this->data);
     }
 
-    DynArray(DynArray&& field) noexcept : m_size(field.m_size)
-    {
-        std::swap(data, field.data);
-    }
+    DynArray(DynArray&& arr) noexcept : m_size(arr.m_size) { std::swap(data, arr.data); }
 
     // Operator overloads
-    DynArray& operator=(const DynArray& field)
+    DynArray& operator=(const DynArray& arr)
     {
-        std::copy(field.begin(), field.end(), this->data);
+        std::copy(arr.begin(), arr.end(), this->data);
         return *this;
     }
 
-    T& operator[](size_t index)
+    T& operator[](size_t index) noexcept { return this->data[index]; }
+
+    const T& operator[](size_t index) const noexcept { return this->data[index]; }
+
+    T& at(size_t index)
     {
-        // if (index >= this->m_size)
-        //     throw std::out_of_range(
-        //         fmt::format("sm::DynArray: index {} out of range for m_size {}", index,
-        //                     this->m_size));
+        if (index >= this->m_size)
+            throw std::out_of_range(
+                fmt::format("sm::DynArray: index {} out of range for m_size {}", index,
+                            this->m_size));
         return this->data[index];
     }
 
-    const T& operator[](size_t index) const
+    const T& at(size_t index) const
     {
-        // if (index >= this->m_size)
-        //     throw std::out_of_range(
-        //         fmt::format("sm::DynArray: index {} out of range for m_size {}", index,
-        //                     this->m_size));
+        if (index >= this->m_size)
+            throw std::out_of_range(
+                fmt::format("sm::DynArray: index {} out of range for m_size {}", index,
+                            this->m_size));
         return this->data[index];
     }
 
-    auto begin() { return iterator(&this->data[0]); }
-    auto end() { return iterator(&this->data[this->m_size]); }
+    auto begin() noexcept { return static_cast<iterator>(&this->data[0]); }
+    auto end() noexcept { return static_cast<iterator>(&this->data[this->m_size]); }
 
-    auto begin() const { return const_iterator(&this->data[0]); }
-    auto end() const { return const_iterator(&this->data[this->m_size]); }
+    auto begin() const noexcept { return static_cast<const_iterator>(&this->data[0]); }
+    auto end() const noexcept
+    {
+        return static_cast<const_iterator>(&this->data[this->m_size]);
+    }
 
-    auto cbegin() const { return const_iterator(&this->data[0]); }
-    auto cend() const { return const_iterator(&this->data[this->m_size]); }
+    auto cbegin() const noexcept { return static_cast<const_iterator>(&this->data[0]); }
+    auto cend() const noexcept
+    {
+        return static_cast<const_iterator>(&this->data[this->m_size]);
+    }
 
-    auto size() const { return this->m_size; }
-    auto max_size() const { return this->m_size; } // for stl compatibility
-    auto empty() const { return this->m_size == 0; }
+    auto size() const noexcept { return this->m_size; }
+    auto max_size() const noexcept { return this->m_size; } // for stl compatibility
+    auto empty() const noexcept { return this->m_size == 0; }
 
     auto as_span() { return std::span{ this->begin(), this->m_size }; }
 
-    ~DynArray()
-    {
-        delete[] data;
-        // fmt::print("Called DynArray destructor\n");
-    }
+    ~DynArray() { delete[] data; }
 
   private:
     const size_t m_size;
     T* data;
 };
-
-// template <typename T>
-// inline bool operator==(const DynArray<T>& lhs, const DynArray<T>& rhs)
-// {
-//     return lhs.m_size == rhs.m_size && std::equal(lhs.cbegin(), lhs.cend(),
-//     rhs.cbegin());
-// }
-
-// template <typename T>
-// inline bool operator!=(const DynArray<T>& lhs, const DynArray<T>& rhs)
-// {
-//     return !operator==(lhs, rhs);
-// }
 } // namespace sm

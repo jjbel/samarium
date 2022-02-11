@@ -38,24 +38,28 @@ template <sm::concepts::number T = double> class Rect
 {
   public:
     // tag dispatching modes:
-    static class default_init_t
+    class default_init_t
     {
-    } default_init;
-    static class from_min_max_t
+    };
+    class from_min_max_t
     {
-    } from_min_max;
-    static class centre_width_height_t
+    };
+    class centre_width_height_t
     {
-    } centre_width_height;
+    };
+
+    static default_init_t default_init;
+    static from_min_max_t from_min_max;
+    static centre_width_height_t centre_width_height;
 
     // iterator:
     struct Iterator
     {
-        // using iterator_category = std::forward_iterator_tag;
+        using iterator_category = std::forward_iterator_tag;
         // using difference_type   = std::ptrdiff_t;
-        // using value_type        = Vector2_t<T>;
-        // using pointer           = Vector2_t<T>*;
-        // using reference         = Vector2_t<T>&;
+        using value_type = Vector2_t<T>;
+        using pointer    = Vector2_t<T>*;
+        using reference  = Vector2_t<T>&;
 
         constexpr Iterator(Vector2_t<T> indices, const Rect& rect)
             : m_indices{ indices }, m_rect{ rect }
@@ -87,15 +91,9 @@ template <sm::concepts::number T = double> class Rect
             return tmp;
         }
 
-        constexpr friend bool operator==(const Iterator& a, const Iterator& b)
-        {
-            return a.m_rect == b.m_rect and a.m_indices == b.m_indices;
-        }
+        constexpr friend bool operator==(const Iterator& a, const Iterator& b) noexcept = default;
 
-        constexpr friend bool operator!=(const Iterator& a, const Iterator& b)
-        {
-            return not(a == b);
-        }
+        constexpr friend bool operator!=(const Iterator& a, const Iterator& b) noexcept = default;
 
       private:
         Vector2_t<T> m_indices;

@@ -54,33 +54,21 @@ class Renderer
     Image image;
     Transform transform;
 
-    Renderer(
-        Image image_ /* , size_t thread_count_ = std::thread::hardware_concurrency() */)
-        : image(image_), transform(image_.dims.cast<double>() / 2., 1.), draw_funcs()
-    //   thread_count(thread_count_), mut(), pool(thread_count_)
+    Renderer(Image image_, size_t thread_count_ = std::thread::hardware_concurrency())
+        : image{ image_ }, transform{ image_.dims.cast<double>() / 2., 1. }, draw_funcs{},
+          thread_count{ thread_count_ }
     {
-        // this->chunk_size =
-        //     std::max(static_cast<size_t>(std::ceil(static_cast<double>(image_.size()) /
-        //                                            static_cast<double>(thread_count_))),
-        //              1ul);
-        // this->chunks =
-        //     this->image | ranges::views::chunk(static_cast<long
-        //     int>(this->chunk_size));
     }
 
-
     template <typename T>
-    requires std::invocable<T, Vector2, Transform>
+    requires std::invocable<T, Vector2>
     void add_drawer(T&& drawer) { this->draw_funcs.emplace_back(drawer); }
 
     void render();
 
   private:
     std::vector<Drawer_t> draw_funcs;
-    // size_t thread_count;
-    // size_t chunk_size;
-    // ranges::invoke_result_t<ranges::views::chunk_base_fn, sm::Image&, size_t> chunks;
-    // std::mutex mut;
-    // boost::asio::thread_pool pool;
+    size_t thread_count;
+    std::mutex mut;
 };
 } // namespace sm

@@ -32,36 +32,36 @@
 
 namespace sm::interp
 {
-[[nodiscard]] constexpr inline auto smooth_step()
+[[nodiscard]] constexpr auto smooth_step()
 {
     return [](auto x) { return x * x * (3. - 2. * x); };
 }
 
-[[nodiscard]] constexpr inline auto smoother_step()
+[[nodiscard]] constexpr auto smoother_step()
 {
     return [](auto x) { return x * x * x * (x * (x * 6. - 15.) + 10.); };
 }
 
 template <typename T>
-[[nodiscard]] constexpr inline auto in_range(T value, Extents<T> range)
+[[nodiscard]] constexpr auto in_range(T value, Extents<T> range)
 {
     return range.contains(value);
 }
 
 template <typename T>
-[[nodiscard]] constexpr inline auto clamp(T value, Extents<T> range) noexcept
+[[nodiscard]] constexpr auto clamp(T value, Extents<T> range) noexcept
 {
     return range.clamp(value);
 }
 
 template <typename T>
-[[nodiscard]] constexpr inline auto lerp(double factor, Extents<T> range)
+[[nodiscard]] constexpr auto lerp(double factor, Extents<T> range)
 {
     return range.lerp(factor);
 }
 
 template <typename T>
-[[nodiscard]] constexpr inline auto lerp_inverse(double value, Extents<T> range)
+[[nodiscard]] constexpr auto lerp_inverse(double value, Extents<T> range)
 {
     return range.lerp_inverse(value);
 }
@@ -69,14 +69,14 @@ template <typename T>
 // https://stackoverflow.com/questions/1969240/mapping-a-range-of-values-to-another
 
 template <typename From_t, typename To_t>
-[[nodiscard]] constexpr inline auto map_range(From_t value, Extents<From_t> from, Extents<To_t> to)
+[[nodiscard]] constexpr auto map_range(From_t value, Extents<From_t> from, Extents<To_t> to)
 {
     return from.min +
            (value - from.min) * to.size() / from.size();
 }
 
 template <typename T, typename U>
-[[nodiscard]] constexpr inline auto
+[[nodiscard]] constexpr auto
 map_range_clamp(T value, Extents<T> from, Extents<U> to)
 {
     return from.min + (from.clamp(value) - from.min) *
@@ -84,7 +84,7 @@ map_range_clamp(T value, Extents<T> from, Extents<U> to)
 }
 
 template <typename T, typename U>
-[[nodiscard]] constexpr inline auto make_mapper(Extents<T> from, Extents<U> to)
+[[nodiscard]] constexpr auto make_mapper(Extents<T> from, Extents<U> to)
 {
     return [from_min = from.min, from_max = from.max(),
             from_range = from.max() - from.min, to_range = to.size()](T value)
@@ -92,7 +92,7 @@ template <typename T, typename U>
 }
 
 template <typename T, typename U>
-[[nodiscard]] constexpr inline auto make_clamped_mapper(Extents<T> from, Extents<U> to)
+[[nodiscard]] constexpr auto make_clamped_mapper(Extents<T> from, Extents<U> to)
 {
     return [from_min = from.min, from_max = from.max(),
             from_range = from.max() - from.min, to_range = to.max() - to.min](T value)
