@@ -45,7 +45,9 @@ class Window
   public:
     size_t frame_counter;
 
-    Window(Dimensions dims, const std::string& name, uint32_t framerate = 65536)
+    Window(Dimensions dims         = sm::dimsFHD,
+           const std::string& name = "Samarium Window",
+           uint32_t framerate      = 65536)
         : window(
               sf::VideoMode(static_cast<uint32_t>(dims.x), static_cast<uint32_t>(dims.y)),
               name),
@@ -63,6 +65,9 @@ class Window
         {
             if (event.type == sf::Event::Closed) window.close();
         }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) &&
+            sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+            window.close();
     }
 
     auto draw(const Image& image)
@@ -81,5 +86,7 @@ class Window
         ++frame_counter;
         // std::this_thread::sleep_for(std::chrono::milliseconds{ 16 });
     }
+
+    operator bool() const { return window.isOpen(); }
 };
 } // namespace sm

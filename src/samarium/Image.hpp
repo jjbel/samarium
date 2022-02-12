@@ -113,6 +113,9 @@ template <typename T> class Field
 
     auto rect() const { return Rect<size_t>{ Indices{}, dims - Indices{ 1, 1 } }; }
 
+    auto fill(const T& value) { this->data.fill(value); }
+
+
     template <color_format_concept Format> auto formatted_data(Format) const;
 };
 

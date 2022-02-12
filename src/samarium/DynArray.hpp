@@ -29,6 +29,7 @@
 #pragma once
 
 #include <algorithm>
+#include <execution>
 #include <iterator>
 #include <span>
 
@@ -51,12 +52,12 @@ template <typename T> class DynArray
 
     DynArray(size_t size_, T init_value) : m_size(size_), data(new T[size_]{})
     {
-        std::fill(&this->data[0], &this->data[size_], init_value);
+        std::fill(std::execution::par_unseq, &this->data[0], &this->data[size_], init_value);
     }
 
     DynArray(const DynArray& arr) : m_size(arr.m_size), data(new T[arr.m_size]{})
     {
-        std::copy(arr.begin(), arr.end(), this->data);
+        std::copy(std::execution::par_unseq, arr.begin(), arr.end(), this->data);
     }
 
     DynArray(DynArray&& arr) noexcept : m_size(arr.m_size) { std::swap(data, arr.data); }
@@ -110,6 +111,11 @@ template <typename T> class DynArray
     auto empty() const noexcept { return this->m_size == 0; }
 
     auto as_span() { return std::span{ this->begin(), this->m_size }; }
+
+    auto fill(const T& value)
+    {
+        std::fill(std::execution::par_unseq, this->begin(), this->end(), value);
+    }
 
     ~DynArray() { delete[] data; }
 

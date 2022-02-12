@@ -34,6 +34,7 @@ include(modern_project_structure)
 ensure_entry_point()
 
 if(NOT CMAKE_BUILD_TYPE)
+    message(STATUS "Setting build type to Release")
     set(CMAKE_BUILD_TYPE "Release")
 endif()
 

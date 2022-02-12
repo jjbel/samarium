@@ -140,7 +140,7 @@ class Color
 
 namespace literals
 {
-consteval inline auto operator""_c(const char* str, size_t size) { return Color::from_hex(str); }
+consteval inline auto operator""_c(const char* str, size_t) { return Color::from_hex(str); }
 
 } // namespace literals
 
