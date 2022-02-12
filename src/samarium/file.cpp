@@ -74,7 +74,6 @@ bool export_to(const Image& image, std::string file_path, const bool shouldOverw
     };
 
     const auto data = image.formatted_data(sm::bgr);
-    sm::util::print("\n\n", data.size());
 
     std::ofstream{ file_path }
         .write(reinterpret_cast<const char*>(&tga_header[0]), 18)

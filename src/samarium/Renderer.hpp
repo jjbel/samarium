@@ -55,7 +55,7 @@ class Renderer
     Transform transform;
 
     Renderer(Image image_, size_t thread_count_ = std::thread::hardware_concurrency())
-        : image{ image_ }, transform{ image_.dims.cast<double>() / 2., 1. }, draw_funcs{},
+        : image{ image_ }, transform{ image_.dims.as<double>() / 2., 1. }, draw_funcs{},
           thread_count{ thread_count_ }
     {
     }

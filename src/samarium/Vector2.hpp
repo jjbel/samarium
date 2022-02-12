@@ -86,9 +86,13 @@ template <concepts::number T> class Vector2_t
         return *this;
     }
 
-    template <concepts::number U> constexpr auto cast() const
+    template <concepts::number U> constexpr auto as() const
     {
         return Vector2_t<U>{ static_cast<U>(this->x), static_cast<U>(this->y) };
+    }
+    template <concepts::number U> constexpr operator Vector2_t<U>() const
+    {
+        return this->as<U>();
     }
 };
 
