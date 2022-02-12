@@ -28,25 +28,30 @@
 
 #pragma once
 
-#include <cstddef>
-#include <cstdint>
+#include <thread>
+#include <vector>
+#include <functional>
 
-namespace sm
+class ThreadPool
 {
-// using u8  = uint_fast8_t;
-// using u16 = uint_fast16_t;
-// using u32 = uint_fast32_t;
-// using u64 = uint_fast64_t;
-// using i8  = int_fast8_t;
-// using i16 = int_fast16_t;
-// using i32 = int_fast32_t;
-// using i64 = int_fast64_t;
-using u8  = uint8_t;
-using u16 = uint16_t;
-using u32 = uint32_t;
-using u64 = uint64_t;
-using i8  = int8_t;
-using i16 = int16_t;
-using i32 = int32_t;
-using i64 = int64_t;
-} // namespace sm
+    std::vector<std::jthread> workers;
+    std::vector<std::function> jobs;
+    std::atomic_bool keep_working{true};
+    std::atomic_bool keep_working{true};
+    
+    ThreadPool(size_t thread_count = std::thread::hardware_concurrency())
+    {
+        for (size_t i = 0; i < thread_count; i++)
+        {
+            workers.emplace_back([i, &keep_working]
+            {
+                while(keep_working)
+                {
+                    if()
+                        
+                }
+            });
+        }
+        
+    }
+};

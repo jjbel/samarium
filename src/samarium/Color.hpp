@@ -101,10 +101,23 @@ class Color
         b                = static_cast<u8>(that.a / 255.0 * that.b + (1.0 - alpha) * b);
         a                = static_cast<u8>((a / 255.0 + (1.0 - a / 255.0) * alpha) * 255);
     }
+    // [[nodiscard]] constexpr auto add_alpha_over(Color that) noexcept
+    // {
+    //     const auto alpha = 1.0 / 255 * that.a;
+    //     r                = static_cast<u8>(that.a / 255.0 * that.r + (1.0 - alpha) * r);
+    //     g                = static_cast<u8>(that.a / 255.0 * that.g + (1.0 - alpha) * g);
+    //     b                = static_cast<u8>(that.a / 255.0 * that.b + (1.0 - alpha) * b);
+    //     a                = static_cast<u8>((a / 255.0 + (1.0 - a / 255.0) * alpha) * 255);
+    // }
 
     [[nodiscard]] constexpr auto with_alpha(u8 alpha) const
     {
         return Color{ r, g, b, alpha };
+    }
+
+    [[nodiscard]] constexpr auto with_multiplied_alpha(double factor) const
+    {
+        return Color{ r, g, b, static_cast<u8>(a * factor) };
     }
 
     template <concepts::integral T = u8>

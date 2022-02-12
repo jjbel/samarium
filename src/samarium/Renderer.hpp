@@ -49,7 +49,7 @@ namespace sm
 class Renderer
 {
   public:
-    using Drawer_t = std::function<Color(Vector2, Transform)>;
+    using Drawer_t = std::function<Color(Vector2)>;
 
     Image image;
     Transform transform;
