@@ -37,7 +37,7 @@ class SamariumConan(ConanFile):
     topics = ("c++20", "physics", "simulation")
 
     generators = "cmake"
-    requires = "fmt/8.0.1", "sfml/2.5.1", "date/3.0.1", "range-v3/0.11.0", "boost/1.78.0"
+    requires = "fmt/8.0.1", "sfml/2.5.1", "date/3.0.1",
     exports_sources = "src/*"
     options = {"testing": [True, False]}
     default_options = {"testing": False}
