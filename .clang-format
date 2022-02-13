@@ -16,7 +16,7 @@ BreakBeforeBraces: Allman
 BreakConstructorInitializers: BeforeColon
 BreakInheritanceList: BeforeColon
 ColumnLimit: '90'
-Cpp11BracedListStyle: 'false'
+# Cpp11BracedListStyle: 'false'
 IndentWidth: '4'
 MaxEmptyLinesToKeep: '2'
 SortIncludes: 'true'
