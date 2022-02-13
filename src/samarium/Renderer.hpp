@@ -34,41 +34,43 @@
 #include <thread>
 #include <vector>
 
-// #include "boost/asio/thread_pool.hpp"
-// #include "range/v3/range/conversion.hpp"
-// #include "range/v3/view/chunk.hpp"
-// #include "range/v3/view/transform.hpp"
-
 #include "Image.hpp"
-#include "Shapes.hpp"
+#include "ThreadPool.hpp"
 #include "Transform.hpp"
-#include "math.hpp"
+#include "interp.hpp"
+#include "shapes.hpp"
 
 namespace sm
 {
 class Renderer
 {
   public:
-    using Drawer_t = std::function<Color(Vector2)>;
+    struct Drawer
+    {
+        std::function<sm::Color(const sm::Vector2&)> fn;
+        sm::Rect<double> rect;
+    };
+
 
     Image image;
-    Transform transform;
+    Transform transform{ image.dims.as<double>() / 2., 1. };
 
-    Renderer(Image image_, size_t thread_count_ = std::thread::hardware_concurrency())
-        : image{ image_ }, transform{ image_.dims.as<double>() / 2., 1. }, draw_funcs{},
-          thread_count{ thread_count_ }
+    Renderer(const Image& image_, u32 thread_count_ = std::thread::hardware_concurrency())
+        : image{ image_ }, thread_count{ thread_count_ }, thread_pool{ thread_count_ }
+
     {
     }
 
-    template <typename T>
-    requires std::invocable<T, Vector2>
-    void add_drawer(T&& drawer) { this->draw_funcs.emplace_back(drawer); }
+    void draw(Drawer&& drawer);
+
+    void draw(Circle circle, Color color, double aa_factor = 2.);
 
     void render();
 
+
   private:
-    std::vector<Drawer_t> draw_funcs;
-    size_t thread_count;
-    std::mutex mut;
+    u32 thread_count;
+    sm::ThreadPool thread_pool;
+    std::vector<Drawer> draw_funcs{};
 };
 } // namespace sm

@@ -1,9 +1,37 @@
+/*
+ *                                  MIT License
+ *
+ *                               Copyright (c) 2022
+ *
+ *       Project homepage: <https://github.com/strangeQuark1041/samarium/>
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the Software), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *     copies of the Software, and to permit persons to whom the Software is
+ *            furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ *                copies or substantial portions of the Software.
+ *
+ *    THE SOFTWARE IS PROVIDED AS IS, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *     AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *                                   SOFTWARE.
+ *
+ *  For more information, please refer to <https://opensource.org/licenses/MIT/>
+ */
+
 #include "samarium/Colors.hpp"
 #include "samarium/Renderer.hpp"
+#include "samarium/ThreadPool.hpp"
 #include "samarium/Window.hpp"
 #include "samarium/file.hpp"
 #include "samarium/interp.hpp"
-#include "samarium/random.hpp"
 #include <execution>
 #include <functional>
 #include <ranges>
@@ -14,50 +42,31 @@ namespace si = sm::interp;
 
 int main()
 {
-    // using namespace sm::literals;
-    // auto image = sm::Image{ sm::dimsHD, "#10101A"_c };
+    using namespace sm::literals;
+    auto rn = sm::Renderer{ sm::Image{ sm::dimsHD, "#10101B"_c } };
 
-    // const auto mapper = sm::interp::make_clamped_mapper<size_t, uint8_t>(
-    //     sm::Extents{ 0ul, image.dims.x }, sm::Extents{ 0ul, 255ul });
-
-    // const auto draw_circle = [dims = image.dims, mapper](sm::Vector2 i,
-    //                                                      sm::Vector2 centre,
-    //                                                      double radius, double aa)
-    // {
-    //     return sm::Color(255, 50, 50,100)
-    //         .with_multiplied_alpha(
-    //             sm::interp::clamp((radius - (i - centre).length()) / aa + 1, { 0., 1. }));
-    // };
-
-    // auto w = sm::util::Stopwatch{};
-
-    // std::vector<std::function<sm::Color(const sm::Vector2&)>> buffer;
-    // for (size_t i = 0; i < 10; i++)
-    // {
-    //     buffer.emplace_back(
-    //         [draw_circle, i](sm::Vector2 coords) {
-    //             return draw_circle(coords, sm::Vector2{ .8, .6 } * (30. * i), 60., 2.);
-    //         });
-    // }
+    for (size_t i = 0; i < 10; i++)
+    {
+        rn.draw(sm::Circle{ .centre = (.8_x + .6_y) * (30. * i) + (100.0_x + 100.0_y),
+                            .radius = 24. },
+                sm::colors::red, 2.);
+    }
 
 
-    // const sm::Color* beg = image.begin();
-    // std::for_each(std::execution::par, image.begin(), image.end(),
-    //               [=, dims = image.dims](auto& pixel)
-    //               {
-    //                   const auto coords = sm::convert_1d_to_2d(dims, &pixel - beg);
-    //                   for (const auto& fn : buffer) pixel.add_alpha_over(fn(coords));
-    //               });
+    auto w = sm::util::Stopwatch{};
 
+    rn.render();
 
-    // w.print();
-
-    // sm::file::export_to(image, "temp1.tga", true);
-    // for (auto win = sm::Window{ image.dims }; win;)
+    w.print();
+    w.reset();
+    // sm::file::export_to(rn.image, "temp1.tga", true);
+    w.print();
+    print(rn.transform);
+    // for (auto win = sm::Window{ rn.image.dims }; win;)
     // {
     //     win.get_input();
 
-    //     win.draw(image);
+    //     win.draw(rn.image);
     //     win.display();
     // }
 }

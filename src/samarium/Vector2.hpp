@@ -97,28 +97,28 @@ template <concepts::number T> class Vector2_t
 };
 
 template <concepts::floating_point T>
-[[nodiscard]] constexpr inline bool operator==(const Vector2_t<T>& lhs,
+[[nodiscard]] constexpr bool operator==(const Vector2_t<T>& lhs,
                                                const Vector2_t<T>& rhs) noexcept
 {
     return math::equals(lhs.x, rhs.x) && math::equals(lhs.y, rhs.y);
 }
 
 template <concepts::integral T>
-[[nodiscard]] constexpr inline bool operator==(const Vector2_t<T>& lhs,
+[[nodiscard]] constexpr bool operator==(const Vector2_t<T>& lhs,
                                                const Vector2_t<T>& rhs) noexcept
 {
     return lhs.x == rhs.x && lhs.y == rhs.y;
 }
 
 template <concepts::number T>
-[[nodiscard]] constexpr inline bool operator!=(const Vector2_t<T>& lhs,
+[[nodiscard]] constexpr bool operator!=(const Vector2_t<T>& lhs,
                                                const Vector2_t<T>& rhs)
 {
     return !operator==(lhs, rhs);
 }
 
 template <concepts::number T>
-[[nodiscard]] constexpr inline auto operator+(Vector2_t<T> lhs,
+[[nodiscard]] constexpr auto operator+(Vector2_t<T> lhs,
                                               const Vector2_t<T>& rhs) noexcept
 {
     lhs += rhs;
@@ -126,7 +126,7 @@ template <concepts::number T>
 }
 
 template <concepts::number T>
-[[nodiscard]] constexpr inline auto operator-(Vector2_t<T> lhs,
+[[nodiscard]] constexpr auto operator-(Vector2_t<T> lhs,
                                               const Vector2_t<T>& rhs) noexcept
 {
     lhs -= rhs;
@@ -134,7 +134,7 @@ template <concepts::number T>
 }
 
 template <concepts::number T>
-[[nodiscard]] constexpr inline auto operator*(Vector2_t<T> lhs,
+[[nodiscard]] constexpr auto operator*(Vector2_t<T> lhs,
                                               const Vector2_t<T>& rhs) noexcept
 {
     lhs *= rhs;
@@ -142,21 +142,21 @@ template <concepts::number T>
 }
 
 template <concepts::number T>
-[[nodiscard]] constexpr inline auto operator*(Vector2_t<T> lhs, T rhs) noexcept
+[[nodiscard]] constexpr auto operator*(Vector2_t<T> lhs, T rhs) noexcept
 {
     lhs *= rhs;
     return lhs;
 }
 
 template <concepts::number T>
-[[nodiscard]] constexpr inline auto operator*(T lhs, Vector2_t<T> rhs) noexcept
+[[nodiscard]] constexpr auto operator*(T lhs, Vector2_t<T> rhs) noexcept
 {
     rhs *= lhs;
     return rhs;
 }
 
 template <concepts::number T>
-[[nodiscard]] constexpr inline auto operator/(Vector2_t<T> lhs,
+[[nodiscard]] constexpr auto operator/(Vector2_t<T> lhs,
                                               const Vector2_t<T>& rhs) noexcept
 {
     lhs /= rhs;
@@ -164,7 +164,7 @@ template <concepts::number T>
 }
 
 template <concepts::number T>
-[[nodiscard]] constexpr inline auto operator/(Vector2_t<T> lhs, T rhs) noexcept
+[[nodiscard]] constexpr auto operator/(Vector2_t<T> lhs, T rhs) noexcept
 {
     lhs /= rhs;
     return lhs;
@@ -190,7 +190,7 @@ consteval auto operator"" _y(long double y)
 template <sm::concepts::number T> class fmt::formatter<sm::Vector2_t<T>>
 {
   public:
-    constexpr inline auto parse(format_parse_context& ctx) { return ctx.begin(); }
+    constexpr auto parse(const format_parse_context& ctx) { return ctx.begin(); }
 
     template <typename FormatContext>
     auto format(const sm::Vector2_t<T>& p, FormatContext& ctx)

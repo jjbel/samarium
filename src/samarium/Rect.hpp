@@ -37,21 +37,6 @@ namespace sm
 template <sm::concepts::number T = double> class Rect
 {
   public:
-    // tag dispatching modes:
-    class default_init_t
-    {
-    };
-    class from_min_max_t
-    {
-    };
-    class centre_width_height_t
-    {
-    };
-
-    static default_init_t default_init;
-    static from_min_max_t from_min_max;
-    static centre_width_height_t centre_width_height;
-
     // iterator:
     struct Iterator
     {
@@ -91,9 +76,8 @@ template <sm::concepts::number T = double> class Rect
             return tmp;
         }
 
-        constexpr friend bool operator==(const Iterator& a, const Iterator& b) noexcept = default;
-
-        constexpr friend bool operator!=(const Iterator& a, const Iterator& b) noexcept = default;
+        constexpr friend bool operator==(const Iterator& a,
+                                         const Iterator& b) noexcept = default;
 
       private:
         Vector2_t<T> m_indices;
@@ -103,23 +87,15 @@ template <sm::concepts::number T = double> class Rect
     // constructors:
     constexpr Rect() noexcept : m_min{}, m_max{} {}
 
-    constexpr Rect(Vector2_t<T> vec1, Vector2_t<T> vec2) noexcept
-        : m_min{ std::min(vec1.x, vec2.x), std::min(vec1.y, vec2.y) }, m_max{
-              std::max(vec1.x, vec2.x), std::max(vec1.y, vec2.y)
-          }
-    {
-    }
-
-    constexpr Rect(from_min_max_t, Vector2_t<T> min_, Vector2_t<T> max_) noexcept
+    constexpr Rect(Vector2_t<T> min_, Vector2_t<T> max_) noexcept
         : m_min{ min_ }, m_max{ max_ }
     {
     }
 
-    constexpr Rect(centre_width_height_t, Vector2_t<T> centre, T width, T height) noexcept
-        : m_min{ centre - Vector2_t<T>{ -std::abs(width), -std::abs(height) } }, m_max{
-              centre + Vector2_t<T>{ std::abs(width), std::abs(height) }
-          }
+    static constexpr auto from_centre_width_height(Vector2_t<T> centre, T width, T height)
     {
+        const auto vec = Vector2_t{ .x = width, .y = height };
+        return Rect{ centre - vec, centre + vec };
     }
 
     [[nodiscard]] constexpr auto min() const { return m_min; }
@@ -134,26 +110,32 @@ template <sm::concepts::number T = double> class Rect
     {
         return Iterator{ m_min, *this };
     }
+
     [[nodiscard]] constexpr auto end() requires sm::concepts::integral<T>
     {
         return Iterator{ Vector2_t<T>{ m_min.x, m_max.y + 1 }, *this };
     }
+
     [[nodiscard]] constexpr auto cbegin() const requires sm::concepts::integral<T>
     {
         return Iterator{ m_min, *this };
     }
+
     [[nodiscard]] constexpr auto cend() const requires sm::concepts::integral<T>
     {
         return Iterator{ Vector2_t<T>{ m_min.x, m_max.y + 1 }, *this };
     }
 
-    [[nodiscard]] constexpr friend bool operator==(const Rect<T>& lhs, const Rect<T>& rhs)
+    [[nodiscard]] constexpr auto contains(const Vector2_t<T>& vec) const noexcept
     {
-        return lhs.m_min == rhs.m_min and lhs.m_max == rhs.m_max;
+        return vec.x >= m_min.x && vec.x <= m_max.x && vec.y >= m_min.y &&
+               vec.y <= m_max.y;
     }
 
+    [[nodiscard]] constexpr friend bool operator==(const Rect<T>& lhs,
+                                                   const Rect<T>& rhs) noexcept = default;
+
   private:
-    // members:
     Vector2_t<T> m_min;
     Vector2_t<T> m_max;
 };

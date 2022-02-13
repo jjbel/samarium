@@ -50,7 +50,8 @@ class Window
            uint32_t framerate      = 65536)
         : window(
               sf::VideoMode(static_cast<uint32_t>(dims.x), static_cast<uint32_t>(dims.y)),
-              name),
+              name,
+              sf::Style::Titlebar | sf::Style::Close),
           frame_counter{ 0 }
     {
         window.setFramerateLimit(framerate);

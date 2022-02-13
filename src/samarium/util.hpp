@@ -42,13 +42,6 @@ namespace sm::util
     return *str ? 1u + strlen(str + 1) : 0u;
 }
 
-// template <char ch> consteval u8 from_hex()
-// {
-//     if constexpr ('0' <= ch && ch <= '9') return ch - '0';
-//     if constexpr ('a' <= ch && ch <= 'f') return ch - 'a' + 10;
-//     if constexpr ('A' <= ch && ch <= 'F') return ch - 'a' + 10;
-//     throw std::logic_error("hex character must be 0-9, a-f, or A-F");
-// }
 [[nodiscard]] consteval u8 hex_to_int_safe(char ch)
 {
     if ('0' <= ch && ch <= '9') return static_cast<u8>(ch - '0');
@@ -56,14 +49,6 @@ namespace sm::util
     if ('A' <= ch && ch <= 'F') return static_cast<u8>(ch - 'A' + 10);
     throw std::invalid_argument("hex character must be 0-9, a-f, or A-F");
 }
-
-// u8 hex_to_int(char ch)
-// {
-//     if ('0' <= ch && ch <= '9') return static_cast<u8>(ch - '0');
-//     if ('a' <= ch && ch <= 'f') return static_cast<u8>(ch - 'a' + 10);
-//     if ('A' <= ch && ch <= 'F') return static_cast<u8>(ch - 'A' + 10);
-//     throw std::logic_error("hex character must be 0-9, a-f, or A-F");
-// }
 
 class Stopwatch
 {

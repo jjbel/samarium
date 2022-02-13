@@ -35,7 +35,7 @@ namespace sm
 class Circle
 {
   public:
-    Vector2 center;
-    double radius;
+    Vector2 centre{};
+    double radius{};
 };
 } // namespace sm

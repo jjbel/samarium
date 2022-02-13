@@ -26,7 +26,6 @@
  *  For more information, please refer to <https://opensource.org/licenses/MIT/>
  */
 
-#include "boost/asio/post.hpp"
 #include <execution>
 #include <utility>
 
@@ -36,6 +35,45 @@ namespace sm
 {
 void Renderer::render()
 {
-    // std::for_each(this->image.begin(), this->image.end(), [](auto& pixel) {});
+    const auto size = image.size();
+    size_t j        = 0;
+
+    for (size_t i = 0; i < thread_count; i++)
+    {
+        const auto chunk_size =
+            i < size % thread_count ? size / thread_count + 1 : size / thread_count;
+        thread_pool.push_task(
+            [chunk_size, j, i, dims = image.dims, &image = this->image,
+             &draw_funcs = this->draw_funcs]
+            {
+                for (size_t k = j; k < j + chunk_size; k++)
+                {
+                    const auto coords = sm::convert_1d_to_2d(dims, k);
+                    for (const auto& drawer : draw_funcs)
+                        if (drawer.rect.contains(coords))
+                            image[k].add_alpha_over(drawer.fn(coords));
+                }
+                // std::this_thread::sleep_for(std::chrono::milliseconds{ i * 300 });
+                // fmt::print("{}. [{}, {}]\n", i, j, j + chunk_size - 1);
+            });
+        j += chunk_size;
+    }
+    thread_pool.wait_for_tasks();
+}
+
+void Renderer::draw(Drawer&& drawer) { this->draw_funcs.emplace_back(drawer); }
+
+
+void Renderer::draw(Circle circle, Color color, double aa_factor)
+{
+    this->draw(Drawer(
+        [=](const Vector2& coords)
+        {
+            return color.with_multiplied_alpha(sm::interp::clamp(
+                (circle.radius - (coords - circle.centre).length()) / aa_factor + 1,
+                { .min = 0., .max = 1. }));
+        },
+        Rect<double>::from_centre_width_height(circle.centre, circle.radius + aa_factor,
+                                               circle.radius + aa_factor)));
 }
 } // namespace sm

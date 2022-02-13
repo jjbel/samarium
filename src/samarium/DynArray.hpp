@@ -35,7 +35,7 @@
 
 namespace sm
 {
-template <typename T> class DynArray
+template <typename T> class DynArray // NOSONAR
 {
   public:
     // Container types
@@ -52,7 +52,8 @@ template <typename T> class DynArray
 
     DynArray(size_t size_, T init_value) : m_size(size_), data(new T[size_]{})
     {
-        std::fill(std::execution::par_unseq, &this->data[0], &this->data[size_], init_value);
+        std::fill(std::execution::par_unseq, &this->data[0], &this->data[size_],
+                  init_value);
     }
 
     DynArray(const DynArray& arr) : m_size(arr.m_size), data(new T[arr.m_size]{})

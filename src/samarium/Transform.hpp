@@ -48,13 +48,12 @@ class Transform
 
     constexpr auto apply_inverse(Vector2 vec) const { return (vec - pos) / scale; }
 };
-
 } // namespace sm
 
 template <> class fmt::formatter<sm::Transform>
 {
   public:
-    constexpr inline auto parse(format_parse_context& ctx) { return ctx.begin(); }
+    constexpr auto parse(const format_parse_context& ctx) const { return ctx.begin(); }
 
     template <typename FormatContext>
     auto format(const sm::Transform& p, FormatContext& ctx)

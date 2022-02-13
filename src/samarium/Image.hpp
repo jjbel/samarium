@@ -49,12 +49,12 @@ constexpr inline auto dimsHD  = Dimensions{ 1280u, 720u };
 constexpr inline auto dimsFHD = Dimensions{ 1920u, 1080u };
 constexpr inline auto dimsP2  = Dimensions{ 2048u, 1024u };
 
-constexpr inline auto convert_1d_to_2d(Dimensions dims, size_t index)
+constexpr auto convert_1d_to_2d(Dimensions dims, size_t index)
 {
     return Indices(index % dims.x, index / dims.x);
 }
 
-constexpr inline auto convert_2d_to_1d(Dimensions dims, Indices coordinates)
+constexpr auto convert_2d_to_1d(Dimensions dims, Indices coordinates)
 {
     return coordinates.y * dims.x + coordinates.x;
 }
@@ -133,9 +133,9 @@ inline auto Image::formatted_data(Format format) const
 {
     const auto format_length = Format::length;
     auto fmt_data            = DynArray<std::array<u8, format_length>>(this->size());
-    // fmt::print("length: {}\n", this->cend() - this->cbegin());
 
-    std::transform(this->begin(), this->end(), fmt_data.begin(),
+    std::transform(std::execution::par_unseq, this->begin(), this->end(),
+                   fmt_data.begin(),
                    [format](auto color) { return color.get_formatted(format); });
 
     return fmt_data;
