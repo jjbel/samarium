@@ -15,7 +15,7 @@ env:
   CONAN_SYSREQUIRES_MODE: 'enabled'
 
 jobs:
-  CTest and Sonarscan:
+  linux-ctest-sonarscan:
     runs-on: ubuntu-latest
 
     env:
@@ -140,40 +140,40 @@ jobs:
   #           name: sarif-file
   #           path: ${{ steps.run-analysis.outputs.sarif }}
 
-CTest and Sonarscan:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set up GCC
-        uses: egor-tensin/setup-gcc@v1
-        with:
-          version: 11
-          platform: x64
+  linux conan-create:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Set up GCC
+          uses: egor-tensin/setup-gcc@v1
+          with:
+            version: 11
+            platform: x64
 
-      - name: Setup cmake
-        uses: jwlawson/actions-setup-cmake@v1.12
-        with:
-          cmake-version: '3.22.x'
+        - name: Setup cmake
+          uses: jwlawson/actions-setup-cmake@v1.12
+          with:
+            cmake-version: '3.22.x'
 
-      - name: Install Conan
-        id: conan
-        uses: turtlebrowser/get-conan@main
+        - name: Install Conan
+          id: conan
+          uses: turtlebrowser/get-conan@main
 
-      - name: Install other deps
-        run: sudo apt-get update && sudo apt-get install valgrind libtbb-dev libsfml-dev libudev-dev libxcb-xrm-dev mesa-common-dev libgl1-mesa-dev libdrm-dev libxxf86vm-dev libxt-dev xutils-dev xcb libx11-xcb-dev libxcb-glx0 libxcb-glx0-dev xorg-dev libxcb-dri2-0-dev
+        - name: Install other deps
+          run: sudo apt-get update && sudo apt-get install valgrind libtbb-dev libsfml-dev libudev-dev libxcb-xrm-dev mesa-common-dev libgl1-mesa-dev libdrm-dev libxxf86vm-dev libxt-dev xutils-dev xcb libx11-xcb-dev libxcb-glx0 libxcb-glx0-dev xorg-dev libxcb-dri2-0-dev
 
-      - name: Check Tool Versions
-        run: |
-          conan    --version
-          cmake    --version
-          c++      --version
+        - name: Check Tool Versions
+          run: |
+            conan    --version
+            cmake    --version
+            c++      --version
 
-      - name: Configure Conan
-        run: |
-          conan profile new default --detect
-          conan profile update settings.compiler.libcxx=libstdc++11 default
+        - name: Configure Conan
+          run: |
+            conan profile new default --detect
+            conan profile update settings.compiler.libcxx=libstdc++11 default
 
-      - name: Git Clone
-        run: git clone https://github.com/strangeQuark1041/samarium.git
+        - name: Git Clone
+          run: git clone https://github.com/strangeQuark1041/samarium.git
 
-      - name: Conan Create
-        run: conan create samarium
+        - name: Conan Create
+          run: conan create samarium
