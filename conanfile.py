@@ -29,7 +29,7 @@ from conans import ConanFile, CMake
 
 class SamariumConan(ConanFile):
     name = "samarium"
-    version = "1.0"
+    version = "1.0.0"
     license = "MIT"
     author = "strangeQuark1041"
     url = "https://github.com/strangeQuark1041/samarium/"

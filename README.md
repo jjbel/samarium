@@ -44,7 +44,7 @@ For example gcc11 at least.
 
 ```sh
 git clone https://github.com/strangeQuark1041/samarium.git
-conan create samarium --build=missing
+conan create samarium
 ```
 
 ## Example
@@ -90,12 +90,10 @@ add_executable(example example.cpp)
 target_link_libraries(example ${CONAN_LIBS})
 ```
 
-Create a directory `build` and open your terminal in it:
+Then run:
 ```sh
-conan install .. --build=missing # install dependencies
-cmake .. # cmake
-cmake --build . # compile
-./bin/example # run the program
+cmake -B build # cmake
+cmake --build build # compile
 ```
 
 ## Documentation
