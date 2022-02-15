@@ -1,5 +1,4 @@
-#include "samarium/Vector2.hpp"
-#include "samarium/print.hpp"
+#include "samarium/samarium.hpp"
 
 int main()
 {

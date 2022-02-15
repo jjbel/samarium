@@ -34,20 +34,18 @@
 #include <memory>
 #include <utility>
 
-// #include <range/v3/all.hpp>
-
-#include "Color.hpp"
-#include "DynArray.hpp"
-#include "Rect.hpp"
-#include "Vector2.hpp"
-#include "print.hpp"
+#include "core/DynArray.hpp"
+#include "graphics/Color.hpp"
+#include "math/Rect.hpp"
+#include "math/Vector2.hpp"
+#include "util/print.hpp"
 
 namespace sm
 {
-constexpr inline auto dims4K  = Dimensions{ 3840u, 2160u };
-constexpr inline auto dimsHD  = Dimensions{ 1280u, 720u };
-constexpr inline auto dimsFHD = Dimensions{ 1920u, 1080u };
-constexpr inline auto dimsP2  = Dimensions{ 2048u, 1024u };
+constexpr inline auto dims4K  = Dimensions{3840u, 2160u};
+constexpr inline auto dimsHD  = Dimensions{1280u, 720u};
+constexpr inline auto dimsFHD = Dimensions{1920u, 1080u};
+constexpr inline auto dimsP2  = Dimensions{2048u, 1024u};
 
 constexpr auto convert_1d_to_2d(Dimensions dims, size_t index)
 {
@@ -111,7 +109,7 @@ template <typename T> class Field
     auto max_size() const { return this->data.size(); } // for stl compatibility
     auto empty() const { return this->data.size() == 0; }
 
-    auto rect() const { return Rect<size_t>{ Indices{}, dims - Indices{ 1, 1 } }; }
+    auto rect() const { return Rect<size_t>{Indices{}, dims - Indices{1, 1}}; }
 
     auto fill(const T& value) { this->data.fill(value); }
 
@@ -124,7 +122,7 @@ using Image = Field<Color>;
 // Since data is already stored as RGBA, no need to convert it, directly return it
 template <> template <> inline auto Image::formatted_data(RGBA_t) const
 {
-    return std::span{ this->data.cbegin(), this->size() * 4 };
+    return std::span{this->data.cbegin(), this->size() * 4};
 }
 
 template <>

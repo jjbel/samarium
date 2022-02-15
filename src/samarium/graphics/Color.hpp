@@ -35,9 +35,9 @@
 
 #include "fmt/format.h"
 
-#include "math.hpp"
-#include "types.hpp"
-#include "util.hpp"
+#include "math/math.hpp"
+#include "core/types.hpp"
+#include "util/util.hpp"
 
 namespace sm
 {

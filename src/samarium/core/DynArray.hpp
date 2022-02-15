@@ -33,9 +33,11 @@
 #include <iterator>
 #include <span>
 
+#include "fmt/format.h"
+
 namespace sm
 {
-template <typename T> class DynArray // NOSONAR
+template <typename T> class DynArray
 {
   public:
     // Container types
@@ -48,15 +50,17 @@ template <typename T> class DynArray // NOSONAR
     using size_type       = std::size_t;
 
     // Constructors
-    DynArray(size_t size_ = {}) : m_size(size_), data(new T[size_]{}) {}
+    explicit DynArray(size_t size_ = {})
+        : m_size(size_), data(new T[size_]{}) {} // NOSONAR
 
-    DynArray(size_t size_, T init_value) : m_size(size_), data(new T[size_]{})
+    explicit DynArray(size_t size_, T init_value)
+        : m_size(size_), data(new T[size_]) // NOSONAR
     {
         std::fill(std::execution::par_unseq, &this->data[0], &this->data[size_],
                   init_value);
     }
 
-    DynArray(const DynArray& arr) : m_size(arr.m_size), data(new T[arr.m_size]{})
+    DynArray(const DynArray& arr) : m_size(arr.m_size), data(new T[arr.m_size])
     {
         std::copy(std::execution::par_unseq, arr.begin(), arr.end(), this->data);
     }
@@ -111,7 +115,7 @@ template <typename T> class DynArray // NOSONAR
     auto max_size() const noexcept { return this->m_size; } // for stl compatibility
     auto empty() const noexcept { return this->m_size == 0; }
 
-    auto as_span() { return std::span{ this->begin(), this->m_size }; }
+    auto as_span() { return std::span{this->begin(), this->m_size}; }
 
     auto fill(const T& value)
     {

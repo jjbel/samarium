@@ -28,37 +28,12 @@
 
 #pragma once
 
-#include <filesystem>
-#include <source_location>
-#include <string_view>
-#include <iomanip>
+#include "graphics/Image.hpp"
+#include "util/print.hpp"
 
-#include <fmt/color.h>
-#include <fmt/format.h>
-#include <fmt/ranges.h>
-
-namespace sm::util
+namespace sm::file
 {
-inline void print(const auto&... args)
-{
-    // recursive call using pack expansion syntax
-    (fmt::print("{} ", args), ...);
-    fmt::print("\n");
-}
-
-inline void log(const std::string_view message)
-{
-    const std::source_location location = std::source_location::current();
-    fmt::print(fg(fmt::color::steel_blue) | fmt::emphasis::bold, "[{}:{}: {}]: ",
-               std::filesystem::path(location.file_name()).filename().string(),
-               location.line(), location.function_name());
-    print(message);
-}
-
-inline void error(const auto&... args)
-{
-    fmt::print(stderr, fg(fmt::color::red) | fmt::emphasis::bold, "Error: ");
-    (fmt::print(stderr, fg(fmt::color::red) | fmt::emphasis::bold, "{}", args), ...);
-    fmt::print(stderr, "\n");
-}
-} // namespace sm::util
+bool export_to(const Image& image,
+               std::string file_path      = "",
+               const bool shouldOverwrite = false);
+} // namespace sm::file

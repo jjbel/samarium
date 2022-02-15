@@ -26,16 +26,11 @@
  *  For more information, please refer to <https://opensource.org/licenses/MIT/>
  */
 
-#include "samarium/Colors.hpp"
-#include "samarium/Renderer.hpp"
-#include "samarium/ThreadPool.hpp"
-#include "samarium/Window.hpp"
-#include "samarium/file.hpp"
-#include "samarium/interp.hpp"
 #include <execution>
 #include <functional>
 #include <ranges>
 
+#include "samarium/samarium.hpp"
 
 using sm::util::print;
 namespace si = sm::interp;
@@ -43,30 +38,31 @@ namespace si = sm::interp;
 int main()
 {
     using namespace sm::literals;
-    auto rn = sm::Renderer{ sm::Image{ sm::dimsHD, "#10101B"_c } };
-
-    for (size_t i = 0; i < 10; i++)
-    {
-        rn.draw(sm::Circle{ .centre = (.8_x + .6_y) * (30. * i) + (100.0_x + 100.0_y),
-                            .radius = 24. },
-                sm::colors::red, 2.);
-    }
+    auto rn = sm::Renderer{sm::Image{sm::dimsHD, "#10101B"_c}};
 
 
-    auto w = sm::util::Stopwatch{};
-
-    rn.render();
-
-    w.print();
-    w.reset();
     // sm::file::export_to(rn.image, "temp1.tga", true);
-    w.print();
-    print(rn.transform);
-    // for (auto win = sm::Window{ rn.image.dims }; win;)
-    // {
-    //     win.get_input();
+    const auto bg   = "#10101B"_c;
+    auto ball       = sm::Particle{.vel{1, 1}, .radius = 40, .color = "#ff3721"_c};
+    const auto rect = sm::Rect<double>{{-40, -40}, 40, 40};
+    print(rn.transform.apply(rect).min);
+    print(rn.transform.apply(rect).max);
 
-    //     win.draw(rn.image);
-    //     win.display();
-    // }
+    auto win = sm::Window{rn.image.dims};
+    sm::util::Stopwatch w{};
+    while (win.is_open() && win.frame_counter <= 600)
+    {
+        win.get_input();
+        rn.fill(bg);
+
+        ball.update();
+        rn.draw(ball);
+
+        rn.render();
+        win.draw(rn.image);
+        win.display();
+    }
+    auto t = w.time().count();
+    fmt::print("Frames: {}, time: {:.3}, framerate: {:.3} fps, time per frame: {:.3}ms\n",
+               win.frame_counter, t, win.frame_counter / t, t / win.frame_counter * 1000);
 }

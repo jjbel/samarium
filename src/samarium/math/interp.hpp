@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "Extents.hpp"
+#include "math/Extents.hpp"
 
 namespace sm::interp
 {

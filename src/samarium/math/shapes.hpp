@@ -28,36 +28,13 @@
 
 #pragma once
 
-#include "fmt/format.h"
-
-#include "Vector2.hpp"
+#include "math/Vector2.hpp"
 
 namespace sm
 {
-class Transform
+struct Circle
 {
-  public:
-    Vector2 pos;
-    double scale;
-
-    constexpr Transform(Vector2 pos_ = {}, double scale_ = {}) : pos(pos_), scale(scale_)
-    {
-    }
-
-    constexpr auto apply(Vector2 vec) const { return vec * scale + pos; }
-
-    constexpr auto apply_inverse(Vector2 vec) const { return (vec - pos) / scale; }
+    Vector2 centre{};
+    double radius{};
 };
 } // namespace sm
-
-template <> class fmt::formatter<sm::Transform>
-{
-  public:
-    constexpr auto parse(const format_parse_context& ctx) const { return ctx.begin(); }
-
-    template <typename FormatContext>
-    auto format(const sm::Transform& p, FormatContext& ctx)
-    {
-        return format_to(ctx.out(), "Transform[pos: {}, scale: {}]", p.pos, p.scale);
-    }
-};

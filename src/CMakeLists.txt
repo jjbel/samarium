@@ -33,7 +33,48 @@ conan_basic_setup()
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-add_library(samarium "samarium/Renderer.cpp" "samarium/file.cpp")
+set(SOURCES
+    "samarium/core/concepts.hpp"
+    "samarium/core/DynArray.hpp"
+    "samarium/core/ThreadPool.hpp"
+    "samarium/core/types.hpp"
+    "samarium/core.hpp"
+
+    "samarium/graphics/Color.hpp"
+    "samarium/graphics/colors.hpp"
+    "samarium/graphics/Image.hpp"
+    "samarium/graphics/Renderer.hpp"
+    "samarium/graphics/Renderer.cpp"
+    "samarium/graphics.hpp"
+
+    "samarium/gui/Window.hpp"
+    "samarium/gui.hpp"
+
+    "samarium/math/Extents.hpp"
+    "samarium/math/interp.hpp"
+    "samarium/math/math.hpp"
+    "samarium/math/Rect.hpp"
+    "samarium/math/shapes.hpp"
+    "samarium/math/Transform.hpp"
+    "samarium/math/Vector2.hpp"
+    "samarium/math.hpp"
+
+    "samarium/physics/Particle.hpp"
+    "samarium/physics.hpp"
+
+    "samarium/util/file.hpp"
+    "samarium/util/file.cpp"
+    "samarium/util/print.hpp"
+    "samarium/util/random.hpp"
+    "samarium/util/util.hpp"
+    "samarium/util.hpp"
+
+    "samarium/samarium.hpp"
+)
+
+add_library(samarium ${SOURCES})
+
+target_include_directories(samarium PRIVATE "${CMAKE_SOURCE_DIR}/src/samarium")
 
 target_link_libraries(samarium PRIVATE ${CONAN_LIBS})
 
@@ -45,4 +86,3 @@ endif()
 if(WARNINGS)
     target_compile_options(samarium PUBLIC ${WARNINGS})
 endif()
-

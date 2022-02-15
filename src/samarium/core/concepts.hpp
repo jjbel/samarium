@@ -30,7 +30,7 @@
 
 #include <concepts>
 
-#include "types.hpp"
+#include "core/types.hpp"
 
 namespace sm::concepts
 {

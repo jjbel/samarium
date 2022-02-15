@@ -28,6 +28,25 @@
 
 #pragma once
 
-#include "samarium/util/file.hpp"
-#include "samarium/util/print.hpp"
-#include "samarium/util/random.hpp"
+#include "graphics/Color.hpp"
+#include "math/shapes.hpp"
+
+namespace sm
+{
+struct Particle
+{
+    Vector2 pos{};
+    Vector2 vel{};
+    Vector2 acc{};
+    double radius{};
+    Color color{};
+
+    auto as_circle() const noexcept { return Circle{pos, radius}; }
+
+    auto update(double time_delta = 1.) noexcept
+    {
+        vel += acc * time_delta;
+        pos += vel * time_delta;
+    }
+};
+} // namespace sm

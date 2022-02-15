@@ -28,31 +28,6 @@
 
 #pragma once
 
-#include <array>
-#include <random>
-
-#include "interp.hpp"
-
-namespace sm::random
-{
-constexpr static auto cache_length = size_t{ 100 };
-
-static auto current = size_t{ 0 };
-
-const static auto cache = []()
-{
-    auto values = std::array<double, cache_length>{};
-    // std::random_device rand_dev;
-    std::mt19937 generator(247);
-    std::uniform_real_distribution<double> distribution(0., 1.);
-    std::generate(values.begin(), values.end(), [&] { return distribution(generator); });
-    return values;
-}();
-
-auto random() { return cache[current++ % cache_length]; }
-
-template <typename T> [[nodiscard]] auto rand_range(Extents<T> range)
-{
-    return static_cast<T>(range.lerp(random()));
-}
-} // namespace sm::random
+#include "samarium/core/DynArray.hpp"
+#include "samarium/core/ThreadPool.hpp"
+#include "samarium/core/concepts.hpp"

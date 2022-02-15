@@ -29,12 +29,14 @@
 #include <execution>
 #include <utility>
 
-#include "Renderer.hpp"
+#include "graphics/Renderer.hpp"
 
 namespace sm
 {
 void Renderer::render()
 {
+    if (draw_funcs.empty()) return;
+
     const auto size = image.size();
     size_t j        = 0;
 
@@ -44,36 +46,38 @@ void Renderer::render()
             i < size % thread_count ? size / thread_count + 1 : size / thread_count;
         thread_pool.push_task(
             [chunk_size, j, i, dims = image.dims, &image = this->image,
-             &draw_funcs = this->draw_funcs]
+             &draw_funcs = this->draw_funcs, tr = this->transform]
             {
                 for (size_t k = j; k < j + chunk_size; k++)
                 {
-                    const auto coords = sm::convert_1d_to_2d(dims, k);
+                    const auto coords = tr.apply_inverse(sm::convert_1d_to_2d(dims, k));
                     for (const auto& drawer : draw_funcs)
                         if (drawer.rect.contains(coords))
                             image[k].add_alpha_over(drawer.fn(coords));
                 }
-                // std::this_thread::sleep_for(std::chrono::milliseconds{ i * 300 });
-                // fmt::print("{}. [{}, {}]\n", i, j, j + chunk_size - 1);
             });
         j += chunk_size;
     }
     thread_pool.wait_for_tasks();
+    draw_funcs.clear();
 }
-
-void Renderer::draw(Drawer&& drawer) { this->draw_funcs.emplace_back(drawer); }
-
 
 void Renderer::draw(Circle circle, Color color, double aa_factor)
 {
-    this->draw(Drawer(
+    this->draw(
         [=](const Vector2& coords)
         {
             return color.with_multiplied_alpha(sm::interp::clamp(
                 (circle.radius - (coords - circle.centre).length()) / aa_factor + 1,
-                { .min = 0., .max = 1. }));
+                {.min = 0., .max = 1.}));
         },
         Rect<double>::from_centre_width_height(circle.centre, circle.radius + aa_factor,
-                                               circle.radius + aa_factor)));
+                                               circle.radius + aa_factor));
 }
+
+void Renderer::draw(Particle particle, double aa_factor)
+{
+    this->draw(particle.as_circle(), particle.color, aa_factor);
+}
+
 } // namespace sm

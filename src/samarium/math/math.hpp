@@ -28,6 +28,40 @@
 
 #pragma once
 
-#include "samarium/util/file.hpp"
-#include "samarium/util/print.hpp"
-#include "samarium/util/random.hpp"
+#include <cmath>
+
+#include "core/concepts.hpp"
+
+namespace sm::math
+{
+constexpr inline auto PI      = 3.14159265358979323846;
+constexpr inline auto EPSILON = 1.e-4;
+
+template <concepts::floating_point T>
+[[nodiscard]] constexpr auto equals(T a, T b) noexcept
+{
+    return std::abs(a - b) <= EPSILON;
+}
+
+template <typename T> [[nodiscard]] constexpr inline auto min(T value0, T value1) noexcept
+{
+    if (value0 < value1) return value0;
+    else
+        return value1;
+}
+
+template <typename T> [[nodiscard]] constexpr inline auto max(T value0, T value1) noexcept
+{
+    if (value0 > value1) return value0;
+    else
+        return value1;
+}
+
+template <u32 n> [[nodiscard]] constexpr inline auto power(auto x)
+{
+    if constexpr (n == 0) return 1;
+    // if constexpr (n == 1) return x;
+
+    return x * power<n-1>(x);
+}
+} // namespace sm::math

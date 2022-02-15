@@ -28,14 +28,57 @@
 
 #pragma once
 
-#include "Vector2.hpp"
+#include <functional>
+#include <mutex>
+#include <ranges>
+#include <thread>
+#include <vector>
+
+#include "core/ThreadPool.hpp"
+#include "graphics/Image.hpp"
+#include "math/Transform.hpp"
+#include "math/interp.hpp"
+#include "math/shapes.hpp"
+#include "physics/Particle.hpp"
 
 namespace sm
 {
-class Circle
+class Renderer
 {
   public:
-    Vector2 centre{};
-    double radius{};
+    struct Drawer
+    {
+        std::function<sm::Color(const sm::Vector2&)> fn;
+        sm::Rect<double> rect;
+    };
+
+
+    Image image;
+    Transform transform{image.dims.as<double>() / 2., 1.};
+
+    Renderer(const Image& image_, u32 thread_count_ = std::thread::hardware_concurrency())
+        : image{image_}, thread_count{thread_count_}, thread_pool{thread_count_}
+
+    {
+    }
+
+    auto fill(const Color& color) { this->image.fill(color); }
+
+    void draw(auto&& fn) { this->draw_funcs.emplace_back(Drawer{fn, image.rect()}); }
+    void draw(auto&& fn, Rect<double> rect)
+    {
+        this->draw_funcs.emplace_back(Drawer{fn, rect});
+    }
+
+    void draw(Circle circle, Color color, double aa_factor = 1.6);
+    void draw(Particle particler, double aa_factor = 1.6);
+
+    void render();
+
+
+  private:
+    u32 thread_count;
+    sm::ThreadPool thread_pool;
+    std::vector<Drawer> draw_funcs{};
 };
 } // namespace sm

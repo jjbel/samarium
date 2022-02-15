@@ -28,66 +28,43 @@
 
 #pragma once
 
-#include <chrono>
-#include <thread>
+#include <tuple>
 
-#include "SFML/Graphics.hpp"
+#include "math/math.hpp"
 
 namespace sm
 {
-class Window
+template <concepts::arithmetic T> class Extents
 {
-    sf::Image im;
-    sf::Texture sftexture;
-    sf::Sprite sfbufferSprite;
-    sf::RenderWindow window;
-
   public:
-    size_t frame_counter;
+    T min{};
+    T max{};
 
-    Window(Dimensions dims         = sm::dimsFHD,
-           const std::string& name = "Samarium Window",
-           uint32_t framerate      = 65536)
-        : window(
-              sf::VideoMode(static_cast<uint32_t>(dims.x), static_cast<uint32_t>(dims.y)),
-              name,
-              sf::Style::Titlebar | sf::Style::Close),
-          frame_counter{ 0 }
+    [[nodiscard]] static constexpr auto find_min_max(T a, T b)
     {
-        window.setFramerateLimit(framerate);
+        return (a < b) ? Extents{a, b} : Extents{b, a};
     }
 
-    auto is_open() const { return window.isOpen(); }
+    [[nodiscard]] constexpr auto size() const { return max - min; }
 
-    auto get_input()
+    [[nodiscard]] constexpr auto contains(T value) const
     {
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed) window.close();
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) &&
-            sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
-            window.close();
+        return min <= value and value <= max;
     }
 
-    auto draw(const Image& image)
+    [[nodiscard]] constexpr auto clamp(T value) const
     {
-        im.create(static_cast<uint32_t>(image.dims.x),
-                  static_cast<uint32_t>(image.dims.y),
-                  reinterpret_cast<const sf::Uint8*>(&image[0]));
-        sftexture.loadFromImage(im);
-        sfbufferSprite.setTexture(sftexture, true);
+        return value < min ? min : value > max ? max : value;
     }
 
-    auto display()
+    [[nodiscard]] constexpr auto lerp(double factor) const
     {
-        window.draw(sfbufferSprite);
-        window.display();
-        ++frame_counter;
-        // std::this_thread::sleep_for(std::chrono::milliseconds{ 16 });
+        return min * (1. - factor) + max * factor;
     }
 
-    operator bool() const { return window.isOpen(); }
+    [[nodiscard]] constexpr double lerp_inverse(T value) const
+    {
+        return (value - min) / this->size();
+    }
 };
 } // namespace sm

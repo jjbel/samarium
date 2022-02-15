@@ -31,8 +31,8 @@
 #include <filesystem>
 #include <fstream>
 
-#include "Image.hpp"
-#include "print.hpp"
+#include "graphics/Image.hpp"
+#include "util/print.hpp"
 
 namespace sm::file
 {
@@ -70,12 +70,11 @@ bool export_to(const Image& image, std::string file_path, const bool shouldOverw
         static_cast<unsigned char>(255 & image.dims.y),
         static_cast<unsigned char>(255 & (image.dims.y >> 8)),
         24,
-        32
-    };
+        32};
 
     const auto data = image.formatted_data(sm::bgr);
 
-    std::ofstream{ file_path }
+    std::ofstream{file_path}
         .write(reinterpret_cast<const char*>(&tga_header[0]), 18)
         .write(reinterpret_cast<const char*>(&data[0]),
                static_cast<std::streamsize>(data.size() * data[0].size()));

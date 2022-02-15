@@ -30,13 +30,16 @@
 
 #include <iterator>
 
-#include "Vector2.hpp"
+#include "math/Vector2.hpp"
 
 namespace sm
 {
-template <sm::concepts::number T = double> class Rect
+template <sm::concepts::number T = double> struct Rect
 {
-  public:
+    Vector2_t<T> min;
+    Vector2_t<T> max;
+
+
     // iterator:
     struct Iterator
     {
@@ -47,7 +50,7 @@ template <sm::concepts::number T = double> class Rect
         using reference  = Vector2_t<T>&;
 
         constexpr Iterator(Vector2_t<T> indices, const Rect& rect)
-            : m_indices{ indices }, m_rect{ rect }
+            : m_indices{indices}, m_rect{rect}
         {
         }
 
@@ -57,9 +60,9 @@ template <sm::concepts::number T = double> class Rect
 
         constexpr Vector2_t<T>& operator++()
         {
-            if (m_indices.x == m_rect.m_max.x)
+            if (m_indices.x == m_rect.max.x)
             {
-                m_indices.x = m_rect.m_min.x;
+                m_indices.x = m_rect.min.x;
                 m_indices.y++;
             }
             else
@@ -84,59 +87,43 @@ template <sm::concepts::number T = double> class Rect
         const Rect& m_rect;
     };
 
-    // constructors:
-    constexpr Rect() noexcept : m_min{}, m_max{} {}
-
-    constexpr Rect(Vector2_t<T> min_, Vector2_t<T> max_) noexcept
-        : m_min{ min_ }, m_max{ max_ }
-    {
-    }
-
     static constexpr auto from_centre_width_height(Vector2_t<T> centre, T width, T height)
     {
-        const auto vec = Vector2_t{ .x = width, .y = height };
-        return Rect{ centre - vec, centre + vec };
+        const auto vec = Vector2_t{.x = width, .y = height};
+        return Rect{centre - vec, centre + vec};
     }
-
-    [[nodiscard]] constexpr auto min() const { return m_min; }
-    [[nodiscard]] constexpr auto max() const { return m_max; }
 
     [[nodiscard]] constexpr auto operator[](size_t index) const
     {
-        return m_min + convert_1d_to_2d(m_max - m_min + Vector2_t<T>{ 1, 1 }, index);
+        return min + convert_1d_to_2d(max - min + Vector2_t<T>{1, 1}, index);
     }
 
     [[nodiscard]] constexpr auto begin() requires sm::concepts::integral<T>
     {
-        return Iterator{ m_min, *this };
+        return Iterator{min, *this};
     }
 
     [[nodiscard]] constexpr auto end() requires sm::concepts::integral<T>
     {
-        return Iterator{ Vector2_t<T>{ m_min.x, m_max.y + 1 }, *this };
+        return Iterator{Vector2_t<T>{min.x, max.y + 1}, *this};
     }
 
     [[nodiscard]] constexpr auto cbegin() const requires sm::concepts::integral<T>
     {
-        return Iterator{ m_min, *this };
+        return Iterator{min, *this};
     }
 
     [[nodiscard]] constexpr auto cend() const requires sm::concepts::integral<T>
     {
-        return Iterator{ Vector2_t<T>{ m_min.x, m_max.y + 1 }, *this };
+        return Iterator{Vector2_t<T>{min.x, max.y + 1}, *this};
     }
 
     [[nodiscard]] constexpr auto contains(const Vector2_t<T>& vec) const noexcept
     {
-        return vec.x >= m_min.x && vec.x <= m_max.x && vec.y >= m_min.y &&
-               vec.y <= m_max.y;
+        return vec.x >= min.x && vec.x <= max.x && vec.y >= min.y && vec.y <= max.y;
     }
 
     [[nodiscard]] constexpr friend bool operator==(const Rect<T>& lhs,
                                                    const Rect<T>& rhs) noexcept = default;
-
-  private:
-    Vector2_t<T> m_min;
-    Vector2_t<T> m_max;
 };
 } // namespace sm

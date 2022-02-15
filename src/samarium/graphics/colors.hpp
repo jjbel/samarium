@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "Color.hpp"
+#include "graphics/Color.hpp"
 
 namespace sm::colors
 {

@@ -28,49 +28,6 @@
 
 #pragma once
 
-#include <functional>
-#include <mutex>
-#include <ranges>
-#include <thread>
-#include <vector>
-
-#include "Image.hpp"
-#include "ThreadPool.hpp"
-#include "Transform.hpp"
-#include "interp.hpp"
-#include "shapes.hpp"
-
-namespace sm
-{
-class Renderer
-{
-  public:
-    struct Drawer
-    {
-        std::function<sm::Color(const sm::Vector2&)> fn;
-        sm::Rect<double> rect;
-    };
-
-
-    Image image;
-    Transform transform{ image.dims.as<double>() / 2., 1. };
-
-    Renderer(const Image& image_, u32 thread_count_ = std::thread::hardware_concurrency())
-        : image{ image_ }, thread_count{ thread_count_ }, thread_pool{ thread_count_ }
-
-    {
-    }
-
-    void draw(Drawer&& drawer);
-
-    void draw(Circle circle, Color color, double aa_factor = 2.);
-
-    void render();
-
-
-  private:
-    u32 thread_count;
-    sm::ThreadPool thread_pool;
-    std::vector<Drawer> draw_funcs{};
-};
-} // namespace sm
+#include "samarium/graphics/Renderer.hpp"
+#include "samarium/gui/Window.hpp"
+#include "samarium/util/file.hpp"

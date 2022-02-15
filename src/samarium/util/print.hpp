@@ -28,46 +28,37 @@
 
 #pragma once
 
-#include <tuple>
+#include <filesystem>
+#include <iomanip>
+#include <source_location>
+#include <string_view>
 
-#include "math.hpp"
+#include "fmt/color.h"
+#include "fmt/format.h"
+#include "fmt/ranges.h"
 
-namespace sm
+namespace sm::util
 {
-template <concepts::arithmetic T> class Extents
+inline void print(const auto&... args)
 {
-  public:
-    T min{};
-    T max{};
+    // recursive call using pack expansion syntax
+    (fmt::print("{} ", args), ...);
+    fmt::print("\n");
+}
 
-    [[nodiscard]] static constexpr auto find_min_max(T a, T b)
-    {
-        return (a < b) ? Extents{ a, b } : Extents{ b, a };
-    }
+inline void log(const std::string_view message)
+{
+    const std::source_location location = std::source_location::current();
+    fmt::print(fg(fmt::color::steel_blue) | fmt::emphasis::bold, "[{}:{}: {}]: ",
+               std::filesystem::path(location.file_name()).filename().string(),
+               location.line(), location.function_name());
+    print(message);
+}
 
-    [[nodiscard]] constexpr auto size() const
-    {
-        return max - min;
-    }
-
-    [[nodiscard]] constexpr auto contains(T value) const
-    {
-        return min <= value and value <= max;
-    }
-
-    [[nodiscard]] constexpr auto clamp(T value) const
-    {
-        return value < min ? min : value > max ? max : value;
-    }
-
-    [[nodiscard]] constexpr auto lerp(double factor) const
-    {
-        return min * (1. - factor) + max * factor;
-    }
-
-    [[nodiscard]] constexpr double lerp_inverse(T value) const
-    {
-        return (value - min) / this->size();
-    }
-};
-} // namespace sm
+inline void error(const auto&... args)
+{
+    fmt::print(stderr, fg(fmt::color::red) | fmt::emphasis::bold, "Error: ");
+    (fmt::print(stderr, fg(fmt::color::red) | fmt::emphasis::bold, "{}", args), ...);
+    fmt::print(stderr, "\n");
+}
+} // namespace sm::util

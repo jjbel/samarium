@@ -36,6 +36,7 @@ conan_basic_setup()
 add_executable(samarium_tests samarium_tests.cpp)
 
 target_include_directories(samarium_tests PRIVATE ${CMAKE_SOURCE_DIR}/src)
+target_include_directories(samarium_tests PRIVATE ${CMAKE_SOURCE_DIR}/src/samarium)
 
 target_link_libraries(samarium_tests PRIVATE samarium)
 target_link_libraries(samarium_tests PRIVATE ${CONAN_LIBS})

@@ -30,7 +30,7 @@
 
 #include "fmt/format.h"
 
-#include "math.hpp"
+#include "math/math.hpp"
 
 namespace sm
 {
@@ -88,7 +88,7 @@ template <concepts::number T> class Vector2_t
 
     template <concepts::number U> constexpr auto as() const
     {
-        return Vector2_t<U>{ static_cast<U>(this->x), static_cast<U>(this->y) };
+        return Vector2_t<U>{static_cast<U>(this->x), static_cast<U>(this->y)};
     }
     template <concepts::number U> constexpr operator Vector2_t<U>() const
     {
@@ -98,44 +98,40 @@ template <concepts::number T> class Vector2_t
 
 template <concepts::floating_point T>
 [[nodiscard]] constexpr bool operator==(const Vector2_t<T>& lhs,
-                                               const Vector2_t<T>& rhs) noexcept
+                                        const Vector2_t<T>& rhs) noexcept
 {
     return math::equals(lhs.x, rhs.x) && math::equals(lhs.y, rhs.y);
 }
 
 template <concepts::integral T>
 [[nodiscard]] constexpr bool operator==(const Vector2_t<T>& lhs,
-                                               const Vector2_t<T>& rhs) noexcept
+                                        const Vector2_t<T>& rhs) noexcept
 {
     return lhs.x == rhs.x && lhs.y == rhs.y;
 }
 
 template <concepts::number T>
-[[nodiscard]] constexpr bool operator!=(const Vector2_t<T>& lhs,
-                                               const Vector2_t<T>& rhs)
+[[nodiscard]] constexpr bool operator!=(const Vector2_t<T>& lhs, const Vector2_t<T>& rhs)
 {
     return !operator==(lhs, rhs);
 }
 
 template <concepts::number T>
-[[nodiscard]] constexpr auto operator+(Vector2_t<T> lhs,
-                                              const Vector2_t<T>& rhs) noexcept
+[[nodiscard]] constexpr auto operator+(Vector2_t<T> lhs, const Vector2_t<T>& rhs) noexcept
 {
     lhs += rhs;
     return lhs;
 }
 
 template <concepts::number T>
-[[nodiscard]] constexpr auto operator-(Vector2_t<T> lhs,
-                                              const Vector2_t<T>& rhs) noexcept
+[[nodiscard]] constexpr auto operator-(Vector2_t<T> lhs, const Vector2_t<T>& rhs) noexcept
 {
     lhs -= rhs;
     return lhs;
 }
 
 template <concepts::number T>
-[[nodiscard]] constexpr auto operator*(Vector2_t<T> lhs,
-                                              const Vector2_t<T>& rhs) noexcept
+[[nodiscard]] constexpr auto operator*(Vector2_t<T> lhs, const Vector2_t<T>& rhs) noexcept
 {
     lhs *= rhs;
     return lhs;
@@ -156,8 +152,7 @@ template <concepts::number T>
 }
 
 template <concepts::number T>
-[[nodiscard]] constexpr auto operator/(Vector2_t<T> lhs,
-                                              const Vector2_t<T>& rhs) noexcept
+[[nodiscard]] constexpr auto operator/(Vector2_t<T> lhs, const Vector2_t<T>& rhs) noexcept
 {
     lhs /= rhs;
     return lhs;
@@ -176,14 +171,8 @@ using Dimensions = Vector2_t<size_t>;
 
 namespace literals
 {
-consteval auto operator"" _x(long double x)
-{
-    return Vector2{ static_cast<double>(x), 0 };
-}
-consteval auto operator"" _y(long double y)
-{
-    return Vector2{ 0, static_cast<double>(y) };
-}
+consteval auto operator"" _x(long double x) { return Vector2{static_cast<double>(x), 0}; }
+consteval auto operator"" _y(long double y) { return Vector2{0, static_cast<double>(y)}; }
 } // namespace literals
 } // namespace sm
 
