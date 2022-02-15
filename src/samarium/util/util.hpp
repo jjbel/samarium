@@ -32,7 +32,7 @@
 #include <concepts>
 #include <iterator>
 
-#include "core/types.hpp"
+#include "samarium/core/types.hpp"
 
 namespace sm::util
 {

@@ -30,8 +30,8 @@
 
 #include "fmt/format.h"
 
-#include "math/Rect.hpp"
-#include "math/Vector2.hpp"
+#include "Rect.hpp"
+#include "Vector2.hpp"
 
 namespace sm
 {

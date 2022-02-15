@@ -34,7 +34,7 @@ class SamariumConan(ConanFile):
     author = "strangeQuark1041"
     url = "https://github.com/strangeQuark1041/samarium/"
     description = "2-D physics simulation engine"
-    topics = ("c++20", "physics", "simulation")
+    topics = ("c++20", "physics", "2d", "simulation")
 
     generators = "cmake"
     requires = "fmt/8.0.1", "sfml/2.5.1", "date/3.0.1",

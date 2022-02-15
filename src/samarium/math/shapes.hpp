@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "math/Vector2.hpp"
+#include "Vector2.hpp"
 
 namespace sm
 {

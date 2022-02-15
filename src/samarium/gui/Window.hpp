@@ -33,8 +33,8 @@
 
 #include "SFML/Graphics.hpp"
 
-#include "graphics/Image.hpp"
-#include "util/util.hpp"
+#include "samarium/graphics/Image.hpp"
+#include "samarium/util/util.hpp"
 
 namespace sm
 {

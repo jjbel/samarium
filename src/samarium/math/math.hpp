@@ -30,7 +30,7 @@
 
 #include <cmath>
 
-#include "core/concepts.hpp"
+#include "samarium/core/concepts.hpp"
 
 namespace sm::math
 {

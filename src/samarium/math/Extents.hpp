@@ -30,7 +30,7 @@
 
 #include <tuple>
 
-#include "math/math.hpp"
+#include "math.hpp"
 
 namespace sm
 {

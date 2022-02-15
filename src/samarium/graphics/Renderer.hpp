@@ -34,12 +34,13 @@
 #include <thread>
 #include <vector>
 
-#include "core/ThreadPool.hpp"
-#include "graphics/Image.hpp"
-#include "math/Transform.hpp"
-#include "math/interp.hpp"
-#include "math/shapes.hpp"
-#include "physics/Particle.hpp"
+#include "samarium/core/ThreadPool.hpp"
+#include "samarium/math/Transform.hpp"
+#include "samarium/math/interp.hpp"
+#include "samarium/math/shapes.hpp"
+#include "samarium/physics/Particle.hpp"
+
+#include "Image.hpp"
 
 namespace sm
 {

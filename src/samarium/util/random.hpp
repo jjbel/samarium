@@ -31,7 +31,7 @@
 #include <array>
 #include <random>
 
-#include "math/interp.hpp"
+#include "samarium/math/interp.hpp"
 
 namespace sm::random
 {

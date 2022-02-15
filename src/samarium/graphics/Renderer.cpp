@@ -29,7 +29,7 @@
 #include <execution>
 #include <utility>
 
-#include "graphics/Renderer.hpp"
+#include "Renderer.hpp"
 
 namespace sm
 {

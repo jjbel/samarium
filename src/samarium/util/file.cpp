@@ -31,8 +31,9 @@
 #include <filesystem>
 #include <fstream>
 
-#include "graphics/Image.hpp"
-#include "util/print.hpp"
+#include "samarium/graphics/Image.hpp"
+
+#include "print.hpp"
 
 namespace sm::file
 {

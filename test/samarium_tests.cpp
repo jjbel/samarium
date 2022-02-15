@@ -40,8 +40,6 @@ int main()
     using namespace sm::literals;
     auto rn = sm::Renderer{sm::Image{sm::dimsHD, "#10101B"_c}};
 
-
-    // sm::file::export_to(rn.image, "temp1.tga", true);
     const auto bg   = "#10101B"_c;
     auto ball       = sm::Particle{.vel{1, 1}, .radius = 40, .color = "#ff3721"_c};
     const auto rect = sm::Rect<double>{{-40, -40}, 40, 40};

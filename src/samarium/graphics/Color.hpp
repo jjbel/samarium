@@ -35,27 +35,27 @@
 
 #include "fmt/format.h"
 
-#include "math/math.hpp"
-#include "core/types.hpp"
-#include "util/util.hpp"
+#include "samarium/core/types.hpp"
+#include "samarium/math/math.hpp"
+#include "samarium/util/util.hpp"
 
 namespace sm
 {
 struct RGB_t
 {
-    constexpr static auto length = size_t{ 3 };
+    constexpr static auto length = size_t{3};
 };
 struct RGBA_t
 {
-    constexpr static auto length = size_t{ 4 };
+    constexpr static auto length = size_t{4};
 };
 struct BGR_t
 {
-    constexpr static auto length = size_t{ 3 };
+    constexpr static auto length = size_t{3};
 };
 struct BGRA_t
 {
-    constexpr static auto length = size_t{ 4 };
+    constexpr static auto length = size_t{4};
 };
 
 constexpr inline auto rgb  = RGB_t{};
@@ -69,7 +69,7 @@ class Color
     u8 r{};
     u8 g{};
     u8 b{};
-    u8 a{ 255u };
+    u8 a{255u};
 
     static consteval auto from_hex(const char* str)
     {
@@ -85,10 +85,10 @@ class Color
         const auto b = static_cast<u8>(16 * util::hex_to_int_safe(str[5]) +
                                        util::hex_to_int_safe(str[6]));
 
-        const auto a = length == 7u ? u8{ 255 }
+        const auto a = length == 7u ? u8{255}
                                     : static_cast<u8>(16 * util::hex_to_int_safe(str[7]) +
                                                       util::hex_to_int_safe(str[8]));
-        return Color{ r, g, b, a };
+        return Color{r, g, b, a};
     }
 
     // https://en.m.wikipedia.org/wiki/Alpha_compositing
@@ -104,39 +104,39 @@ class Color
 
     [[nodiscard]] constexpr auto with_alpha(u8 alpha) const
     {
-        return Color{ r, g, b, alpha };
+        return Color{r, g, b, alpha};
     }
 
     [[nodiscard]] constexpr auto with_multiplied_alpha(double factor) const
     {
-        return Color{ r, g, b, static_cast<u8>(a * factor) };
+        return Color{r, g, b, static_cast<u8>(a * factor)};
     }
 
     template <concepts::integral T = u8>
     [[nodiscard]] auto get_formatted(RGB_t /* color_format */) const noexcept
     {
-        return std::array{ static_cast<T>(this->r), static_cast<T>(this->g),
-                           static_cast<T>(this->b) };
+        return std::array{static_cast<T>(this->r), static_cast<T>(this->g),
+                          static_cast<T>(this->b)};
     }
 
     template <concepts::integral T = u8>
     [[nodiscard]] auto get_formatted(RGBA_t /* color_format */) const noexcept
     {
-        return std::array{ static_cast<T>(this->r), static_cast<T>(this->g),
-                           static_cast<T>(this->b), static_cast<T>(this->a) };
+        return std::array{static_cast<T>(this->r), static_cast<T>(this->g),
+                          static_cast<T>(this->b), static_cast<T>(this->a)};
     }
 
     template <concepts::integral T = u8>
     [[nodiscard]] auto get_formatted(BGR_t /* color_format */) const noexcept
     {
-        return std::array{ static_cast<T>(b), static_cast<T>(g), static_cast<T>(r) };
+        return std::array{static_cast<T>(b), static_cast<T>(g), static_cast<T>(r)};
     }
 
     template <concepts::integral T = u8>
     [[nodiscard]] auto get_formatted(BGRA_t /* color_format */) const noexcept
     {
-        return std::array{ static_cast<T>(b), static_cast<T>(g), static_cast<T>(r),
-                           static_cast<T>(a) };
+        return std::array{static_cast<T>(b), static_cast<T>(g), static_cast<T>(r),
+                          static_cast<T>(a)};
     }
 
     [[nodiscard]] constexpr friend bool operator==(const Color& lhs,

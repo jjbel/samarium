@@ -34,11 +34,12 @@
 #include <memory>
 #include <utility>
 
-#include "core/DynArray.hpp"
-#include "graphics/Color.hpp"
-#include "math/Rect.hpp"
-#include "math/Vector2.hpp"
-#include "util/print.hpp"
+#include "samarium/core/DynArray.hpp"
+#include "samarium/math/Rect.hpp"
+#include "samarium/math/Vector2.hpp"
+#include "samarium/util/print.hpp"
+
+#include "Color.hpp"
 
 namespace sm
 {

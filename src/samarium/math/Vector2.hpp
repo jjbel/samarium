@@ -30,7 +30,7 @@
 
 #include "fmt/format.h"
 
-#include "math/math.hpp"
+#include "math.hpp"
 
 namespace sm
 {

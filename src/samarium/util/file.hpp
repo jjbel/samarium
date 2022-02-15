@@ -28,8 +28,8 @@
 
 #pragma once
 
-#include "graphics/Image.hpp"
-#include "util/print.hpp"
+#include "samarium/graphics/Image.hpp"
+#include "samarium/util/print.hpp"
 
 namespace sm::file
 {
