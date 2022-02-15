@@ -86,9 +86,9 @@ jobs:
         run: cmake -B build
       - name: CMake Build
         run: build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }}  cmake --build build
-      - name: CTest
-        working-directory: ./build
-        run: ctest -vv
+      # - name: CTest
+      #   working-directory: ./build
+      #   run: ctest -vv
       - name: Run sonar-scanner
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -176,4 +176,4 @@ jobs:
           run: git clone https://github.com/strangeQuark1041/samarium.git
 
         - name: Conan Create
-          run: conan create samarium
+          run: conan create samarium --build=missing
