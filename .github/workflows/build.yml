@@ -140,7 +140,7 @@ jobs:
   #           name: sarif-file
   #           path: ${{ steps.run-analysis.outputs.sarif }}
 
-  linux conan-create:
+  linux-conan-create:
       runs-on: ubuntu-latest
       steps:
         - name: Set up GCC
