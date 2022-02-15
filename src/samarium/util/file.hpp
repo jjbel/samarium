@@ -30,10 +30,13 @@
 
 #include "samarium/graphics/Image.hpp"
 #include "samarium/util/print.hpp"
+#include "samarium/util/util.hpp"
 
 namespace sm::file
 {
-bool export_to(const Image& image,
-               std::string file_path      = "",
-               const bool shouldOverwrite = false);
+void export_tga(const Image& image,
+                const std::string& file_path = util::get_date_filename("tga"));
+
+void export_to(const Image& image,
+               const std::string& file_path = util::get_date_filename("tga"));
 } // namespace sm::file

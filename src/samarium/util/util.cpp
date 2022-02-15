@@ -26,47 +26,14 @@
  *  For more information, please refer to <https://opensource.org/licenses/MIT/>
  */
 
-#include <execution>
-#include <functional>
-#include <ranges>
+#include "date/date.h"
 
-#include "samarium/samarium.hpp"
+#include "util.hpp"
 
-using sm::util::print;
-namespace si = sm::interp;
-
-int main()
+namespace sm::util
 {
-    using namespace sm::literals;
-    auto rn = sm::Renderer{sm::Image{sm::dimsHD, "#10101B"_c}};
-
-    const auto bg   = "#10101B"_c;
-    auto ball       = sm::Particle{.vel{1, 1}, .radius = 40, .color = "#ff3721"_c};
-    const auto rect = sm::Rect<double>{{-40, -40}, 40, 40};
-    print(rn.transform.apply(rect).min);
-    print(rn.transform.apply(rect).max);
-
-    auto win = sm::Window{rn.image.dims};
-    sm::util::Stopwatch w{};
-    while (win.is_open() && win.frame_counter <= 600 && false)
-    {
-        win.get_input();
-        rn.fill(bg);
-
-        ball.update();
-        rn.draw(ball);
-
-        rn.render();
-
-        // sm::file::export_to(rn.image, fmt::format("dev/temp{:4}.tga",
-        // win.frame_counter), true);
-
-        win.draw(rn.image);
-        win.display();
-    }
-    auto t = w.time().count();
-    fmt::print("Frames: {}, time: {:.3}, framerate: {:.3} fps, time per frame: {:.3}ms\n",
-               win.frame_counter, t, win.frame_counter / t, t / win.frame_counter * 1000);
-
-    sm::file::export_to(rn.image);
+std::string get_date_filename(const std::string& extension)
+{
+    return date::format("%F_%T.", std::chrono::system_clock::now()) + extension;
 }
+} // namespace sm::util

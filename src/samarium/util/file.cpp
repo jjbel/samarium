@@ -27,7 +27,6 @@
  */
 
 #include <array>
-#include <date/date.h>
 #include <filesystem>
 #include <fstream>
 
@@ -37,41 +36,28 @@
 
 namespace sm::file
 {
-bool export_to(const Image& image, std::string file_path, const bool shouldOverwrite)
+void export_tga(const Image& image, const std::string& file_path)
 {
     namespace fs = std::filesystem;
 
-    file_path = file_path.length() == 0
-                    ? date::format("%F_%T.tga", std::chrono::system_clock::now())
-                    : file_path;
-
-    if (fs::exists(fs::path(file_path)) and !shouldOverwrite)
-    {
-        util::error('\'', file_path,
-                    "' already exists.\nPass `true` as last argument of "
-                    "sm::util::write() to overwrite\n");
-        return false;
-    }
-
-    const std::array<unsigned char, 18> tga_header = {
-        0,
-        0,
-        2,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        static_cast<unsigned char>(255 & image.dims.x),
-        static_cast<unsigned char>(255 & (image.dims.x >> 8)),
-        static_cast<unsigned char>(255 & image.dims.y),
-        static_cast<unsigned char>(255 & (image.dims.y >> 8)),
-        24,
-        32};
+    const auto tga_header = std::array<u8, 18>{0,
+                                               0,
+                                               2,
+                                               0,
+                                               0,
+                                               0,
+                                               0,
+                                               0,
+                                               0,
+                                               0,
+                                               0,
+                                               0,
+                                               static_cast<u8>(255 & image.dims.x),
+                                               static_cast<u8>(255 & (image.dims.x >> 8)),
+                                               static_cast<u8>(255 & image.dims.y),
+                                               static_cast<u8>(255 & (image.dims.y >> 8)),
+                                               24,
+                                               32};
 
     const auto data = image.formatted_data(sm::bgr);
 
@@ -79,6 +65,10 @@ bool export_to(const Image& image, std::string file_path, const bool shouldOverw
         .write(reinterpret_cast<const char*>(&tga_header[0]), 18)
         .write(reinterpret_cast<const char*>(&data[0]),
                static_cast<std::streamsize>(data.size() * data[0].size()));
-    return true;
+}
+
+void export_to(const Image& image,
+               const std::string& file_path)
+{
 }
 } // namespace sm::file

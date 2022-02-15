@@ -28,9 +28,12 @@
 
 #pragma once
 
+#include <string>
 #include <chrono>
 #include <concepts>
 #include <iterator>
+
+#include "fmt/format.h"
 
 #include "samarium/core/types.hpp"
 
@@ -48,6 +51,8 @@ namespace sm::util
     if ('A' <= ch && ch <= 'F') return static_cast<u8>(ch - 'A' + 10);
     throw std::invalid_argument("hex character must be 0-9, a-f, or A-F");
 }
+
+std::string get_date_filename(const std::string& extension);
 
 class Stopwatch
 {
