@@ -28,15 +28,16 @@
 
 #pragma once
 
+#include <optional>
+
 #include "interp.hpp"
 #include "shapes.hpp"
 
+#include "samarium/util/print.hpp"
+
 namespace sm::math
 {
-[[nodiscard]] constexpr auto distance(Vector2 p1, Vector2 p2)
-{
-    return (p1 - p2).length();
-}
+[[nodiscard]] constexpr auto distance(Vector2 p1, Vector2 p2) { return (p1 - p2).length(); }
 
 [[nodiscard]] constexpr auto project(Vector2 point, LineSegment ls)
 {
@@ -50,8 +51,7 @@ namespace sm::math
 {
     // https://stackoverflow.com/a/1501725/17100530
     const auto vec = ls.vector();
-    const auto t =
-        interp::clamp(Vector2::dot(point - ls.p1, vec) / ls.length_sq(), {0., 1.});
+    const auto t   = interp::clamp(Vector2::dot(point - ls.p1, vec) / ls.length_sq(), {0., 1.});
     return interp::lerp(t, Extents<Vector2>{ls.p1, ls.p2});
 }
 
@@ -67,5 +67,44 @@ namespace sm::math
     const auto l2 = ls.length_sq();
     if (almost_equal(l2, 0.)) return distance(point, ls.p1); // p1 == p2 case
     return distance(point, project_clamped(point, ls));
+}
+
+[[nodiscard]] constexpr auto lies_in_segment(Vector2 point, LineSegment l)
+{
+    return interp::in_range(Vector2::dot(point - l.p1, l.vector()) / l.length_sq(), {0., 1.});
+}
+
+[[nodiscard]] constexpr std::optional<Vector2> intersection(LineSegment l1, LineSegment l2)
+{
+    const auto denom1 = l1.p2.x - l1.p1.x;
+    const auto denom2 = l2.p2.x - l2.p1.x;
+
+    const auto denom1_is_0 = almost_equal(denom1, 0.0);
+    const auto denom2_is_0 = almost_equal(denom2, 0.0);
+
+    if (denom1_is_0 && denom2_is_0) return std::nullopt;
+
+    if (denom1_is_0)
+        return std::optional{Vector2{l1.p1.x, l2.slope() * (l1.p1.x - l2.p1.x) + l2.p1.y}};
+    else if (denom2_is_0)
+        return std::optional{Vector2{l2.p1.x, l1.slope() * (l2.p1.x - l1.p1.x) + l1.p1.y}};
+    else
+    {
+        const auto m1 = l1.slope();
+        const auto m2 = l2.slope();
+
+        const auto x = (m2 * l2.p1.x - m1 * l1.p1.x + l1.p1.y - l2.p1.y) / (m2 - m1);
+        return std::optional{Vector2{x, m1 * (x - l1.p1.x) + l1.p1.y}};
+    }
+}
+
+[[nodiscard]] constexpr std::optional<Vector2> clamped_intersection(LineSegment l1,
+                                                                    LineSegment l2)
+{
+    const auto point = intersection(l1, l2);
+    if (!point) return std::nullopt;
+    if (lies_in_segment(*point, l1) && lies_in_segment(*point, l2)) return point;
+    else
+        return std::nullopt;
 }
 } // namespace sm::math

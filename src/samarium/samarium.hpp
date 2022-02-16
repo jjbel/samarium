@@ -28,8 +28,9 @@
 
 #pragma once
 
-#include "samarium/graphics/colors.hpp"
 #include "samarium/graphics/Renderer.hpp"
+#include "samarium/graphics/colors.hpp"
 #include "samarium/gui/Window.hpp"
 #include "samarium/math/geometry.hpp"
+#include "samarium/physics/collision.hpp"
 #include "samarium/util/file.hpp"

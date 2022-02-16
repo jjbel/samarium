@@ -40,9 +40,10 @@ template <concepts::number T> class Vector2_t
     T x{};
     T y{};
 
-    constexpr auto length() const noexcept { return std::sqrt(x * x + y * y); }
-    constexpr auto length_sq() const noexcept { return x * x + y * y; }
-    constexpr auto angle() const noexcept { return std::atan2(y, x); }
+    [[nodiscard]] constexpr auto length() const noexcept { return std::sqrt(x * x + y * y); }
+    [[nodiscard]] constexpr auto length_sq() const noexcept { return x * x + y * y; }
+    [[nodiscard]] constexpr auto angle() const noexcept { return std::atan2(y, x); }
+    [[nodiscard]] constexpr auto slope() const { return y / x; }
 
     constexpr auto operator+=(const Vector2_t& rhs) noexcept
     {
@@ -102,15 +103,13 @@ template <concepts::number T> class Vector2_t
 };
 
 template <concepts::floating_point T>
-[[nodiscard]] constexpr bool operator==(const Vector2_t<T>& lhs,
-                                        const Vector2_t<T>& rhs) noexcept
+[[nodiscard]] constexpr bool operator==(const Vector2_t<T>& lhs, const Vector2_t<T>& rhs) noexcept
 {
     return math::almost_equal(lhs.x, rhs.x) && math::almost_equal(lhs.y, rhs.y);
 }
 
 template <concepts::integral T>
-[[nodiscard]] constexpr bool operator==(const Vector2_t<T>& lhs,
-                                        const Vector2_t<T>& rhs) noexcept
+[[nodiscard]] constexpr bool operator==(const Vector2_t<T>& lhs, const Vector2_t<T>& rhs) noexcept
 {
     return lhs.x == rhs.x && lhs.y == rhs.y;
 }
@@ -186,12 +185,11 @@ template <sm::concepts::number T> class fmt::formatter<sm::Vector2_t<T>>
   public:
     constexpr auto parse(const format_parse_context& ctx) { return ctx.begin(); }
 
-    template <typename FormatContext>
-    auto format(const sm::Vector2_t<T>& p, FormatContext& ctx)
+    template <typename FormatContext> auto format(const sm::Vector2_t<T>& p, FormatContext& ctx)
     {
         return format_to(
             ctx.out(),
-            (std::is_floating_point<T>::value ? "Vec({:6.2f}, {:6.2f})" : "Vec({}, {})"),
-            p.x, p.y);
+            (std::is_floating_point<T>::value ? "Vec({:6.2f}, {:6.2f})" : "Vec({}, {})"), p.x,
+            p.y);
     }
 };

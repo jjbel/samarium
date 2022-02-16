@@ -28,66 +28,16 @@
 
 #pragma once
 
-#include <chrono>
-#include <thread>
+#include "samarium/math/geometry.hpp"
 
-#include "SFML/Graphics.hpp"
+#include "Particle.hpp"
 
-#include "samarium/graphics/Renderer.hpp"
-#include "samarium/util/util.hpp"
-
-namespace sm
+namespace sm::phys
 {
-class Window
+constexpr auto did_collide(Particle p1, Particle p2) {}
+
+constexpr auto did_collide(Particle now, Particle prev, LineSegment l)
 {
-    sf::Image im;
-    sf::Texture sftexture;
-    sf::Sprite sfbufferSprite;
-    sf::RenderWindow window;
-    sm::util::Stopwatch watch{};
-
-  public:
-    size_t frame_counter{};
-
-
-    Window(Dimensions dims         = sm::dimsFHD,
-           const std::string& name = "Samarium Window",
-           uint32_t framerate      = 64)
-        : window(sf::VideoMode(static_cast<uint32_t>(dims.x), static_cast<uint32_t>(dims.y)),
-                 name,
-                 sf::Style::Titlebar | sf::Style::Close)
-    {
-        window.setFramerateLimit(framerate);
-    }
-
-    bool is_open() const;
-
-    void get_input();
-
-    void draw(const Image& image);
-
-    void display();
-
-    operator bool() const { return window.isOpen(); }
-};
-
-struct WindowManager
-{
-    Window& window;
-    Renderer& renderer;
-
-    WindowManager(Window& win, Renderer& rn, Color color) : window(win), renderer(rn)
-    {
-        window.get_input();
-        renderer.fill(color);
-    }
-
-    ~WindowManager()
-    {
-        renderer.render();
-
-        window.draw(renderer.image);
-        window.display();
-    }
-};
-} // namespace sm
+    return sm::math::clamped_intersection({prev.pos, now.pos}, l);
+}
+} // namespace sm::phys

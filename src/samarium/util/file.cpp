@@ -67,8 +67,8 @@ void export_tga(const Image& image, const std::string& file_path)
                static_cast<std::streamsize>(data.size() * data[0].size()));
 }
 
-void export_to(const Image& image,
-               const std::string& file_path)
+void export_to(const Image& image, const std::string& file_path)
 {
+    if (file_path.ends_with(".tga")) export_tga(image, file_path);
 }
 } // namespace sm::file

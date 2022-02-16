@@ -38,36 +38,30 @@ namespace si = sm::interp;
 int main()
 {
     using namespace sm::literals;
-    auto rn = sm::Renderer{sm::Image{sm::dimsHD, "#10101B"_c}};
+    auto rn = sm::Renderer{sm::Image{sm::dimsHD}};
 
-    const auto bg   = "#10101B"_c;
-    auto ball       = sm::Particle{.vel{1, 1}, .radius = 40, .color = "#ff3721"_c};
-    const auto rect = sm::Rect<double>{{-40, -40}, 40, 40};
-    print(rn.transform.apply(rect).min);
-    print(rn.transform.apply(rect).max);
+    auto ball_now  = sm::Particle{.vel{30, -7}, .radius = 40, .color = "#ff3721"_c};
+    auto ball_prev = ball_now;
+
+    auto l = sm::LineSegment{{-300, -300}, {300, -270}};
 
     auto win = sm::Window{rn.image.dims};
     sm::util::Stopwatch w{};
     while (win.is_open() && win.frame_counter <= 600 && 1)
     {
-        win.get_input();
-        rn.fill(bg);
+        sm::WindowManager(win, rn, "#10101B"_c);
 
-        ball.update();
-        rn.draw(ball);
-        rn.draw(sm::LineSegment{{0, 0}, {500, 800}}, "#0dbaff"_c);
+        ball_prev = ball_now;
+        ball_now.update();
 
-        rn.render();
+        rn.draw(l, "#0dbaff"_c);
+        rn.draw(ball_now);
 
-        // sm::file::export_to(rn.image, fmt::format("dev/temp{:4}.tga",
-        // win.frame_counter), true);
-
-        win.draw(rn.image);
-        win.display();
+        auto point = sm::phys::did_collide(ball_now, ball_prev, l);
+        if (point)
+        {
+            print("Point: ", *point);
+            rn.draw(sm::Circle{*point, 4}, sm::colors::green);
+        }
     }
-    auto t = w.time().count();
-    fmt::print("Frames: {}, time: {:.3}, framerate: {:.3} fps, time per frame: {:.3}ms\n",
-               win.frame_counter, t, win.frame_counter / t, t / win.frame_counter * 1000);
-
-    sm::file::export_to(rn.image);
 }

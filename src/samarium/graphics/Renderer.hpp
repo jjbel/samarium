@@ -55,7 +55,7 @@ class Renderer
 
     Image image;
     Transform transform{.pos   = image.dims.as<double>() / 2.,
-                        .scale = Vector2{.x = 1.0, .y = -1.0}};
+                        .scale = Vector2{0.8, 0.8} * Vector2{1.0, -1.0}};
 
     Renderer(const Image& image_, u32 thread_count_ = std::thread::hardware_concurrency())
         : image{image_}, thread_count{thread_count_}, thread_pool{thread_count_}
@@ -65,7 +65,9 @@ class Renderer
 
     auto fill(const Color& color) { this->image.fill(color); }
 
-    void draw(auto&& fn)
+    template <typename T>
+    void draw(T&& fn) requires(concepts::reason("Function should accept a const Vector2&") &&
+                               std::invocable<T, const Vector2&>)
     {
         const auto rect = image.rect();
         this->draw_funcs.emplace_back(Drawer(
@@ -74,13 +76,19 @@ class Renderer
                 Rect{.min = rect.min, .max = rect.max + Indices{1, 1}}.template as<double>())));
     }
 
-    void draw(auto&& fn, Rect<double> rect) { this->draw_funcs.emplace_back(Drawer{fn, rect}); }
+    template <typename T>
+    void draw(T&& fn, Rect<double> rect) requires(
+        concepts::reason("Function should accept a const Vector2&") &&
+        std::invocable<T, const Vector2&>)
+    {
+        this->draw_funcs.emplace_back(Drawer{fn, rect});
+    }
 
     void draw(Circle circle, Color color, double aa_factor = 1.6);
 
     void draw(Particle particler, double aa_factor = 1.6);
 
-    void draw(LineSegment ls, Color color, double thickness = 1.0, double aa_factor = 0.9);
+    void draw(LineSegment ls, Color color, double thickness = 1.0, double aa_factor = 1.6);
 
     void render();
 
