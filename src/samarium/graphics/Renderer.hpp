@@ -36,8 +36,7 @@
 
 #include "samarium/core/ThreadPool.hpp"
 #include "samarium/math/Transform.hpp"
-#include "samarium/math/interp.hpp"
-#include "samarium/math/shapes.hpp"
+#include "samarium/math/geometry.hpp"
 #include "samarium/physics/Particle.hpp"
 
 #include "Image.hpp"
@@ -65,14 +64,23 @@ class Renderer
 
     auto fill(const Color& color) { this->image.fill(color); }
 
-    void draw(auto&& fn) { this->draw_funcs.emplace_back(Drawer{fn, image.rect()}); }
+    void draw(auto&& fn)
+    {
+        this->draw_funcs.emplace_back(
+            Drawer(fn, transform.apply_inverse(image.rect().template as<double>())));
+    }
+
     void draw(auto&& fn, Rect<double> rect)
     {
         this->draw_funcs.emplace_back(Drawer{fn, rect});
     }
 
     void draw(Circle circle, Color color, double aa_factor = 1.6);
+
     void draw(Particle particler, double aa_factor = 1.6);
+
+    void
+    draw(LineSegment ls, Color color, double thickness = 1.0, double aa_factor = 0.9);
 
     void render();
 

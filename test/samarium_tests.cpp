@@ -48,13 +48,14 @@ int main()
 
     auto win = sm::Window{rn.image.dims};
     sm::util::Stopwatch w{};
-    while (win.is_open() && win.frame_counter <= 600 && false)
+    while (win.is_open() && win.frame_counter <= 600 && 1)
     {
         win.get_input();
         rn.fill(bg);
 
         ball.update();
         rn.draw(ball);
+        rn.draw(sm::LineSegment{{0,0}, {500, 800}}, "#0dbaff"_c, 10);
 
         rn.render();
 

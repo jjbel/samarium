@@ -34,7 +34,7 @@
 
 namespace sm
 {
-template <sm::concepts::number T = double> struct Rect
+template <concepts::number T = double> struct Rect
 {
     Vector2_t<T> min;
     Vector2_t<T> max;
@@ -86,6 +86,12 @@ template <sm::concepts::number T = double> struct Rect
         Vector2_t<T> m_indices;
         const Rect& m_rect;
     };
+
+    template <concepts::number U> constexpr auto as() const
+    {
+        // very weird: https://stackoverflow.com/a/3505738/17100530
+        return Rect<U>{min.template as<U>(), max.template as<U>()};
+    }
 
     static constexpr auto from_centre_width_height(Vector2_t<T> centre, T width, T height)
     {

@@ -92,7 +92,12 @@ template <concepts::number T> class Vector2_t
     }
     template <concepts::number U> constexpr operator Vector2_t<U>() const
     {
-        return this->as<U>();
+        return this->template as<U>();
+    }
+
+    [[nodiscard]] static constexpr auto dot(Vector2_t<T> p1, Vector2_t<T> p2)
+    {
+        return p1.x * p2.x + p1.y * p2.y;
     }
 };
 
@@ -100,7 +105,7 @@ template <concepts::floating_point T>
 [[nodiscard]] constexpr bool operator==(const Vector2_t<T>& lhs,
                                         const Vector2_t<T>& rhs) noexcept
 {
-    return math::equals(lhs.x, rhs.x) && math::equals(lhs.y, rhs.y);
+    return math::almost_equal(lhs.x, rhs.x) && math::almost_equal(lhs.y, rhs.y);
 }
 
 template <concepts::integral T>

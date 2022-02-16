@@ -38,7 +38,7 @@ constexpr inline auto PI      = 3.14159265358979323846;
 constexpr inline auto EPSILON = 1.e-4;
 
 template <concepts::floating_point T>
-[[nodiscard]] constexpr auto equals(T a, T b) noexcept
+[[nodiscard]] constexpr auto almost_equal(T a, T b) noexcept
 {
     return std::abs(a - b) <= EPSILON;
 }

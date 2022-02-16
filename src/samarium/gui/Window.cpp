@@ -26,49 +26,37 @@
  *  For more information, please refer to <https://opensource.org/licenses/MIT/>
  */
 
-#pragma once
-
-#include <chrono>
-#include <thread>
-
-#include "SFML/Graphics.hpp"
-
-#include "samarium/graphics/Image.hpp"
-#include "samarium/util/util.hpp"
+#include "Window.hpp"
 
 namespace sm
 {
-class Window
+bool Window::is_open() const { return window.isOpen(); }
+
+void Window::get_input()
 {
-    sf::Image im;
-    sf::Texture sftexture;
-    sf::Sprite sfbufferSprite;
-    sf::RenderWindow window;
-    sm::util::Stopwatch watch{};
-
-  public:
-    size_t frame_counter{};
-
-
-    Window(Dimensions dims         = sm::dimsFHD,
-           const std::string& name = "Samarium Window",
-           uint32_t framerate      = 64)
-        : window(
-              sf::VideoMode(static_cast<uint32_t>(dims.x), static_cast<uint32_t>(dims.y)),
-              name,
-              sf::Style::Titlebar | sf::Style::Close)
+    sf::Event event;
+    while (window.pollEvent(event))
     {
-        window.setFramerateLimit(framerate);
+        if (event.type == sf::Event::Closed) window.close();
     }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) &&
+        sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+        window.close();
+}
 
-    bool is_open() const;
+void Window::draw(const Image& image)
+{
+    im.create(static_cast<uint32_t>(image.dims.x), static_cast<uint32_t>(image.dims.y),
+              reinterpret_cast<const sf::Uint8*>(&image[0]));
+    sftexture.loadFromImage(im);
+    sfbufferSprite.setTexture(sftexture, true);
+}
 
-    void get_input();
-
-    void draw(const Image& image);
-
-    void display();
-
-    operator bool() const { return window.isOpen(); }
-};
+void Window::display()
+{
+    window.draw(sfbufferSprite);
+    window.display();
+    ++frame_counter;
+    watch.reset();
+}
 } // namespace sm

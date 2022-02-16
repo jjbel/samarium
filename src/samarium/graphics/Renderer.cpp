@@ -33,6 +33,12 @@
 
 namespace sm
 {
+auto antialias(double distance, double radius, double aa_factor)
+{
+    // https://www.desmos.com/calculator/jhewyqc2wy
+    return interp::clamp((radius - distance) / aa_factor + 1, {0.0, 1.0});
+}
+
 void Renderer::render()
 {
     if (draw_funcs.empty()) return;
@@ -67,9 +73,8 @@ void Renderer::draw(Circle circle, Color color, double aa_factor)
     this->draw(
         [=](const Vector2& coords)
         {
-            return color.with_multiplied_alpha(sm::interp::clamp(
-                (circle.radius - (coords - circle.centre).length()) / aa_factor + 1,
-                {.min = 0., .max = 1.}));
+            return color.with_multiplied_alpha(
+                antialias(math::distance(coords, circle.centre), circle.radius, aa_factor));
         },
         Rect<double>::from_centre_width_height(circle.centre, circle.radius + aa_factor,
                                                circle.radius + aa_factor));
@@ -80,4 +85,13 @@ void Renderer::draw(Particle particle, double aa_factor)
     this->draw(particle.as_circle(), particle.color, aa_factor);
 }
 
+void Renderer::draw(LineSegment ls, Color color, double thickness, double aa_factor)
+{
+    this->draw(
+        [=](const Vector2& coords)
+        {
+            return color.with_multiplied_alpha(
+                antialias(math::clamped_distance(coords, ls), thickness, aa_factor));
+        });
+}
 } // namespace sm

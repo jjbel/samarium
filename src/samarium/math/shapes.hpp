@@ -37,4 +37,14 @@ struct Circle
     Vector2 centre{};
     double radius{};
 };
+
+struct LineSegment
+{
+    Vector2 p1{};
+    Vector2 p2{};
+
+    [[nodiscard]] constexpr auto vector() const { return p2 - p1; }
+    [[nodiscard]] constexpr auto length() const { return vector().length(); }
+    [[nodiscard]] constexpr auto length_sq() const { return vector().length_sq(); }
+};
 } // namespace sm

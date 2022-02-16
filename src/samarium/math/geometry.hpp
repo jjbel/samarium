@@ -28,47 +28,44 @@
 
 #pragma once
 
-#include <chrono>
-#include <thread>
+#include "interp.hpp"
+#include "shapes.hpp"
 
-#include "SFML/Graphics.hpp"
-
-#include "samarium/graphics/Image.hpp"
-#include "samarium/util/util.hpp"
-
-namespace sm
+namespace sm::math
 {
-class Window
+[[nodiscard]] constexpr auto distance(Vector2 p1, Vector2 p2)
 {
-    sf::Image im;
-    sf::Texture sftexture;
-    sf::Sprite sfbufferSprite;
-    sf::RenderWindow window;
-    sm::util::Stopwatch watch{};
+    return (p1 - p2).length();
+}
 
-  public:
-    size_t frame_counter{};
+[[nodiscard]] constexpr auto project(Vector2 point, LineSegment ls)
+{
+    // https://stackoverflow.com/a/1501725/17100530
+    const auto vec = ls.vector();
+    const auto t   = Vector2::dot(point - ls.p1, vec) / ls.length_sq();
+    return interp::lerp(t, Extents<Vector2>{ls.p1, ls.p2});
+}
 
+[[nodiscard]] constexpr auto project_clamped(Vector2 point, LineSegment ls)
+{
+    // https://stackoverflow.com/a/1501725/17100530
+    const auto vec = ls.vector();
+    const auto t =
+        interp::clamp(Vector2::dot(point - ls.p1, vec) / ls.length_sq(), {0., 1.});
+    return interp::lerp(t, Extents<Vector2>{ls.p1, ls.p2});
+}
 
-    Window(Dimensions dims         = sm::dimsFHD,
-           const std::string& name = "Samarium Window",
-           uint32_t framerate      = 64)
-        : window(
-              sf::VideoMode(static_cast<uint32_t>(dims.x), static_cast<uint32_t>(dims.y)),
-              name,
-              sf::Style::Titlebar | sf::Style::Close)
-    {
-        window.setFramerateLimit(framerate);
-    }
+[[nodiscard]] constexpr auto distance(Vector2 point, LineSegment ls)
+{
+    const auto l2 = ls.length_sq();
+    if (almost_equal(l2, 0.)) return distance(point, ls.p1); // p1 == p2 case
+    return distance(point, project(point, ls));
+}
 
-    bool is_open() const;
-
-    void get_input();
-
-    void draw(const Image& image);
-
-    void display();
-
-    operator bool() const { return window.isOpen(); }
-};
-} // namespace sm
+[[nodiscard]] constexpr auto clamped_distance(Vector2 point, LineSegment ls)
+{
+    const auto l2 = ls.length_sq();
+    if (almost_equal(l2, 0.)) return distance(point, ls.p1); // p1 == p2 case
+    return distance(point, project_clamped(point, ls));
+}
+} // namespace sm::math

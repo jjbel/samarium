@@ -37,6 +37,7 @@ add_library(samarium
     ${CMAKE_CURRENT_SOURCE_DIR}/samarium/util/util.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/samarium/util/file.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/samarium/graphics/Renderer.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/samarium/gui/Window.cpp
 )
 
 target_include_directories(samarium PUBLIC "${CMAKE_CURRENT_LIST_DIR}")

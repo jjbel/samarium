@@ -53,6 +53,11 @@ class Transform
     }
 
     constexpr auto apply_inverse(Vector2 vec) const { return (vec - pos) / scale; }
+
+    constexpr auto apply_inverse(Rect<double> rect) const
+    {
+        return Rect<double>{apply_inverse(rect.min), apply_inverse(rect.max)};
+    }
 };
 } // namespace sm
 

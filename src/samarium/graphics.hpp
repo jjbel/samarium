@@ -29,3 +29,4 @@
 #pragma once
 
 #include "samarium/graphics/Renderer.hpp"
+#include "samarium/graphics/colors.hpp"

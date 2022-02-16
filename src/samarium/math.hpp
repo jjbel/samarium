@@ -30,4 +30,4 @@
 
 #include "samarium/math/Transform.hpp"
 #include "samarium/math/interp.hpp"
-#include "samarium/math/shapes.hpp"
+#include "samarium/math/geometry.hpp"
