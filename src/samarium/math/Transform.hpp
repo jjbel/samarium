@@ -38,12 +38,8 @@ namespace sm
 class Transform
 {
   public:
-    Vector2 pos;
-    double scale;
-
-    constexpr Transform(Vector2 pos_ = {}, double scale_ = {}) : pos(pos_), scale(scale_)
-    {
-    }
+    Vector2 pos{};
+    Vector2 scale{};
 
     constexpr auto apply(Vector2 vec) const { return vec * scale + pos; }
 
@@ -56,7 +52,9 @@ class Transform
 
     constexpr auto apply_inverse(Rect<double> rect) const
     {
-        return Rect<double>{apply_inverse(rect.min), apply_inverse(rect.max)};
+        return Rect<double>::find_min_max( // -ve sign may invalidate min, max so recalculate it
+            apply_inverse(rect.min),
+            apply_inverse(rect.max));
     }
 };
 } // namespace sm
@@ -66,8 +64,7 @@ template <> class fmt::formatter<sm::Transform>
   public:
     constexpr auto parse(const format_parse_context& ctx) const { return ctx.begin(); }
 
-    template <typename FormatContext>
-    auto format(const sm::Transform& p, FormatContext& ctx)
+    template <typename FormatContext> auto format(const sm::Transform& p, FormatContext& ctx)
     {
         return format_to(ctx.out(), "Transform[pos: {}, scale: {}]", p.pos, p.scale);
     }

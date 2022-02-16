@@ -55,7 +55,7 @@ int main()
 
         ball.update();
         rn.draw(ball);
-        rn.draw(sm::LineSegment{{0,0}, {500, 800}}, "#0dbaff"_c, 10);
+        rn.draw(sm::LineSegment{{0, 0}, {500, 800}}, "#0dbaff"_c);
 
         rn.render();
 

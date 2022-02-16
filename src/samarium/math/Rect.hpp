@@ -79,8 +79,7 @@ template <concepts::number T = double> struct Rect
             return tmp;
         }
 
-        constexpr friend bool operator==(const Iterator& a,
-                                         const Iterator& b) noexcept = default;
+        constexpr friend bool operator==(const Iterator& a, const Iterator& b) noexcept = default;
 
       private:
         Vector2_t<T> m_indices;
@@ -91,6 +90,12 @@ template <concepts::number T = double> struct Rect
     {
         // very weird: https://stackoverflow.com/a/3505738/17100530
         return Rect<U>{min.template as<U>(), max.template as<U>()};
+    }
+
+    static constexpr auto find_min_max(Vector2_t<T> p1, Vector2_t<T> p2)
+    {
+        return Rect<T>{{math::min(p1.x, p2.x), math::min(p1.y, p2.y)},
+                       {math::max(p1.x, p2.x), math::max(p1.y, p2.y)}};
     }
 
     static constexpr auto from_centre_width_height(Vector2_t<T> centre, T width, T height)
