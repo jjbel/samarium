@@ -80,18 +80,44 @@ void Renderer::draw(Circle circle, Color color, double aa_factor)
                                                circle.radius + aa_factor));
 }
 
-void Renderer::draw(Particle particle, double aa_factor)
+void Renderer::draw(Particle particle, Color color, double aa_factor)
 {
-    this->draw(particle.as_circle(), particle.color, aa_factor);
+    this->draw(particle.as_circle(), color, aa_factor);
 }
 
 void Renderer::draw(LineSegment ls, Color color, double thickness, double aa_factor)
 {
+    const auto vector = ls.vector();
+    const auto extra  = 2 * aa_factor;
     this->draw(
         [=](const Vector2& coords)
         {
             return color.with_multiplied_alpha(
                 antialias(math::clamped_distance(coords, ls), thickness, aa_factor));
-        });
+        },
+        Rect<double>::from_centre_width_height((ls.p1 + ls.p2) / 2.0, vector.x + extra,
+                                               vector.y + extra));
+}
+
+void Renderer::draw_grid(bool axes, bool grid, bool dots)
+{
+    if (axes)
+    {
+        for (double i = -(image.dims.x / 2.0); i < image.dims.x / 2; i += 50)
+        {
+            sm::util::print(i);
+            this->draw(
+                [](const Vector2& coords) {
+                    return Color{255, 255, 255, 60};
+                },
+                Rect<double>::from_centre_width_height(Vector2{i, 0}, 1, image.dims.y));
+        }
+
+        this->draw(
+            [](const Vector2& coords) {
+                return Color{255, 255, 255, 100};
+            },
+            Rect<double>::from_centre_width_height(Vector2{}, image.dims.x, 1));
+    }
 }
 } // namespace sm

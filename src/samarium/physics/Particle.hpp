@@ -38,8 +38,8 @@ struct Particle
     Vector2 pos{};
     Vector2 vel{};
     Vector2 acc{};
-    double radius{};
-    Color color{};
+    double radius{10};
+    double mass{1};
 
     auto as_circle() const noexcept { return Circle{pos, radius}; }
 

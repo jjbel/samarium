@@ -36,6 +36,7 @@
 
 #include "samarium/core/ThreadPool.hpp"
 #include "samarium/math/Transform.hpp"
+#include "samarium/graphics/colors.hpp"
 #include "samarium/math/geometry.hpp"
 #include "samarium/physics/Particle.hpp"
 
@@ -55,7 +56,7 @@ class Renderer
 
     Image image;
     Transform transform{.pos   = image.dims.as<double>() / 2.,
-                        .scale = Vector2{0.8, 0.8} * Vector2{1.0, -1.0}};
+                        .scale = Vector2{10, 10} * Vector2{1.0, -1.0}};
 
     Renderer(const Image& image_, u32 thread_count_ = std::thread::hardware_concurrency())
         : image{image_}, thread_count{thread_count_}, thread_pool{thread_count_}
@@ -86,9 +87,14 @@ class Renderer
 
     void draw(Circle circle, Color color, double aa_factor = 1.6);
 
-    void draw(Particle particler, double aa_factor = 1.6);
+    void draw(Particle particler, Color color = sm::colors::orangered, double aa_factor = 0.1);
 
-    void draw(LineSegment ls, Color color, double thickness = 1.0, double aa_factor = 1.6);
+    void draw(LineSegment ls,
+              Color color      = sm::colors::white,
+              double thickness = 0.1,
+              double aa_factor = 0.1);
+
+    void draw_grid(bool axes = true, bool grid = true, bool dots = true);
 
     void render();
 

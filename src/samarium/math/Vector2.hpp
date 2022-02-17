@@ -45,6 +45,25 @@ template <concepts::number T> class Vector2_t
     [[nodiscard]] constexpr auto angle() const noexcept { return std::atan2(y, x); }
     [[nodiscard]] constexpr auto slope() const { return y / x; }
 
+    [[nodiscard]] static constexpr auto
+    from_polar(double length, double angle) requires concepts::floating_point<T>
+    {
+        return Vector2_t<T>{length * std::cos(angle), length * std::sin(angle)};
+    }
+
+    [[nodiscard]] constexpr auto with_length(double length) const
+    {
+        const auto factor = length / this->length();
+        return Vector2_t<T>{x * factor, y * factor};
+    }
+
+    [[nodiscard]] constexpr auto with_angle(double angle) const
+    {
+        return from_polar(this->length(), angle);
+    }
+
+    constexpr auto operator-() const { return Vector2_t<T>{-x, -y}; }
+
     constexpr auto operator+=(const Vector2_t& rhs) noexcept
     {
         this->x += rhs.x;

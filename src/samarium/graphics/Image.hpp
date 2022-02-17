@@ -50,7 +50,7 @@ constexpr inline auto dimsP2  = Dimensions{2048u, 1024u};
 
 constexpr auto convert_1d_to_2d(Dimensions dims, size_t index)
 {
-    return Indices(index % dims.x, index / dims.x);
+    return Indices{index % dims.x, index / dims.x};
 }
 
 constexpr auto convert_2d_to_1d(Dimensions dims, Indices coordinates)
@@ -78,15 +78,10 @@ template <typename T> class Field
     // Constructors
     Field(Dimensions dims_ = dimsFHD) : dims(dims_), data(dims.x * dims.y) {}
 
-    Field(Dimensions dims_, T init_value) : dims(dims_), data(dims.x * dims.y, init_value)
-    {
-    }
+    Field(Dimensions dims_, T init_value) : dims(dims_), data(dims.x * dims.y, init_value) {}
 
     // Member functions
-    T& operator[](Indices indices)
-    {
-        return this->data[indices.y * this->dims.x + indices.x];
-    }
+    T& operator[](Indices indices) { return this->data[indices.y * this->dims.x + indices.x]; }
 
     const T& operator[](Indices indices) const
     {
@@ -114,29 +109,24 @@ template <typename T> class Field
 
     auto fill(const T& value) { this->data.fill(value); }
 
+    template <color_format_concept Format>
+    DynArray<std::array<u8, Format::length>> formatted_data(Format format) const
+    {
+        const auto format_length = Format::length;
+        auto fmt_data            = DynArray<std::array<u8, format_length>>(this->size());
 
-    template <color_format_concept Format> auto formatted_data(Format) const;
+        std::transform(std::execution::par_unseq, this->begin(), this->end(), fmt_data.begin(),
+                       [format](auto color) { return color.get_formatted(format); });
+
+        return fmt_data;
+    }
 };
 
 using Image = Field<Color>;
 
 // Since data is already stored as RGBA, no need to convert it, directly return it
-template <> template <> inline auto Image::formatted_data(RGBA_t) const
-{
-    return std::span{this->data.cbegin(), this->size() * 4};
-}
-
-template <>
-template <color_format_concept Format>
-inline auto Image::formatted_data(Format format) const
-{
-    const auto format_length = Format::length;
-    auto fmt_data            = DynArray<std::array<u8, format_length>>(this->size());
-
-    std::transform(std::execution::par_unseq, this->begin(), this->end(),
-                   fmt_data.begin(),
-                   [format](auto color) { return color.get_formatted(format); });
-
-    return fmt_data;
-}
+// template <> template <> inline auto Image::formatted_data(RGBA_t) const
+// {
+//     return std::span{this->data.cbegin(), this->size() * 4};
+// }
 } // namespace sm

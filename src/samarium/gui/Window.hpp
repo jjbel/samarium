@@ -52,7 +52,7 @@ class Window
 
     Window(Dimensions dims         = sm::dimsFHD,
            const std::string& name = "Samarium Window",
-           uint32_t framerate      = 64)
+           uint32_t framerate      = 65)
         : window(sf::VideoMode(static_cast<uint32_t>(dims.x), static_cast<uint32_t>(dims.y)),
                  name,
                  sf::Style::Titlebar | sf::Style::Close)

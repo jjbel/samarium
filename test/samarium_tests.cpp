@@ -40,28 +40,29 @@ int main()
     using namespace sm::literals;
     auto rn = sm::Renderer{sm::Image{sm::dimsHD}};
 
-    auto ball_now  = sm::Particle{.vel{30, -7}, .radius = 40, .color = "#ff3721"_c};
-    auto ball_prev = ball_now;
+    const auto gravity = -50.0_y;
 
-    auto l = sm::LineSegment{{-300, -300}, {300, -270}};
+    auto p1 = sm::Particle{.pos = {-36, 0}, .vel = {18, 0}, .radius = 1};
+    // auto p2 =
+    // sm::Particle{.pos = {0, -200}, .vel = {0, 100}, .radius = 40, .color = sm::colors::red};
+    auto l = sm::LineSegment{{-30, -30}, {30, -29}};
 
     auto win = sm::Window{rn.image.dims};
     sm::util::Stopwatch w{};
-    while (win.is_open() && win.frame_counter <= 600 && 1)
+
+    while (win.is_open() && win.frame_counter <= 800 && 1)
     {
         sm::WindowManager(win, rn, "#10101B"_c);
 
-        ball_prev = ball_now;
-        ball_now.update();
+        p1.acc = gravity;
+        // p2.acc = gravity;
 
-        rn.draw(l, "#0dbaff"_c);
-        rn.draw(ball_now);
-
-        auto point = sm::phys::did_collide(ball_now, ball_prev, l);
-        if (point)
-        {
-            print("Point: ", *point);
-            rn.draw(sm::Circle{*point, 4}, sm::colors::green);
-        }
+        // sm::phys::collide(p1, p2);
+        p1.update(1.0 / 60.0);
+        // p2.update(1.0 / 60.0);
+        rn.draw(l);
+        rn.draw(p1, sm::colors::orangered);
+        // rn.draw(p2);
     }
+    w.print();
 }
