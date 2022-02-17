@@ -43,21 +43,21 @@ template <concepts::floating_point T>
     return std::abs(a - b) <= EPSILON;
 }
 
-template <typename T> [[nodiscard]] constexpr inline auto min(T value0, T value1) noexcept
+template <typename T> [[nodiscard]] constexpr auto min(T value0, T value1) noexcept
 {
     if (value0 < value1) return value0;
     else
         return value1;
 }
 
-template <typename T> [[nodiscard]] constexpr inline auto max(T value0, T value1) noexcept
+template <typename T> [[nodiscard]] constexpr auto max(T value0, T value1) noexcept
 {
     if (value0 > value1) return value0;
     else
         return value1;
 }
 
-template <u32 n> [[nodiscard]] constexpr inline auto power(auto x)
+template <u32 n> [[nodiscard]] constexpr auto power(auto x)
 {
     if constexpr (n == 0) return 1;
     // if constexpr (n == 1) return x;

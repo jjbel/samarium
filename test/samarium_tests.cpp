@@ -37,32 +37,44 @@ namespace si = sm::interp;
 
 int main()
 {
-    using namespace sm::literals;
-    auto rn = sm::Renderer{sm::Image{sm::dimsHD}};
+    // using namespace sm::literals;
+    // auto rn = sm::Renderer{sm::Image{sm::dimsHD}};
 
-    const auto gravity = -50.0_y;
+    // const auto gravity = -50.0_y;
 
-    auto p1 = sm::Particle{.pos = {-36, 0}, .vel = {18, 0}, .radius = 1};
-    // auto p2 =
-    // sm::Particle{.pos = {0, -200}, .vel = {0, 100}, .radius = 40, .color = sm::colors::red};
-    auto l = sm::LineSegment{{-30, -30}, {30, -29}};
+    // auto p1 = sm::Particle{.pos = {-36, 0}, .vel = {6, 30}, .radius = 4};
+    // auto p2 = p1;
 
-    auto win = sm::Window{rn.image.dims};
-    sm::util::Stopwatch w{};
+    // auto l = sm::LineSegment{{-30, -30}, {30, -29}};
 
-    while (win.is_open() && win.frame_counter <= 800 && 1)
-    {
-        sm::WindowManager(win, rn, "#10101B"_c);
+    // const auto dims = rn.image.dims;
+    // const auto l1   = sm::LineSegment{{-10.0, 10.0}, {10.0, 10.0}};
+    // const auto l2   = sm::LineSegment{{-10.0, 10.0}, {-11.0, -10.0}};
+    // const auto l3   = sm::LineSegment{{-10.0, -10.0}, {10.0, -10.0}};
+    // const auto l4   = sm::LineSegment{{10.0, 10.0}, {10.0, -10.0}};
 
-        p1.acc = gravity;
-        // p2.acc = gravity;
+    // auto win = sm::Window{rn.image.dims, "Collision", 60};
+    // sm::util::Stopwatch w{};
 
-        // sm::phys::collide(p1, p2);
-        p1.update(1.0 / 60.0);
-        // p2.update(1.0 / 60.0);
-        rn.draw(l);
-        rn.draw(p1, sm::colors::orangered);
-        // rn.draw(p2);
-    }
-    w.print();
+    // // print(sm::math::clamped_distance(sm::Vector2{1, 1}, l2));
+
+    // while (win.is_open() && win.frame_counter <= 1200 && 1)
+    // {
+    //     sm::WindowManager(win, rn, "#10101B"_c);
+
+    //     p1.acc = gravity;
+    //     p1.update(1.0 / 60.0);
+    //     sm::phys::collide(p1, p2, l);
+
+    //     rn.draw(l, "#03bcff"_c);
+    //     // rn.draw(l1, "#03bcff"_c);
+    //     // rn.draw(l2, "#03bcff"_c);
+    //     // rn.draw(l3, "#03bcff"_c);
+    //     // rn.draw(l4, "#03bcff"_c);
+
+    //     // p1.pos = l2.p2;
+    //     rn.draw(p1, sm::colors::orangered);
+    //     p2 = p1;
+    // }
+    // w.print();
 }

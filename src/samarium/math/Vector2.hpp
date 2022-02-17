@@ -51,18 +51,18 @@ template <concepts::number T> class Vector2_t
         return Vector2_t<T>{length * std::cos(angle), length * std::sin(angle)};
     }
 
-    [[nodiscard]] constexpr auto with_length(double length) const
+    [[nodiscard]] constexpr auto with_length(double new_length) const
     {
-        const auto factor = length / this->length();
+        const auto factor = new_length / this->length();
         return Vector2_t<T>{x * factor, y * factor};
     }
 
-    [[nodiscard]] constexpr auto with_angle(double angle) const
+    [[nodiscard]] constexpr auto with_angle(double new_angle) const
     {
-        return from_polar(this->length(), angle);
+        return from_polar(this->length(), new_angle);
     }
 
-    constexpr auto operator-() const { return Vector2_t<T>{-x, -y}; }
+    [[nodiscard]] constexpr auto operator-() const { return Vector2_t<T>{-x, -y}; }
 
     constexpr auto operator+=(const Vector2_t& rhs) noexcept
     {
@@ -118,6 +118,25 @@ template <concepts::number T> class Vector2_t
     [[nodiscard]] static constexpr auto dot(Vector2_t<T> p1, Vector2_t<T> p2)
     {
         return p1.x * p2.x + p1.y * p2.y;
+    }
+
+    [[nodiscard]] static constexpr auto angle_between(Vector2_t<T> from, Vector2_t<T> to)
+    {
+        return to.angle() - from.angle();
+    }
+
+    constexpr auto rotate(double amount) { *this = this->with_angle(this->angle() + amount); }
+
+    [[nodiscard]] constexpr auto rotated_by(double amount) const
+    {
+        auto temp = *this;
+        temp.rotate(amount);
+        return temp;
+    }
+
+    constexpr auto reflect(Vector2_t<T> vec) noexcept
+    {
+        this->rotate(2 * angle_between(*this, vec));
     }
 };
 
@@ -208,7 +227,7 @@ template <sm::concepts::number T> class fmt::formatter<sm::Vector2_t<T>>
     {
         return format_to(
             ctx.out(),
-            (std::is_floating_point<T>::value ? "Vec({:6.2f}, {:6.2f})" : "Vec({}, {})"), p.x,
+            (std::is_floating_point<T>::value ? "Vec({:6.3f}, {:6.3f})" : "Vec({}, {})"), p.x,
             p.y);
     }
 };

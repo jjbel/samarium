@@ -34,7 +34,7 @@
 
 namespace sm::phys
 {
-constexpr std::optional<Vector2> did_collide(Particle p1, Particle p2)
+[[nodiscard]] constexpr std::optional<Vector2> did_collide(const Particle& p1, const Particle& p2)
 {
     if (math::distance(p1.pos, p2.pos) <= p1.radius + p2.radius)
         return std::optional((p1.pos + p2.pos) / 2.0);
@@ -45,7 +45,7 @@ constexpr std::optional<Vector2> did_collide(Particle p1, Particle p2)
 constexpr auto collide(Particle& p1, Particle& p2)
 {
     // https://courses.lumenlearning.com/boundless-physics/chapter/collisions/#:~:text=particles%20are%20involved%20in%20an-,elastic%20collision,-%2C%20the%20velocity%20of%20the%20first
-    if (auto point = did_collide(p1, p2))
+    if (const auto point = did_collide(p1, p2))
     {
         const auto shift = (p1.radius + (math::distance(p1.pos, p2.pos) - p2.radius)) / 2;
         fmt::print("Shift: {}\n", shift);
@@ -63,8 +63,38 @@ constexpr auto collide(Particle& p1, Particle& p2)
     }
 }
 
-constexpr auto did_collide(Particle now, Particle prev, LineSegment l)
+[[nodiscard]] constexpr auto
+did_collide(const Particle& now, const Particle& prev, const LineSegment& l)
 {
-    return sm::math::clamped_intersection({prev.pos, now.pos}, l);
+    const auto proj = math::project(prev.pos, l);
+    const auto radius_shift =
+        (proj - prev.pos)
+            .with_length(prev.radius); // keep track of the point on the circumference of prev
+                                       // closest to l, which will cross l first
+
+    return sm::math::clamped_intersection({prev.pos + radius_shift, now.pos + radius_shift}, l);
+}
+
+constexpr auto collide(Particle& now, Particle& prev, const LineSegment& l)
+{
+    const auto vec  = l.vector();
+    const auto proj = math::project(prev.pos, l);
+    const auto radius_shift =
+        (proj - prev.pos)
+            .with_length(prev.radius); // keep track of the point on the circumference of prev
+                                       // closest to l, which will cross l first
+
+    const auto possible_collision =
+        sm::math::clamped_intersection({prev.pos + radius_shift, now.pos + radius_shift}, l);
+    if (!possible_collision) return;
+
+    const auto point = *possible_collision;
+
+    auto leftover_vel = now.pos + radius_shift - point;
+    leftover_vel.reflect(vec);
+    now.pos = point + leftover_vel - radius_shift;
+    now.vel.reflect(vec);
+
+    sm::util::print(leftover_vel);
 }
 } // namespace sm::phys

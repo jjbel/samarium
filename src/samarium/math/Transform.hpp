@@ -31,7 +31,7 @@
 #include "fmt/format.h"
 
 #include "Rect.hpp"
-#include "Vector2.hpp"
+#include "shapes.hpp"
 
 namespace sm
 {
@@ -53,8 +53,13 @@ class Transform
     constexpr auto apply_inverse(Rect<double> rect) const
     {
         return Rect<double>::find_min_max( // -ve sign may invalidate min, max so recalculate it
-            apply_inverse(rect.min),
-            apply_inverse(rect.max));
+            apply_inverse(rect.min), apply_inverse(rect.max));
+    }
+
+    constexpr auto apply_inverse(LineSegment l) const
+    {
+        return LineSegment( // -ve sign may invalidate min, max so recalculate it
+            apply_inverse(l.p1), apply_inverse(l.p2));
     }
 };
 } // namespace sm
