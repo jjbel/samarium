@@ -26,11 +26,31 @@
  *  For more information, please refer to <https://opensource.org/licenses/MIT/>
  */
 
-#include "samarium/samarium.hpp"
+#pragma once
 
-int main()
+#include "fmt/format.h"
+
+#include "types.hpp"
+
+namespace sm
 {
-    sm::util::print(sm::version);
-    sm::util::print("A Vector2: ", sm::Vector2{.x = 5, .y = -3});
-    sm::util::print("A Color: ", sm::Color{.r = 5, .g = 200, .b = 255});
-}
+struct version_t
+{
+    u8 major{1};
+    u8 minor{0};
+    u8 patch{0};
+};
+
+static constexpr auto version = version_t{};
+} // namespace sm
+
+template <> class fmt::formatter<sm::version_t>
+{
+  public:
+    constexpr auto parse(const format_parse_context& ctx) { return ctx.begin(); }
+
+    template <typename FormatContext> auto format(const sm::version_t& p, FormatContext& ctx)
+    {
+        return format_to(ctx.out(), "samarium version {}.{}.{}", p.major, p.minor, p.patch);
+    }
+};

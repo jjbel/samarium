@@ -44,7 +44,7 @@ For example gcc11 at least.
 
 ```sh
 git clone https://github.com/strangeQuark1041/samarium.git
-conan create **samarium**
+conan create samarium
 ```
 
 ## Example
@@ -55,7 +55,7 @@ In a new folder, called, for example **`myProj`**, create the following files:
 
 ```Yaml
 [requires]
-samarium/1.0
+samarium/1.0.0
 
 [generators]
 cmake
@@ -64,13 +64,13 @@ cmake
 `example.cpp`:
 
 ```cpp
-#include "samarium/Vector2.hpp"
-#include "samarium/print.hpp"
+#include "samarium/samarium.hpp"
 
 int main()
 {
-    auto vec = sm::Vector2();
-    sm::util::print("Samarium works! Print vector: ", vec);
+    sm::util::print(sm::version);
+    sm::util::print("A Vector2: ", sm::Vector2{.x = 5, .y = -3});
+    sm::util::print("A Color:   ", sm::Color{.r = 5, .g = 200, .b = 255});
 }
 ```
 

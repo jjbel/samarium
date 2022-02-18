@@ -25,7 +25,12 @@
 # For more information, please refer to <https://opensource.org/licenses/MIT/>
 
 cmake_minimum_required(VERSION 3.16)
-project(samarium CXX)
+
+project(
+    samarium
+    VERSION 1.0.0
+    LANGUAGES CXX
+)
 
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
