@@ -78,12 +78,12 @@ class Color
         if (length != 7u && length != 9u)
             throw std::logic_error("Hex string must be either 7 or 9 characters long");
 
-        const auto r = static_cast<u8>(16 * util::hex_to_int_safe(str[1]) +
-                                       util::hex_to_int_safe(str[2]));
-        const auto g = static_cast<u8>(16 * util::hex_to_int_safe(str[3]) +
-                                       util::hex_to_int_safe(str[4]));
-        const auto b = static_cast<u8>(16 * util::hex_to_int_safe(str[5]) +
-                                       util::hex_to_int_safe(str[6]));
+        const auto r =
+            static_cast<u8>(16 * util::hex_to_int_safe(str[1]) + util::hex_to_int_safe(str[2]));
+        const auto g =
+            static_cast<u8>(16 * util::hex_to_int_safe(str[3]) + util::hex_to_int_safe(str[4]));
+        const auto b =
+            static_cast<u8>(16 * util::hex_to_int_safe(str[5]) + util::hex_to_int_safe(str[6]));
 
         const auto a = length == 7u ? u8{255}
                                     : static_cast<u8>(16 * util::hex_to_int_safe(str[7]) +
@@ -102,12 +102,9 @@ class Color
         a                = static_cast<u8>((a / 255.0 + (1.0 - a / 255.0) * alpha) * 255);
     }
 
-    [[nodiscard]] constexpr auto with_alpha(u8 alpha) const
-    {
-        return Color{r, g, b, alpha};
-    }
+    [[nodiscard]] constexpr auto with_alpha(u8 alpha) const { return Color{r, g, b, alpha}; }
 
-    [[nodiscard]] constexpr auto with_multiplied_alpha(double factor) const
+    [[nodiscard]] constexpr auto with_multiplied_alpha(double_t factor) const
     {
         return Color{r, g, b, static_cast<u8>(a * factor)};
     }
@@ -159,11 +156,9 @@ template <> class fmt::formatter<sm::Color>
   public:
     constexpr auto parse(const format_parse_context& ctx) const { return ctx.begin(); }
 
-    template <typename FormatContext>
-    auto format(const sm::Color& p, FormatContext& ctx) //
+    template <typename FormatContext> auto format(const sm::Color& p, FormatContext& ctx) //
     {
-        return format_to(ctx.out(),
-                         "\x1b[38;2;{0};{1};{2}mCol\x1b[0m[{0}, {1}, {2}, {3}]", p.r, p.g,
-                         p.b, p.a);
+        return format_to(ctx.out(), "\x1b[38;2;{0};{1};{2}mCol\x1b[0m[{0}, {1}, {2}, {3}]", p.r,
+                         p.g, p.b, p.a);
     }
 };

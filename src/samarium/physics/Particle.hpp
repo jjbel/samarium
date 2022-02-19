@@ -38,15 +38,18 @@ struct Particle
     Vector2 pos{};
     Vector2 vel{};
     Vector2 acc{};
-    double radius{10};
-    double mass{1};
+    double_t radius{10};
+    double_t mass{1};
 
     auto as_circle() const noexcept { return Circle{pos, radius}; }
 
-    auto update(double time_delta = 1.) noexcept
+    auto apply_force(Vector2 force) noexcept { acc += force / mass; }
+
+    auto update(double_t time_delta = 1.) noexcept
     {
         vel += acc * time_delta;
         pos += vel * time_delta;
+        acc *= 0.0;
     }
 };
 } // namespace sm

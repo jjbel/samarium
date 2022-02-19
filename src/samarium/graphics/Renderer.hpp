@@ -35,8 +35,8 @@
 #include <vector>
 
 #include "samarium/core/ThreadPool.hpp"
-#include "samarium/math/Transform.hpp"
 #include "samarium/graphics/colors.hpp"
+#include "samarium/math/Transform.hpp"
 #include "samarium/math/geometry.hpp"
 #include "samarium/physics/Particle.hpp"
 
@@ -50,12 +50,12 @@ class Renderer
     struct Drawer
     {
         std::function<sm::Color(const sm::Vector2&)> fn;
-        sm::Rect<double> rect;
+        sm::Rect<double_t> rect;
     };
 
 
     Image image;
-    Transform transform{.pos   = image.dims.as<double>() / 2.,
+    Transform transform{.pos   = image.dims.as<double_t>() / 2.,
                         .scale = Vector2{10, 10} * Vector2{1.0, -1.0}};
 
     Renderer(const Image& image_, u32 thread_count_ = std::thread::hardware_concurrency())
@@ -74,29 +74,41 @@ class Renderer
         this->draw_funcs.emplace_back(Drawer(
             fn,
             transform.apply_inverse(
-                Rect{.min = rect.min, .max = rect.max + Indices{1, 1}}.template as<double>())));
+                Rect{.min = rect.min, .max = rect.max + Indices{1, 1}}.template as<double_t>())));
     }
 
     template <typename T>
-    void draw(T&& fn, Rect<double> rect) requires(
+    void draw(T&& fn, Rect<double_t> rect) requires(
         concepts::reason("Function should accept a const Vector2&") &&
         std::invocable<T, const Vector2&>)
     {
         this->draw_funcs.emplace_back(Drawer{fn, rect});
     }
 
-    void draw(Circle circle, Color color, double aa_factor = 1.6);
+    void draw(Circle circle, Color color, double_t aa_factor = 1.6);
 
-    void draw(Particle particler, Color color = sm::colors::orangered, double aa_factor = 0.1);
+    void draw(Particle particler, Color color = sm::colors::orangered, double_t aa_factor = 0.1);
 
     void draw(LineSegment ls,
-              Color color      = sm::colors::white,
-              double thickness = 0.1,
-              double aa_factor = 0.1);
+              Color color,
+              double_t thickness = 0.1,
+              bool extend        = false,
+              double_t aa_factor = 0.1);
+
+    void draw_lines(std::ranges::range auto lines,
+                    Color color,
+                    bool extend        = false,
+                    double_t thickness = 0.1,
+                    double_t aa_factor = 0.1)
+    {
+        for (auto&& line : lines) { this->draw(line, color, extend, thickness, aa_factor); }
+    }
 
     void draw_grid(bool axes = true, bool grid = true, bool dots = true);
 
     void render();
+
+    std::array<LineSegment, 4> viewport_box() const;
 
 
   private:

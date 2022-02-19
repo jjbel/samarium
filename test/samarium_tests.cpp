@@ -28,9 +28,46 @@
 
 #include "samarium/samarium.hpp"
 
+using sm::util::print;
+
 int main()
 {
-    sm::util::print(sm::version);
-    sm::util::print("A Vector2: ", sm::Vector2{.x = 5, .y = -3});
-    sm::util::print("A Color: ", sm::Color{.r = 5, .g = 200, .b = 255});
+    using namespace sm::literals;
+    auto rn = sm::Renderer{sm::Image{sm::dimsHD}};
+
+    const auto gravity = -100.0_y;
+
+    const auto anchor          = 30.0_y;
+    const auto rest_length     = 4.0;
+    const auto spring_constant = 10.0;
+
+    auto p1 = sm::Particle{.pos = {}, .vel = {50, 0}, .radius = 5, .mass = 4};
+    auto p2 = p1;
+
+    const auto l = sm::LineSegment{{-30, -30}, {30, -9}};
+
+    const auto dims         = rn.image.dims.as<double>();
+    const auto viewport_box = rn.viewport_box();
+
+    auto win = sm::Window{rn.image.dims, "Collision", 60};
+    while (win.is_open() && win.frame_counter <= 1800 && 1)
+    {
+        sm::WindowManager(win, rn, "#10101B"_c);
+
+        p1.apply_force(p1.mass * gravity);
+        const auto spring = p1.pos - anchor;
+        const auto force =
+            spring.with_length(spring_constant * (rest_length - spring.length()));
+        print(spring, force);
+        p1.apply_force(force);
+        p1.update(1.0 / 60.0);
+        // sm::phys::collide(p1, p2, l);
+
+        for (auto&& i : viewport_box) sm::phys::collide(p1, p2, i);
+
+        // rn.draw(l, "#03bcff"_c);
+        rn.draw(sm::LineSegment{anchor, p1.pos}, sm::colors::lightgreen, .08);
+        rn.draw(p1, sm::colors::orangered);
+        p2 = p1;
+    }
 }

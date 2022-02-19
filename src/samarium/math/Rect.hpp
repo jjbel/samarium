@@ -34,7 +34,7 @@
 
 namespace sm
 {
-template <concepts::number T = double> struct Rect
+template <concepts::number T = double_t> struct Rect
 {
     Vector2_t<T> min;
     Vector2_t<T> max;

@@ -47,19 +47,17 @@ template <typename T> [[nodiscard]] constexpr auto in_range(T value, Extents<T> 
     return range.contains(value);
 }
 
-template <typename T>
-[[nodiscard]] constexpr auto clamp(T value, Extents<T> range) noexcept
+template <typename T> [[nodiscard]] constexpr auto clamp(T value, Extents<T> range) noexcept
 {
     return range.clamp(value);
 }
 
-template <typename T> [[nodiscard]] constexpr auto lerp(double factor, Extents<T> range)
+template <typename T> [[nodiscard]] constexpr auto lerp(double_t factor, Extents<T> range)
 {
     return range.lerp(factor);
 }
 
-template <typename T>
-[[nodiscard]] constexpr auto lerp_inverse(double value, Extents<T> range)
+template <typename T> [[nodiscard]] constexpr auto lerp_inverse(double_t value, Extents<T> range)
 {
     return range.lerp_inverse(value);
 }
@@ -75,28 +73,26 @@ template <typename T, typename Output_t = T>
 template <typename T, typename Output_t = T>
 [[nodiscard]] constexpr auto map_range_clamp(T value, Extents<T> from, Extents<T> to)
 {
-    return static_cast<Output_t>(from.min + (from.clamp(value) - from.min) * to.size() /
-                                                from.size());
+    return static_cast<Output_t>(from.min +
+                                 (from.clamp(value) - from.min) * to.size() / from.size());
 }
 
 template <typename T, typename Output_t = T>
 [[nodiscard]] constexpr auto make_mapper(Extents<T> from, Extents<T> to)
 {
     return [from_min = from.min, from_max = from.max, from_range = from.size(),
-            to_range = to.size()](T value) {
-        return static_cast<Output_t>(from_min +
-                                     (value - from_min) * to_range / from_range);
-    };
+            to_range = to.size()](T value)
+    { return static_cast<Output_t>(from_min + (value - from_min) * to_range / from_range); };
 }
 
 template <typename T, typename Output_t = T>
 [[nodiscard]] constexpr auto make_clamped_mapper(Extents<T> from, Extents<T> to)
 {
-    return [from, from_min = from.min, from_max = from.max,
-            from_range = from.max - from.min, to_range = to.max - to.min](T value)
+    return [from, from_min = from.min, from_max = from.max, from_range = from.max - from.min,
+            to_range = to.max - to.min](T value)
     {
-        return static_cast<Output_t>(from_min + (from.clamp(value) - from_min) *
-                                                    to_range / from_range);
+        return static_cast<Output_t>(from_min +
+                                     (from.clamp(value) - from_min) * to_range / from_range);
     };
 }
 } // namespace sm::interp

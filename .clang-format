@@ -15,7 +15,7 @@ BinPackArguments: 'true'
 BreakBeforeBraces: Allman
 BreakConstructorInitializers: BeforeColon
 BreakInheritanceList: BeforeColon
-ColumnLimit: '98'
+ColumnLimit: '82'
 # Cpp11BracedListStyle: 'false'
 IndentWidth: '4'
 MaxEmptyLinesToKeep: '2'

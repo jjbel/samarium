@@ -41,10 +41,10 @@ static auto current = size_t{0};
 
 const static auto cache = []()
 {
-    auto values = std::array<double, cache_length>{};
+    auto values = std::array<double_t, cache_length>{};
     // std::random_device rand_dev;
     std::mt19937 generator(247);
-    std::uniform_real_distribution<double> distribution(0., 1.);
+    std::uniform_real_distribution<double_t> distribution(0., 1.);
     std::generate(values.begin(), values.end(), [&] { return distribution(generator); });
     return values;
 }();

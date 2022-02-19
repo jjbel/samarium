@@ -43,16 +43,16 @@ class Transform
 
     constexpr auto apply(Vector2 vec) const { return vec * scale + pos; }
 
-    constexpr auto apply(Rect<double> rect) const
+    constexpr auto apply(Rect<double_t> rect) const
     {
-        return Rect<double>{apply(rect.min), apply(rect.max)};
+        return Rect<double_t>{apply(rect.min), apply(rect.max)};
     }
 
     constexpr auto apply_inverse(Vector2 vec) const { return (vec - pos) / scale; }
 
-    constexpr auto apply_inverse(Rect<double> rect) const
+    constexpr auto apply_inverse(Rect<double_t> rect) const
     {
-        return Rect<double>::find_min_max( // -ve sign may invalidate min, max so recalculate it
+        return Rect<double_t>::find_min_max( // -ve sign may invalidate min, max so recalculate it
             apply_inverse(rect.min), apply_inverse(rect.max));
     }
 

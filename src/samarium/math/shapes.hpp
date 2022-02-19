@@ -35,7 +35,7 @@ namespace sm
 struct Circle
 {
     Vector2 centre{};
-    double radius{};
+    double_t radius{};
 };
 
 struct LineSegment
