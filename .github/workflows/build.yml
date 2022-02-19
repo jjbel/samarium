@@ -96,6 +96,67 @@ jobs:
         run: |
           sonar-scanner --define sonar.host.url="${{ env.SONAR_SERVER_URL }}" --define sonar.cfamily.build-wrapper-output="${{ env.BUILD_WRAPPER_OUT_DIR }}"
 
+  linux-conan-create:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Set up GCC
+          uses: egor-tensin/setup-gcc@v1
+          with:
+            version: 11
+            platform: x64
+
+        - name: Setup cmake
+          uses: jwlawson/actions-setup-cmake@v1.12
+          with:
+            cmake-version: '3.22.x'
+
+        - name: Install Conan
+          id: conan
+          uses: turtlebrowser/get-conan@main
+
+        - name: Install other deps
+          run: sudo apt-get update && sudo apt-get install valgrind libtbb-dev libsfml-dev libudev-dev libxcb-xrm-dev mesa-common-dev libgl1-mesa-dev libdrm-dev libxxf86vm-dev libxt-dev xutils-dev xcb libx11-xcb-dev libxcb-glx0 libxcb-glx0-dev xorg-dev libxcb-dri2-0-dev
+
+        - name: Check Tool Versions
+          run: |
+            conan    --version
+            cmake    --version
+            c++      --version
+
+        - name: Configure Conan
+          run: |
+            conan profile new default --detect
+            conan profile update settings.compiler.libcxx=libstdc++11 default
+
+        - name: Git Clone
+          run: git clone https://github.com/strangeQuark1041/samarium.git
+
+        - name: Conan Create
+          run: conan create samarium --build=missing
+
+  windows-conan-create:
+      runs-on: windows-latest
+      steps:
+        - name: Setup cmake
+          uses: jwlawson/actions-setup-cmake@v1.12
+          with:
+            cmake-version: '3.22.x'
+
+        - name: Install Conan
+          id: conan
+          uses: turtlebrowser/get-conan@main
+
+        - name: Configure Conan
+          run: |
+            conan profile new default --detect
+            conan profile update settings.compiler.libcxx=libstdc++11 default
+
+        - name: Git Clone
+          run: git clone https://github.com/strangeQuark1041/samarium.git
+
+        - name: Conan Create
+          run: conan create samarium --build=missing
+
   # analyze:
   #     name: Analyze
   #     runs-on: windows-latest
@@ -139,41 +200,3 @@ jobs:
   #         with:
   #           name: sarif-file
   #           path: ${{ steps.run-analysis.outputs.sarif }}
-
-  linux-conan-create:
-      runs-on: ubuntu-latest
-      steps:
-        - name: Set up GCC
-          uses: egor-tensin/setup-gcc@v1
-          with:
-            version: 11
-            platform: x64
-
-        - name: Setup cmake
-          uses: jwlawson/actions-setup-cmake@v1.12
-          with:
-            cmake-version: '3.22.x'
-
-        - name: Install Conan
-          id: conan
-          uses: turtlebrowser/get-conan@main
-
-        - name: Install other deps
-          run: sudo apt-get update && sudo apt-get install valgrind libtbb-dev libsfml-dev libudev-dev libxcb-xrm-dev mesa-common-dev libgl1-mesa-dev libdrm-dev libxxf86vm-dev libxt-dev xutils-dev xcb libx11-xcb-dev libxcb-glx0 libxcb-glx0-dev xorg-dev libxcb-dri2-0-dev
-
-        - name: Check Tool Versions
-          run: |
-            conan    --version
-            cmake    --version
-            c++      --version
-
-        - name: Configure Conan
-          run: |
-            conan profile new default --detect
-            conan profile update settings.compiler.libcxx=libstdc++11 default
-
-        - name: Git Clone
-          run: git clone https://github.com/strangeQuark1041/samarium.git
-
-        - name: Conan Create
-          run: conan create samarium --build=missing
