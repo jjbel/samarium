@@ -149,7 +149,6 @@ jobs:
         - name: Configure Conan
           run: |
             conan profile new default --detect
-            conan profile update settings.compiler.libcxx=libstdc++11 default
 
         - name: Git Clone
           run: git clone https://github.com/strangeQuark1041/samarium.git
