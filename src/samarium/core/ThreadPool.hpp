@@ -88,12 +88,7 @@ class ThreadPool
      * destroys all threads. Note that if the variable paused is set to true, then
      * any tasks still in the queue will never be executed.
      */
-    ~ThreadPool()
-    {
-        wait_for_tasks();
-        running = false;
-        destroy_threads();
-    }
+    ~ThreadPool();
 
     // =======================
     // Public member functions
@@ -105,21 +100,14 @@ class ThreadPool
      *
      * @return The number of queued tasks.
      */
-    ui64 get_tasks_queued() const
-    {
-        const std::scoped_lock lock(queue_mutex);
-        return tasks.size();
-    }
+    ui64 get_tasks_queued() const;
 
     /**
      * @brief Get the number of tasks currently being executed by the threads.
      *
      * @return The number of running tasks.
      */
-    ui32 get_tasks_running() const
-    {
-        return tasks_total - /* (ui32) */ get_tasks_queued();
-    }
+    ui32 get_tasks_running() const;
 
     /**
      * @brief Get the total number of unfinished tasks - either still in the
@@ -127,14 +115,14 @@ class ThreadPool
      *
      * @return The total number of tasks.
      */
-    ui32 get_tasks_total() const { return tasks_total; }
+    ui32 get_tasks_total() const;
 
     /**
      * @brief Get the number of threads in the pool.
      *
      * @return The number of threads.
      */
-    ui32 get_thread_count() const { return thread_count; }
+    ui32 get_thread_count() const;
 
     /**
      * @brief Parallelize a loop by splitting it into blocks, submitting each
@@ -253,20 +241,7 @@ class ThreadPool
      * implementation. With a hyperthreaded CPU, this will be twice the number of
      * CPU cores. If the argument is zero, the default value will be used instead.
      */
-    void reset(const ui32& _thread_count = std::thread::hardware_concurrency())
-    {
-        bool was_paused = paused;
-        paused          = true;
-        wait_for_tasks();
-        running = false;
-        destroy_threads();
-        thread_count =
-            _thread_count ? _thread_count : std::thread::hardware_concurrency();
-        threads.reset(new std::thread[thread_count]);
-        paused  = was_paused;
-        running = true;
-        create_threads();
-    }
+    void reset(const ui32& _thread_count = std::thread::hardware_concurrency());
 
     /**
      * @brief Submit a function with zero or more arguments and no return value
@@ -361,21 +336,7 @@ class ThreadPool
      * submit() instead, and call the wait() member function of the generated
      * future.
      */
-    void wait_for_tasks()
-    {
-        while (true)
-        {
-            if (!paused)
-            {
-                if (tasks_total == 0) break;
-            }
-            else
-            {
-                if (get_tasks_running() == 0) break;
-            }
-            sleep_or_yield();
-        }
-    }
+    void wait_for_tasks();
 
     // ===========
     // Public data

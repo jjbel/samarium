@@ -52,7 +52,7 @@ int main()
     auto win = sm::Window{rn.image.dims, "Collision", 60};
     while (win.is_open() && win.frame_counter <= 1800 && 1)
     {
-        sm::WindowManager(win, rn, "#10101B"_c);
+        sm::WindowManager wm(win, rn, "#10101B"_c);
 
         p1.apply_force(p1.mass * gravity);
         const auto spring = p1.pos - anchor;

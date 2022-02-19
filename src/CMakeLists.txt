@@ -39,6 +39,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 add_library(samarium
+    ${CMAKE_CURRENT_SOURCE_DIR}/samarium/core/ThreadPool.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/samarium/util/util.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/samarium/util/file.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/samarium/graphics/Renderer.cpp
