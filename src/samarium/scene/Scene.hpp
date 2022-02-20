@@ -28,67 +28,23 @@
 
 #pragma once
 
-#include <chrono>
-#include <thread>
-
-#include "SFML/Graphics.hpp"
-
-#include "samarium/graphics/Renderer.hpp"
-#include "samarium/util/util.hpp"
+#include "samarium/gui/Window.hpp"
 
 namespace sm
 {
-class Window
+struct Scene
 {
-    sf::Image im;
-    sf::Texture sftexture;
-    sf::Sprite sfbufferSprite;
-    sf::RenderWindow window;
-    sm::util::Stopwatch watch{};
-
-  public:
-    size_t frame_counter{};
-
-    Window(Dimensions dims         = sm::dimsFHD,
-           const std::string& name = "Samarium Window",
-           uint32_t framerate      = 65536)
-        : window(sf::VideoMode(static_cast<uint32_t>(dims.x),
-                               static_cast<uint32_t>(dims.y)),
-                 name,
-                 sf::Style::Titlebar | sf::Style::Close)
+    struct Settings
     {
-        window.setFramerateLimit(framerate);
-    }
+        double time_delta{1};
+        Vector2 gravity{};
+        double friction_coefficient{};
+        double restitution_coefficient{};
+        double spring_constant{1};
+    };
 
-    bool is_open() const;
-
-    void get_input();
-
-    void draw(const Image& image);
-
-    void display();
-
-    operator bool() const { return window.isOpen(); }
-};
-
-struct WindowManager
-{
-    Window& window;
-    Renderer& renderer;
-
-    WindowManager(Window& win, Renderer& rn, Color color)
-        : window(win), renderer(rn)
-    {
-        window.get_input();
-        renderer.fill(color);
-    }
-
-    ~WindowManager()
-    {
-        renderer.render();
-
-        window.draw(renderer.image);
-        window.display();
-    }
+    Settings settings;
+    Window window;
+    Renderer rn;
 };
 } // namespace sm

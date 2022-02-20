@@ -57,7 +57,7 @@ void Window::display()
     window.draw(sfbufferSprite);
     window.display();
     ++frame_counter;
-    // watch.print();
+    watch.print();
     watch.reset();
 }
 } // namespace sm
