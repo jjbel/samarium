@@ -47,6 +47,27 @@ class Window
     sm::util::Stopwatch watch{};
 
   public:
+    struct Manager
+    {
+        Window& window;
+        Renderer& renderer;
+
+        Manager(Window& win, Renderer& rn, Color color)
+            : window(win), renderer(rn)
+        {
+            window.get_input();
+            renderer.fill(color);
+        }
+
+        ~Manager()
+        {
+            renderer.render();
+
+            window.draw(renderer.image);
+            window.display();
+        }
+    };
+
     size_t frame_counter{};
 
     Window(Dimensions dims         = sm::dimsFHD,
@@ -68,27 +89,17 @@ class Window
 
     void display();
 
+    template <typename T>
+    requires std::invocable<T>
+    void run(Renderer& rn, Color color, T call_every_frame)
+    {
+        while (this->is_open())
+        {
+            const auto wm = Manager(*this, rn, color);
+            call_every_frame();
+        }
+    }
+
     operator bool() const { return window.isOpen(); }
-};
-
-struct WindowManager
-{
-    Window& window;
-    Renderer& renderer;
-
-    WindowManager(Window& win, Renderer& rn, Color color)
-        : window(win), renderer(rn)
-    {
-        window.get_input();
-        renderer.fill(color);
-    }
-
-    ~WindowManager()
-    {
-        renderer.render();
-
-        window.draw(renderer.image);
-        window.display();
-    }
 };
 } // namespace sm

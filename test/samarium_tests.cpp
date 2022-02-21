@@ -37,7 +37,7 @@ int main()
 
     const auto gravity = -100.0_y;
 
-    const sm::Vector2 anchor       = 30.0_y;
+    const sm::Vector2 anchor   = 30.0_y;
     const auto rest_length     = 4.0;
     const auto spring_constant = 10.0;
 
@@ -49,24 +49,24 @@ int main()
     const auto dims         = rn.image.dims.as<double>();
     const auto viewport_box = rn.viewport_box();
 
-    auto win = sm::Window{rn.image.dims, "Collision", 60};
-    while (win.is_open() && win.frame_counter <= 1800 && 1)
+    const auto run_every_frame = [&]
     {
-        sm::WindowManager wm(win, rn, "#10101B"_c);
+        p1.apply_force(p1.mass * gravity);
+        const auto spring = p1.pos - anchor;
+        const auto force =
+            spring.with_length(spring_constant * (rest_length - spring.length()));
+        p1.apply_force(force);
+        p1.update(1.0 / 60.0);
+        sm::phys::collide(p1, p2, l);
 
-        // p1.apply_force(p1.mass * gravity);
-        // const auto spring = p1.pos - anchor;
-        // const auto force =
-        // spring.with_length(spring_constant * (rest_length - spring.length()));
-        // p1.apply_force(force);
-        // p1.update(1.0 / 60.0);
-        // sm::phys::collide(p1, p2, l);
+        for (auto&& i : viewport_box) sm::phys::collide(p1, p2, i);
 
-        // for (auto&& i : viewport_box) sm::phys::collide(p1, p2, i);
+        rn.draw(l, "#03bcff"_c);
+        rn.draw(sm::LineSegment{anchor, p1.pos}, sm::colors::lightgreen, .08);
+        rn.draw(p1, sm::colors::orangered);
+        p2 = p1;
+    };
 
-        // rn.draw(l, "#03bcff"_c);
-        // rn.draw(sm::LineSegment{anchor, p1.pos}, sm::colors::lightgreen, .08);
-        // rn.draw(p1, sm::colors::orangered);
-        // p2 = p1;
-    }
+    auto window = sm::Window{rn.image.dims, "Collision", 60};
+    window.run(rn, "#10101B"_c, run_every_frame);
 }
