@@ -7,7 +7,7 @@ using sm::Vector2 = Vector2_t<double>;
 
 ## About
 
-A `Vector2_t` holds 2 values - an x and a y coordinate. It represents a Euclidean vector, or arrow in space.
+A `Vector2_t` holds 2 values - an x and a y coordinate. It represents a Euclidean vector, or an arrow in space.
 
 A `Vector2` is a vector of doubles. As it is used frequently, it is a typedef for `Vector2_t<T>`
 

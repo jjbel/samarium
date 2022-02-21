@@ -37,7 +37,7 @@ int main()
 
     const auto gravity = -100.0_y;
 
-    const auto anchor          = 30.0_y;
+    const sm::Vector2 anchor       = 30.0_y;
     const auto rest_length     = 4.0;
     const auto spring_constant = 10.0;
 
