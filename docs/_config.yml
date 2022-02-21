@@ -18,7 +18,7 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-title: Samarium
+title: Samarium Documentation
 description: >- # this means to ignore newlines until "baseurl:"
   Documentation for https://github.com/strangeQuark1041/samarium:
   a 2-D physics simulation engine written in modern C++
@@ -27,9 +27,9 @@ url: "https://strangequark1041.github.io" # the base hostname & protocol for you
 github_username: strangeQuark1041
 
 # Build settings
-theme: minima
-plugins:
-  - jekyll-feed
+theme: cayman
+# plugins:
+  # - jekyll-feed
 
 # Exclude from processing.
 # The following items will not be processed, by default.
