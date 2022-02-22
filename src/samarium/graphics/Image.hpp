@@ -28,15 +28,8 @@
 
 #pragma once
 
-#include <algorithm>
-#include <concepts>
-#include <iterator>
-#include <memory>
-#include <utility>
-
 #include "samarium/core/DynArray.hpp"
 #include "samarium/math/Rect.hpp"
-#include "samarium/math/Vector2.hpp"
 #include "samarium/util/print.hpp"
 
 #include "Color.hpp"
@@ -58,7 +51,7 @@ constexpr auto convert_2d_to_1d(Dimensions dims, Indices coordinates)
     return coordinates.y * dims.x + coordinates.x;
 }
 
-template <typename T> class Field
+template <typename T> class Grid
 {
   public:
     // Container types
@@ -76,12 +69,18 @@ template <typename T> class Field
     DynArray<T> data;
 
     // Constructors
-    Field(Dimensions dims_ = dimsFHD) : dims(dims_), data(dims.x * dims.y) {}
+    Grid(Dimensions dims_ = dimsFHD) : dims(dims_), data(dims.x * dims.y) {}
 
-    Field(Dimensions dims_, T init_value) : dims(dims_), data(dims.x * dims.y, init_value) {}
+    Grid(Dimensions dims_, T init_value)
+        : dims(dims_), data(dims.x * dims.y, init_value)
+    {
+    }
 
     // Member functions
-    T& operator[](Indices indices) { return this->data[indices.y * this->dims.x + indices.x]; }
+    T& operator[](Indices indices)
+    {
+        return this->data[indices.y * this->dims.x + indices.x];
+    }
 
     const T& operator[](Indices indices) const
     {
@@ -113,16 +112,18 @@ template <typename T> class Field
     DynArray<std::array<u8, Format::length>> formatted_data(Format format) const
     {
         const auto format_length = Format::length;
-        auto fmt_data            = DynArray<std::array<u8, format_length>>(this->size());
+        auto fmt_data = DynArray<std::array<u8, format_length>>(this->size());
 
-        std::transform(std::execution::par_unseq, this->begin(), this->end(), fmt_data.begin(),
-                       [format](auto color) { return color.get_formatted(format); });
+        std::transform(std::execution::par_unseq, this->begin(), this->end(),
+                       fmt_data.begin(),
+                       [format](auto color)
+                       { return color.get_formatted(format); });
 
         return fmt_data;
     }
 };
 
-using Image = Field<Color>;
+using Image = Grid<Color>;
 
 // Since data is already stored as RGBA, no need to convert it, directly return it
 // template <> template <> inline auto Image::formatted_data(RGBA_t) const
