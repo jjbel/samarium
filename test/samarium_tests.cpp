@@ -28,26 +28,28 @@
 
 #include "samarium/samarium.hpp"
 
-using sm::util::print;
-using namespace sm::literals;
-
 int main()
 {
+    using namespace sm::literals;
     auto rn = sm::Renderer{sm::Image{sm::dimsHD}};
 
     const auto gravity = -100.0_y;
 
     const sm::Vector2 anchor   = 30.0_y;
-    const auto rest_length     = 4.0;
-    const auto spring_constant = 10.0;
+    const auto rest_length     = 14.0;
+    const auto spring_constant = 100.0;
 
-    auto p1 = sm::Particle{.pos = {}, .vel = {50, 0}, .radius = 1, .mass = 40};
+    auto p1 = sm::Particle{.pos = {}, .vel = {50, 0}, .radius = 3, .mass = 40};
     auto p2 = p1;
 
     const auto l = sm::LineSegment{{-30, -30}, {30, -9}};
 
     const auto dims         = rn.image.dims.as<double>();
     const auto viewport_box = rn.viewport_box();
+
+    auto window = sm::Window{rn.image.dims, "Collision", 60};
+
+    sm::util::Stopwatch watch{};
 
     const auto run_every_frame = [&]
     {
@@ -56,17 +58,26 @@ int main()
         const auto force =
             spring.with_length(spring_constant * (rest_length - spring.length()));
         p1.apply_force(force);
-        p1.update(1.0 / 60.0);
+        p1.update();
+
         sm::phys::collide(p1, p2, l);
 
         for (auto&& i : viewport_box) sm::phys::collide(p1, p2, i);
-
-        rn.draw(l, "#03bcff"_c);
-        rn.draw(sm::LineSegment{anchor, p1.pos}, sm::colors::lightgreen, .08);
-        rn.draw(p1, sm::colors::orangered);
+        rn.draw_line_segment(l, sm::gradients::purple, 0.4);
+        rn.draw_line_segment(sm::LineSegment{anchor, p1.pos}, "#c471ed"_c, .06);
+        rn.draw(p1, sm::colors::red);
         p2 = p1;
+
+        fmt::print(stderr, "\r{:>{}}", "",
+                   sm::util::get_terminal_dims()
+                       .x); // clear line by padding spaces to width of terminal
+        fmt::print(
+            stderr, "\rCurrent framerate: {}",
+            std::round(
+                1.0 /
+                watch.time().count())); // print to stderr for no line buffering
+        watch.reset();
     };
 
-    auto window = sm::Window{rn.image.dims, "Collision", 60};
     window.run(rn, "#10101B"_c, run_every_frame);
 }

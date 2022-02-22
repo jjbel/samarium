@@ -37,7 +37,22 @@
 
 namespace sm::math
 {
-[[nodiscard]] constexpr auto distance(Vector2 p1, Vector2 p2) { return (p1 - p2).length(); }
+[[nodiscard]] constexpr auto distance(Vector2 p1, Vector2 p2)
+{
+    return (p1 - p2).length();
+}
+
+[[nodiscard]] constexpr auto lerp_along(Vector2 point, LineSegment ls)
+{
+    return Vector2::dot(point - ls.p1, ls.vector()) / ls.length_sq();
+}
+
+[[nodiscard]] constexpr auto clamped_lerp_along(Vector2 point, LineSegment ls)
+{
+    return interp::clamp(Vector2::dot(point - ls.p1, ls.vector()) /
+                             ls.length_sq(),
+                         Extents<double>{0.0, 1.0});
+}
 
 [[nodiscard]] constexpr auto project(Vector2 point, LineSegment ls)
 {
@@ -51,7 +66,8 @@ namespace sm::math
 {
     // https://stackoverflow.com/a/1501725/17100530
     const auto vec = ls.vector();
-    const auto t   = interp::clamp(Vector2::dot(point - ls.p1, vec) / ls.length_sq(), {0., 1.});
+    const auto t   = interp::clamp(
+          Vector2::dot(point - ls.p1, vec) / ls.length_sq(), {0., 1.});
     return interp::lerp(t, Extents<Vector2>{ls.p1, ls.p2});
 }
 
@@ -71,10 +87,12 @@ namespace sm::math
 
 [[nodiscard]] constexpr auto lies_in_segment(Vector2 point, LineSegment l)
 {
-    return interp::in_range(Vector2::dot(point - l.p1, l.vector()) / l.length_sq(), {0., 1.});
+    return interp::in_range(
+        Vector2::dot(point - l.p1, l.vector()) / l.length_sq(), {0., 1.});
 }
 
-[[nodiscard]] constexpr std::optional<Vector2> intersection(LineSegment l1, LineSegment l2)
+[[nodiscard]] constexpr std::optional<Vector2> intersection(LineSegment l1,
+                                                            LineSegment l2)
 {
     const auto denom1 = l1.p2.x - l1.p1.x;
     const auto denom2 = l2.p2.x - l2.p1.x;
@@ -85,21 +103,24 @@ namespace sm::math
     if (denom1_is_0 && denom2_is_0) return std::nullopt;
 
     if (denom1_is_0)
-        return std::optional{Vector2{l1.p1.x, l2.slope() * (l1.p1.x - l2.p1.x) + l2.p1.y}};
+        return std::optional{
+            Vector2{l1.p1.x, l2.slope() * (l1.p1.x - l2.p1.x) + l2.p1.y}};
     else if (denom2_is_0)
-        return std::optional{Vector2{l2.p1.x, l1.slope() * (l2.p1.x - l1.p1.x) + l1.p1.y}};
+        return std::optional{
+            Vector2{l2.p1.x, l1.slope() * (l2.p1.x - l1.p1.x) + l1.p1.y}};
     else
     {
         const auto m1 = l1.slope();
         const auto m2 = l2.slope();
 
-        const auto x = (m2 * l2.p1.x - m1 * l1.p1.x + l1.p1.y - l2.p1.y) / (m2 - m1);
+        const auto x =
+            (m2 * l2.p1.x - m1 * l1.p1.x + l1.p1.y - l2.p1.y) / (m2 - m1);
         return std::optional{Vector2{x, m1 * (x - l1.p1.x) + l1.p1.y}};
     }
 }
 
-[[nodiscard]] constexpr std::optional<Vector2> clamped_intersection(LineSegment l1,
-                                                                    LineSegment l2)
+[[nodiscard]] constexpr std::optional<Vector2>
+clamped_intersection(LineSegment l1, LineSegment l2)
 {
     const auto point = intersection(l1, l2);
     if (!point) return std::nullopt;

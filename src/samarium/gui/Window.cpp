@@ -46,7 +46,8 @@ void Window::get_input()
 
 void Window::draw(const Image& image)
 {
-    im.create(static_cast<uint32_t>(image.dims.x), static_cast<uint32_t>(image.dims.y),
+    im.create(static_cast<uint32_t>(image.dims.x),
+              static_cast<uint32_t>(image.dims.y),
               reinterpret_cast<const sf::Uint8*>(&image[0]));
     sftexture.loadFromImage(im);
     sfbufferSprite.setTexture(sftexture, true);
@@ -58,5 +59,10 @@ void Window::display()
     window.display();
     ++frame_counter;
     watch.reset();
+}
+
+double Window::current_framerate() const
+{
+    return this->watch.time().count() * 1000;
 }
 } // namespace sm

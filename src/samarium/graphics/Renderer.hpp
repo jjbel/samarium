@@ -47,6 +47,19 @@ namespace sm
 class Renderer
 {
   public:
+    static auto antialias(double_t distance, double_t radius, double_t aa_factor)
+    {
+        // https://www.desmos.com/calculator/jhewyqc2wy
+        return interp::clamp((radius - distance) / aa_factor + 1, {0.0, 1.0});
+    }
+
+    static auto
+    antialias(Color color, double_t distance, double_t radius, double_t aa_factor)
+    {
+        return color.with_multiplied_alpha(
+            antialias(distance, radius, aa_factor));
+    }
+
     struct Drawer
     {
         std::function<sm::Color(const sm::Vector2&)> fn;
@@ -58,7 +71,8 @@ class Renderer
     Transform transform{.pos   = image.dims.as<double_t>() / 2.,
                         .scale = Vector2{10, 10} * Vector2{1.0, -1.0}};
 
-    Renderer(const Image& image_, u32 thread_count_ = std::thread::hardware_concurrency())
+    Renderer(const Image& image_,
+             u32 thread_count_ = std::thread::hardware_concurrency())
         : image{image_}, thread_count{thread_count_}, thread_pool{thread_count_}
 
     {
@@ -67,14 +81,15 @@ class Renderer
     auto fill(const Color& color) { this->image.fill(color); }
 
     template <typename T>
-    void draw(T&& fn) requires(concepts::reason("Function should accept a const Vector2&") &&
-                               std::invocable<T, const Vector2&>)
+    void draw(T&& fn) requires(
+        concepts::reason("Function should accept a const Vector2&") &&
+        std::invocable<T, const Vector2&>)
     {
         const auto rect = image.rect();
-        this->draw_funcs.emplace_back(Drawer(
-            fn,
-            transform.apply_inverse(
-                Rect{.min = rect.min, .max = rect.max + Indices{1, 1}}.template as<double_t>())));
+        this->draw_funcs.emplace_back(
+            Drawer(fn, transform.apply_inverse(
+                           Rect{.min = rect.min, .max = rect.max + Indices{1, 1}}
+                               .template as<double_t>())));
     }
 
     template <typename T>
@@ -87,21 +102,56 @@ class Renderer
 
     void draw(Circle circle, Color color, double_t aa_factor = 1.6);
 
-    void draw(Particle particler, Color color = sm::colors::orangered, double_t aa_factor = 0.1);
-
-    void draw(LineSegment ls,
-              Color color,
-              double_t thickness = 0.1,
-              bool extend        = false,
+    void draw(Particle particler,
+              Color color        = sm::colors::orangered,
               double_t aa_factor = 0.1);
 
-    void draw_lines(std::ranges::range auto lines,
-                    Color color,
-                    bool extend        = false,
-                    double_t thickness = 0.1,
-                    double_t aa_factor = 0.1)
+    void draw_line_segment(LineSegment ls,
+                           Color color,
+                           double_t thickness = 0.1,
+                           double_t aa_factor = 0.1);
+
+    void draw_line(LineSegment ls,
+                   Color color,
+                   double_t thickness = 0.1,
+                   double_t aa_factor = 0.1);
+
+    template <typename T>
+    requires std::invocable<T, double>
+    void draw_line_segment(LineSegment ls,
+                           T function_along_line,
+                           double_t thickness = 0.1,
+                           double_t aa_factor = 0.1)
     {
-        for (auto&& line : lines) { this->draw(line, color, extend, thickness, aa_factor); }
+        const auto vector = ls.vector().abs();
+        const auto extra  = 2 * aa_factor;
+        this->draw(
+            [=](const Vector2& coords)
+            {
+                return antialias(
+                    function_along_line(math::lerp_along(coords, ls)),
+                    math::clamped_distance(coords, ls), thickness, aa_factor);
+            },
+            Rect<double_t>::from_centre_width_height(
+                (ls.p1 + ls.p2) / 2.0, vector.x + extra, vector.y + extra));
+    }
+
+    template <typename T>
+    requires std::invocable<T, double>
+    void draw_line(LineSegment ls,
+                   T function_along_line,
+                   double_t thickness = 0.1,
+                   double_t aa_factor = 0.1)
+    {
+        const auto vector = ls.vector().abs();
+        const auto extra  = 2 * aa_factor;
+        this->draw(
+            [=](const Vector2& coords)
+            {
+                return antialias(
+                    function_along_line(math::clamped_lerp_along(coords, ls)),
+                    math::distance(coords, ls), thickness, aa_factor);
+            });
     }
 
     void draw_grid(bool axes = true, bool grid = true, bool dots = true);

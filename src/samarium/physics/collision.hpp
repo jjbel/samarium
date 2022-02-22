@@ -95,6 +95,6 @@ constexpr auto collide(Particle& now, Particle& prev, const LineSegment& l)
     now.pos = point + leftover_vel - radius_shift;
     now.vel.reflect(vec);
 
-    sm::util::print(leftover_vel);
+    // sm::util::print(leftover_vel);
 }
 } // namespace sm::phys

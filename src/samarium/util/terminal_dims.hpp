@@ -28,28 +28,34 @@
 
 #pragma once
 
-#include "samarium/graphics/Color.hpp"
-#include "samarium/math/shapes.hpp"
+// https://stackoverflow.com/a/62485211/17100530
 
-namespace sm
+#if defined(_WIN32)
+#define WIN32_LEAN_AND_MEAN
+#define VC_EXTRALEAN
+#include <Windows.h>
+#elif defined(__linux__)
+#include <stdio.h>
+#include <sys/ioctl.h>
+#include <unistd.h>
+#endif // Windows/Linux
+
+#include "samarium/math/Vector2.hpp"
+
+namespace sm::util
 {
-struct Particle
+Dimensions get_terminal_dims()
 {
-    Vector2 pos{};
-    Vector2 vel{};
-    Vector2 acc{};
-    double_t radius{10};
-    double_t mass{1};
-
-    auto as_circle() const noexcept { return Circle{pos, radius}; }
-
-    auto apply_force(Vector2 force) noexcept { acc += force / mass; }
-
-    auto update(double_t time_delta = 1.0 / 64) noexcept
-    {
-        vel += acc * time_delta;
-        pos += vel * time_delta;
-        acc *= 0.0;
-    }
-};
-} // namespace sm
+#if defined(_WIN32)
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+    return Dimensions{
+        static_cast<u32>(csbi.srWindow.Right - csbi.srWindow.Left + 1),
+        static_cast<u32>(csbi.srWindow.Bottom - csbi.srWindow.Top + 1)};
+#elif defined(__linux__)
+    struct winsize w;
+    ioctl(fileno(stdout), TIOCGWINSZ, &w);
+    return {static_cast<u32>(w.ws_col), static_cast<u32>(w.ws_row)};
+#endif // Windows/Linux
+}
+} // namespace sm::util

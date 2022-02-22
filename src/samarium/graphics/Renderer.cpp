@@ -33,12 +33,6 @@
 
 namespace sm
 {
-auto antialias(double_t distance, double_t radius, double_t aa_factor)
-{
-    // https://www.desmos.com/calculator/jhewyqc2wy
-    return interp::clamp((radius - distance) / aa_factor + 1, {0.0, 1.0});
-}
-
 void Renderer::render()
 {
     if (draw_funcs.empty()) return;
@@ -74,8 +68,8 @@ void Renderer::draw(Circle circle, Color color, double_t aa_factor)
     this->draw(
         [=](const Vector2& coords)
         {
-            return color.with_multiplied_alpha(antialias(
-                math::distance(coords, circle.centre), circle.radius, aa_factor));
+            return antialias(color, math::distance(coords, circle.centre),
+                             circle.radius, aa_factor);
         },
         Rect<double_t>::from_centre_width_height(
             circle.centre, circle.radius + aa_factor, circle.radius + aa_factor));
@@ -86,22 +80,35 @@ void Renderer::draw(Particle particle, Color color, double_t aa_factor)
     this->draw(particle.as_circle(), color, aa_factor);
 }
 
-void Renderer::draw(LineSegment ls,
-                    Color color,
-                    double_t thickness,
-                    bool extend,
-                    double_t aa_factor)
+void Renderer::draw_line_segment(LineSegment ls,
+                                 Color color,
+                                 double_t thickness,
+                                 double_t aa_factor)
 {
     const auto vector = ls.vector().abs();
     const auto extra  = 2 * aa_factor;
     this->draw(
         [=](const Vector2& coords)
         {
-            return color.with_multiplied_alpha(antialias(
-                math::clamped_distance(coords, ls), thickness, aa_factor));
+            return antialias(color, math::clamped_distance(coords, ls), thickness,
+                             aa_factor);
         },
         Rect<double_t>::from_centre_width_height(
             (ls.p1 + ls.p2) / 2.0, vector.x + extra, vector.y + extra));
+}
+
+void Renderer::draw_line(LineSegment ls,
+                         Color color,
+                         double_t thickness,
+                         double_t aa_factor)
+{
+    const auto vector = ls.vector().abs();
+    const auto extra  = 2 * aa_factor;
+    this->draw(
+        [=](const Vector2& coords) {
+            return antialias(color, math::distance(coords, ls), thickness,
+                             aa_factor);
+        });
 }
 
 void Renderer::draw_grid(bool axes, bool grid, bool dots)

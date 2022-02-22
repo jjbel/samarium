@@ -30,6 +30,8 @@
 
 #include <tuple>
 
+#include "samarium/graphics/Color.hpp"
+
 #include "math.hpp"
 
 namespace sm
@@ -57,6 +59,11 @@ template <concepts::arithmetic T> class Extents
     [[nodiscard]] constexpr auto lerp(double_t factor) const
     {
         return min * (1. - factor) + max * factor;
+    }
+
+    [[nodiscard]] constexpr auto clamped_lerp(double_t factor) const
+    {
+        return min * (1. - this->clamp(factor)) + max * factor;
     }
 
     [[nodiscard]] constexpr double_t lerp_inverse(T value) const

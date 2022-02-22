@@ -72,7 +72,7 @@ class Window
 
     Window(Dimensions dims         = sm::dimsFHD,
            const std::string& name = "Samarium Window",
-           uint32_t framerate      = 65536)
+           uint32_t framerate      = 64)
         : window(sf::VideoMode(static_cast<uint32_t>(dims.x),
                                static_cast<uint32_t>(dims.y)),
                  name,
@@ -99,6 +99,8 @@ class Window
             call_every_frame();
         }
     }
+
+    double current_framerate() const;
 
     operator bool() const { return window.isOpen(); }
 };

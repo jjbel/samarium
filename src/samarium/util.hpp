@@ -31,3 +31,4 @@
 #include "samarium/util/file.hpp"
 #include "samarium/util/print.hpp"
 #include "samarium/util/random.hpp"
+#include "samarium/util/terminal_dims.hpp"
