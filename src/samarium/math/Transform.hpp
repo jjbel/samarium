@@ -43,20 +43,20 @@ class Transform
 
     constexpr auto apply(Vector2 vec) const { return vec * scale + pos; }
 
-    constexpr auto apply(Rect<double_t> rect) const
+    constexpr auto apply(const Rect<double_t>& rect) const
     {
         return Rect<double_t>{apply(rect.min), apply(rect.max)};
     }
 
     constexpr auto apply_inverse(Vector2 vec) const { return (vec - pos) / scale; }
 
-    constexpr auto apply_inverse(Rect<double_t> rect) const
+    constexpr auto apply_inverse(const Rect<double_t>& rect) const
     {
         return Rect<double_t>::find_min_max( // -ve sign may invalidate min, max so recalculate it
             apply_inverse(rect.min), apply_inverse(rect.max));
     }
 
-    constexpr auto apply_inverse(LineSegment l) const
+    constexpr auto apply_inverse(const LineSegment& l) const
     {
         return LineSegment( // -ve sign may invalidate min, max so recalculate it
             apply_inverse(l.p1), apply_inverse(l.p2));

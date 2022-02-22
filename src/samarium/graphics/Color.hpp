@@ -74,9 +74,9 @@ class Color
     static consteval auto from_hex(const char* str)
     {
         const auto length = util::strlen(str);
-        if (str[0] != '#') throw std::logic_error("Hex string must start with #");
+        if (str[0] != '#') throw std::invalid_argument("Hex string must start with #");
         if (length != 7u && length != 9u)
-            throw std::logic_error("Hex string must be either 7 or 9 characters long");
+            throw std::invalid_argument("Hex string must be either 7 or 9 characters long");
 
         const auto r =
             static_cast<u8>(16 * util::hex_to_int_safe(str[1]) + util::hex_to_int_safe(str[2]));

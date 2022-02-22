@@ -34,7 +34,8 @@
 
 namespace sm::phys
 {
-[[nodiscard]] constexpr std::optional<Vector2> did_collide(const Particle& p1, const Particle& p2)
+[[nodiscard]] constexpr std::optional<Vector2> did_collide(const Particle& p1,
+                                                           const Particle& p2)
 {
     if (math::distance(p1.pos, p2.pos) <= p1.radius + p2.radius)
         return std::optional((p1.pos + p2.pos) / 2.0);
@@ -44,20 +45,27 @@ namespace sm::phys
 
 constexpr auto collide(Particle& p1, Particle& p2)
 {
-    // https://courses.lumenlearning.com/boundless-physics/chapter/collisions/#:~:text=particles%20are%20involved%20in%20an-,elastic%20collision,-%2C%20the%20velocity%20of%20the%20first
+    /*
+        https://courses.lumenlearning.com/boundless-physics/chapter/collisions/#:~:text=particles%20are%20involved%20in%20an-,elastic%20collision,-%2C%20the%20velocity%20of%20the%20first
+        https://www.khanacademy.org/science/physics/linear-momentum/elastic-and-inelastic-collisions/a/what-are-elastic-and-inelastic-collisions
+    */
+
     if (const auto point = did_collide(p1, p2))
     {
-        const auto shift = (p1.radius + (math::distance(p1.pos, p2.pos) - p2.radius)) / 2;
-        fmt::print("Shift: {}\n", shift);
+        const auto shift =
+            (p1.radius + (math::distance(p1.pos, p2.pos) - p2.radius)) / 2;
         const auto centre = p1.pos + (p2.pos - p1.pos).with_length(shift);
         p1.pos            = centre + (p1.pos - centre).with_length(p1.radius);
         p2.pos            = centre + (p2.pos - centre).with_length(p2.radius);
 
+        const auto sum  = p1.mass + p2.mass;
+        const auto diff = p1.mass - p2.mass;
 
-        const auto vel1 = (p1.mass - p2.mass) / (p2.mass + p1.mass) * p1.vel +
-                          2 * p2.mass / (p2.mass + p1.mass) * p2.vel;
-        const auto vel2 = 2 * p1.mass / (p2.mass + p1.mass) * p1.vel +
-                          (p2.mass - p1.mass) / (p2.mass + p1.mass) * p2.vel;
+        const auto vel1 =
+            ((diff / sum) * p1.vel) + ((2 * p2.mass / sum) * p2.vel);
+        const auto vel2 =
+            ((2 * p1.mass / sum) * p1.vel) + ((-diff / sum) * p2.vel);
+
         p1.vel = vel1;
         p2.vel = vel2;
     }
@@ -69,10 +77,12 @@ did_collide(const Particle& now, const Particle& prev, const LineSegment& l)
     const auto proj = math::project(prev.pos, l);
     const auto radius_shift =
         (proj - prev.pos)
-            .with_length(prev.radius); // keep track of the point on the circumference of prev
-                                       // closest to l, which will cross l first
+            .with_length(
+                prev.radius); // keep track of the point on the circumference of
+                              // prev closest to l, which will cross l first
 
-    return sm::math::clamped_intersection({prev.pos + radius_shift, now.pos + radius_shift}, l);
+    return sm::math::clamped_intersection(
+        {prev.pos + radius_shift, now.pos + radius_shift}, l);
 }
 
 constexpr auto collide(Particle& now, Particle& prev, const LineSegment& l)
@@ -81,11 +91,12 @@ constexpr auto collide(Particle& now, Particle& prev, const LineSegment& l)
     const auto proj = math::project(prev.pos, l);
     const auto radius_shift =
         (proj - prev.pos)
-            .with_length(prev.radius); // keep track of the point on the circumference of prev
-                                       // closest to l, which will cross l first
+            .with_length(
+                prev.radius); // keep track of the point on the circumference of
+                              // prev closest to l, which will cross l first
 
-    const auto possible_collision =
-        sm::math::clamped_intersection({prev.pos + radius_shift, now.pos + radius_shift}, l);
+    const auto possible_collision = sm::math::clamped_intersection(
+        {prev.pos + radius_shift, now.pos + radius_shift}, l);
     if (!possible_collision) return;
 
     const auto point = *possible_collision;

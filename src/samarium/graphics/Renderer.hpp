@@ -102,23 +102,23 @@ class Renderer
 
     void draw(Circle circle, Color color, double_t aa_factor = 1.6);
 
-    void draw(Particle particler,
+    void draw(const Particle& particler,
               Color color        = sm::colors::orangered,
               double_t aa_factor = 0.1);
 
-    void draw_line_segment(LineSegment ls,
+    void draw_line_segment(const LineSegment& ls,
                            Color color,
                            double_t thickness = 0.1,
                            double_t aa_factor = 0.1);
 
-    void draw_line(LineSegment ls,
+    void draw_line(const LineSegment& ls,
                    Color color,
                    double_t thickness = 0.1,
                    double_t aa_factor = 0.1);
 
     template <typename T>
     requires std::invocable<T, double>
-    void draw_line_segment(LineSegment ls,
+    void draw_line_segment(const LineSegment& ls,
                            T function_along_line,
                            double_t thickness = 0.1,
                            double_t aa_factor = 0.1)
@@ -138,7 +138,7 @@ class Renderer
 
     template <typename T>
     requires std::invocable<T, double>
-    void draw_line(LineSegment ls,
+    void draw_line(const LineSegment& ls,
                    T function_along_line,
                    double_t thickness = 0.1,
                    double_t aa_factor = 0.1)

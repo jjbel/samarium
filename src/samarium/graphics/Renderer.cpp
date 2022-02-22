@@ -50,8 +50,8 @@ void Renderer::render()
             {
                 for (size_t k = j; k < j + chunk_size; k++)
                 {
-                    const auto coords =
-                        tr.apply_inverse(sm::convert_1d_to_2d(dims, k));
+                    const auto coords = tr.apply_inverse(
+                        sm::convert_1d_to_2d(dims, k).as<double>());
                     for (const auto& drawer : draw_funcs)
                         if (drawer.rect.contains(coords))
                             image[k].add_alpha_over(drawer.fn(coords));
@@ -75,12 +75,12 @@ void Renderer::draw(Circle circle, Color color, double_t aa_factor)
             circle.centre, circle.radius + aa_factor, circle.radius + aa_factor));
 }
 
-void Renderer::draw(Particle particle, Color color, double_t aa_factor)
+void Renderer::draw(const Particle& particle, Color color, double_t aa_factor)
 {
     this->draw(particle.as_circle(), color, aa_factor);
 }
 
-void Renderer::draw_line_segment(LineSegment ls,
+void Renderer::draw_line_segment(const LineSegment& ls,
                                  Color color,
                                  double_t thickness,
                                  double_t aa_factor)
@@ -97,13 +97,11 @@ void Renderer::draw_line_segment(LineSegment ls,
             (ls.p1 + ls.p2) / 2.0, vector.x + extra, vector.y + extra));
 }
 
-void Renderer::draw_line(LineSegment ls,
+void Renderer::draw_line(const LineSegment& ls,
                          Color color,
                          double_t thickness,
                          double_t aa_factor)
 {
-    const auto vector = ls.vector().abs();
-    const auto extra  = 2 * aa_factor;
     this->draw(
         [=](const Vector2& coords) {
             return antialias(color, math::distance(coords, ls), thickness,
@@ -113,25 +111,12 @@ void Renderer::draw_line(LineSegment ls,
 
 void Renderer::draw_grid(bool axes, bool grid, bool dots)
 {
-    if (axes)
-    {
-        for (double_t i = -(image.dims.x / 2.0); i < image.dims.x / 2; i += 50)
-        {
-            sm::util::print(i);
-            this->draw(
-                [](const Vector2& coords) {
-                    return Color{255, 255, 255, 60};
-                },
-                Rect<double_t>::from_centre_width_height(Vector2{i, 0}, 1,
-                                                         image.dims.y));
-        }
-
-        this->draw(
-            [](const Vector2& coords) {
-                return Color{255, 255, 255, 100};
-            },
-            Rect<double_t>::from_centre_width_height(Vector2{}, image.dims.x, 1));
-    }
+    // if (axes)
+    // {
+    //     this->draw_line_segment(
+    //         transform.apply_inverse(LineSegment{{image.dims.x / 2.0}, {image.dims.x / 2.0, image.dims.y}}),
+    //         Color{255, 255, 255, 0});
+    // }
 }
 
 std::array<LineSegment, 4> Renderer::viewport_box() const

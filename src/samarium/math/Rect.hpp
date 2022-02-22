@@ -44,7 +44,6 @@ template <concepts::number T = double_t> struct Rect
     struct Iterator
     {
         using iterator_category = std::forward_iterator_tag;
-        // using difference_type   = std::ptrdiff_t;
         using value_type = Vector2_t<T>;
         using pointer    = Vector2_t<T>*;
         using reference  = Vector2_t<T>&;

@@ -102,6 +102,7 @@ Documentation is located at the [Github wiki](https://github.com/strangeQuark104
 
 ## Todo
 
+- specify bounding box for `Renderer::draw_line`
 - add modules support
 
 ## References

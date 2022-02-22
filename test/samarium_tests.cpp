@@ -35,37 +35,57 @@ int main()
 
     const auto gravity = -100.0_y;
 
-    const sm::Vector2 anchor   = 30.0_y;
-    const auto rest_length     = 14.0;
-    const auto spring_constant = 100.0;
-
-    auto p1 = sm::Particle{.pos = {}, .vel = {50, 0}, .radius = 3, .mass = 40};
-    auto p2 = p1;
-
-    const auto l = sm::LineSegment{{-30, -30}, {30, -9}};
-
-    const auto dims         = rn.image.dims.as<double>();
     const auto viewport_box = rn.viewport_box();
 
     auto window = sm::Window{rn.image.dims, "Collision", 60};
-    sm::util::print(sm::Vector2{2, 3});
+
+    const auto count = 100;
+    auto now         = std::vector(count, sm::Particle{.radius = 1.5, .mass = 4});
+    auto prev        = now;
+
+    for (auto& p : now)
+    {
+        p.pos = sm::random::rand_vector(
+            rn.transform.apply_inverse(rn.image.rect().as<double>()));
+        p.vel = sm::random::rand_vector(sm::Extents<double>{0, 24},
+                                        sm::Extents<double>{0, 360.0_degrees});
+    }
+
+    // for (int i = 0; i < 10; i++) sm::util::print(sm::gradients::heat(i
+    // / 10.0));
+
+    sm::util::Stopwatch watch{};
+
 
     const auto run_every_frame = [&]
     {
-        p1.apply_force(p1.mass * gravity);
-        const auto spring = p1.pos - anchor;
-        const auto force =
-            spring.with_length(spring_constant * (rest_length - spring.length()));
-        p1.apply_force(force);
-        p1.update();
+        for (size_t i = 0; i < count; i++)
+        {
+            auto& p_now  = now[i];
+            auto& p_prev = prev[i];
+            // p_now.apply_force(p_now.mass * gravity);
 
-        sm::phys::collide(p1, p2, l);
+            sm::update(p_now);
 
-        for (auto&& i : viewport_box) sm::phys::collide(p1, p2, i);
-        rn.draw_line_segment(l, sm::gradients::purple, 0.4);
-        rn.draw_line_segment(sm::LineSegment{anchor, p1.pos}, "#c471ed"_c, .06);
-        rn.draw(p1, sm::colors::red);
-        p2 = p1;
+            for (auto& p : now)
+                if (&p != &p_now) sm::phys::collide(p_now, p);
+
+            for (auto&& line : viewport_box)
+                sm::phys::collide(p_now, p_prev, line);
+
+            rn.draw(p_now, sm::gradients::heat(p_now.vel.length() / 24.0));
+        }
+        prev = now;
+
+        fmt::print(stderr, "\r{:>{}}", "",
+                   sm::util::get_terminal_dims()
+                       .x); // clear line by padding spaces to width of terminal
+        fmt::print(
+            stderr, "\rCurrent framerate: {}",
+            std::round(
+                1.0 /
+                watch.time().count())); // print to stderr for no line buffering
+        watch.reset();
     };
 
     window.run(rn, "#10101B"_c, run_every_frame);

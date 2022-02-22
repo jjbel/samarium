@@ -33,7 +33,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
-add_executable(samarium_tests samarium_tests.cpp)
+if(NOT TEST_FILE)
+    set(TEST_FILE "${CMAKE_CURRENT_SOURCE_DIR}/samarium_tests.cpp")
+endif()
+
+message(STATUS "Using test file: ${TEST_FILE}")
+add_executable(samarium_tests ${TEST_FILE})
 
 target_include_directories(samarium_tests PRIVATE ${CMAKE_SOURCE_DIR}/src)
 target_include_directories(samarium_tests PRIVATE ${CMAKE_SOURCE_DIR}/src/samarium)

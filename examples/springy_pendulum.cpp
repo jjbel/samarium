@@ -48,7 +48,6 @@ int main()
     const auto viewport_box = rn.viewport_box();
 
     auto window = sm::Window{rn.image.dims, "Collision", 60};
-    sm::util::print(sm::Vector2{2, 3});
 
     const auto run_every_frame = [&]
     {
@@ -62,7 +61,7 @@ int main()
         sm::phys::collide(p1, p2, l);
 
         for (auto&& i : viewport_box) sm::phys::collide(p1, p2, i);
-        rn.draw_line_segment(l, sm::gradients::purple, 0.4);
+        rn.draw_line_segment(l, sm::gradients::blue_green, 0.4);
         rn.draw_line_segment(sm::LineSegment{anchor, p1.pos}, "#c471ed"_c, .06);
         rn.draw(p1, sm::colors::red);
         p2 = p1;

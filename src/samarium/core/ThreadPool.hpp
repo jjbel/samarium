@@ -27,7 +27,7 @@
  * documentation and updates, or to submit feature requests and bug reports.
  */
 
-#define THREAD_POOL_VERSION "v2.0.0 (2021-08-14)"
+// #define THREAD_POOL_VERSION "v2.0.0 (2021-08-14)"
 
 #include <atomic>      // std::atomic
 #include <chrono>      // std::chrono
@@ -156,19 +156,19 @@ class ThreadPool
                           ui32 num_blocks = 0)
     {
         typedef std::common_type_t<T1, T2> T;
-        T the_first_index = (T)first_index;
-        T last_index      = (T)index_after_last;
+        auto the_first_index = (T)first_index;
+        auto last_index      = (T)index_after_last;
         if (the_first_index == last_index) return;
         if (last_index < the_first_index)
         {
-            T temp          = last_index;
+            const auto temp = last_index;
             last_index      = the_first_index;
             the_first_index = temp;
         }
         last_index--;
         if (num_blocks == 0) num_blocks = thread_count;
-        ui64 total_size = (ui64)(last_index - the_first_index + 1);
-        ui64 block_size = (ui64)(total_size / num_blocks);
+        auto total_size = (ui64)(last_index - the_first_index + 1);
+        auto block_size = (ui64)(total_size / num_blocks);
         if (block_size == 0)
         {
             block_size = 1;

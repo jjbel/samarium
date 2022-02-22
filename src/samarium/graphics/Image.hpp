@@ -69,9 +69,11 @@ template <typename T> class Grid
     DynArray<T> data;
 
     // Constructors
-    Grid(Dimensions dims_ = dimsFHD) : dims(dims_), data(dims.x * dims.y) {}
+    explicit Grid(Dimensions dims_ = dimsFHD) : dims(dims_), data(dims.x * dims.y)
+    {
+    }
 
-    Grid(Dimensions dims_, T init_value)
+    explicit Grid(Dimensions dims_, T init_value)
         : dims(dims_), data(dims.x * dims.y, init_value)
     {
     }
@@ -124,10 +126,4 @@ template <typename T> class Grid
 };
 
 using Image = Grid<Color>;
-
-// Since data is already stored as RGBA, no need to convert it, directly return it
-// template <> template <> inline auto Image::formatted_data(RGBA_t) const
-// {
-//     return std::span{this->data.cbegin(), this->size() * 4};
-// }
 } // namespace sm

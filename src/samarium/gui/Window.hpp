@@ -59,7 +59,9 @@ class Window
             renderer.fill(color);
         }
 
-        ~Manager()
+        Manager(const Manager&) = delete;
+
+        ~Manager() // NOSONAR
         {
             renderer.render();
 
@@ -101,7 +103,5 @@ class Window
     }
 
     double current_framerate() const;
-
-    operator bool() const { return window.isOpen(); }
 };
 } // namespace sm

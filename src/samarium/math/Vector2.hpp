@@ -132,10 +132,6 @@ template <concepts::number T> class Vector2_t
     {
         return Vector2_t<U>{static_cast<U>(this->x), static_cast<U>(this->y)};
     }
-    template <concepts::number U> constexpr operator Vector2_t<U>() const
-    {
-        return this->template as<U>();
-    }
 
     [[nodiscard]] static constexpr auto dot(Vector2_t<T> p1, Vector2_t<T> p2)
     {

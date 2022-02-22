@@ -63,7 +63,10 @@ template <> class Gradient<3>
     Color to{};
 
   public:
-    constexpr Gradient(Color from_, Color mid_,Color to_) : from{from_}, to{to_} {}
+    constexpr Gradient(Color from_, Color mid_, Color to_)
+        : from{from_}, mid{mid_}, to{to_}
+    {
+    }
     constexpr auto operator()(double factor) const
     {
         factor = Extents<double_t>{0.0, 1.0}.clamp(factor);

@@ -34,4 +34,5 @@
 #include "samarium/physics/collision.hpp"
 #include "samarium/scene/Scene.hpp"
 #include "samarium/util/file.hpp"
+#include "samarium/util/random.hpp"
 #include "samarium/util/terminal_dims.hpp"
