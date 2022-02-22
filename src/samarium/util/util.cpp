@@ -26,9 +26,8 @@
  *  For more information, please refer to <https://opensource.org/licenses/MIT/>
  */
 
-#include "date/date.h"
-
 #include "util.hpp"
+#include "date.hpp"
 
 namespace sm::util
 {
