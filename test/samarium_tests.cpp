@@ -48,6 +48,7 @@ int main()
     const auto viewport_box = rn.viewport_box();
 
     auto window = sm::Window{rn.image.dims, "Collision", 60};
+    sm::util::print(sm::Vector2{2, 3});
 
     sm::util::Stopwatch watch{};
 

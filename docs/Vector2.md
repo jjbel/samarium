@@ -1,0 +1,100 @@
+# `sm::math::Vector2_t`
+
+```cpp
+template <sm::concepts::number T> class sm::Vector2_t;
+using sm::Vector2 = Vector2_t<double>;
+```
+
+## About
+
+A `Vector2_t` holds 2 values - an x and a y coordinate. It represents a Euclidean vector, or arrow in space.
+
+A `Vector2` is a vector of doubles. As it is used frequently, it is a typedef for `Vector2_t<double>`
+Similarly, `Indices` for indexing into `Images` and `Dimensions` are both typedefs for `Vector2_t<size_t>`
+
+## Example
+
+```cpp
+auto vec = Vector2{2, 3};
+fmt::print("{}", vec); // prints: Vec( 2.000,  3.000)
+```
+
+## Members
+
+1. `T x` : x-coordinate
+
+2. `T y` : y-coordinate
+
+## Constructors
+
+`Vector2_t` is an [aggregate](https://en.cppreference.com/w/cpp/language/aggregate_initialization) and hence can be constructed as:
+
+```cpp
+auto vec1 = sm::Vector2(); // x=0,y=0
+auto vec2 = sm::Vector2{}; // x=0,y=0
+auto vec3 = sm::Vector2(1,2); // x=1,y=2
+auto vec4 = sm::Vector2{1,2};  // x=1,y=2
+auto vec5 = sm::Vector2{.x = 1, .y = 2}; // x=1,y=2
+```
+
+## Literals
+
+1. `consteval auto operator"" _x(long double x);` : constructs `Vector2{x, 0}`
+
+2. `consteval auto operator"" _y(long double y);` : constructs `Vector2{0, y}`
+
+Example
+
+```cpp
+using namespace sm::literals;
+auto vec1 = 1.0x; // (1,0)
+auto vec2 = -4.2y; // (0,-4.2)
+auto vec3 = 1.0x - 3.14y; // (1,-3.14)
+```
+
+## Member Functions
+
+1. `constexpr double length() const noexcept;` : length of the vector
+
+2. `constexpr double length_sq() const noexcept;` : length squared of the vector. Avoids the `sqrt` to save computing time
+
+3. `constexpr double angle() const noexcept;` : angle of the vector from the positive x-axis
+
+## Operators
+
+`Vector2_t` is overloaded on common mathematical operators for both other vectors and scalars (`double`s). Operations are conducted element wise. **This means that multiplication is element wise,** and not the dot or cross product.
+
+NOTE: all these are `constexpr` and `noexcept`
+
+
+Given 2 `Vector2_t<T>`s, `lhs` and `rhs`
+
+1. `Vector2_t<T> operator+=(rhs)`
+
+2. `Vector2_t<T> operator-=(rhs)`
+
+3. `Vector2_t<T> operator*=(rhs)`
+
+4. `Vector2_t<T> operator*=(T num)`
+
+5. `Vector2_t<T> operator/=(rhs)`
+
+6. `Vector2_t<T> operator/=(T num)`
+
+7. `bool operator==(lhs, rhs);`
+
+8. `bool operator!=(lhs, rhs);`
+
+9. `Vector2_t<T> operator+(lhs, rhs);`
+
+10. `Vector2_t<T> operator-(lhs, rhs);`
+
+11. `Vector2_t<T> operator*(lhs, rhs);`
+
+12. `Vector2_t<T> operator*(lhs, T num);`
+
+13. `Vector2_t<T> operator*(T num, rhs);`
+
+14. `Vector2_t<T> operator/(lhs, rhs);`
+
+15. `Vector2_t<T> operator/(lhs, T num);`
