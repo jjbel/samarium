@@ -5,6 +5,19 @@
 
 .main-content {
 h1 {
-    font-size: 1rem;
+    font-size: 2rem;
+    color: rgb(2, 3, 43);
+    text-decoration: none;
+    background: linear-gradient(to right, #600b6b, #080942);
+    background-repeat: repeat-x;
+    background-size: 100% 2px;
+    background-position: 0 95%;
 }
+}
+
+.page-header {
+    color: #fff;
+    text-align: center;
+    background-color: #159957;
+    background-image: linear-gradient(120deg, #e7257e, #ff702c);
 }

@@ -18,10 +18,9 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-title: Samarium Documentation
+title: Samarium
 description: >- # this means to ignore newlines until "baseurl:"
-  Documentation for https://github.com/strangeQuark1041/samarium:
-  a 2-D physics simulation engine written in modern C++
+  A 2-D physics simulation engine written in modern C++
 baseurl: "/samarium" # the subpath of your site, e.g. /blog
 url: "https://strangequark1041.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 github_username: strangeQuark1041
