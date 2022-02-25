@@ -2,6 +2,16 @@
 
 ### In file: `samarium/math/Vector2.hpp`
 
+- [Vector2](#vector2)
+  - [Definition](#definition)
+  - [About](#about)
+  - [Example](#example)
+  - [Members](#members)
+  - [Constructors](#constructors)
+  - [Literals](#literals)
+  - [Member Functions](#member-functions)
+  - [Operators](#operators)
+
 ## Definition
 
 ```cpp

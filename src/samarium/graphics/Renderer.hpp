@@ -31,8 +31,6 @@
 #include <functional>
 #include <mutex>
 #include <ranges>
-#include <thread>
-#include <vector>
 
 #include "samarium/core/ThreadPool.hpp"
 #include "samarium/math/Transform.hpp"

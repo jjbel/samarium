@@ -60,11 +60,13 @@ constexpr auto collide(Particle& p1, Particle& p2)
 
         const auto sum  = p1.mass + p2.mass;
         const auto diff = p1.mass - p2.mass;
+        const auto coeff1 = diff / sum;
+        const auto coeff2 = 2 / sum;
 
         const auto vel1 =
-            ((diff / sum) * p1.vel) + ((2 * p2.mass / sum) * p2.vel);
+            (coeff1 * p1.vel) + ((2 * p2.mass / sum) * p2.vel);
         const auto vel2 =
-            ((2 * p1.mass / sum) * p1.vel) + ((-diff / sum) * p2.vel);
+            (coeff2 * p1.mass * p1.vel) + (-coeff1 * p2.vel);
 
         p1.vel = vel1;
         p2.vel = vel2;

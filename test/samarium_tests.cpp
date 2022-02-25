@@ -45,8 +45,8 @@ int main()
 
     auto window = sm::Window{rn.image.dims, "Collision", 60};
 
-    const auto count = 1;
-    auto now         = std::vector(count, sm::Particle{.radius = 1.2, .mass = 4});
+    const auto count = 100;
+    auto now         = std::vector(count, sm::Particle{.radius = 1.6, .mass = 4});
     auto prev        = now;
 
     for (auto& p : now)
@@ -55,6 +55,11 @@ int main()
             rn.transform.apply_inverse(rn.image.rect().as<double>()));
         p.vel = sm::random::rand_vector(sm::Extents<double>{0, 14},
                                         sm::Extents<double>{0, 360.0_degrees});
+
+        const auto mass_extent = sm::Extents<double>{1, 10};
+
+        p.mass   = sm::random::rand_range<double>(mass_extent);
+        p.radius = sm::interp::map_range(p.mass, mass_extent, sm::Extents<double>{0.4, 3});
     }
 
     for (int i = 0; i < 10; i++) sm::print(sm::gradients::heat(i / 10.0));
@@ -69,7 +74,7 @@ int main()
             auto& p_now  = now[i];
             auto& p_prev = prev[i];
             // p_now.apply_force(p_now.mass * gravity);
-            viewport_box[0].translate(0.001_x);
+            // viewport_box[0].translate(0.001_x);
 
             sm::update(p_now);
 
@@ -79,7 +84,7 @@ int main()
             for (auto&& line : viewport_box)
                 sm::phys::collide(p_now, p_prev, line);
 
-            rn.draw(p_now, sm::gradients::heat(p_now.vel.length() / 24.0));
+            rn.draw(p_now, sm::gradients::heat(p_now.vel.length() / 14.0));
             // rn.draw_line_segment(viewport_box[0]);
         }
         prev = now;
@@ -95,5 +100,5 @@ int main()
         watch.reset();
     };
 
-    window.run(rn, "#10101B"_c, run_every_frame);
+    window.run(rn, sm::Color(16, 16, 24), run_every_frame);
 }

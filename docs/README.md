@@ -1,5 +1,9 @@
 # Samarium Documentation
 
+- [Samarium Documentation](#samarium-documentation)
+  - [Development](#development)
+  - [Modules](#modules)
+
 ## Development
 
 - Samarium uses [`git`](https://git-scm.com/) for version control, [`conan`](https://conan.io/) for package management and [`cmake`](https://cmake.org/) as a build generator

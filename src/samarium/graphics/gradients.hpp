@@ -40,5 +40,5 @@ constexpr inline auto blue_green =
 constexpr inline auto horizon =
     Gradient<2>{Color{18, 194, 233}, Color{246, 79, 89}};
 constexpr inline auto heat =
-    Gradient<3>{Color{26, 43, 108}, Color{178, 31, 31}, Color{246, 79, 89}};
+    Gradient<3>{Color{27, 9, 128}, Color{107, 21, 21}, Color{255, 126, 40}};
 } // namespace sm::gradients

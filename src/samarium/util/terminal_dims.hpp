@@ -50,8 +50,8 @@ Dimensions get_terminal_dims()
     CONSOLE_SCREEN_BUFFER_INFO csbi;
     GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
     return Dimensions{
-        static_cast<u32>(csbi.srWindow.Right - csbi.srWindow.Left + 1),
-        static_cast<u32>(csbi.srWindow.Bottom - csbi.srWindow.Top + 1)};
+        static_cast<u32>(csbi.srWindow.Right - csbi.srWindow.Left) + 1u,
+        static_cast<u32>(csbi.srWindow.Bottom - csbi.srWindow.Top) + 1u};
 #elif defined(__linux__)
     struct winsize w;
     ioctl(fileno(stdout), TIOCGWINSZ, &w);

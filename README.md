@@ -5,8 +5,9 @@
     <img alt="Lines of code" src="https://img.shields.io/tokei/lines/github/strangeQuark1041/samarium">
     <img alt="Repo Size" src="https://img.shields.io/github/repo-size/strangeQuark1041/samarium">
     <img alt="MIT License" src="https://img.shields.io/badge/license-MIT-yellow">
+    <img alt="language: C++20" src="https://img.shields.io/badge/language-C%2B%2B20-yellow">
     <br>
-    Samarium is an open-source 2d physics simulation package written in modern C++.
+    <h3>Samarium is a 2d physics simulation library written in modern C++20.</h3>
 </p>
 
 ## Contents

@@ -2,6 +2,12 @@
 
 ### In file: `samarium/util/random.hpp`
 
+- [random](#random)
+  - [Definition](#definition)
+  - [About](#about)
+  - [Example](#example)
+  - [Members](#members)
+
 ## Definition
 
 ```cpp

@@ -40,9 +40,9 @@ class Trail
     std::vector<Vector2> trail;
 
   public:
-    size_t length;
+    const size_t max_length;
 
-    explicit Trail(size_t length_) : trail(), length{length_} {}
+    explicit Trail(size_t length) : trail(), max_length{length} {}
 
     void push_back(Vector2 pos);
 
