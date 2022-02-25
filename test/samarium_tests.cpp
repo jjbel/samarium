@@ -35,19 +35,19 @@ int main()
 
     const auto gravity = -100.0_y;
 
-    const auto viewport_box = rn.viewport_box();
+    auto viewport_box = rn.viewport_box();
 
     auto window = sm::Window{rn.image.dims, "Collision", 60};
 
-    const auto count = 100;
-    auto now         = std::vector(count, sm::Particle{.radius = 1.5, .mass = 4});
+    const auto count = 400;
+    auto now         = std::vector(count, sm::Particle{.radius = 1.2, .mass = 4});
     auto prev        = now;
 
     for (auto& p : now)
     {
         p.pos = sm::random::rand_vector(
             rn.transform.apply_inverse(rn.image.rect().as<double>()));
-        p.vel = sm::random::rand_vector(sm::Extents<double>{0, 24},
+        p.vel = sm::random::rand_vector(sm::Extents<double>{0, 14},
                                         sm::Extents<double>{0, 360.0_degrees});
     }
 
@@ -64,6 +64,7 @@ int main()
             auto& p_now  = now[i];
             auto& p_prev = prev[i];
             // p_now.apply_force(p_now.mass * gravity);
+            viewport_box[0].translate(0.001_x);
 
             sm::update(p_now);
 
@@ -74,6 +75,7 @@ int main()
                 sm::phys::collide(p_now, p_prev, line);
 
             rn.draw(p_now, sm::gradients::heat(p_now.vel.length() / 24.0));
+            rn.draw_line_segment(viewport_box[0]);
         }
         prev = now;
 

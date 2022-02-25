@@ -114,8 +114,8 @@ void Renderer::draw_grid(bool axes, bool grid, bool dots)
     // if (axes)
     // {
     //     this->draw_line_segment(
-    //         transform.apply_inverse(LineSegment{{image.dims.x / 2.0}, {image.dims.x / 2.0, image.dims.y}}),
-    //         Color{255, 255, 255, 0});
+    //         transform.apply_inverse(LineSegment{{image.dims.x / 2.0},
+    //         {image.dims.x / 2.0, image.dims.y}}), Color{255, 255, 255, 0});
     // }
 }
 

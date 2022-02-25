@@ -35,12 +35,14 @@
 #include <vector>
 
 #include "samarium/core/ThreadPool.hpp"
-#include "samarium/graphics/colors.hpp"
 #include "samarium/math/Transform.hpp"
 #include "samarium/math/geometry.hpp"
 #include "samarium/physics/Particle.hpp"
 
+#include "Gradient.hpp"
 #include "Image.hpp"
+#include "Trail.hpp"
+#include "colors.hpp"
 
 namespace sm
 {
@@ -102,17 +104,34 @@ class Renderer
 
     void draw(Circle circle, Color color, double_t aa_factor = 1.6);
 
-    void draw(const Particle& particler,
+    void draw(const Particle& particle,
               Color color        = sm::colors::orangered,
               double_t aa_factor = 0.1);
 
+    void draw(const Trail& trail,
+              Color color          = sm::colors::lightgreen,
+              double_t fade_factor = 0.0,
+              double_t radius      = 1.0,
+              double_t aa_factor   = 0.1)
+    {
+    }
+
+    template<size_t gradient_size>
+    void draw(const Trail& trail,
+              Gradient<gradient_size> color,
+              double_t fade_factor = 0.0,
+              double_t radius      = 1.0,
+              double_t aa_factor   = 0.1)
+    {
+    }
+
     void draw_line_segment(const LineSegment& ls,
-                           Color color,
+                           Color color = sm::colors::white,
                            double_t thickness = 0.1,
                            double_t aa_factor = 0.1);
 
     void draw_line(const LineSegment& ls,
-                   Color color,
+                   Color color = sm::colors::white,
                    double_t thickness = 0.1,
                    double_t aa_factor = 0.1);
 

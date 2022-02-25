@@ -28,46 +28,24 @@
 
 #pragma once
 
-#include <array>
+#include <span>
+#include <vector>
 
-#include "samarium/math/interp.hpp"
-
-#include "Color.hpp"
+#include "samarium/math/Vector2.hpp"
 
 namespace sm
 {
-template <size_t size> class Gradient;
-
-template <> class Gradient<2>
+class Trail
 {
-    Color from{};
-    Color to{};
+    std::vector<Vector2> trail;
 
   public:
-    constexpr Gradient(Color from_, Color to_) : from{from_}, to{to_} {}
-    constexpr auto operator()(double factor) const
-    {
-        return interp::lerp_rgb(factor, from, to);
-    }
-};
+    size_t length;
 
-template <> class Gradient<3>
-{
-    Color from{};
-    Color mid{};
-    Color to{};
+    explicit Trail(size_t length_) : trail(), length{length} {}
 
-  public:
-    constexpr Gradient(Color from_, Color mid_, Color to_)
-        : from{from_}, mid{mid_}, to{to_}
-    {
-    }
-    constexpr auto operator()(double factor) const
-    {
-        factor = Extents<double_t>{0.0, 1.0}.clamp(factor);
-        if (factor < 0.5) { return interp::lerp_rgb(2.0 * factor, from, mid); }
-        else
-            return interp::lerp_rgb(2.0 * (factor - 0.5), mid, to);
-    }
+    void push_back(Vector2 pos);
+
+    std::span<Vector2> span() const;
 };
 } // namespace sm

@@ -46,6 +46,8 @@ add_library(samarium
     ${CMAKE_CURRENT_SOURCE_DIR}/samarium/gui/Window.cpp
 )
 
+target_compile_features(samarium PUBLIC cxx_std_20)
+
 target_include_directories(samarium PUBLIC "${CMAKE_CURRENT_LIST_DIR}")
 
 if(WARNINGS)

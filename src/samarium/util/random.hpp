@@ -35,20 +35,28 @@
 
 namespace sm::random
 {
-constexpr static auto cache_length = size_t{1000};
+static auto cache_length = size_t{1000};
 
 static auto current = size_t{0};
 
-const static auto cache = []()
+namespace detail
 {
-    auto values = std::array<double_t, cache_length>{};
+static auto get_random(size_t size)
+{
     // std::random_device rand_dev;
+    std::vector<double> values(size);
+
     std::mt19937 generator(247);
     std::uniform_real_distribution<double_t> distribution(0., 1.);
     std::generate(values.begin(), values.end(),
                   [&] { return distribution(generator); });
     return values;
-}();
+}
+} // namespace detail
+
+static std::vector<double> cache = detail::get_random(4000u);
+
+auto fill_cache(size_t size) { cache = std::move(detail::get_random(size)); }
 
 auto random() { return cache[current++ % cache_length]; }
 
