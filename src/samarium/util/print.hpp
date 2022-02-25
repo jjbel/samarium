@@ -36,7 +36,7 @@
 #include "fmt/format.h"
 #include "fmt/ranges.h"
 
-namespace sm::util
+namespace sm
 {
 inline void print(const auto&... args)
 {

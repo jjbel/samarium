@@ -129,28 +129,28 @@ class Color
         return Color{r, g, b, static_cast<u8>(a * factor)};
     }
 
-    template <concepts::integral T = u8>
+    template <concepts::Integral T = u8>
     [[nodiscard]] auto get_formatted(RGB_t /* color_format */) const noexcept
     {
         return std::array{static_cast<T>(this->r), static_cast<T>(this->g),
                           static_cast<T>(this->b)};
     }
 
-    template <concepts::integral T = u8>
+    template <concepts::Integral T = u8>
     [[nodiscard]] auto get_formatted(RGBA_t /* color_format */) const noexcept
     {
         return std::array{static_cast<T>(this->r), static_cast<T>(this->g),
                           static_cast<T>(this->b), static_cast<T>(this->a)};
     }
 
-    template <concepts::integral T = u8>
+    template <concepts::Integral T = u8>
     [[nodiscard]] auto get_formatted(BGR_t /* color_format */) const noexcept
     {
         return std::array{static_cast<T>(b), static_cast<T>(g),
                           static_cast<T>(r)};
     }
 
-    template <concepts::integral T = u8>
+    template <concepts::Integral T = u8>
     [[nodiscard]] auto get_formatted(BGRA_t /* color_format */) const noexcept
     {
         return std::array{static_cast<T>(b), static_cast<T>(g), static_cast<T>(r),
@@ -170,9 +170,13 @@ consteval auto operator""_c(const char* str, size_t)
 
 } // namespace literals
 
+namespace concepts
+{
 template <typename T>
-concept color_format_concept =
-    concepts::is_any_of<T, RGB_t, RGBA_t, BGR_t, BGRA_t>;
+concept ColorFormat =
+    concepts::AnyOf<T, RGB_t, RGBA_t, BGR_t, BGRA_t>;
+} // namespace concepts
+
 } // namespace sm
 
 

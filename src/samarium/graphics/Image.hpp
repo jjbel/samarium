@@ -110,7 +110,7 @@ template <typename T> class Grid
 
     auto fill(const T& value) { this->data.fill(value); }
 
-    template <color_format_concept Format>
+    template <concepts::ColorFormat Format>
     DynArray<std::array<u8, Format::length>> formatted_data(Format format) const
     {
         const auto format_length = Format::length;

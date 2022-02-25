@@ -42,7 +42,7 @@ class Trail
   public:
     size_t length;
 
-    explicit Trail(size_t length_) : trail(), length{length} {}
+    explicit Trail(size_t length_) : trail(), length{length_} {}
 
     void push_back(Vector2 pos);
 

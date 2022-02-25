@@ -1,7 +1,11 @@
-# `sm::math::Vector2_t`
+# Vector2
+
+### In file: `samarium/math/Vector2.hpp`
+
+## Definition
 
 ```cpp
-template <sm::concepts::number T> class sm::Vector2_t;
+template <sm::concepts::Number T> class sm::Vector2_t;
 using sm::Vector2 = Vector2_t<double>;
 ```
 

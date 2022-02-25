@@ -43,7 +43,7 @@ namespace sm
  * auto vec = Vector2{.x = 4.2, .y = -1.4};
  * @endcode
  */
-template <concepts::number T> class Vector2_t
+template <concepts::Number T> class Vector2_t
 {
   public:
     T x{};
@@ -65,7 +65,7 @@ template <concepts::number T> class Vector2_t
 
     [[nodiscard]] static constexpr auto
     from_polar(double_t length,
-               double_t angle) requires concepts::floating_point<T>
+               double_t angle) requires concepts::FloatingPoint<T>
     {
         return Vector2_t<T>{length * std::cos(angle), length * std::sin(angle)};
     }
@@ -128,7 +128,7 @@ template <concepts::number T> class Vector2_t
         return *this;
     }
 
-    template <concepts::number U> constexpr auto as() const
+    template <concepts::Number U> constexpr auto as() const
     {
         return Vector2_t<U>{static_cast<U>(this->x), static_cast<U>(this->y)};
     }
@@ -167,28 +167,28 @@ template <concepts::number T> class Vector2_t
     }
 };
 
-template <concepts::floating_point T>
+template <concepts::FloatingPoint T>
 [[nodiscard]] constexpr bool operator==(const Vector2_t<T>& lhs,
                                         const Vector2_t<T>& rhs) noexcept
 {
     return math::almost_equal(lhs.x, rhs.x) && math::almost_equal(lhs.y, rhs.y);
 }
 
-template <concepts::integral T>
+template <concepts::Integral T>
 [[nodiscard]] constexpr bool operator==(const Vector2_t<T>& lhs,
                                         const Vector2_t<T>& rhs) noexcept
 {
     return lhs.x == rhs.x && lhs.y == rhs.y;
 }
 
-template <concepts::number T>
+template <concepts::Number T>
 [[nodiscard]] constexpr bool operator!=(const Vector2_t<T>& lhs,
                                         const Vector2_t<T>& rhs)
 {
     return !operator==(lhs, rhs);
 }
 
-template <concepts::number T>
+template <concepts::Number T>
 [[nodiscard]] constexpr auto operator+(Vector2_t<T> lhs,
                                        const Vector2_t<T>& rhs) noexcept
 {
@@ -196,7 +196,7 @@ template <concepts::number T>
     return lhs;
 }
 
-template <concepts::number T>
+template <concepts::Number T>
 [[nodiscard]] constexpr auto operator-(Vector2_t<T> lhs,
                                        const Vector2_t<T>& rhs) noexcept
 {
@@ -204,7 +204,7 @@ template <concepts::number T>
     return lhs;
 }
 
-template <concepts::number T>
+template <concepts::Number T>
 [[nodiscard]] constexpr auto operator*(Vector2_t<T> lhs,
                                        const Vector2_t<T>& rhs) noexcept
 {
@@ -212,21 +212,21 @@ template <concepts::number T>
     return lhs;
 }
 
-template <concepts::number T>
+template <concepts::Number T>
 [[nodiscard]] constexpr auto operator*(Vector2_t<T> lhs, T rhs) noexcept
 {
     lhs *= rhs;
     return lhs;
 }
 
-template <concepts::number T>
+template <concepts::Number T>
 [[nodiscard]] constexpr auto operator*(T lhs, Vector2_t<T> rhs) noexcept
 {
     rhs *= lhs;
     return rhs;
 }
 
-template <concepts::number T>
+template <concepts::Number T>
 [[nodiscard]] constexpr auto operator/(Vector2_t<T> lhs,
                                        const Vector2_t<T>& rhs) noexcept
 {
@@ -234,7 +234,7 @@ template <concepts::number T>
     return lhs;
 }
 
-template <concepts::number T>
+template <concepts::Number T>
 [[nodiscard]] constexpr auto operator/(Vector2_t<T> lhs, T rhs) noexcept
 {
     lhs /= rhs;
@@ -258,7 +258,7 @@ consteval auto operator"" _y(long double y)
 } // namespace literals
 } // namespace sm
 
-template <sm::concepts::number T> class fmt::formatter<sm::Vector2_t<T>>
+template <sm::concepts::Number T> class fmt::formatter<sm::Vector2_t<T>>
 {
   public:
     constexpr auto parse(const format_parse_context& ctx) { return ctx.begin(); }

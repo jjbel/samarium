@@ -2,6 +2,7 @@
 ---
 
 @import "{{ site.theme }}";
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@200&display=swap');
 
 .main-content {
 h1 {
@@ -13,9 +14,14 @@ h1 {
     background-size: 100% 2px;
     background-position: 0 95%;
 }
+
+max-width: 75rem;
 }
 
 .page-header {
+    h2 {
+        font-size: 6rem;
+    }
     color: #fff;
     text-align: center;
     background-color: #159957;

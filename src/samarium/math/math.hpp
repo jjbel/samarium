@@ -37,7 +37,7 @@ namespace sm::math
 {
 constexpr inline auto EPSILON = 1.e-4;
 
-template <concepts::floating_point T>
+template <concepts::FloatingPoint T>
 [[nodiscard]] constexpr auto almost_equal(T a, T b) noexcept
 {
     return std::abs(a - b) <= EPSILON;

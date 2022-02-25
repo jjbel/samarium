@@ -38,19 +38,20 @@ namespace sm::concepts
 constexpr bool reason(const char* const) { return true; };
 
 template <typename T>
-concept integral = reason(
-    "NOTE: T should be of integral type, eg int or size_t") && std::is_integral_v<T>;
+concept Integral =
+    reason("NOTE: T should be of integral type, eg int or size_t") &&
+    std::is_integral_v<T>;
 
 template <typename T>
-concept floating_point =
+concept FloatingPoint =
     reason("NOTE: T should be of floating point type, eg float or double") &&
     std::is_floating_point_v<T>;
 
 template <typename T>
-concept number = integral<T> || floating_point<T>;
+concept Number = Integral<T> || FloatingPoint<T>;
 
 template <typename T>
-concept arithmetic = requires(T a, T b)
+concept Arithmetic = requires(T a, T b)
 {
     {
         a + b
@@ -61,10 +62,10 @@ concept arithmetic = requires(T a, T b)
 };
 
 template <typename T, typename... U>
-concept is_any_of = (std::same_as<T, U> || ...);
+concept AnyOf = (std::same_as<T, U> || ...);
 
 template <class ContainerType>
-concept Container_t = requires(ContainerType a, const ContainerType b)
+concept Container = requires(ContainerType a, const ContainerType b)
 {
     requires std::regular<ContainerType>;
     requires std::swappable<ContainerType>;
@@ -76,12 +77,13 @@ concept Container_t = requires(ContainerType a, const ContainerType b)
     requires std::forward_iterator<typename ContainerType::iterator>;
     requires std::forward_iterator<typename ContainerType::const_iterator>;
     requires std::signed_integral<typename ContainerType::difference_type>;
-    requires std::same_as<
-        typename ContainerType::difference_type,
-        typename std::iterator_traits<typename ContainerType::iterator>::difference_type>;
     requires std::same_as<typename ContainerType::difference_type,
                           typename std::iterator_traits<
-                              typename ContainerType::const_iterator>::difference_type>;
+                              typename ContainerType::iterator>::difference_type>;
+    requires std::same_as<
+        typename ContainerType::difference_type,
+        typename std::iterator_traits<
+            typename ContainerType::const_iterator>::difference_type>;
     {
         a.begin()
         } -> std::same_as<typename ContainerType::iterator>;

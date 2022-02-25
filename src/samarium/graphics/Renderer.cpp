@@ -44,19 +44,25 @@ void Renderer::render()
     {
         const auto chunk_size = i < size % thread_count ? size / thread_count + 1
                                                         : size / thread_count;
-        thread_pool.push_task(
-            [chunk_size, j, i, dims = image.dims, &image = this->image,
-             &draw_funcs = this->draw_funcs, tr = this->transform]
+
+        const auto task = [chunk_size, j, dims = image.dims, &image = this->image,
+                           &draw_funcs = this->draw_funcs, tr = this->transform]
+        {
+            for (size_t k = j; k < j + chunk_size; k++)
             {
-                for (size_t k = j; k < j + chunk_size; k++)
+                const auto coords =
+                    tr.apply_inverse(sm::convert_1d_to_2d(dims, k).as<double>());
+                for (const auto& drawer : draw_funcs)
                 {
-                    const auto coords = tr.apply_inverse(
-                        sm::convert_1d_to_2d(dims, k).as<double>());
-                    for (const auto& drawer : draw_funcs)
-                        if (drawer.rect.contains(coords))
-                            image[k].add_alpha_over(drawer.fn(coords));
+                    if (drawer.rect.contains(coords))
+                    {
+                        image[k].add_alpha_over(drawer.fn(coords));
+                    }
                 }
-            });
+            }
+        };
+
+        thread_pool.push_task(task);
         j += chunk_size;
     }
     thread_pool.wait_for_tasks();

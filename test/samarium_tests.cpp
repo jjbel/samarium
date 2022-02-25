@@ -30,6 +30,12 @@
 
 int main()
 {
+    for (auto i : std::views::iota(1, 10))
+    {
+        sm::print(sm::random::random(), sm::random::rand_vector(sm::Rect<double>{
+                                            .min = {-1, 1}, .max = {1, 1}}));
+    }
+
     using namespace sm::literals;
     auto rn = sm::Renderer{sm::Image{sm::dimsHD}};
 
@@ -39,7 +45,7 @@ int main()
 
     auto window = sm::Window{rn.image.dims, "Collision", 60};
 
-    const auto count = 400;
+    const auto count = 1;
     auto now         = std::vector(count, sm::Particle{.radius = 1.2, .mass = 4});
     auto prev        = now;
 
@@ -51,8 +57,7 @@ int main()
                                         sm::Extents<double>{0, 360.0_degrees});
     }
 
-    // for (int i = 0; i < 10; i++) sm::util::print(sm::gradients::heat(i
-    // / 10.0));
+    for (int i = 0; i < 10; i++) sm::print(sm::gradients::heat(i / 10.0));
 
     sm::util::Stopwatch watch{};
 
@@ -75,7 +80,7 @@ int main()
                 sm::phys::collide(p_now, p_prev, line);
 
             rn.draw(p_now, sm::gradients::heat(p_now.vel.length() / 24.0));
-            rn.draw_line_segment(viewport_box[0]);
+            // rn.draw_line_segment(viewport_box[0]);
         }
         prev = now;
 

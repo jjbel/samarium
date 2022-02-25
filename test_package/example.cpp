@@ -30,7 +30,7 @@
 
 int main()
 {
-    sm::util::print(sm::version);
-    sm::util::print("A Vector2: ", sm::Vector2{.x = 5, .y = -3});
-    sm::util::print("A Color:   ", sm::Color{.r = 5, .g = 200, .b = 255});
+    sm::print(sm::version);
+    sm::print("A Vector2: ", sm::Vector2{.x = 5, .y = -3});
+    sm::print("A Color:   ", sm::Color{.r = 5, .g = 200, .b = 255});
 }
