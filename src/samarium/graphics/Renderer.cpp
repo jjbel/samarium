@@ -81,6 +81,11 @@ void Renderer::draw(Circle circle, Color color, double_t aa_factor)
             circle.centre, circle.radius + aa_factor, circle.radius + aa_factor));
 }
 
+void Renderer::draw(const Particle& particle, double_t aa_factor)
+{
+    this->draw(particle.as_circle(), particle.color, aa_factor);
+}
+
 void Renderer::draw(const Particle& particle, Color color, double_t aa_factor)
 {
     this->draw(particle.as_circle(), color, aa_factor);

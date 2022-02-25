@@ -1,71 +1,54 @@
-/*
- *                                  MIT License
- *
- *                               Copyright (c) 2022
- *
- *       Project homepage: <https://github.com/strangeQuark1041/samarium/>
- *
- *  Permission is hereby granted, free of charge, to any person obtaining a copy
- *  of this software and associated documentation files (the Software), to deal
- *  in the Software without restriction, including without limitation the rights
- *   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- *     copies of the Software, and to permit persons to whom the Software is
- *            furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- *                copies or substantial portions of the Software.
- *
- *    THE SOFTWARE IS PROVIDED AS IS, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- *     AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- *                                   SOFTWARE.
- *
- *  For more information, please refer to <https://opensource.org/licenses/MIT/>
- */
+#include <ranges>
 
 #include "samarium/samarium.hpp"
 
 int main()
 {
-    for (auto i : std::views::iota(1, 10))
-    {
-        sm::print(sm::random::random(), sm::random::rand_vector(sm::Rect<double>{
-                                            .min = {-1, 1}, .max = {1, 1}}));
-    }
-
     using namespace sm::literals;
-    auto rn = sm::Renderer{sm::Image{sm::dimsHD}};
+    auto rn = sm::Renderer{sm::Image{{1840, 900}}};
 
     const auto gravity = -100.0_y;
 
     auto viewport_box = rn.viewport_box();
 
-    auto window = sm::Window{rn.image.dims, "Collision", 60};
+    auto window = sm::Window{rn.image.dims, "Collision", 64};
 
     const auto count = 100;
-    auto now         = std::vector(count, sm::Particle{.radius = 1.6, .mass = 4});
-    auto prev        = now;
+    auto now         = std::vector(
+                count,
+                sm::Particle{.radius = 1.6, .mass = 4, .color = sm::Color{255, 12, 53}});
+    auto prev = now;
 
     for (auto& p : now)
     {
-        p.pos = sm::random::rand_vector(
+        p.pos = 0.9 * sm::random::rand_vector(
             rn.transform.apply_inverse(rn.image.rect().as<double>()));
-        p.vel = sm::random::rand_vector(sm::Extents<double>{0, 14},
+    }
+
+    for (auto& p : now)
+    {
+        if (p.pos.x > -40)
+        {
+            p.vel =
+                sm::random::rand_vector(sm::Extents<double>{30, 84},
                                         sm::Extents<double>{0, 360.0_degrees});
-
-        const auto mass_extent = sm::Extents<double>{1, 10};
-
-        p.mass   = sm::random::rand_range<double>(mass_extent);
-        p.radius = sm::interp::map_range(p.mass, mass_extent, sm::Extents<double>{0.4, 3});
+            p.mass   = 0.15;
+            p.radius = 0.8;
+            p.color  = sm::Color{100, 100, 255};
+        }
+        else
+        {
+            p.vel =
+                sm::random::rand_vector(sm::Extents<double>{0, 10},
+                                        sm::Extents<double>{0, 360.0_degrees});
+            p.mass   = 5;
+            p.radius = 4;
+        }
     }
 
     for (int i = 0; i < 10; i++) sm::print(sm::gradients::heat(i / 10.0));
 
     sm::util::Stopwatch watch{};
-
 
     const auto run_every_frame = [&]
     {
@@ -73,7 +56,7 @@ int main()
         {
             auto& p_now  = now[i];
             auto& p_prev = prev[i];
-            // p_now.apply_force(p_now.mass * gravity);
+            p_now.apply_force(p_now.mass * gravity);
             // viewport_box[0].translate(0.001_x);
 
             sm::update(p_now);
@@ -84,7 +67,7 @@ int main()
             for (auto&& line : viewport_box)
                 sm::phys::collide(p_now, p_prev, line);
 
-            rn.draw(p_now, sm::gradients::heat(p_now.vel.length() / 14.0));
+            rn.draw(p_now);
             // rn.draw_line_segment(viewport_box[0]);
         }
         prev = now;
@@ -100,5 +83,5 @@ int main()
         watch.reset();
     };
 
-    window.run(rn, sm::Color(16, 16, 24), run_every_frame);
+    window.run(rn, sm::Color(12, 12, 20), run_every_frame);
 }

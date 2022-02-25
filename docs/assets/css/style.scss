@@ -2,31 +2,33 @@
 ---
 
 @import "{{ site.theme }}";
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@200&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@200&family=Open+Sans&display=swap');
+
+.body {
+    background-color: rgb(23, 24, 31);
+    font: 'Open Sans', sans-serif;
+}
 
 .page-header {
     h1 {
-        font-size: 5rem;
+        font-size: 3.5rem;
     }
     h2 {
-        font-size: 3rem;
+        font-size: 2.5rem;
     }
     color: #fff;
     text-align: center;
-    background-color: #159957;
-    background-image: linear-gradient(120deg, #e7257e, #ff702c);
+    background-image: linear-gradient(120deg, #4925e7, #ff2cae);
 }
 
 .main-content {
-background-color: rgb(26, 25, 25);
 color: #eee;
 max-width: 95rem;
+font-size: 0.8rem;
 
     h1 {
         font-size: 2rem;
-        color: rgb(26, 26, 26);
         text-decoration: none;
-        background: linear-gradient(to right, rgb(255, 126, 40), #43bde2);
         background: linear-gradient(to right, #500b6b, #43bde2);
         background-repeat: repeat-x;
         background-size: 100% 2px;

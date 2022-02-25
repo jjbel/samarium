@@ -37,7 +37,7 @@
 namespace sm
 {
 constexpr inline auto dims4K  = Dimensions{3840u, 2160u};
-constexpr inline auto dimsHD  = Dimensions{1280u, 720u};
+constexpr inline auto dims720 = Dimensions{1280u, 720u};
 constexpr inline auto dimsFHD = Dimensions{1920u, 1080u};
 constexpr inline auto dimsP2  = Dimensions{2048u, 1024u};
 
@@ -76,6 +76,15 @@ template <typename T> class Grid
     explicit Grid(Dimensions dims_, T init_value)
         : dims(dims_), data(dims.x * dims.y, init_value)
     {
+    }
+
+    static auto generate(Dimensions dims, auto fn)
+    {
+        Grid<T> grid(dims);
+        const auto beg = grid.begin();
+        std::for_each(beg, grid.end(),
+                      [fn = std::move(fn), beg](auto& element)
+                      { element = fn(convert_1d_to_2d(&element - beg)); });
     }
 
     // Member functions

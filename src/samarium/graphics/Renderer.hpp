@@ -102,8 +102,10 @@ class Renderer
 
     void draw(Circle circle, Color color, double_t aa_factor = 1.6);
 
+    void draw(const Particle& particle, double_t aa_factor = 0.1);
+
     void draw(const Particle& particle,
-              Color color        = sm::colors::orangered,
+              Color color,
               double_t aa_factor = 0.1);
 
     void draw(const Trail& trail,
@@ -114,7 +116,7 @@ class Renderer
     {
     }
 
-    template<size_t gradient_size>
+    template <size_t gradient_size>
     void draw(const Trail& trail,
               Gradient<gradient_size> color,
               double_t fade_factor = 0.0,
@@ -124,12 +126,12 @@ class Renderer
     }
 
     void draw_line_segment(const LineSegment& ls,
-                           Color color = sm::colors::white,
+                           Color color        = sm::colors::white,
                            double_t thickness = 0.1,
                            double_t aa_factor = 0.1);
 
     void draw_line(const LineSegment& ls,
-                   Color color = sm::colors::white,
+                   Color color        = sm::colors::white,
                    double_t thickness = 0.1,
                    double_t aa_factor = 0.1);
 

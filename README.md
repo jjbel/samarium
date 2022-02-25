@@ -103,6 +103,7 @@ Documentation is located at the [Github wiki](https://github.com/strangeQuark104
 
 ## Todo
 
+- refactor, Color, Gradient handling into Material
 - specify bounding box for `Renderer::draw_line`
 - add modules support
 

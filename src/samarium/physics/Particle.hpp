@@ -40,6 +40,7 @@ struct Particle
     Vector2 acc{};
     double_t radius{1};
     double_t mass{1};
+    Color color{};
 
     constexpr auto as_circle() const noexcept { return Circle{pos, radius}; }
 

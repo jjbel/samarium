@@ -31,7 +31,7 @@
 int main()
 {
     using namespace sm::literals;
-    auto rn = sm::Renderer{sm::Image{sm::dimsHD}};
+    auto rn = sm::Renderer{sm::Image{sm::dims720}};
 
     const auto gravity = -100.0_y;
 
@@ -39,7 +39,11 @@ int main()
     const auto rest_length     = 14.0;
     const auto spring_constant = 100.0;
 
-    auto p1 = sm::Particle{.pos = {}, .vel = {50, 0}, .radius = 3, .mass = 40};
+    auto p1 = sm::Particle{.pos    = {},
+                           .vel    = {50, 0},
+                           .radius = 3,
+                           .mass   = 40,
+                           .color  = sm::colors::red};
     auto p2 = p1;
 
     const auto l = sm::LineSegment{{-30, -30}, {30, -9}};
@@ -63,7 +67,7 @@ int main()
         for (auto&& i : viewport_box) sm::phys::collide(p1, p2, i);
         rn.draw_line_segment(l, sm::gradients::blue_green, 0.4);
         rn.draw_line_segment(sm::LineSegment{anchor, p1.pos}, "#c471ed"_c, .06);
-        rn.draw(p1, sm::colors::red);
+        rn.draw(p1);
         p2 = p1;
     };
 

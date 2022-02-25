@@ -58,15 +58,17 @@ constexpr auto collide(Particle& p1, Particle& p2)
         p1.pos            = centre + (p1.pos - centre).with_length(p1.radius);
         p2.pos            = centre + (p2.pos - centre).with_length(p2.radius);
 
-        const auto sum  = p1.mass + p2.mass;
-        const auto diff = p1.mass - p2.mass;
+        const auto sum    = p1.mass + p2.mass;
+        const auto diff   = p1.mass - p2.mass;
         const auto coeff1 = diff / sum;
         const auto coeff2 = 2 / sum;
 
         const auto vel1 =
-            (coeff1 * p1.vel) + ((2 * p2.mass / sum) * p2.vel);
+            Vector2{(coeff1 * p1.vel.x) + (coeff2 * p2.mass * p2.vel.x),
+                    (coeff1 * p1.vel.y) + (coeff2 * p2.mass * p2.vel.y)};
         const auto vel2 =
-            (coeff2 * p1.mass * p1.vel) + (-coeff1 * p2.vel);
+            Vector2{(coeff2 * p1.mass * p1.vel.x) + (-coeff1 * p2.vel.x),
+                    (coeff2 * p1.mass * p1.vel.y) + (-coeff1 * p2.vel.y)};
 
         p1.vel = vel1;
         p2.vel = vel2;
