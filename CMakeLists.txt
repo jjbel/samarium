@@ -22,16 +22,15 @@ conan_install()
 include(ccache)
 use_ccache()
 
-add_subdirectory(src)
-
 # set restrictive compilation warnings
 include(compiler_warnings)
 set_project_warnings()
 message(STATUS "Compiler options: ${WARNINGS}")
 add_compile_options(${WARNINGS})
 
-include(CTest)
-add_subdirectory(test)
-enable_testing()
+add_subdirectory(src)
 
-add_test(NAME SamariumTests COMMAND samarium_tests)
+include(gtest_setup)
+gtest_setup()
+enable_testing()
+add_subdirectory(test)

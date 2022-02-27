@@ -10,7 +10,7 @@
 #include <chrono>
 #include <thread>
 
-#include <SFML/Graphics.hpp>
+#include "SFML/Graphics.hpp"
 
 #include "samarium/graphics/Renderer.hpp"
 #include "samarium/util/util.hpp"

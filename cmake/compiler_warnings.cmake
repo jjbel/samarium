@@ -59,10 +59,10 @@ function(set_project_warnings)
         -march=x86-64
     )
 
-    if(WARNINGS_AS_ERRORS)
-        set(COMMON_WARNINGS ${COMMON_WARNINGS} -Werror)
-        set(MSVC_WARNINGS ${MSVC_WARNINGS} /WX)
-    endif()
+    # if(WARNINGS_AS_ERRORS)
+    #     set(COMMON_WARNINGS ${COMMON_WARNINGS} -Werror)
+    #     set(MSVC_WARNINGS ${MSVC_WARNINGS} /WX)
+    # endif()
 
     set(CLANG_WARNINGS ${COMMON_WARNINGS} -fcolor-diagnostics -ferror-limit=5)
 
