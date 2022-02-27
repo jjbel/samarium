@@ -30,8 +30,11 @@ project(samarium_tests LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-conan_basic_setup()
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
+list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})
+
+find_package(SFML 2.5 COMPONENTS system window graphics audio REQUIRED)
+find_package(fmt REQUIRED)
 
 if(NOT TEST_FILE)
     set(TEST_FILE "${CMAKE_CURRENT_SOURCE_DIR}/samarium_tests.cpp")
@@ -44,7 +47,8 @@ target_include_directories(samarium_tests PRIVATE ${CMAKE_SOURCE_DIR}/src)
 target_include_directories(samarium_tests PRIVATE ${CMAKE_SOURCE_DIR}/src/samarium)
 
 target_link_libraries(samarium_tests PRIVATE samarium)
-target_link_libraries(samarium_tests PRIVATE ${CONAN_LIBS})
+target_link_libraries(samarium_tests PRIVATE fmt::fmt)
+target_link_libraries(samarium_tests PRIVATE sfml-graphics sfml-audio)
 
 if(WARNINGS)
     target_compile_options(samarium_tests PRIVATE ${WARNINGS})

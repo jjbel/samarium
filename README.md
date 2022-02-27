@@ -7,7 +7,7 @@
     <img alt="MIT License" src="https://img.shields.io/badge/license-MIT-yellow">
     <img alt="language: C++20" src="https://img.shields.io/badge/language-C%2B%2B20-yellow">
     <br>
-    <h3>Samarium is a 2d physics simulation library written in modern C++20.</h3>
+    Samarium is a 2d physics simulation library written in modern C++20.
 </p>
 
 ## Contents
@@ -24,6 +24,7 @@
 ## Quickstart
 
 ```sh
+pip install conan
 git clone https://github.com/strangeQuark1041/samarium.git
 conan create samarium --build=missing
 ```
