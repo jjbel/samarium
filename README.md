@@ -1,10 +1,14 @@
 <h1 align="center">Samarium</h1>
 
 <p align="center">
-    <img alt="Github Action" src="https://github.com/strangeQuark1041/samarium/actions/workflows/build.yml/badge.svg">
+    <a href="https://github.com/strangeQuark1041/samarium/actions">
+         <img alt="CI status" src="https://github.com/strangeQuark1041/samarium/actions/workflows/build.yml/badge.svg">
+    </a>
     <img alt="Lines of code" src="https://img.shields.io/tokei/lines/github/strangeQuark1041/samarium">
     <img alt="Repo Size" src="https://img.shields.io/github/repo-size/strangeQuark1041/samarium">
-    <img alt="MIT License" src="https://img.shields.io/badge/license-MIT-yellow">
+    <a href="https://github.com/strangeQuark1041/samarium/blob/main/LICENSE.md">
+         <img alt="MIT License" src="https://img.shields.io/badge/license-MIT-yellow">
+    </a>
     <img alt="language: C++20" src="https://img.shields.io/badge/language-C%2B%2B20-yellow">
     <br>
     Samarium is a 2d physics simulation library written in modern C++20.
@@ -26,7 +30,7 @@
 ```sh
 pip install conan
 git clone https://github.com/strangeQuark1041/samarium.git
-conan create samarium --build=missing
+conan create samarium -b missing
 ```
 
 ## Prerequistes
@@ -46,7 +50,7 @@ For example gcc11 at least.
 
 ```sh
 git clone https://github.com/strangeQuark1041/samarium.git
-conan create samarium
+conan create samarium -b missing
 ```
 
 ## Example
@@ -57,10 +61,10 @@ In a new folder, called, for example **`myProj`**, create the following files:
 
 ```Yaml
 [requires]
-samarium/1.0.0
+samarium/1.0.0 # use samarium version 1.0.0 (the current stable version)
 
 [generators]
-cmake
+cmake # use the default (and easiest to use) cmake config
 ```
 
 `example.cpp`:
@@ -70,7 +74,7 @@ cmake
 
 int main()
 {
-    sm::print(sm::version);
+    sm::print(sm::version); // sm::print calls fmt::print on all its args
     sm::print("A Vector2: ", sm::Vector2{.x = 5, .y = -3});
     sm::print("A Color:   ", sm::Color{.r = 5, .g = 200, .b = 255});
 }

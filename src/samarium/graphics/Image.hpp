@@ -47,12 +47,12 @@ template <typename T> class Grid
     const Dimensions dims;
 
     // Constructors
-    explicit Grid(Dimensions dims_ = dimsFHD) : dims(dims_), data(dims.x * dims.y)
+    explicit Grid(Dimensions dims_ = dimsFHD) : data(dims_.x * dims_.y), dims{dims_}
     {
     }
 
     explicit Grid(Dimensions dims_, T init_value)
-        : dims(dims_), data(dims.x * dims.y, init_value)
+        : data(dims_.x * dims_.y, init_value), dims{dims_}
     {
     }
 

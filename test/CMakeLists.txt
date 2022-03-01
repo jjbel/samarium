@@ -12,7 +12,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
 list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})
 
-find_package(SFML 2.5 COMPONENTS system window graphics REQUIRED)
+find_package(SFML COMPONENTS system window graphics REQUIRED)
 find_package(fmt REQUIRED)
 
 if(NOT TEST_FILE)

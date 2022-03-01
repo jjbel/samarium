@@ -65,8 +65,8 @@ jobs:
         id: conan
         uses: turtlebrowser/get-conan@main
 
-      # - name: Install other deps
-      #   run: sudo apt-get update && sudo apt-get install valgrind libtbb-dev libudev-dev libxcb-xrm-dev mesa-common-dev libgl1-mesa-dev libdrm-dev libxxf86vm-dev libxt-dev xutils-dev xcb libx11-xcb-dev libxcb-glx0 libxcb-glx0-dev xorg-dev libxcb-dri2-0-dev
+      - name: Install other deps
+        run: sudo apt-get update && sudo apt-get install libtbb-dev # libudev-dev libxcb-xrm-dev mesa-common-dev libgl1-mesa-dev libdrm-dev libxxf86vm-dev libxt-dev xutils-dev xcb libx11-xcb-dev libxcb-glx0 libxcb-glx0-dev xorg-dev libxcb-dri2-0-dev
 
       - name: Check Tool Versions
         run: |
@@ -110,8 +110,8 @@ jobs:
           id: conan
           uses: turtlebrowser/get-conan@main
 
-        # - name: Install other deps
-        #   run: sudo apt-get update && sudo apt-get install valgrind libtbb-dev libsfml-dev libudev-dev libxcb-xrm-dev mesa-common-dev libgl1-mesa-dev libdrm-dev libxxf86vm-dev libxt-dev xutils-dev xcb libx11-xcb-dev libxcb-glx0 libxcb-glx0-dev xorg-dev libxcb-dri2-0-dev
+        - name: Install other deps
+          run: sudo apt-get update && sudo apt-get install libtbb-dev # libsfml-dev libudev-dev libxcb-xrm-dev mesa-common-dev libgl1-mesa-dev libdrm-dev libxxf86vm-dev libxt-dev xutils-dev xcb libx11-xcb-dev libxcb-glx0 libxcb-glx0-dev xorg-dev libxcb-dri2-0-dev
 
         - name: Check Tool Versions
           run: |
@@ -128,7 +128,7 @@ jobs:
           run: git clone https://github.com/strangeQuark1041/samarium.git
 
         - name: Conan Create
-          run: conan create samarium --build=missing
+          run: conan create samarium -b missing
 
   windows-conan-create:
       runs-on: windows-latest
