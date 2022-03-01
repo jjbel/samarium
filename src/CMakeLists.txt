@@ -36,8 +36,8 @@ if(WARNINGS)
     target_compile_options(samarium PUBLIC ${WARNINGS})
 endif()
 
-target_link_libraries(samarium PRIVATE fmt::fmt)
-target_link_libraries(samarium PRIVATE sfml-graphics)
+target_link_libraries(samarium PUBLIC fmt::fmt)
+target_link_libraries(samarium PUBLIC sfml-graphics)
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     find_package(TBB REQUIRED)

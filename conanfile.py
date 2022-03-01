@@ -14,23 +14,20 @@ class SamariumConan(ConanFile):
     url = "https://github.com/strangeQuark1041/samarium/"
     description = "2-D physics simulation engine"
     topics = ("c++20", "physics", "2d", "simulation")
-
+    
+    settings = "os", "compiler", "build_type", "arch"
+    options = {"shared": [True, False], "fPIC": [True, False]}
+    default_options = {"shared": False, "fPIC": True}
+    
     generators = "cmake_find_package"
     requires = "fmt/8.1.1", "sfml/2.5.1"
     exports_sources = "src/*"
-    options = {"testing": [True, False]}
-    default_options = {"testing": False}
-    build_policy = "missing"
 
     def configure(self):
         self.options['sfml'].graphics = True
         self.options['sfml'].window = True
         self.options['sfml'].audio = False
         self.options['sfml'].network = False
-
-    # def requirements(self):
-    #     if self.options.testing:
-    #         self.requires('gtest/cci.20210126')
 
     def build(self):
         cmake = CMake(self)  # get reference to cmake executable

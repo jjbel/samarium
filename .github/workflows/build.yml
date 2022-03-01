@@ -73,7 +73,6 @@ jobs:
           conan    --version
           cmake    --version
           c++      --version
-          valgrind --version
 
       - name: Configure Conan
         run: |

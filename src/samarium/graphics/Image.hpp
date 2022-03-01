@@ -43,9 +43,8 @@ template <typename T> class Grid
     using size_type       = std::size_t;
 
     // Public members
-    const Dimensions dims;
-
     DynArray<T> data;
+    const Dimensions dims;
 
     // Constructors
     explicit Grid(Dimensions dims_ = dimsFHD) : dims(dims_), data(dims.x * dims.y)
