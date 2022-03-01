@@ -25,7 +25,7 @@ class SamariumConan(ConanFile):
     def configure(self):
         self.options['sfml'].graphics = True
         self.options['sfml'].window = True
-        self.options['sfml'].audio = True
+        self.options['sfml'].audio = False
         self.options['sfml'].network = False
 
     def requirements(self):

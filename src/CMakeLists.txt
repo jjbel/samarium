@@ -17,7 +17,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
 list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})
 
-find_package(SFML 2.5 COMPONENTS system window graphics audio REQUIRED)
+find_package(SFML 2.5 COMPONENTS system window graphics REQUIRED)
 find_package(fmt REQUIRED)
 
 add_library(samarium
@@ -37,7 +37,7 @@ if(WARNINGS)
 endif()
 
 target_link_libraries(samarium PRIVATE fmt::fmt)
-target_link_libraries(samarium PRIVATE sfml-graphics sfml-audio)
+target_link_libraries(samarium PRIVATE sfml-graphics)
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     find_package(TBB REQUIRED)
