@@ -31,7 +31,6 @@ add_library(samarium
 target_compile_features(samarium PUBLIC cxx_std_20)
 
 target_include_directories(samarium PUBLIC "${CMAKE_CURRENT_LIST_DIR}")
-target_include_directories(samarium PUBLIC "${SFML_INCLUDE_DIRS}")
 
 if(WARNINGS)
     target_compile_options(samarium PUBLIC ${WARNINGS})
@@ -42,5 +41,5 @@ target_link_libraries(samarium PRIVATE sfml-graphics sfml-audio)
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     find_package(TBB REQUIRED)
-    target_link_libraries(samarium PRIVATE TBB::tbb)
+    target_link_libraries(samarium PUBLIC TBB::tbb)
 endif()

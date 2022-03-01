@@ -248,7 +248,7 @@ template <sm::concepts::Number T> class fmt::formatter<sm::Vector2_t<T>>
         return format_to(ctx.out(),
                          (std::is_floating_point<T>::value
                               ? "Vec({:6.3f}, {:6.3f})"
-                              : "Vec({}, {})"),
+                              : "Vec({:>3}, {:>3})"),
                          p.x, p.y);
     }
 };

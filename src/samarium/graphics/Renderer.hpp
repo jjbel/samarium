@@ -89,18 +89,14 @@ class Renderer
               Color color          = sm::colors::lightgreen,
               double_t fade_factor = 0.0,
               double_t radius      = 1.0,
-              double_t aa_factor   = 0.1)
-    {
-    }
+              double_t aa_factor   = 0.1);
 
     template <size_t gradient_size>
     void draw(const Trail& trail,
               Gradient<gradient_size> color,
               double_t fade_factor = 0.0,
               double_t radius      = 1.0,
-              double_t aa_factor   = 0.1)
-    {
-    }
+              double_t aa_factor   = 0.1);
 
     void draw_line_segment(const LineSegment& ls,
                            Color color        = sm::colors::white,

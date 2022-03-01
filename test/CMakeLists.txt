@@ -23,16 +23,17 @@ message(STATUS "Using test file: ${TEST_FILE}")
 add_executable(samarium_tests ${TEST_FILE})
 
 target_include_directories(samarium_tests PRIVATE ${CMAKE_SOURCE_DIR}/src)
-target_include_directories(samarium_tests PRIVATE ${CMAKE_SOURCE_DIR}/src/samarium)
+# target_include_directories(samarium_tests PRIVATE ${CMAKE_SOURCE_DIR}/src/samarium)
 
 target_link_libraries(samarium_tests PRIVATE samarium)
 target_link_libraries(samarium_tests PRIVATE fmt::fmt)
 target_link_libraries(samarium_tests PRIVATE sfml-graphics sfml-audio)
 target_link_libraries(samarium_tests PRIVATE gtest_main)
 
-include(GoogleTest)
-gtest_discover_tests(samarium_tests)
-
 if(WARNINGS)
     target_compile_options(samarium_tests PRIVATE ${WARNINGS})
 endif()
+
+include(GoogleTest)
+gtest_discover_tests(samarium_tests)
+target_compile_options(gtest PRIVATE -Wno-null-dereference) # ??? gtest enables Werror

@@ -22,7 +22,7 @@ conan_install()
 include(ccache)
 use_ccache()
 
-# set restrictive compilation warnings
+# set compilation warnings and flags
 include(compiler_warnings)
 set_project_warnings()
 message(STATUS "Compiler options: ${WARNINGS}")
