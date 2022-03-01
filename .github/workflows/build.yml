@@ -65,8 +65,8 @@ jobs:
         id: conan
         uses: turtlebrowser/get-conan@main
 
-      - name: Install other deps
-        run: sudo apt-get update && sudo apt-get install valgrind libtbb-dev libudev-dev libxcb-xrm-dev mesa-common-dev libgl1-mesa-dev libdrm-dev libxxf86vm-dev libxt-dev xutils-dev xcb libx11-xcb-dev libxcb-glx0 libxcb-glx0-dev xorg-dev libxcb-dri2-0-dev
+      # - name: Install other deps
+      #   run: sudo apt-get update && sudo apt-get install valgrind libtbb-dev libudev-dev libxcb-xrm-dev mesa-common-dev libgl1-mesa-dev libdrm-dev libxxf86vm-dev libxt-dev xutils-dev xcb libx11-xcb-dev libxcb-glx0 libxcb-glx0-dev xorg-dev libxcb-dri2-0-dev
 
       - name: Check Tool Versions
         run: |
@@ -75,14 +75,11 @@ jobs:
           c++      --version
           valgrind --version
 
-      - name: Setup Build Environment
-        run: mkdir -p build
       - name: Configure Conan
-        working-directory: ./build
         run: |
           conan profile new default --detect
           conan profile update settings.compiler.libcxx=libstdc++11 default
-      - name: CMake
+      - name: CMake Configure
         run: cmake -B build
       - name: CMake Build
         run: build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }}  cmake --build build
@@ -114,8 +111,8 @@ jobs:
           id: conan
           uses: turtlebrowser/get-conan@main
 
-        - name: Install other deps
-          run: sudo apt-get update && sudo apt-get install valgrind libtbb-dev libsfml-dev libudev-dev libxcb-xrm-dev mesa-common-dev libgl1-mesa-dev libdrm-dev libxxf86vm-dev libxt-dev xutils-dev xcb libx11-xcb-dev libxcb-glx0 libxcb-glx0-dev xorg-dev libxcb-dri2-0-dev
+        # - name: Install other deps
+        #   run: sudo apt-get update && sudo apt-get install valgrind libtbb-dev libsfml-dev libudev-dev libxcb-xrm-dev mesa-common-dev libgl1-mesa-dev libdrm-dev libxxf86vm-dev libxt-dev xutils-dev xcb libx11-xcb-dev libxcb-glx0 libxcb-glx0-dev xorg-dev libxcb-dri2-0-dev
 
         - name: Check Tool Versions
           run: |

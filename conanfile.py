@@ -28,9 +28,9 @@ class SamariumConan(ConanFile):
         self.options['sfml'].audio = False
         self.options['sfml'].network = False
 
-    def requirements(self):
-        if self.options.testing:
-            self.requires('gtest/cci.20210126')
+    # def requirements(self):
+    #     if self.options.testing:
+    #         self.requires('gtest/cci.20210126')
 
     def build(self):
         cmake = CMake(self)  # get reference to cmake executable
