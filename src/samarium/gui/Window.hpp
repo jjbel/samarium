@@ -24,6 +24,7 @@ class Window
     sf::Sprite sfbufferSprite;
     sf::RenderWindow window;
     sm::util::Stopwatch watch{};
+    size_t target_framerate{};
 
   public:
     struct Manager
@@ -57,7 +58,8 @@ class Window
         : window(sf::VideoMode(static_cast<uint32_t>(dims.x),
                                static_cast<uint32_t>(dims.y)),
                  name,
-                 sf::Style::Titlebar | sf::Style::Close)
+                 sf::Style::Titlebar | sf::Style::Close),
+          target_framerate{framerate}
     {
         window.setFramerateLimit(framerate);
     }
@@ -70,14 +72,28 @@ class Window
 
     void display();
 
-    template <typename T>
-    requires std::invocable<T>
+    template <std::invocable T>
     void run(Renderer& rn, Color color, T call_every_frame)
     {
         while (this->is_open())
         {
             const auto wm = Manager(*this, rn, color);
             call_every_frame();
+        }
+    }
+
+    template <typename T, typename U>
+    void run(Renderer& rn, Color color, T update, U draw, size_t substeps = 1)
+    {
+        while (this->is_open())
+        {
+            const auto wm = Manager(*this, rn, color);
+            for (size_t i = 0; i < substeps; i++)
+            {
+                update(1.0 / (target_framerate * substeps));
+            }
+
+            draw();
         }
     }
 

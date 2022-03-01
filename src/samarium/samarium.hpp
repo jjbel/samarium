@@ -8,10 +8,9 @@
 #pragma once
 
 #include "samarium/core/version.hpp"
-#include "samarium/graphics/colors.hpp"
+#include "samarium/gui/Window.hpp"
 #include "samarium/graphics/gradients.hpp"
 #include "samarium/physics/collision.hpp"
-#include "samarium/scene/Scene.hpp"
 #include "samarium/util/file.hpp"
 #include "samarium/util/random.hpp"
 #include "samarium/util/terminal_dims.hpp"

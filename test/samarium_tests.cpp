@@ -15,7 +15,7 @@
 
 TEST(Main, main)
 {
-    /*  using namespace sm::literals;
+    using namespace sm::literals;
     auto rn = sm::Renderer{sm::Image{{1840, 900}}};
 
     const auto gravity = -100.0_y;
@@ -24,12 +24,11 @@ TEST(Main, main)
 
     auto window = sm::Window{rn.image.dims, "Collision", 64};
 
-    const auto count = 100;
+    const auto count = 1000;
     auto now         = std::vector(
                 count,
-                sm::Particle{.radius = 1.6, .mass = 4, .color = sm::Color{255,
-                12,
-    53}}); auto prev = now;
+                sm::Particle{.radius = 1.6, .mass = 4, .color = sm::Color{255, 12, 53}});
+    auto prev = now;
 
     for (auto& p : now)
     {
@@ -39,13 +38,13 @@ TEST(Main, main)
 
     for (auto& p : now)
     {
-        if (p.pos.x > -40)
+        if (p.pos.x > -40 || true)
         {
             p.vel =
                 sm::random::rand_vector(sm::Extents<double>{30, 84},
                                         sm::Extents<double>{0, 360.0_degrees});
-            p.mass   = 0.15;
-            p.radius = 0.8;
+            p.mass   = 5;
+            p.radius = 1;
             p.color  = sm::Color{100, 100, 255};
         }
         else
@@ -53,8 +52,8 @@ TEST(Main, main)
             p.vel =
                 sm::random::rand_vector(sm::Extents<double>{0, 10},
                                         sm::Extents<double>{0, 360.0_degrees});
-            p.mass   = 5;
-            p.radius = 4;
+            p.mass   = 15;
+            p.radius = 2.4;
         }
     }
 
@@ -62,44 +61,39 @@ TEST(Main, main)
 
     sm::util::Stopwatch watch{};
 
-    const auto run_every_frame = [&]
+    const auto update = [&](auto delta)
     {
         for (size_t i = 0; i < count; i++)
         {
             auto& p_now  = now[i];
             auto& p_prev = prev[i];
-            p_now.apply_force(p_now.mass * gravity);
-            // viewport_box[0].translate(0.001_x);
+            // p_now.apply_force(p_now.mass * gravity);
 
-            sm::update(p_now);
+            sm::update(p_now, delta);
 
             for (auto& p : now)
                 if (&p != &p_now) sm::phys::collide(p_now, p);
 
             for (auto&& line : viewport_box)
                 sm::phys::collide(p_now, p_prev, line);
-
-            rn.draw(p_now);
-            // rn.draw_line_segment(viewport_box[0]);
         }
         prev = now;
+    };
+
+    const auto draw = [&]
+    {
+        // std::ranges::for_each(now, [&rn](const auto& p) { rn.draw(p); });
 
         fmt::print(stderr, "\r{:>{}}", "",
                    sm::util::get_terminal_dims()
-                       .x); // clear line by padding spaces to width of
-                       terminal
+                       .x); // clear line by padding spaces to width of terminal
         fmt::print(
             stderr, "\rCurrent framerate: {}",
             std::round(
                 1.0 /
-                watch.time().count())); // print to stderr for no line
-                buffering
+                watch.time().count())); // print to stderr for no line buffering
         watch.reset();
     };
 
-    window.run(rn, sm::Color(12, 12, 20), run_every_frame); */
-
-    sm::print(sm::Vector2{2, 3});
-
-    EXPECT_STRNE("hello", "world");
+    window.run(rn, sm::Color(12, 12, 20), update, draw, 40ul);
 }

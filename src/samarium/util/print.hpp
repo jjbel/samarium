@@ -17,14 +17,14 @@
 
 namespace sm
 {
-inline void print(const auto&... args)
+template <typename... Args> void print(Args&&... args)
 {
     // recursive call using pack expansion syntax
-    (fmt::print("{} ", args), ...);
+    (fmt::print("{} ", std::forward<Args>(args)), ...);
     fmt::print("\n");
 }
 
-inline void error(const auto&... args)
+void error(const auto&... args)
 {
     fmt::print(stderr, fg(fmt::color::red) | fmt::emphasis::bold, "Error: ");
     (fmt::print(stderr, fg(fmt::color::red) | fmt::emphasis::bold, "{}", args),
