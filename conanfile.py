@@ -14,7 +14,7 @@ class SamariumConan(ConanFile):
     license = "MIT"
     author = "strangeQuark1041"
     url = "https://github.com/strangeQuark1041/samarium/"
-    description = "2-D physics simulation engine"
+    description = "2-D physics simulation library"
     topics = ("c++20", "physics", "2d", "simulation")
 
     settings = "os", "compiler", "build_type", "arch"
