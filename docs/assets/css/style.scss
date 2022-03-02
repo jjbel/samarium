@@ -2,7 +2,7 @@
 ---
 
 @import "{{ site.theme }}";
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@200&family=Nunito:wght@300&family=Open+Sans&family=Ubuntu:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@200&family=Nunito:wght@400&family=Open+Sans&family=Ubuntu:wght@700&display=swap');
 
 $bg: rgb(14, 12, 19);
 
@@ -25,7 +25,7 @@ body {
 
     color: #fff;
     text-align: center;
-    background-image: linear-gradient(120deg, #ff5d12, #ff2c84);
+    background-image: linear-gradient(120deg, #7710a0, #04033b);
 }
 
 .main-content {
@@ -55,6 +55,7 @@ body {
 
     a {
         color: rgb(127, 176, 231);
+        text-decoration: underline;
     }
 
 
