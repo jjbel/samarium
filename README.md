@@ -22,6 +22,7 @@
 - [Installation](#installation)
 - [Example](#example)
 - [Documentation](#documentation)
+- [License](#license)
 - [Todo](#todo)
 - [References](#references)
 
@@ -104,7 +105,11 @@ cmake --build build # compile
 
 ## Documentation
 
-Documentation is located at the [Github wiki](https://github.com/strangeQuark1041/samarium/wiki) or locally in  [docs/README.md](docs/README.md)
+Documentation is located on [Github Pages here](https://strangequark1041.github.io/samarium/) or locally in  [docs/README.md](docs/README.md)
+
+## License
+
+Samarium is distributed under the permissive [MIT License](LICENSE.md).
 
 ## Todo
 

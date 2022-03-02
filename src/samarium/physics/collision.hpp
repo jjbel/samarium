@@ -9,6 +9,7 @@
 
 #include "samarium/math/geometry.hpp"
 
+#include "Dual.hpp"
 #include "Particle.hpp"
 
 namespace sm::phys
@@ -68,27 +69,25 @@ did_collide(const Particle& now, const Particle& prev, const LineSegment& l)
         {prev.pos + radius_shift, now.pos + radius_shift}, l);
 }
 
-constexpr auto collide(Particle& now, Particle& prev, const LineSegment& l)
+constexpr auto collide(Dual<Particle>& p, const LineSegment& l)
 {
     const auto vec  = l.vector();
-    const auto proj = math::project(prev.pos, l);
+    const auto proj = math::project(p.prev.pos, l);
     const auto radius_shift =
-        (proj - prev.pos)
+        (proj - p.prev.pos)
             .with_length(
-                prev.radius); // keep track of the point on the circumference of
-                              // prev closest to l, which will cross l first
+                p.prev.radius); // keep track of the point on the circumference of
+                                // prev closest to l, which will cross l first
 
     const auto possible_collision = sm::math::clamped_intersection(
-        {prev.pos + radius_shift, now.pos + radius_shift}, l);
+        {p.prev.pos + radius_shift, p.now.pos + radius_shift}, l);
     if (!possible_collision) return;
 
     const auto point = *possible_collision;
 
-    auto leftover_vel = now.pos + radius_shift - point;
+    auto leftover_vel = p.now.pos + radius_shift - point;
     leftover_vel.reflect(vec);
-    now.pos = point + leftover_vel - radius_shift;
-    now.vel.reflect(vec);
-
-    // sm::print(leftover_vel);
+    p.now.pos = point + leftover_vel - radius_shift;
+    p.now.vel.reflect(vec);
 }
 } // namespace sm::phys

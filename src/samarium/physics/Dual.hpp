@@ -7,8 +7,8 @@
 
 #pragma once
 
-// #include
-
+namespace sm
+{
 template <typename T> struct Dual
 {
     T now{};
@@ -18,9 +18,10 @@ template <typename T> struct Dual
 
     constexpr auto operator->() { return &now; }
 
-    constexpr auto update(auto&&... args)
+    template <typename... Args> constexpr auto update(Args&&... args)
     {
-        now.update(args...);
+        now.update(std::forward<Args>(args)...);
         prev = now;
     }
 };
+} // namespace sm

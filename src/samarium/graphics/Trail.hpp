@@ -21,10 +21,12 @@ class Trail
   public:
     const size_t max_length;
 
-    explicit Trail(size_t length) : trail(), max_length{length} {}
+    explicit Trail(size_t length = 50) : trail(), max_length{length} {}
+
+    size_t size() const;
 
     void push_back(Vector2 pos);
 
-    std::span<Vector2> span() const;
+    std::span<const Vector2> span() const;
 };
 } // namespace sm

@@ -26,6 +26,7 @@ add_library(samarium
     ${CMAKE_CURRENT_SOURCE_DIR}/samarium/util/file.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/samarium/graphics/Renderer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/samarium/gui/Window.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/samarium/graphics/Trail.cpp
 )
 
 target_compile_features(samarium PUBLIC cxx_std_20)

@@ -83,7 +83,7 @@ class Renderer
 
     void draw(const Particle& particle, double_t aa_factor = 0.1);
 
-    void draw(const Particle& particle, Color color, double_t aa_factor = 0.1);
+    void draw(const Particle& particle, Color color, double_t aa_factor = 0.3);
 
     void draw(const Trail& trail,
               Color color          = sm::colors::lightgreen,

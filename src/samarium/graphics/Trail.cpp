@@ -13,7 +13,7 @@ namespace sm
 {
 void Trail::push_back(Vector2 pos)
 {
-    if (this->max_length < this->trail.size()) { this->trail.push_back(pos); }
+    if (this->max_length > this->trail.size()) { this->trail.push_back(pos); }
     else
     {
         std::ranges::rotate(this->trail, this->trail.begin() + 1);
@@ -21,5 +21,13 @@ void Trail::push_back(Vector2 pos)
     }
 }
 
-std::span<Vector2> Trail::span() const { return std::span(this->trail); }
+size_t Trail::size() const
+{
+    return this->trail.size();
+}
+
+std::span<const Vector2> Trail::span() const
+{
+    return std::span(this->trail.begin(), this->trail.size());
+}
 } // namespace sm
