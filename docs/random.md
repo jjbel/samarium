@@ -52,9 +52,3 @@ for(auto i : std::views::iota(1,10)
 - `Vector2 rand_vector(Rect<double> bounding_box)`
 
 - `Vector2 rand_vector(Extents<double_t> radius_range, Extents<double_t> angle_range)`
-
-<p align="center">
-
-[Back to Home](README.md)
-
-</p>

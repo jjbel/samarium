@@ -4,9 +4,11 @@
 @import "{{ site.theme }}";
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@200&family=Open+Sans&display=swap');
 
+$bg: rgb(23, 24, 31);
+
 html,
 body {
-    background-color: rgb(23, 24, 31);
+    background-color: $bg;
     font: 'Open Sans', sans-serif;
 }
 
@@ -26,52 +28,23 @@ body {
 
 .main-content {
     color: #eee;
-    background-color: rgb(23, 24, 31);
+    background-color: $bg;
     max-width: 95rem;
     font-size: 1.25rem;
     font: 'Open Sans', sans-serif;
     
     h1 {
         font-size: 4rem;
-        text-decoration: none;
-        background: linear-gradient(to right, #4ae4ff, #0b156b);
-        background-repeat: repeat-x;
-        background-size: 100% 2px;
-        background-position: 0 95%;
     }
     
     code {
-        font-size: 1.45rem;
+        font-size: 1.3rem;
+        background-color: $bg;
         font-family: 'JetBrains Mono', monospace;
     }
 
-    // https://developer.mozilla.org/en-US/docs/Learn/CSS/Styling_text/Styling_links
-    a {
-        outline: none;
-        text-decoration: none;
-        padding: 2px 1px 0;
+    
+    h1, h2 {
+        color: rgb(255, 173, 184);
     }
-
-    a:link {
-        color: #012453;
-    }
-
-    a:visited {
-        color: #16287a;
-    }
-
-    a:focus {
-        border-bottom: 1px solid;
-        background: #98b5e4;
-    }
-
-    a:hover {
-        border-bottom: 1px solid;
-        background: #aacefe;
-    }
-
-    a:active {
-        color: #aacefe;
-    }
-
 }

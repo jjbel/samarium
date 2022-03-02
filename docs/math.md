@@ -43,10 +43,3 @@ fmt::format("{} degrees is {} in radians", 36, 36_degrees);
 - `consteval double sm::literals::operator"" _degrees(long double angle);`
 
 - `consteval double sm::literals::operator"" _radians(long double angle);`
-
-<p align="center">
-
-[Back to Home](README.md)
-
-</p>
-
