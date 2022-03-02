@@ -21,7 +21,7 @@ body {
 
     color: #fff;
     text-align: center;
-    background-image: linear-gradient(120deg, #ffa412, #ff2c61);
+    background-image: linear-gradient(120deg, #ff5d12, #ff2c84);
 }
 
 .main-content {
@@ -30,17 +30,18 @@ body {
     max-width: 95rem;
     font-size: 1.25rem;
     font: 'Open Sans', sans-serif;
-
+    
     h1 {
         font-size: 4rem;
         text-decoration: none;
-        background: linear-gradient(to right, #500b6b, #43bde2);
+        background: linear-gradient(to right, #4ae4ff, #0b156b);
         background-repeat: repeat-x;
         background-size: 100% 2px;
         background-position: 0 95%;
     }
-
+    
     code {
+        font-size: 1.45rem;
         font-family: 'JetBrains Mono', monospace;
     }
 
@@ -70,7 +71,6 @@ body {
     }
 
     a:active {
-        background: #012453;
         color: #aacefe;
     }
 

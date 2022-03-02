@@ -1,22 +1,16 @@
-# Samarium Documentation
+# Samarium
 
-- [Samarium Documentation](#samarium-documentation)
-  - [Development](#development)
-  - [Modules](#modules)
+- [Samarium](#samarium)
+  - [About](#about)
+  - [Components](#components)
 
-## Development
+## About
 
-- Samarium uses [`git`](https://git-scm.com/) for version control, [`conan`](https://conan.io/) for package management and [`cmake`](https://cmake.org/) as a build generator
-- Dependencies do not need to be installed manually
-- By default, `cmake` builds an executable `samarium` in the `bin` directory
-- Note - use your editor's clang-format plugin if it exists, for proper formatting
-- The actual source code is located in `src/lib`, which builds a static library `libsm.a`
-- This links with a file defining `int main()`, `src/main.cpp` by default.
-- The root `CMakeLists.txt` merely adds the subdirectories `src` and `test`, and enables development specific options like testing and compiler flags.
+Samarium started as a pet project of mine. I wanted to experience physics and scientific ideas interactively. It also became an opportunity for me to learn modern programming tools, namely git, C++ and conan
 
-## Modules
+## Components
 
-Samarium consists of the folowing modules:
+Samarium is broken up into these components:
 
-1. `math`: core math functions and computation
-2. `graphics`: `Color`, `Image`, and `Renderer`
+1. `math`: [`math` itself](math.md), [Vector2](Vector2.md): core math functions for computation
+2. `graphics`: `Color`, `Image`, and `Renderer`: drawing stuff in 2d
