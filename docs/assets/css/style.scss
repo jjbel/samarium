@@ -15,11 +15,13 @@ body {
 .page-header {
     h1 {
         font-size: 3.5rem;
+        font-family: 'JetBrains Mono', monospace;
     }
 
     h2 {
         font-size: 2.5rem;
     }
+
 
     color: #fff;
     text-align: center;
@@ -30,11 +32,11 @@ body {
     color: #eee;
     background-color: $bg;
     max-width: 95rem;
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     font: 'Open Sans', sans-serif;
     border-radius: 2rem;
     margin: 2rem auto;
-    box-shadow: 0.1rem 0.1rem 0.5rem 0.5rem #555 inset;
+    box-shadow: 0.1rem 0.1rem 0.5rem 0.5rem rgb(44, 44, 44);
 
     h1 {
         font-size: 4rem;
@@ -42,13 +44,17 @@ body {
 
     code {
         color: #eee;
-        font-size: 1.55rem;
+        font-size: 1.83rem;
         background-color: $bg;
         font-family: 'JetBrains Mono', monospace;
     }
 
     div {
         background-color: rgb(31, 32, 41);
+    }
+
+    a {
+        color: rgb(127, 176, 231);
     }
 
 
