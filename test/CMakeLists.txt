@@ -36,4 +36,7 @@ endif()
 
 include(GoogleTest)
 gtest_discover_tests(samarium_tests)
-target_compile_options(gtest PRIVATE -Wno-null-dereference) # ??? gtest enables Werror
+
+if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    target_compile_options(gtest PRIVATE -Wno-null-dereference) # ??? gtest enables Werror
+endif()
