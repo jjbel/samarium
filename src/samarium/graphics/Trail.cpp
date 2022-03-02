@@ -16,15 +16,13 @@ void Trail::push_back(Vector2 pos)
     if (this->max_length > this->trail.size()) { this->trail.push_back(pos); }
     else
     {
-        std::ranges::rotate(this->trail, this->trail.begin() + 1);
+        std::rotate(this->trail.begin(), this->trail.begin() + 1,
+                    this->trail.end());
         this->trail.back() = std::move(pos);
     }
 }
 
-size_t Trail::size() const
-{
-    return this->trail.size();
-}
+size_t Trail::size() const { return this->trail.size(); }
 
 std::span<const Vector2> Trail::span() const
 {

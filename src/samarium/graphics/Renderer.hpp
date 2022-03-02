@@ -9,7 +9,6 @@
 
 #include <functional>
 #include <mutex>
-#include <ranges>
 
 #include "samarium/core/ThreadPool.hpp"
 #include "samarium/math/Transform.hpp"

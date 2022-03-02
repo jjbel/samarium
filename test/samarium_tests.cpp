@@ -5,7 +5,6 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
-#include <ranges>
 #include "gtest/gtest.h"
 #include "samarium/samarium.hpp"
 #include "tests/Vector2.hpp"
