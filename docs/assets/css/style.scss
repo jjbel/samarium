@@ -2,14 +2,14 @@
 ---
 
 @import "{{ site.theme }}";
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@200&family=Open+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@200&family=Nunito:wght@300&family=Open+Sans&display=swap');
 
 $bg: rgb(20, 18, 27);
 
 html,
 body {
     background-color: rgb(13, 14, 22);
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Nunito', sans-serif;
 }
 
 .page-header {
@@ -33,7 +33,8 @@ body {
     font-size: 1.5rem;
     font: 'Open Sans', sans-serif;
     border-radius: 2rem;
-    margin: 2rem 2rem;
+    margin: 2rem auto;
+    box-shadow: 0.1rem 0.1rem 0.5rem 0.5rem #555 inset;
 
     h1 {
         font-size: 4rem;
@@ -52,8 +53,9 @@ body {
 
 
     h1, h2 {
-        color: rgb(255, 187, 204);
-        border-bottom: 0.14rem solid;
+        color: rgb(255, 208, 220);
+        border-bottom: 0.17rem solid;
         border-color: #fff;
+        width: fit-content;
     }
 }
