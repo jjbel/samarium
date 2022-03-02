@@ -1,4 +1,4 @@
-/* 
+/*
  * SPDX-License-Identifier: MIT
  * Copyright (c) 2022 Jai Bellare
  * Project homepage: https://github.com/strangeQuark1041/samarium
@@ -20,5 +20,7 @@ using i16 = int16_t;
 using i32 = int32_t;
 using i64 = int64_t;
 
-using double_t = double;
+using f32 = float;
+using f64 = double;
+using f80 = long double;
 } // namespace sm

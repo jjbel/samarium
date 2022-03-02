@@ -23,17 +23,17 @@ namespace detail
 static auto get_random(size_t size)
 {
     // std::random_device rand_dev;
-    std::vector<double> values(size);
+    std::vector<f64> values(size);
 
     std::mt19937 generator(247);
-    std::uniform_real_distribution<double_t> distribution(0., 1.);
+    std::uniform_real_distribution<f64> distribution(0., 1.);
     std::generate(values.begin(), values.end(),
                   [&] { return distribution(generator); });
     return values;
 }
 } // namespace detail
 
-static std::vector<double> cache = detail::get_random(4000u);
+static std::vector<f64> cache = detail::get_random(4000u);
 
 auto fill_cache(size_t size) { cache = std::move(detail::get_random(size)); }
 
@@ -44,18 +44,17 @@ template <typename T> [[nodiscard]] auto rand_range(Extents<T> range)
     return static_cast<T>(range.lerp(random()));
 }
 
-[[nodiscard]] auto rand_vector(Rect<double> bounding_box)
+[[nodiscard]] auto rand_vector(Rect<f64> bounding_box)
 {
-    return Vector2{
-        rand_range<double_t>({bounding_box.min.x, bounding_box.max.x}),
-        rand_range<double_t>({bounding_box.min.y, bounding_box.max.y})};
+    return Vector2{rand_range<f64>({bounding_box.min.x, bounding_box.max.x}),
+                   rand_range<f64>({bounding_box.min.y, bounding_box.max.y})};
 }
 
-[[nodiscard]] auto rand_vector(Extents<double_t> radius_range,
-                               Extents<double_t> angle_range)
+[[nodiscard]] auto rand_vector(Extents<f64> radius_range,
+                               Extents<f64> angle_range)
 {
     return Vector2::from_polar(
-        rand_range<double_t>({radius_range.min, radius_range.max}),
-        rand_range<double_t>({angle_range.min, angle_range.max}));
+        rand_range<f64>({radius_range.min, radius_range.max}),
+        rand_range<f64>({angle_range.min, angle_range.max}));
 }
 } // namespace sm::random

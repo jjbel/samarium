@@ -15,7 +15,7 @@ namespace sm
 {
 
 /**
- * Represents a Euclidean vector, or an arrow in space
+ * Represents a canonical Euclidean vector, ie an arrow in space
  * @tparam T type of x and y, required to be integral or floating point
  *
  * @code
@@ -25,6 +25,8 @@ namespace sm
 template <concepts::Number T> class Vector2_t
 {
   public:
+    using value_type = T;
+
     T x{};
     T y{};
 
@@ -32,30 +34,32 @@ template <concepts::Number T> class Vector2_t
     {
         return std::sqrt(x * x + y * y);
     }
+
     [[nodiscard]] constexpr auto length_sq() const noexcept
     {
         return x * x + y * y;
     }
+
     [[nodiscard]] constexpr auto angle() const noexcept
     {
         return std::atan2(y, x);
     }
+
     [[nodiscard]] constexpr auto slope() const { return y / x; }
 
     [[nodiscard]] static constexpr auto
-    from_polar(double_t length,
-               double_t angle) requires concepts::FloatingPoint<T>
+    from_polar(f64 length, f64 angle) requires concepts::FloatingPoint<T>
     {
         return Vector2_t<T>{length * std::cos(angle), length * std::sin(angle)};
     }
 
-    [[nodiscard]] constexpr auto with_length(double_t new_length) const
+    [[nodiscard]] constexpr auto with_length(f64 new_length) const
     {
         const auto factor = new_length / this->length();
         return Vector2_t<T>{x * factor, y * factor};
     }
 
-    [[nodiscard]] constexpr auto with_angle(double_t new_angle) const
+    [[nodiscard]] constexpr auto with_angle(f64 new_angle) const
     {
         return from_polar(this->length(), new_angle);
     }
@@ -128,12 +132,12 @@ template <concepts::Number T> class Vector2_t
         return to.angle() - from.angle();
     }
 
-    constexpr auto rotate(double_t amount)
+    constexpr auto rotate(f64 amount)
     {
         *this = this->with_angle(this->angle() + amount);
     }
 
-    [[nodiscard]] constexpr auto rotated_by(double_t amount) const
+    [[nodiscard]] constexpr auto rotated_by(f64 amount) const
     {
         auto temp = *this;
         temp.rotate(amount);
@@ -220,20 +224,14 @@ template <concepts::Number T>
     return lhs;
 }
 
-using Vector2    = Vector2_t<double_t>;
+using Vector2    = Vector2_t<f64>;
 using Indices    = Vector2_t<size_t>;
 using Dimensions = Vector2_t<size_t>;
 
 namespace literals
 {
-consteval auto operator"" _x(long double x)
-{
-    return Vector2{static_cast<double_t>(x), 0};
-}
-consteval auto operator"" _y(long double y)
-{
-    return Vector2{0, static_cast<double_t>(y)};
-}
+consteval auto operator"" _x(f80 x) { return Vector2{static_cast<f64>(x), 0}; }
+consteval auto operator"" _y(f80 y) { return Vector2{0, static_cast<f64>(y)}; }
 } // namespace literals
 } // namespace sm
 

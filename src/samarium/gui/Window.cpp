@@ -40,7 +40,7 @@ void Window::display()
     watch.reset();
 }
 
-double Window::current_framerate() const
+f64 Window::current_framerate() const
 {
     return this->watch.time().count() * 1000;
 }

@@ -26,14 +26,13 @@ namespace sm
 class Renderer
 {
   public:
-    static auto antialias(double_t distance, double_t radius, double_t aa_factor)
+    static auto antialias(f64 distance, f64 radius, f64 aa_factor)
     {
         // https://www.desmos.com/calculator/jhewyqc2wy
         return interp::clamp((radius - distance) / aa_factor + 1, {0.0, 1.0});
     }
 
-    static auto
-    antialias(Color color, double_t distance, double_t radius, double_t aa_factor)
+    static auto antialias(Color color, f64 distance, f64 radius, f64 aa_factor)
     {
         return color.with_multiplied_alpha(
             antialias(distance, radius, aa_factor));
@@ -42,12 +41,12 @@ class Renderer
     struct Drawer
     {
         std::function<sm::Color(const sm::Vector2&)> fn;
-        sm::Rect<double_t> rect;
+        sm::Rect<f64> rect;
     };
 
 
     Image image;
-    Transform transform{.pos   = image.dims.as<double_t>() / 2.,
+    Transform transform{.pos   = image.dims.as<f64>() / 2.,
                         .scale = Vector2{10, 10} * Vector2{1.0, -1.0}};
 
     Renderer(const Image& image_,
@@ -68,52 +67,52 @@ class Renderer
         this->draw_funcs.emplace_back(
             Drawer(fn, transform.apply_inverse(
                            Rect{.min = rect.min, .max = rect.max + Indices{1, 1}}
-                               .template as<double_t>())));
+                               .template as<f64>())));
     }
 
     template <typename T>
-    void draw(T&& fn, Rect<double_t> rect) requires(
+    void draw(T&& fn, Rect<f64> rect) requires(
         concepts::reason("Function should accept a const Vector2&") &&
         std::invocable<T, const Vector2&>)
     {
         this->draw_funcs.emplace_back(Drawer{fn, rect});
     }
 
-    void draw(Circle circle, Color color, double_t aa_factor = 1.6);
+    void draw(Circle circle, Color color, f64 aa_factor = 1.6);
 
-    void draw(const Particle& particle, double_t aa_factor = 0.1);
+    void draw(const Particle& particle, f64 aa_factor = 0.1);
 
-    void draw(const Particle& particle, Color color, double_t aa_factor = 0.3);
+    void draw(const Particle& particle, Color color, f64 aa_factor = 0.3);
 
     void draw(const Trail& trail,
-              Color color          = sm::colors::lightgreen,
-              double_t fade_factor = 0.0,
-              double_t radius      = 1.0,
-              double_t aa_factor   = 0.1);
+              Color color     = sm::colors::lightgreen,
+              f64 fade_factor = 0.0,
+              f64 radius      = 1.0,
+              f64 aa_factor   = 0.1);
 
     template <size_t gradient_size>
     void draw(const Trail& trail,
               Gradient<gradient_size> color,
-              double_t fade_factor = 0.0,
-              double_t radius      = 1.0,
-              double_t aa_factor   = 0.1);
+              f64 fade_factor = 0.0,
+              f64 radius      = 1.0,
+              f64 aa_factor   = 0.1);
 
     void draw_line_segment(const LineSegment& ls,
-                           Color color        = sm::colors::white,
-                           double_t thickness = 0.1,
-                           double_t aa_factor = 0.1);
+                           Color color   = sm::colors::white,
+                           f64 thickness = 0.1,
+                           f64 aa_factor = 0.1);
 
     void draw_line(const LineSegment& ls,
-                   Color color        = sm::colors::white,
-                   double_t thickness = 0.1,
-                   double_t aa_factor = 0.1);
+                   Color color   = sm::colors::white,
+                   f64 thickness = 0.1,
+                   f64 aa_factor = 0.1);
 
     template <typename T>
-    requires std::invocable<T, double>
+    requires std::invocable<T, f64>
     void draw_line_segment(const LineSegment& ls,
                            T function_along_line,
-                           double_t thickness = 0.1,
-                           double_t aa_factor = 0.1)
+                           f64 thickness = 0.1,
+                           f64 aa_factor = 0.1)
     {
         const auto vector = ls.vector().abs();
         const auto extra  = 2 * aa_factor;
@@ -124,16 +123,16 @@ class Renderer
                     function_along_line(math::lerp_along(coords, ls)),
                     math::clamped_distance(coords, ls), thickness, aa_factor);
             },
-            Rect<double_t>::from_centre_width_height(
+            Rect<f64>::from_centre_width_height(
                 (ls.p1 + ls.p2) / 2.0, vector.x + extra, vector.y + extra));
     }
 
     template <typename T>
-    requires std::invocable<T, double>
+    requires std::invocable<T, f64>
     void draw_line(const LineSegment& ls,
                    T function_along_line,
-                   double_t thickness = 0.1,
-                   double_t aa_factor = 0.1)
+                   f64 thickness = 0.1,
+                   f64 aa_factor = 0.1)
     {
         const auto vector = ls.vector().abs();
         const auto extra  = 2 * aa_factor;

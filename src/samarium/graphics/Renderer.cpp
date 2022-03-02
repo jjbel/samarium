@@ -30,7 +30,7 @@ void Renderer::render()
             for (size_t k = j; k < j + chunk_size; k++)
             {
                 const auto coords =
-                    tr.apply_inverse(sm::convert_1d_to_2d(dims, k).as<double>());
+                    tr.apply_inverse(sm::convert_1d_to_2d(dims, k).as<f64>());
                 for (const auto& drawer : draw_funcs)
                 {
                     if (drawer.rect.contains(coords))
@@ -48,7 +48,7 @@ void Renderer::render()
     draw_funcs.clear();
 }
 
-void Renderer::draw(Circle circle, Color color, double_t aa_factor)
+void Renderer::draw(Circle circle, Color color, f64 aa_factor)
 {
     this->draw(
         [=](const Vector2& coords)
@@ -56,24 +56,24 @@ void Renderer::draw(Circle circle, Color color, double_t aa_factor)
             return antialias(color, math::distance(coords, circle.centre),
                              circle.radius, aa_factor);
         },
-        Rect<double_t>::from_centre_width_height(
+        Rect<f64>::from_centre_width_height(
             circle.centre, circle.radius + aa_factor, circle.radius + aa_factor));
 }
 
-void Renderer::draw(const Particle& particle, double_t aa_factor)
+void Renderer::draw(const Particle& particle, f64 aa_factor)
 {
     this->draw(particle.as_circle(), particle.color, aa_factor);
 }
 
-void Renderer::draw(const Particle& particle, Color color, double_t aa_factor)
+void Renderer::draw(const Particle& particle, Color color, f64 aa_factor)
 {
     this->draw(particle.as_circle(), color, aa_factor);
 }
 
 void Renderer::draw_line_segment(const LineSegment& ls,
                                  Color color,
-                                 double_t thickness,
-                                 double_t aa_factor)
+                                 f64 thickness,
+                                 f64 aa_factor)
 {
     const auto vector = ls.vector().abs();
     const auto extra  = 2 * aa_factor;
@@ -83,14 +83,14 @@ void Renderer::draw_line_segment(const LineSegment& ls,
             return antialias(color, math::clamped_distance(coords, ls), thickness,
                              aa_factor);
         },
-        Rect<double_t>::from_centre_width_height(
-            (ls.p1 + ls.p2) / 2.0, vector.x + extra, vector.y + extra));
+        Rect<f64>::from_centre_width_height((ls.p1 + ls.p2) / 2.0,
+                                            vector.x + extra, vector.y + extra));
 }
 
 void Renderer::draw_line(const LineSegment& ls,
                          Color color,
-                         double_t thickness,
-                         double_t aa_factor)
+                         f64 thickness,
+                         f64 aa_factor)
 {
     this->draw(
         [=](const Vector2& coords) {
@@ -111,7 +111,7 @@ void Renderer::draw_grid(bool axes, bool grid, bool dots)
 
 std::array<LineSegment, 4> Renderer::viewport_box() const
 {
-    const auto double_dims = this->image.dims.as<double>();
+    const auto double_dims = this->image.dims.as<f64>();
     return std::array{
         this->transform.apply_inverse(sm::LineSegment{{}, {0, double_dims.y}}),
         this->transform.apply_inverse(sm::LineSegment{{}, {double_dims.x, 0}}),

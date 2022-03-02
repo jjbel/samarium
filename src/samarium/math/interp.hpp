@@ -34,35 +34,32 @@ template <typename T>
 }
 
 template <typename T>
-[[nodiscard]] constexpr auto lerp(double_t factor, Extents<T> range)
+[[nodiscard]] constexpr auto lerp(f64 factor, Extents<T> range)
 {
     return range.lerp(factor);
 }
 
 template <typename T>
-[[nodiscard]] constexpr auto clamped_lerp(double_t factor, Extents<T> range)
+[[nodiscard]] constexpr auto clamped_lerp(f64 factor, Extents<T> range)
 {
     return range.clamped_lerp(factor);
 }
 
-[[nodiscard]] constexpr auto lerp_rgb(double_t factor, Color from, Color to)
+[[nodiscard]] constexpr auto lerp_rgb(f64 factor, Color from, Color to)
 {
-    return Color{static_cast<u8>(
-                     lerp(factor, Extents<double_t>{static_cast<double>(from.r),
-                                                    static_cast<double>(to.r)})),
-                 static_cast<u8>(
-                     lerp(factor, Extents<double_t>{static_cast<double>(from.g),
-                                                    static_cast<double>(to.g)})),
-                 static_cast<u8>(
-                     lerp(factor, Extents<double_t>{static_cast<double>(from.b),
-                                                    static_cast<double>(to.b)})),
-                 static_cast<u8>(
-                     lerp(factor, Extents<double_t>{static_cast<double>(from.a),
-                                                    static_cast<double>(to.a)}))};
+    return Color{
+        static_cast<u8>(lerp(factor, Extents<f64>{static_cast<f64>(from.r),
+                                                  static_cast<f64>(to.r)})),
+        static_cast<u8>(lerp(factor, Extents<f64>{static_cast<f64>(from.g),
+                                                  static_cast<f64>(to.g)})),
+        static_cast<u8>(lerp(factor, Extents<f64>{static_cast<f64>(from.b),
+                                                  static_cast<f64>(to.b)})),
+        static_cast<u8>(lerp(factor, Extents<f64>{static_cast<f64>(from.a),
+                                                  static_cast<f64>(to.a)}))};
 }
 
 template <typename T>
-[[nodiscard]] constexpr auto lerp_inverse(double_t value, Extents<T> range)
+[[nodiscard]] constexpr auto lerp_inverse(f64 value, Extents<T> range)
 {
     return range.lerp_inverse(value);
 }

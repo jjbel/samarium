@@ -31,7 +31,7 @@ namespace sm::math
 {
     return interp::clamp(Vector2::dot(point - ls.p1, ls.vector()) /
                              ls.length_sq(),
-                         Extents<double>{0.0, 1.0});
+                         Extents<f64>{0.0, 1.0});
 }
 
 [[nodiscard]] constexpr auto project(Vector2 point, const LineSegment& ls)

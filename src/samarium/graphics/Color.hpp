@@ -50,14 +50,14 @@ class Color
     u8 b{};
     u8 a{255u};
 
-    static constexpr auto from_double_array(const std::array<double, 3>& colors)
+    static constexpr auto from_double_array(const std::array<f64, 3>& colors)
     {
         return Color{static_cast<u8>(colors[0] * 255),
                      static_cast<u8>(colors[1] * 255),
                      static_cast<u8>(colors[2] * 255)};
     }
 
-    static constexpr auto from_double_array(const std::array<double, 4>& colors)
+    static constexpr auto from_double_array(const std::array<f64, 4>& colors)
     {
         return Color{
             static_cast<u8>(colors[0] * 255), static_cast<u8>(colors[1] * 255),
@@ -103,7 +103,7 @@ class Color
         return Color{r, g, b, alpha};
     }
 
-    [[nodiscard]] constexpr auto with_multiplied_alpha(double_t factor) const
+    [[nodiscard]] constexpr auto with_multiplied_alpha(f64 factor) const
     {
         return Color{r, g, b, static_cast<u8>(a * factor)};
     }

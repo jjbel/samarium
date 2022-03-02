@@ -43,8 +43,8 @@ class Stopwatch
     auto time() const
     {
         const auto finish = std::chrono::steady_clock::now();
-        return std::chrono::duration_cast<std::chrono::duration<double_t>>(
-            finish - start);
+        return std::chrono::duration_cast<std::chrono::duration<f64>>(finish -
+                                                                      start);
     }
 
     auto print() const

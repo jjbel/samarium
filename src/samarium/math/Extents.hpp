@@ -42,17 +42,17 @@ template <concepts::Arithmetic T> class Extents
             return value;
     }
 
-    [[nodiscard]] constexpr auto lerp(double_t factor) const
+    [[nodiscard]] constexpr auto lerp(f64 factor) const
     {
         return min * (1. - factor) + max * factor;
     }
 
-    [[nodiscard]] constexpr auto clamped_lerp(double_t factor) const
+    [[nodiscard]] constexpr auto clamped_lerp(f64 factor) const
     {
         return min * (1. - this->clamp(factor)) + max * factor;
     }
 
-    [[nodiscard]] constexpr double_t lerp_inverse(T value) const
+    [[nodiscard]] constexpr f64 lerp_inverse(T value) const
     {
         return (value - min) / this->size();
     }

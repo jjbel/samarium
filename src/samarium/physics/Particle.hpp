@@ -17,15 +17,15 @@ struct Particle
     Vector2 pos{};
     Vector2 vel{};
     Vector2 acc{};
-    double_t radius{1};
-    double_t mass{1};
+    f64 radius{1};
+    f64 mass{1};
     Color color{};
 
     constexpr auto as_circle() const noexcept { return Circle{pos, radius}; }
 
     constexpr auto apply_force(Vector2 force) noexcept { acc += force / mass; }
 
-    constexpr auto update(double_t time_delta = 1.0 / 64) noexcept
+    constexpr auto update(f64 time_delta = 1.0 / 64) noexcept
     {
         vel += acc * time_delta;
         pos += vel * time_delta;
@@ -33,7 +33,7 @@ struct Particle
     }
 };
 
-constexpr auto update(auto& object, double_t time_delta = 1.0 / 60)
+constexpr auto update(auto& object, f64 time_delta = 1.0 / 60)
 {
     object.update(time_delta);
 }

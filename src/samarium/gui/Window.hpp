@@ -97,6 +97,6 @@ class Window
         }
     }
 
-    double current_framerate() const;
+    f64 current_framerate() const;
 };
 } // namespace sm

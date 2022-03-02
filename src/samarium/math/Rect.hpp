@@ -13,7 +13,7 @@
 
 namespace sm
 {
-template <concepts::Number T = double_t> struct Rect
+template <concepts::Number T = f64> struct Rect
 {
     Vector2_t<T> min;
     Vector2_t<T> max;
