@@ -39,13 +39,12 @@ conan create samarium -b missing
 | Dependency | URL | Documentation |
 | ---        | --- | --- |
 | python     | <https://www.python.org/downloads/> | https://www.python.org/doc/ |
-| git        | <https://git-scm.com/downloads> | https://git-scm.com/docs |
+| git        | <https://git-scm.com/downloads/> | https://git-scm.com/docs/ |
 | cmake      | <https://cmake.org/download/> | https://cmake.org/cmake/help/latest/ |
-| conan      | <https://conan.io/downloads.html> | https://docs.conan.io/en/latest/ |
+| conan      | <https://conan.io/downloads.html/> | https://docs.conan.io/en/latest/ |
 
-**NOTE: A suitable C++ compiler which supports at least C++20 is required**
-
-For example gcc11 at least.
+Compiler wise, at least gcc-11 or Visual C++ 2019 is required
+Clang [does not yet support C++20](https://clang.llvm.org/cxx_status.html#cxx20)
 
 ## Installation
 
