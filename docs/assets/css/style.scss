@@ -4,7 +4,7 @@
 @import "{{ site.theme }}";
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@200&family=Open+Sans&display=swap');
 
-$bg: rgb(23, 24, 31);
+$bg: rgb(20, 18, 27);
 
 html,
 body {
@@ -32,7 +32,8 @@ body {
     max-width: 95rem;
     font-size: 1.5rem;
     font: 'Open Sans', sans-serif;
-    border-radius: 1rem;
+    border-radius: 2rem;
+    margin: 2rem 2rem;
 
     h1 {
         font-size: 4rem;
@@ -52,7 +53,7 @@ body {
 
     h1, h2 {
         color: rgb(255, 187, 204);
-        border-bottom: 0.3rem solid;
+        border-bottom: 0.14rem solid;
         border-color: #fff;
     }
 }

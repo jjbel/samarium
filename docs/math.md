@@ -2,11 +2,12 @@
 
 ### In file: `samarium/math/math.hpp`
 
-- [math](#math)
-  - [Definition](#definition)
-  - [About](#about)
-  - [Example](#example)
-  - [Members](#members)
+### Contents
+
+- [Definition](#definition)
+- [About](#about)
+- [Example](#example)
+- [Members](#members)
 
 ## Definition
 

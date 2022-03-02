@@ -1,8 +1,9 @@
 # Samarium
 
-- [Samarium](#samarium)
-  - [About](#about)
-  - [Components](#components)
+### Contents
+
+- [About](#about)
+- [Components](#components)
 
 ## About
 
