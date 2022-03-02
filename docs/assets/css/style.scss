@@ -8,7 +8,7 @@ $bg: rgb(23, 24, 31);
 
 html,
 body {
-    background-color: $bg;
+    background-color: rgb(13, 14, 22);
     font: 'Open Sans', sans-serif;
 }
 
@@ -30,21 +30,29 @@ body {
     color: #eee;
     background-color: $bg;
     max-width: 95rem;
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     font: 'Open Sans', sans-serif;
-    
+    border-radius: 1rem;
+
     h1 {
         font-size: 4rem;
     }
-    
+
     code {
-        font-size: 1.3rem;
+        color: #eee;
+        font-size: 1.55rem;
         background-color: $bg;
         font-family: 'JetBrains Mono', monospace;
     }
 
-    
+    div {
+        background-color: rgb(31, 32, 41);
+    }
+
+
     h1, h2 {
-        color: rgb(255, 173, 184);
+        color: rgb(255, 187, 204);
+        border-bottom: 0.3rem solid;
+        border-color: #fff;
     }
 }
