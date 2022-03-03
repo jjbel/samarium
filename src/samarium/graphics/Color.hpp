@@ -12,7 +12,7 @@
 
 #include "fmt/format.h"
 
-#include "../core/types.hpp" // for u8
+#include "../core/concepts.hpp" // for u8
 #include "../util/util.hpp"  // for util::strlen
 
 namespace sm

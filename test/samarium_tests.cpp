@@ -5,9 +5,10 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
-#include <catch2/catch_test_macros.hpp>
+#include "catch2/catch_test_macros.hpp"
 
 #include "samarium/samarium.hpp"
+#include "samarium/util/ostream.hpp"
 #include "tests/Vector2.hpp"
 #include "tests/concepts.hpp"
 
@@ -48,7 +49,7 @@ auto App()
                        1000); // print to stderr for no line buffering
         watch.reset();
     };
-
+    std::cout << ball.now.pos;
     rn.draw(ball.now);
     // window.run(rn, sm::Color(12, 12, 20), update, draw);
 }

@@ -24,6 +24,7 @@ add_library(samarium
     ${CMAKE_CURRENT_SOURCE_DIR}/samarium/core/ThreadPool.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/samarium/util/util.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/samarium/util/file.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/samarium/util/ostream.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/samarium/graphics/Renderer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/samarium/gui/Window.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/samarium/graphics/Trail.cpp

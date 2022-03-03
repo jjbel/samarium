@@ -13,23 +13,23 @@
 
 namespace sm
 {
-struct version_t
+struct Version
 {
     u8 major{1};
     u8 minor{0};
     u8 patch{0};
 };
 
-static constexpr auto version = version_t{};
+static constexpr auto version = Version{};
 } // namespace sm
 
-template <> class fmt::formatter<sm::version_t>
+template <> class fmt::formatter<sm::Version>
 {
   public:
     constexpr auto parse(const format_parse_context& ctx) { return ctx.begin(); }
 
     template <typename FormatContext>
-    auto format(const sm::version_t& p, FormatContext& ctx)
+    auto format(const sm::Version& p, FormatContext& ctx)
     {
         return format_to(ctx.out(), "samarium version {}.{}.{}", p.major, p.minor,
                          p.patch);
