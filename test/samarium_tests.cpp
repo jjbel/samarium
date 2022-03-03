@@ -5,7 +5,7 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
-#include "gtest/gtest.h"
+#include <catch2/catch_test_macros.hpp>
 
 #include "samarium/samarium.hpp"
 #include "tests/Vector2.hpp"
@@ -35,7 +35,7 @@ auto App()
         {
             rn.draw(sm::Particle{.pos    = i,
                                  .radius = 1,
-                                 .color  = sm::Color{255, 0, 0}.with_alpha(100)});
+                                 .color  = sm::Color{255, 0, 0}.with_alpha(110)});
         }
         rn.draw(ball.now);
 
@@ -53,4 +53,4 @@ auto App()
     // window.run(rn, sm::Color(12, 12, 20), update, draw);
 }
 
-// TEST(App, main) { App(); }
+TEST_CASE("App", "main") { App(); }

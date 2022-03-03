@@ -30,7 +30,7 @@ add_compile_options(${WARNINGS})
 
 add_subdirectory(src)
 
-include(gtest_setup)
-gtest_setup()
+include(setup_catch2)
+setup_catch2()
 enable_testing()
 add_subdirectory(test)

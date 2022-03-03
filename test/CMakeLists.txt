@@ -23,20 +23,12 @@ message(STATUS "Using test file: ${TEST_FILE}")
 add_executable(samarium_tests ${TEST_FILE})
 
 target_include_directories(samarium_tests PRIVATE ${CMAKE_SOURCE_DIR}/src)
-# target_include_directories(samarium_tests PRIVATE ${CMAKE_SOURCE_DIR}/src/samarium)
 
 target_link_libraries(samarium_tests PRIVATE samarium)
 target_link_libraries(samarium_tests PRIVATE fmt::fmt)
 target_link_libraries(samarium_tests PRIVATE sfml-graphics)
-target_link_libraries(samarium_tests PRIVATE gtest_main)
+target_link_libraries(samarium_tests PRIVATE Catch2::Catch2WithMain)
 
 if(WARNINGS)
     target_compile_options(samarium_tests PRIVATE ${WARNINGS})
-endif()
-
-include(GoogleTest)
-gtest_discover_tests(samarium_tests)
-
-if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    target_compile_options(gtest PRIVATE -Wno-null-dereference) # ??? gtest enables Werror
 endif()

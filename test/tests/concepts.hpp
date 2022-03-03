@@ -7,7 +7,7 @@
 
 #include "samarium/core/concepts.hpp"
 
-TEST(core_concepts, vector2)
+TEST_CASE("core.concepts", "vector2")
 {
     static_assert(sm::concepts::Integral<sm::u8>);
     static_assert(sm::concepts::Integral<sm::u16>);
