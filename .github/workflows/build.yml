@@ -158,7 +158,8 @@ jobs:
           run: cmake -B build
 
         - name: CMake Build
-          run: cmake --build build
+          run: cmake --build build --config Release
+          # https://stackoverflow.com/a/20423820
 
         - name: CTest
           working-directory: build
