@@ -7,12 +7,6 @@
 
 #pragma once
 
-#include <tuple>
-
-#include "samarium/graphics/Color.hpp"
-
-#include "math.hpp"
-
 namespace sm
 {
 template <concepts::Arithmetic T> class Extents

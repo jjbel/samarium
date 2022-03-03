@@ -7,4 +7,4 @@
 
 #pragma once
 
-#include "samarium/physics/Particle.hpp"
+#include "./physics/collision.hpp"

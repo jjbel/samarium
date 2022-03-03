@@ -7,6 +7,5 @@
 
 #pragma once
 
-#include "samarium/math/Transform.hpp"
-#include "samarium/math/geometry.hpp"
-#include "samarium/math/interp.hpp"
+#include "./math/Transform.hpp"
+#include "./math/geometry.hpp"

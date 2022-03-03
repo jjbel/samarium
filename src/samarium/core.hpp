@@ -7,6 +7,6 @@
 
 #pragma once
 
-#include "samarium/core/DynArray.hpp"
-#include "samarium/core/ThreadPool.hpp"
-#include "samarium/core/concepts.hpp"
+#include "./core/DynArray.hpp"
+#include "./core/ThreadPool.hpp"
+#include "./core/concepts.hpp"

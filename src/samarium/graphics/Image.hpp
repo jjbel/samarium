@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include "samarium/core/DynArray.hpp"
-#include "samarium/math/Rect.hpp"
-#include "samarium/util/print.hpp"
+#include "../core/DynArray.hpp"
+#include "../math/Rect.hpp"
+#include "../util/print.hpp"
 
 #include "Color.hpp"
 
@@ -47,7 +47,8 @@ template <typename T> class Grid
     const Dimensions dims;
 
     // Constructors
-    explicit Grid(Dimensions dims_ = dimsFHD) : data(dims_.x * dims_.y), dims{dims_}
+    explicit Grid(Dimensions dims_ = dimsFHD)
+        : data(dims_.x * dims_.y), dims{dims_}
     {
     }
 

@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include "samarium/graphics/Image.hpp"
-#include "samarium/util/print.hpp"
-#include "samarium/util/util.hpp"
+#include "../graphics/Image.hpp"
+#include "../util/print.hpp"
+#include "../util/util.hpp"
 
 namespace sm::file
 {

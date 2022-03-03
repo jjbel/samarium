@@ -12,8 +12,6 @@
 #include "interp.hpp"
 #include "shapes.hpp"
 
-#include "samarium/util/print.hpp"
-
 namespace sm::math
 {
 [[nodiscard]] constexpr auto distance(Vector2 p1, Vector2 p2)

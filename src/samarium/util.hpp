@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "samarium/util/file.hpp"
-#include "samarium/util/print.hpp"
-#include "samarium/util/random.hpp"
-#include "samarium/util/terminal_dims.hpp"
+#include "./util/file.hpp"
+#include "./util/print.hpp"
+#include "./util/random.hpp"
+#include "./util/terminal_dims.hpp"

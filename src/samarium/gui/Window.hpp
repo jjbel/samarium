@@ -12,8 +12,8 @@
 
 #include "SFML/Graphics.hpp"
 
-#include "samarium/graphics/Renderer.hpp"
-#include "samarium/util/util.hpp"
+#include "../graphics/Renderer.hpp"
+#include "../util/util.hpp"
 
 namespace sm
 {

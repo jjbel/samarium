@@ -10,7 +10,7 @@
 #include <array>
 #include <random>
 
-#include "samarium/math/interp.hpp"
+#include "../math/interp.hpp"
 
 namespace sm::random
 {

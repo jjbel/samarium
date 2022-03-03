@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "samarium/math/geometry.hpp"
+#include "../math/geometry.hpp"
 
 #include "Dual.hpp"
 #include "Particle.hpp"

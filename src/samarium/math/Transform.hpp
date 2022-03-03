@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include "fmt/format.h"
-
 #include "Rect.hpp"
 #include "shapes.hpp"
 

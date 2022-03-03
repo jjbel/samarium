@@ -10,15 +10,14 @@
 #include <functional>
 #include <mutex>
 
-#include "samarium/core/ThreadPool.hpp"
-#include "samarium/math/Transform.hpp"
-#include "samarium/math/geometry.hpp"
-#include "samarium/physics/Particle.hpp"
+#include "../core/ThreadPool.hpp"
+#include "../math/Transform.hpp"
+#include "../math/geometry.hpp"
+#include "../physics/Particle.hpp"
 
 #include "Gradient.hpp"
 #include "Image.hpp"
 #include "Trail.hpp"
-#include "colors.hpp"
 
 namespace sm
 {
@@ -55,7 +54,7 @@ class Renderer
     {
     }
 
-    auto fill(const Color& color) { this->image.fill(color); }
+    void fill(const Color& color) { this->image.fill(color); }
 
     template <typename T>
     void draw(T&& fn) requires(
@@ -74,7 +73,30 @@ class Renderer
         concepts::reason("Function should accept a const Vector2&") &&
         std::invocable<T, const Vector2&>)
     {
-        this->draw_funcs.emplace_back(Drawer{fn, rect});
+        // this->draw_funcs.emplace_back(Drawer{fn, rect});
+        const auto box =
+            /* this->transform.apply */ (rect)
+            /* .clamped_to(
+                Rect<f64>{{}, (this->image.dims - Indices{1, 1}).as<f64>()})
+            .template as<size_t>() */
+            ;
+        print("Box: ", box);
+        // const auto task = [box, fn, dims = image.dims, tr = this->transform,
+        //                    &image = this->image]
+        // {
+        //     for (size_t y = box.min.y; y <= box.max.y; y++)
+        //     {
+        //         for (size_t x = box.min.x; x <= box.max.x; x++)
+        //         {
+        //             const auto coords = Indices{x, y};
+        //             const auto coords_transformed =
+        //                 tr.apply_inverse(coords.template as<f64>());
+        //             image[coords].add_alpha_over(fn(coords_transformed));
+        //         }
+        //     }
+        // };
+
+        // this->thread_pool.push_task(task);
     }
 
     void draw(Circle circle, Color color, f64 aa_factor = 1.6);
@@ -84,7 +106,7 @@ class Renderer
     void draw(const Particle& particle, Color color, f64 aa_factor = 0.3);
 
     void draw(const Trail& trail,
-              Color color     = sm::colors::lightgreen,
+              Color color     = Color{100, 255, 80},
               f64 fade_factor = 0.0,
               f64 radius      = 1.0,
               f64 aa_factor   = 0.1);
@@ -97,12 +119,12 @@ class Renderer
               f64 aa_factor   = 0.1);
 
     void draw_line_segment(const LineSegment& ls,
-                           Color color   = sm::colors::white,
+                           Color color   = Color{255, 255, 255},
                            f64 thickness = 0.1,
                            f64 aa_factor = 0.1);
 
     void draw_line(const LineSegment& ls,
-                   Color color   = sm::colors::white,
+                   Color color   = Color{255, 255, 255},
                    f64 thickness = 0.1,
                    f64 aa_factor = 0.1);
 

@@ -6,7 +6,7 @@
 #include <cmath>
 #include <numbers>
 
-#include "samarium/core/concepts.hpp"
+#include "../core/concepts.hpp"
 
 namespace sm::math
 {
@@ -55,13 +55,7 @@ template <u32 n> [[nodiscard]] constexpr auto power(auto x)
 
 namespace sm::literals
 {
-consteval auto operator"" _degrees(f80 angle)
-{
-    return math::to_radians(angle);
-}
+consteval auto operator"" _degrees(f80 angle) { return math::to_radians(angle); }
 
-consteval auto operator"" _radians(f80 angle)
-{
-    return angle;
-}
+consteval auto operator"" _radians(f80 angle) { return angle; }
 } // namespace sm::literals

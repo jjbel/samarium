@@ -7,4 +7,4 @@
 
 #pragma once
 
-#include "samarium/gui/Window.hpp"
+#include "./gui/Window.hpp"

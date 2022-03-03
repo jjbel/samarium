@@ -5,16 +5,13 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
-#include <execution>
-#include <utility>
-
 #include "Renderer.hpp"
 
 namespace sm
 {
 void Renderer::render()
 {
-    if (draw_funcs.empty()) return;
+    /* if (draw_funcs.empty()) return;
 
     const auto size = image.size();
     size_t j        = 0;
@@ -45,7 +42,7 @@ void Renderer::render()
         j += chunk_size;
     }
     thread_pool.wait_for_tasks();
-    draw_funcs.clear();
+    draw_funcs.clear(); */
 }
 
 void Renderer::draw(Circle circle, Color color, f64 aa_factor)

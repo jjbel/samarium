@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "Color.hpp"
+#include "./Color.hpp"
 
 namespace sm::colors
 {

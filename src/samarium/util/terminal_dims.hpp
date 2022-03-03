@@ -19,7 +19,7 @@
 #include <unistd.h>
 #endif // Windows/Linux
 
-#include "samarium/math/Vector2.hpp"
+#include "../math/Vector2.hpp"
 
 namespace sm::util
 {

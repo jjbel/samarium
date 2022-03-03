@@ -7,6 +7,5 @@
 
 #pragma once
 
-#include "samarium/graphics/Renderer.hpp"
-#include "samarium/graphics/colors.hpp"
-#include "samarium/graphics/gradients.hpp"
+#include "./graphics/Renderer.hpp"
+#include "./graphics/colors.hpp"

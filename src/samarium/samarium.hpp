@@ -7,10 +7,9 @@
 
 #pragma once
 
-#include "samarium/core/version.hpp"
-#include "samarium/gui/Window.hpp"
-#include "samarium/graphics/gradients.hpp"
-#include "samarium/physics/collision.hpp"
-#include "samarium/util/file.hpp"
-#include "samarium/util/random.hpp"
-#include "samarium/util/terminal_dims.hpp"
+#include "./core/version.hpp"
+#include "./gui/Window.hpp"
+#include "./physics/collision.hpp"
+#include "./util/file.hpp"
+#include "./util/random.hpp"
+#include "./util/terminal_dims.hpp"

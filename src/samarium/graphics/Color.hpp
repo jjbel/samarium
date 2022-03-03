@@ -8,15 +8,12 @@
 #pragma once
 
 #include <array>
-#include <concepts>
-#include <cstdint>
 #include <string_view>
 
 #include "fmt/format.h"
 
-#include "samarium/core/types.hpp"
-#include "samarium/math/math.hpp"
-#include "samarium/util/util.hpp"
+#include "../core/types.hpp" // for u8
+#include "../util/util.hpp"  // for util::strlen
 
 namespace sm
 {

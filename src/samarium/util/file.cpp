@@ -9,7 +9,7 @@
 #include <filesystem>
 #include <fstream>
 
-#include "samarium/graphics/Image.hpp"
+#include "../graphics/Image.hpp"
 
 #include "print.hpp"
 

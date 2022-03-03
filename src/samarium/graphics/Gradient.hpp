@@ -9,7 +9,7 @@
 
 #include <array>
 
-#include "samarium/math/interp.hpp"
+#include "../math/interp.hpp"
 
 #include "Color.hpp"
 

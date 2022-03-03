@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "samarium/graphics/Color.hpp"
-#include "samarium/math/shapes.hpp"
+#include "../graphics/Color.hpp"
+#include "../math/shapes.hpp"
 
 namespace sm
 {

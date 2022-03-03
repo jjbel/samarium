@@ -30,17 +30,12 @@
 // #define THREAD_POOL_VERSION "v2.0.0 (2021-08-14)"
 
 #include <atomic>      // std::atomic
-#include <chrono>      // std::chrono
-#include <cstdint>     // std::int_fast64_t, std::uint_fast32_t
-#include <functional>  // std::function
 #include <future>      // std::future, std::promise
-#include <iostream>    // std::cout, std::ostream
 #include <memory>      // std::shared_ptr, std::unique_ptr
 #include <mutex>       // std::mutex, std::scoped_lock
 #include <queue>       // std::queue
 #include <thread>      // std::this_thread, std::thread
 #include <type_traits> // std::common_type_t, std::decay_t, std::enable_if_t, std::is_void_v, std::invoke_result_t
-#include <utility>     // std::move
 
 
 namespace sm
@@ -474,125 +469,4 @@ class ThreadPool
      */
     std::atomic<ui32> tasks_total = 0;
 };
-
-//                                     End class ThreadPool //
-// =============================================================================================
-// //
-
-// =============================================================================================
-// //
-//                                   Begin class synced_stream //
-
-/**
- * @brief A helper class to synchronize printing to an output stream by different
- * threads.
- */
-class synced_stream
-{
-  public:
-    /**
-     * @brief Construct a new synced stream.
-     *
-     * @param _out_stream The output stream to print to. The default value is
-     * std::cout.
-     */
-    synced_stream(std::ostream& _out_stream = std::cout)
-        : out_stream(_out_stream){};
-
-    /**
-     * @brief Print any number of items into the output stream. Ensures that no
-     * other threads print to this stream simultaneously, as long as they all
-     * exclusively use this synced_stream object to print.
-     *
-     * @tparam T The types of the items
-     * @param items The items to print.
-     */
-    template <typename... T> void print(const T&... items)
-    {
-        const std::scoped_lock lock(stream_mutex);
-        (out_stream << ... << items);
-    }
-
-    /**
-     * @brief Print any number of items into the output stream, followed by a
-     * newline character. Ensures that no other threads print to this stream
-     * simultaneously, as long as they all exclusively use this synced_stream
-     * object to print.
-     *
-     * @tparam T The types of the items
-     * @param items The items to print.
-     */
-    template <typename... T> void println(const T&... items)
-    {
-        print(items..., '\n');
-    }
-
-  private:
-    /**
-     * @brief A mutex to synchronize printing.
-     */
-    mutable std::mutex stream_mutex = {};
-
-    /**
-     * @brief The output stream to print to.
-     */
-    std::ostream& out_stream;
-};
-
-//                                    End class synced_stream //
-// =============================================================================================
-// //
-
-// =============================================================================================
-// //
-//                                       Begin class timer //
-
-/**
- * @brief A helper class to measure execution time for benchmarking purposes.
- */
-class timer
-{
-    typedef std::int_fast64_t i64;
-
-  public:
-    /**
-     * @brief Start (or restart) measuring time.
-     */
-    void start() { start_time = std::chrono::steady_clock::now(); }
-
-    /**
-     * @brief Stop measuring time and store the elapsed time since start().
-     */
-    void stop() { elapsed_time = std::chrono::steady_clock::now() - start_time; }
-
-    /**
-     * @brief Get the number of milliseconds that have elapsed between start() and
-     * stop().
-     *
-     * @return The number of milliseconds.
-     */
-    i64 ms() const
-    {
-        return (std::chrono::duration_cast<std::chrono::milliseconds>(
-                    elapsed_time))
-            .count();
-    }
-
-  private:
-    /**
-     * @brief The time point when measuring started.
-     */
-    std::chrono::time_point<std::chrono::steady_clock> start_time =
-        std::chrono::steady_clock::now();
-
-    /**
-     * @brief The duration that has elapsed between start() and stop().
-     */
-    std::chrono::duration<double> elapsed_time =
-        std::chrono::duration<double>::zero();
-};
-
-//                                        End class timer //
-// =============================================================================================
-// //
 } // namespace sm
