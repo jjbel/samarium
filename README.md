@@ -55,7 +55,7 @@ conan create samarium -b missing
 
 ## Example
 
-In a new folder, called, for example **`myProj`**, create the following files:
+In a new folder, create the following files:
 
 `conanfile.txt`:
 
