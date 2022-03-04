@@ -83,7 +83,7 @@ jobs:
         run: cmake -B build
 
       - name: CMake Build
-        run: build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }}  cmake --build build
+        run: build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }}  cmake --build build -j 2
 
       - name: CTest
         working-directory: ./build
@@ -158,7 +158,7 @@ jobs:
         run: cmake -B build
 
       - name: CMake Build
-        run: cmake --build build --config Release
+        run: cmake --build build --config Release -j 2
         # https://stackoverflow.com/a/20423820
 
       - name: CTest
