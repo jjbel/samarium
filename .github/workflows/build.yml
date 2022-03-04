@@ -66,13 +66,16 @@ jobs:
         uses: turtlebrowser/get-conan@main
 
       - name: Install other deps
-        run: sudo apt-get update && sudo apt-get install libtbb-dev
+        run: sudo apt-get update && sudo apt-get install libtbb-dev tree
 
       - name: Check Tool Versions
         run: |
           conan    --version
           cmake    --version
           c++      --version
+
+      - name: View Source Tree
+        run: tree
 
       - name: Configure Conan
         run: |
