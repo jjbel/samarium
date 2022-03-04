@@ -75,7 +75,7 @@ void Renderer::draw_line_segment(const LineSegment& ls,
     const auto vector = ls.vector().abs();
     const auto extra  = 2 * aa_factor;
     this->draw(
-        [=](const Vector2& coords)
+        [&ls, color, thickness, aa_factor](const Vector2& coords)
         {
             return rasterize(color, math::clamped_distance(coords, ls), thickness,
                              aa_factor);

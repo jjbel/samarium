@@ -133,14 +133,15 @@ class Renderer
     template <typename T>
     requires std::invocable<T, f64>
     void draw_line_segment(const LineSegment& ls,
-                           T function_along_line,
+                           T&& function_along_line,
                            f64 thickness = 0.1,
                            f64 aa_factor = 0.1)
     {
         const auto vector = ls.vector().abs();
         const auto extra  = 2 * aa_factor;
         this->draw(
-            [=](const Vector2& coords)
+            [&function_along_line, &ls, thickness,
+             aa_factor](const Vector2& coords)
             {
                 return rasterize(
                     function_along_line(math::lerp_along(coords, ls)),
@@ -160,8 +161,8 @@ class Renderer
         const auto vector = ls.vector().abs();
         const auto extra  = 2 * aa_factor;
         this->draw(
-            [&function_along_line, thickness,
-             aa_factor, &ls = std::as_const(ls)](const Vector2& coords)
+            [&function_along_line, &ls, thickness,
+             aa_factor](const Vector2& coords)
             {
                 return rasterize(
                     function_along_line(math::clamped_lerp_along(coords, ls)),
