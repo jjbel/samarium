@@ -2,4 +2,5 @@
 !*/
 !*.cpp
 !*.hpp
+build/*
 date.hpp
