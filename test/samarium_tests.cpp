@@ -36,8 +36,6 @@ auto App()
 
     sm::util::Stopwatch watch{};
 
-    std::ranges::for_each(viewport_box, [](auto&& x) { sm::print(x); });
-
     const auto update = [&](auto delta)
     {
         ball->apply_force(ball->mass * gravity);

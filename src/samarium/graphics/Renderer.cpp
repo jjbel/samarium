@@ -90,7 +90,7 @@ void Renderer::draw_line(const LineSegment& ls,
                          f64 aa_factor)
 {
     this->draw(
-        [color, &ls, color, thickness, aa_factor](const Vector2& coords) {
+        [color, &ls, thickness, aa_factor](const Vector2& coords) {
             return rasterize(color, math::distance(coords, ls), thickness,
                              aa_factor);
         });

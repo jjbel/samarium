@@ -6,6 +6,7 @@
  */
 
 #include "samarium/math/Vector2.hpp"
+#include "samarium/math/geometry.hpp"
 
 TEST_CASE("util.format", "Vector2")
 {
@@ -27,7 +28,7 @@ TEST_CASE("literals", "math.Vector2")
     CHECK(a_y == b_y);
 }
 
-TEST_CASE("math.Vector2", "Vector2")
+TEST_CASE("Vector2", "math.Vector2")
 {
     static_assert(std::is_same_v<sm::Vector2::value_type, sm::f64>);
 
@@ -62,5 +63,53 @@ TEST_CASE("math.Vector2", "Vector2")
         const auto d = sm::Vector2{0.0, 0.0};
         CHECK(sm::math::almost_equal(d.length(), 0.0));
         CHECK(sm::math::almost_equal(d.length_sq(), 0.0));
+    }
+}
+
+TEST_CASE("geometry", "math.Vector2")
+{
+    SECTION("intersection")
+    {
+        SECTION("free")
+        {
+            const auto a = sm::math::intersection({{-1.0, 0.0}, {1.0, 0.0}},
+                                                  {{0.0, 1.0}, {0.0, -1.0}});
+            CHECK(a.has_value());
+            CHECK(*a == sm::Vector2{});
+
+            const auto b = sm::math::intersection({{-1.0, -1.0}, {1.0, 1.0}},
+                                                  {{1.0, -1.0}, {-1.0, 1.0}});
+            CHECK(b.has_value());
+            CHECK(*b == sm::Vector2{});
+
+            const auto c = sm::math::intersection({{}, {0.0, 1.0}},
+                                                  {{1.0, 0.0}, {1.0, 1.0}});
+            CHECK(!c.has_value());
+        }
+
+        SECTION("clamped")
+        {
+            const auto a = sm::math::clamped_intersection(
+                {{-1.0, 0.0}, {1.0, 0.0}}, {{0.0, 1.0}, {0.0, -1.0}});
+            CHECK(a.has_value());
+            CHECK(*a == sm::Vector2{});
+
+            const auto b = sm::math::clamped_intersection(
+                {{-1.0, -1.0}, {1.0, 1.0}}, {{1.0, -1.0}, {-1.0, 1.0}});
+            CHECK(b.has_value());
+            CHECK(*b == sm::Vector2{});
+
+            const auto c = sm::math::clamped_intersection(
+                {{-1.0, -1.0}, {-0.5, -0.5}}, {{1.0, -1.0}, {0.5, -0.5}});
+            CHECK(!c.has_value());
+
+            const auto d = sm::math::clamped_intersection(
+                {{-1.0, 0.0}, {-0.5, 0.0}}, {{0.0, 1.0}, {0.0, 0.5}});
+            CHECK(!d.has_value());
+
+            const auto e = sm::math::clamped_intersection(
+                {{}, {0.0, 1.0}}, {{1.0, 0.0}, {1.0, 1.0}});
+            CHECK(!e.has_value());
+        }
     }
 }

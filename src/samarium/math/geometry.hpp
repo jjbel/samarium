@@ -105,12 +105,12 @@ clamped_intersection(const LineSegment& l1, const LineSegment& l2)
     if (!point) return std::nullopt;
     if (lies_in_segment(*point, l1) && lies_in_segment(*point, l2))
     {
-        fmt::print(stderr, "{}", l1);
-
         return point;
     }
     else
+    {
         return std::nullopt;
+    }
 }
 
 [[nodiscard]] constexpr auto area(Circle circle)
