@@ -158,7 +158,7 @@ jobs:
 
       - name: CTest
         working-directory: build
-        run: ctest -vv
+        run: ctest -vv -C Release
 
   windows-install:
     runs-on: windows-latest
