@@ -160,7 +160,7 @@ class Renderer
         const auto vector = ls.vector().abs();
         const auto extra  = 2 * aa_factor;
         this->draw(
-            [function_along_line = std::move(function_along_line), thickness,
+            [&function_along_line, thickness,
              aa_factor, &ls = std::as_const(ls)](const Vector2& coords)
             {
                 return rasterize(
