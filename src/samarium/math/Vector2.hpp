@@ -233,6 +233,7 @@ namespace literals
 consteval auto operator"" _x(f80 x) { return Vector2{static_cast<f64>(x), 0}; }
 consteval auto operator"" _y(f80 y) { return Vector2{0, static_cast<f64>(y)}; }
 } // namespace literals
+
 } // namespace sm
 
 template <sm::concepts::Number T> class fmt::formatter<sm::Vector2_t<T>>

@@ -29,7 +29,7 @@ struct Particle
     {
         vel += acc * time_delta;
         pos += vel * time_delta;
-        acc *= 0.0;
+        acc  = Vector2{}; // reset acceleration
     }
 };
 

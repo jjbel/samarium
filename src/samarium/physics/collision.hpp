@@ -14,8 +14,8 @@
 
 namespace sm::phys
 {
-[[nodiscard]] constexpr std::optional<Vector2> did_collide(const Particle& p1,
-                                                           const Particle& p2)
+[[nodiscard]] std::optional<Vector2> did_collide(const Particle& p1,
+                                                 const Particle& p2)
 {
     if (math::distance(p1.pos, p2.pos) <= p1.radius + p2.radius)
         return std::optional((p1.pos + p2.pos) / 2.0);
@@ -23,7 +23,7 @@ namespace sm::phys
         return std::nullopt;
 }
 
-constexpr auto collide(Particle& p1, Particle& p2)
+auto collide(Particle& p1, Particle& p2)
 {
     /*
         https://courses.lumenlearning.com/boundless-physics/chapter/collisions/#:~:text=particles%20are%20involved%20in%20an-,elastic%20collision,-%2C%20the%20velocity%20of%20the%20first
@@ -55,7 +55,7 @@ constexpr auto collide(Particle& p1, Particle& p2)
     }
 }
 
-[[nodiscard]] constexpr auto
+[[nodiscard]] auto
 did_collide(const Particle& now, const Particle& prev, const LineSegment& l)
 {
     const auto proj = math::project(prev.pos, l);
@@ -69,7 +69,7 @@ did_collide(const Particle& now, const Particle& prev, const LineSegment& l)
         {prev.pos + radius_shift, now.pos + radius_shift}, l);
 }
 
-constexpr auto collide(Dual<Particle>& p, const LineSegment& l)
+auto collide(Dual<Particle>& p, const LineSegment& l)
 {
     const auto vec  = l.vector();
     const auto proj = math::project(p.prev.pos, l);
@@ -78,9 +78,10 @@ constexpr auto collide(Dual<Particle>& p, const LineSegment& l)
             .with_length(
                 p.prev.radius); // keep track of the point on the circumference of
                                 // prev closest to l, which will cross l first
-
+    
     const auto possible_collision = sm::math::clamped_intersection(
         {p.prev.pos + radius_shift, p.now.pos + radius_shift}, l);
+
     if (!possible_collision) return;
 
     const auto point = *possible_collision;

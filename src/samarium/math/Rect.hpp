@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "Extents.hpp"
 #include "Vector2.hpp"
 
 namespace sm
@@ -29,14 +30,23 @@ template <concepts::Number T = f64> struct Rect
                        {math::max(p1.x, p2.x), math::max(p1.y, p2.y)}};
     }
 
+    constexpr auto validate() { *this = find_min_max(this->min, this->max); }
+
+    [[nodiscard]] constexpr auto validated() const
+    {
+        auto rect = *this;
+        rect.validate();
+        return rect;
+    }
+
     [[nodiscard]] static constexpr auto
-    from_centre_width_height(Vector2_t<T> centre, T width, T height)
+    from_centre_width_height(Vector2_t<T> centre, T width, T height) noexcept
     {
         const auto vec = Vector2_t{.x = width, .y = height};
         return Rect{centre - vec, centre + vec};
     }
 
-    [[nodiscard]] constexpr auto contains(const Vector2_t<T>& vec) const noexcept
+    [[nodiscard]] constexpr auto contains(Vector2_t<T> vec) const noexcept
     {
         return vec.x >= min.x && vec.x <= max.x && vec.y >= min.y &&
                vec.y <= max.y;
@@ -44,10 +54,11 @@ template <concepts::Number T = f64> struct Rect
 
     [[nodiscard]] constexpr auto clamped_to(Rect<T> bounds) const
     {
-        return Rect<T>{{math::max(this->min.x, bounds.min.x),
-                        math::max(this->min.y, bounds.min.y)},
-                       {math::min(this->min.x, bounds.min.x),
-                        math::min(this->min.y, bounds.min.y)}};
+        using ext        = Extents<f64>;
+        const auto ext_x = ext{bounds.min.x, bounds.max.x};
+        const auto ext_y = ext{bounds.min.y, bounds.max.y};
+        return Rect<T>{{ext_x.clamp(min.x), ext_y.clamp(min.y)},
+                       {ext_x.clamp(max.x), ext_y.clamp(max.y)}};
     }
 
     [[nodiscard]] constexpr friend bool
@@ -64,8 +75,9 @@ template <sm::concepts::Number T> class fmt::formatter<sm::Rect<T>>
     auto format(const sm::Rect<T>& p, auto& ctx)
     {
         return format_to(ctx.out(),
-        R"(
+                         R"(
 Rect(min = {},
-     max = {}))", p.min, p.max);
+     max = {}))",
+                         p.min, p.max);
     }
 };

@@ -112,6 +112,7 @@ Samarium is distributed under the permissive [MIT License](LICENSE.md).
 
 ## Todo
 
+- make Rendering multithreaded
 - refactor, Color, Gradient handling into Material
 - specify bounding box for `Renderer::draw_line`
 - add modules support

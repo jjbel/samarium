@@ -11,7 +11,7 @@ TEST_CASE("util.format", "Vector2")
 {
     using namespace std::literals;
     CHECK(fmt::format("{}", sm::Vector2{2, 3}) == "Vec( 2.000,  3.000)"s);
-    CHECK(fmt::format("{}", sm::Vector2_t<size_t>{2, 3}) == "Vec(  2,   3)"s);
+    CHECK(fmt::format("{}", sm::Indices{2, 3}) == "Vec(  2,   3)"s);
 }
 
 TEST_CASE("literals", "math.Vector2")
@@ -31,24 +31,36 @@ TEST_CASE("math.Vector2", "Vector2")
 {
     static_assert(std::is_same_v<sm::Vector2::value_type, sm::f64>);
 
-    const auto a = sm::Vector2{1.0, 0.0};
-    CHECK(sm::math::almost_equal(a.length(), 1.0));
-    CHECK(sm::math::almost_equal(a.length_sq(), 1.0));
-    CHECK(sm::math::almost_equal(a.angle(), 0.0));
-    CHECK(sm::math::almost_equal(a.slope(), 0.0));
+    SECTION("x vector")
+    {
+        const auto a = sm::Vector2{1.0, 0.0};
+        CHECK(sm::math::almost_equal(a.length(), 1.0));
+        CHECK(sm::math::almost_equal(a.length_sq(), 1.0));
+        CHECK(sm::math::almost_equal(a.angle(), 0.0));
+        CHECK(sm::math::almost_equal(a.slope(), 0.0));
+    }
 
-    const auto b = sm::Vector2{1.0, 1.0};
-    CHECK(sm::math::almost_equal(b.length(), std::sqrt(2.0)));
-    CHECK(sm::math::almost_equal(b.length_sq(), 2.0));
-    CHECK(sm::math::almost_equal(b.angle(), sm::math::to_radians(45)));
-    CHECK(sm::math::almost_equal(b.slope(), 1.0));
+    SECTION("xy vector")
+    {
+        const auto b = sm::Vector2{1.0, 1.0};
+        CHECK(sm::math::almost_equal(b.length(), std::sqrt(2.0)));
+        CHECK(sm::math::almost_equal(b.length_sq(), 2.0));
+        CHECK(sm::math::almost_equal(b.angle(), sm::math::to_radians(45)));
+        CHECK(sm::math::almost_equal(b.slope(), 1.0));
+    }
 
-    const auto c = sm::Vector2{0.0, 1.0};
-    CHECK(sm::math::almost_equal(c.length(), 1.0));
-    CHECK(sm::math::almost_equal(c.length_sq(), 1.0));
-    CHECK(sm::math::almost_equal(c.angle(), sm::math::to_radians(90)));
+    SECTION("y vector")
+    {
+        const auto c = sm::Vector2{0.0, 1.0};
+        CHECK(sm::math::almost_equal(c.length(), 1.0));
+        CHECK(sm::math::almost_equal(c.length_sq(), 1.0));
+        CHECK(sm::math::almost_equal(c.angle(), sm::math::to_radians(90)));
+    }
 
-    const auto d = sm::Vector2{0.0, 0.0};
-    CHECK(sm::math::almost_equal(d.length(), 0.0));
-    CHECK(sm::math::almost_equal(d.length_sq(), 0.0));
+    SECTION("origin vector")
+    {
+        const auto d = sm::Vector2{0.0, 0.0};
+        CHECK(sm::math::almost_equal(d.length(), 0.0));
+        CHECK(sm::math::almost_equal(d.length_sq(), 0.0));
+    }
 }

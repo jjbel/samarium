@@ -6,6 +6,8 @@
  */
 
 #include "samarium/samarium.hpp"
+#include "samarium/graphics/gradients.hpp"
+#include "samarium/graphics/colors.hpp"
 
 int main()
 {
@@ -30,8 +32,6 @@ int main()
     const auto dims         = rn.image.dims.as<double>();
     const auto viewport_box = rn.viewport_box();
 
-    auto window = sm::Window{rn.image.dims, "Collision", 60};
-
     const auto run_every_frame = [&]
     {
         p1.apply_force(p1.mass * gravity);
@@ -40,15 +40,17 @@ int main()
             spring.with_length(spring_constant * (rest_length - spring.length()));
         p1.apply_force(force);
         p1.update();
+        auto dual = sm::Dual{p1, p2};
+        sm::phys::collide(dual, l);
+        for (auto&& i : viewport_box) sm::phys::collide(dual, i);
+        std::tie(p1, p2) = std::tuple{dual.now, dual.prev};
 
-        sm::phys::collide(p1, p2, l);
-
-        for (auto&& i : viewport_box) sm::phys::collide(p1, p2, i);
         rn.draw_line_segment(l, sm::gradients::blue_green, 0.4);
         rn.draw_line_segment(sm::LineSegment{anchor, p1.pos}, "#c471ed"_c, .06);
         rn.draw(p1);
         p2 = p1;
     };
 
+    auto window = sm::Window{{rn.image.dims, "Collision", 60}};
     window.run(rn, "#10101B"_c, run_every_frame);
 }

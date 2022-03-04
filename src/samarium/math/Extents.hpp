@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include "../core/concepts.hpp"
+
 namespace sm
 {
 template <concepts::Arithmetic T> class Extents

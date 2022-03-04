@@ -27,6 +27,13 @@ class Window
     size_t target_framerate{};
 
   public:
+    struct Settings
+    {
+        Dimensions dims{sm::dimsFHD};
+        std::string name{"Samarium Window"};
+        uint32_t framerate{64};
+    };
+
     struct Manager
     {
         Window& window;
@@ -52,16 +59,14 @@ class Window
 
     size_t frame_counter{};
 
-    Window(Dimensions dims         = sm::dimsFHD,
-           const std::string& name = "Samarium Window",
-           uint32_t framerate      = 64)
-        : window(sf::VideoMode(static_cast<uint32_t>(dims.x),
-                               static_cast<uint32_t>(dims.y)),
-                 name,
+    Window(Settings settings)
+        : window(sf::VideoMode(static_cast<uint32_t>(settings.dims.x),
+                               static_cast<uint32_t>(settings.dims.y)),
+                 settings.name,
                  sf::Style::Titlebar | sf::Style::Close),
-          target_framerate{framerate}
+          target_framerate{settings.framerate}
     {
-        window.setFramerateLimit(framerate);
+        window.setFramerateLimit(settings.framerate);
     }
 
     bool is_open() const;
@@ -73,7 +78,7 @@ class Window
     void display();
 
     template <std::invocable T>
-    void run(Renderer& rn, Color color, T call_every_frame)
+    void run(Renderer& rn, Color color, T&& call_every_frame)
     {
         while (this->is_open())
         {
@@ -83,14 +88,14 @@ class Window
     }
 
     template <typename T, typename U>
-    void run(Renderer& rn, Color color, T update, U draw, size_t substeps = 1)
+    void run(Renderer& rn, Color color, T&& update, U&& draw, size_t substeps = 1)
     {
         while (this->is_open())
         {
             const auto wm = Manager(*this, rn, color);
             for (size_t i = 0; i < substeps; i++)
             {
-                update(1.0 / (target_framerate * substeps));
+                update(1.0 / static_cast<f64>(target_framerate * substeps));
             }
 
             draw();

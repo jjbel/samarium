@@ -22,7 +22,7 @@ class Transform
 
     constexpr auto apply(const Rect<f64>& rect) const
     {
-        return Rect<f64>{apply(rect.min), apply(rect.max)};
+        return Rect<f64>{apply(rect.min), apply(rect.max)}.validated();
     }
 
     constexpr auto apply_inverse(Vector2 vec) const

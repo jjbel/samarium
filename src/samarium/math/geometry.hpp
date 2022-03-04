@@ -98,13 +98,28 @@ namespace sm::math
     }
 }
 
-[[nodiscard]] constexpr std::optional<Vector2>
+[[nodiscard]] inline std::optional<Vector2>
 clamped_intersection(const LineSegment& l1, const LineSegment& l2)
 {
     const auto point = intersection(l1, l2);
     if (!point) return std::nullopt;
-    if (lies_in_segment(*point, l1) && lies_in_segment(*point, l2)) return point;
+    if (lies_in_segment(*point, l1) && lies_in_segment(*point, l2))
+    {
+        fmt::print(stderr, "{}", l1);
+
+        return point;
+    }
     else
         return std::nullopt;
+}
+
+[[nodiscard]] constexpr auto area(Circle circle)
+{
+    return std::numbers::pi * circle.radius * circle.radius;
+}
+
+template <typename T> [[nodiscard]] constexpr auto area(Rect<T> rect)
+{
+    return (rect.max.x - rect.min.x) * (rect.max.y - rect.min.y);
 }
 } // namespace sm::math

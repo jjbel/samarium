@@ -39,4 +39,19 @@ struct LineSegment
         this->p2 += amount;
     }
 };
+
 } // namespace sm
+
+template <> class fmt::formatter<sm::LineSegment>
+{
+  public:
+    constexpr auto parse(const format_parse_context& ctx) const
+    {
+        return ctx.begin();
+    }
+
+    auto format(const sm::LineSegment& p, auto& ctx)
+    {
+        return format_to(ctx.out(), "LineSegment({}, {})", p.p1, p.p2);
+    }
+};

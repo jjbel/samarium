@@ -50,7 +50,7 @@ void Renderer::draw(Circle circle, Color color, f64 aa_factor)
     this->draw(
         [=](const Vector2& coords)
         {
-            return antialias(color, math::distance(coords, circle.centre),
+            return rasterize(color, math::distance(coords, circle.centre),
                              circle.radius, aa_factor);
         },
         Rect<f64>::from_centre_width_height(
@@ -77,7 +77,7 @@ void Renderer::draw_line_segment(const LineSegment& ls,
     this->draw(
         [=](const Vector2& coords)
         {
-            return antialias(color, math::clamped_distance(coords, ls), thickness,
+            return rasterize(color, math::clamped_distance(coords, ls), thickness,
                              aa_factor);
         },
         Rect<f64>::from_centre_width_height((ls.p1 + ls.p2) / 2.0,
@@ -91,20 +91,20 @@ void Renderer::draw_line(const LineSegment& ls,
 {
     this->draw(
         [=](const Vector2& coords) {
-            return antialias(color, math::distance(coords, ls), thickness,
+            return rasterize(color, math::distance(coords, ls), thickness,
                              aa_factor);
         });
 }
 
-void Renderer::draw_grid(bool axes, bool grid, bool dots)
-{
-    // if (axes)
-    // {
-    //     this->draw_line_segment(
-    //         transform.apply_inverse(LineSegment{{image.dims.x / 2.0},
-    //         {image.dims.x / 2.0, image.dims.y}}), Color{255, 255, 255, 0});
-    // }
-}
+// void Renderer::draw_grid(bool axes, bool grid, bool dots)
+// {
+// if (axes)
+// {
+//     this->draw_line_segment(
+//         transform.apply_inverse(LineSegment{{image.dims.x / 2.0},
+//         {image.dims.x / 2.0, image.dims.y}}), Color{255, 255, 255, 0});
+// }
+// }
 
 std::array<LineSegment, 4> Renderer::viewport_box() const
 {
