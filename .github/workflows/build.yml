@@ -56,7 +56,7 @@ jobs:
           version: 11
           platform: x64
 
-      - name: Setup cmake
+      - name: Install CMake
         uses: jwlawson/actions-setup-cmake@v1.12
         with:
           cmake-version: "3.22.x"
@@ -105,7 +105,7 @@ jobs:
           version: 11
           platform: x64
 
-      - name: Setup cmake
+      - name: Install CMake
         uses: jwlawson/actions-setup-cmake@v1.12
         with:
           cmake-version: "3.22.x"
@@ -141,11 +141,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup cmake
-        uses: jwlawson/actions-setup-cmake@v1.12
-        with:
-          cmake-version: "3.22.x"
-
       - name: Install Conan
         id: conan
         uses: turtlebrowser/get-conan@main
@@ -168,11 +163,6 @@ jobs:
   windows-install:
     runs-on: windows-latest
     steps:
-      - name: Setup cmake
-        uses: jwlawson/actions-setup-cmake@v1.12
-        with:
-          cmake-version: "3.22.x"
-
       - name: Install Conan
         id: conan
         uses: turtlebrowser/get-conan@main
