@@ -20,8 +20,8 @@ template <typename T> struct Dual
 
     template <typename... Args> constexpr auto update(Args&&... args)
     {
-        now.update(std::forward<Args>(args)...);
         prev = now;
+        now.update(std::forward<Args>(args)...);
     }
 };
 } // namespace sm
