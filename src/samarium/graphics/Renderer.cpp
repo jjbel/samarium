@@ -48,7 +48,7 @@ void Renderer::render()
 void Renderer::draw(Circle circle, Color color, f64 aa_factor)
 {
     this->draw(
-        [=](const Vector2& coords)
+        [circle, color, aa_factor](const Vector2& coords)
         {
             return rasterize(color, math::distance(coords, circle.centre),
                              circle.radius, aa_factor);
@@ -90,7 +90,7 @@ void Renderer::draw_line(const LineSegment& ls,
                          f64 aa_factor)
 {
     this->draw(
-        [=](const Vector2& coords) {
+        [color, &ls, color, thickness, aa_factor](const Vector2& coords) {
             return rasterize(color, math::distance(coords, ls), thickness,
                              aa_factor);
         });
