@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include <functional>
-
 #include "../core/ThreadPool.hpp"
 #include "../math/Transform.hpp"
 #include "../math/geometry.hpp"
@@ -20,6 +18,15 @@
 
 namespace sm
 {
+namespace concepts
+{
+template <typename T>
+concept DrawableLambda =
+    std::is_invocable_r<Color, T, const Vector2&>::value; // takes a const
+                                                          // Vector2& and returns
+                                                          // a Color
+}
+
 class Renderer
 {
   public:
@@ -35,13 +42,6 @@ class Renderer
             rasterize(distance, radius, aa_factor));
     }
 
-    struct Drawer
-    {
-        std::function<sm::Color(const sm::Vector2&)> fn;
-        sm::Rect<f64> rect;
-    };
-
-
     Image image;
     Transform transform{.pos   = image.dims.as<f64>() / 2.,
                         .scale = Vector2{10, 10} * Vector2{1.0, -1.0}};
@@ -55,22 +55,17 @@ class Renderer
 
     void fill(const Color& color) { this->image.fill(color); }
 
-    template <typename T>
-    void draw(T&& fn) requires(
-        concepts::reason("Function should accept a const Vector2&") &&
-        std::invocable<T, const Vector2&>)
+    void draw(concepts::DrawableLambda auto&& fn)
     {
-        const auto rect = image.rect();
-        this->draw_funcs.emplace_back(
-            Drawer(fn, transform.apply_inverse(
-                           Rect{.min = rect.min, .max = rect.max + Indices{1, 1}}
-                               .template as<f64>())));
+        // const auto rect = image.rect();
+        // this->draw_funcs.emplace_back(
+        //     Drawer(fn, transform.apply_inverse(
+        //                    Rect{.min = rect.min, .max = rect.max + Indices{1,
+        //                    1}}
+        //                        .template as<f64>())));
     }
 
-    template <typename T>
-    void draw(T&& fn, Rect<f64> rect) requires(
-        concepts::reason("Function should accept a const Vector2&") &&
-        std::invocable<T, const Vector2&>)
+    void draw(concepts::DrawableLambda auto&& fn, Rect<f64> rect)
     {
         // this->draw_funcs.emplace_back(Drawer{fn, rect});
         const auto box = this->transform.apply(rect)
@@ -113,9 +108,8 @@ class Renderer
               f64 radius      = 1.0,
               f64 aa_factor   = 0.1);
 
-    template <size_t gradient_size>
     void draw(const Trail& trail,
-              Gradient<gradient_size> color,
+              concepts::Interpolator auto&& fn,
               f64 fade_factor = 0.0,
               f64 radius      = 1.0,
               f64 aa_factor   = 0.1);
@@ -130,10 +124,8 @@ class Renderer
                    f64 thickness = 0.1,
                    f64 aa_factor = 0.1);
 
-    template <typename T>
-    requires std::invocable<T, f64>
     void draw_line_segment(const LineSegment& ls,
-                           T&& function_along_line,
+                           concepts::Interpolator auto&& function_along_line,
                            f64 thickness = 0.1,
                            f64 aa_factor = 0.1)
     {
@@ -151,10 +143,8 @@ class Renderer
                 (ls.p1 + ls.p2) / 2.0, vector.x + extra, vector.y + extra));
     }
 
-    template <typename T>
-    requires std::invocable<T, f64>
     void draw_line(const LineSegment& ls,
-                   T&& function_along_line,
+                   concepts::Interpolator auto&& function_along_line,
                    f64 thickness = 0.1,
                    f64 aa_factor = 2)
     {
@@ -172,13 +162,10 @@ class Renderer
 
     void draw_grid(bool axes = true, bool grid = true, bool dots = true);
 
-    void render();
-
     std::array<LineSegment, 4> viewport_box() const;
 
   private:
     u32 thread_count;
     sm::ThreadPool thread_pool;
-    std::vector<Drawer> draw_funcs{};
 };
 } // namespace sm

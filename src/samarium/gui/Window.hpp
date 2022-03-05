@@ -37,21 +37,17 @@ class Window
     struct Manager
     {
         Window& window;
-        Renderer& renderer;
+        const Renderer& renderer;
 
-        Manager(Window& win, Renderer& rn, Color color)
-            : window(win), renderer(rn)
+        Manager(Window& win, const Renderer& rn) : window(win), renderer(rn)
         {
             window.get_input();
-            renderer.fill(color);
         }
 
         Manager(const Manager&) = delete;
 
         ~Manager() // NOSONAR
         {
-            renderer.render();
-
             window.draw(renderer.image);
             window.display();
         }
@@ -78,21 +74,21 @@ class Window
     void display();
 
     template <std::invocable T>
-    void run(Renderer& rn, Color color, T&& call_every_frame)
+    void run(Renderer& rn, T&& call_every_frame)
     {
         while (this->is_open())
         {
-            const auto wm = Manager(*this, rn, color);
+            const auto wm = Manager(*this, rn);
             call_every_frame();
         }
     }
 
     template <typename T, typename U>
-    void run(Renderer& rn, Color color, T&& update, U&& draw, size_t substeps = 1)
+    void run(Renderer& rn, T&& update, U&& draw, size_t substeps = 1)
     {
         while (this->is_open())
         {
-            const auto wm = Manager(*this, rn, color);
+            const auto wm = Manager(*this, rn);
             for (size_t i = 0; i < substeps; i++)
             {
                 update(1.0 / static_cast<f64>(target_framerate * substeps));

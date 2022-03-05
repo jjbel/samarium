@@ -9,42 +9,6 @@
 
 namespace sm
 {
-void Renderer::render()
-{
-    /* if (draw_funcs.empty()) return;
-
-    const auto size = image.size();
-    size_t j        = 0;
-
-    for (size_t i = 0; i < thread_count; i++)
-    {
-        const auto chunk_size = i < size % thread_count ? size / thread_count + 1
-                                                        : size / thread_count;
-
-        const auto task = [chunk_size, j, dims = image.dims, &image = this->image,
-                           &draw_funcs = this->draw_funcs, tr = this->transform]
-        {
-            for (size_t k = j; k < j + chunk_size; k++)
-            {
-                const auto coords =
-                    tr.apply_inverse(sm::convert_1d_to_2d(dims, k).as<f64>());
-                for (const auto& drawer : draw_funcs)
-                {
-                    if (drawer.rect.contains(coords))
-                    {
-                        image[k].add_alpha_over(drawer.fn(coords));
-                    }
-                }
-            }
-        };
-
-        thread_pool.push_task(task);
-        j += chunk_size;
-    }
-    thread_pool.wait_for_tasks();
-    draw_funcs.clear(); */
-}
-
 void Renderer::draw(Circle circle, Color color, f64 aa_factor)
 {
     this->draw(

@@ -52,5 +52,5 @@ int main()
     };
 
     auto window = sm::Window{{rn.image.dims, "Collision", 60}};
-    window.run(rn, "#10101B"_c, run_every_frame);
+    window.run(rn, run_every_frame);
 }

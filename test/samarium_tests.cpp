@@ -19,7 +19,8 @@ auto tmp(sm::util::Stopwatch& watch)
     //                .x); // clear line by padding spaces to width of
     //                terminal
     fmt::print(stderr, "{:4.2f}\n",
-               1.0 / watch.time().count()); // print to stderr for no line buffering
+               1.0 /
+                   watch.time().count()); // print to stderr for no line buffering
     watch.reset();
 }
 
@@ -31,7 +32,7 @@ auto App()
     const auto viewport_box = rn.viewport_box();
 
     auto ball = sm::Dual{sm::Particle{
-        .vel = {30, 16}, .radius = 4, .color = sm::Color{255, 0, 0}}};
+        .vel = {30, 96}, .radius = 2.8, .color = sm::Color{255, 0, 0}}};
     auto t    = sm::Trail{100};
 
     sm::util::Stopwatch watch{};
@@ -45,21 +46,23 @@ auto App()
 
     const auto draw = [&]
     {
+        rn.fill(sm::Color{16, 18, 20});
         t.push_back(ball.now.pos);
         for (auto&& i : t.span())
         {
-            rn.draw(sm::Particle{.pos    = i,
-                                 .radius = 0.6,
-                                 .color = sm::colors::limegreen.with_alpha(170)});
+            rn.draw(
+                sm::Particle{.pos    = i,
+                             .radius = 0.3,
+                             .color  = sm::Color{145, 231, 255}.with_alpha(170)});
         }
         rn.draw(ball.now);
         tmp(watch);
     };
 
-    auto window = sm::Window{
-        {.dims = rn.image.dims, .name = "Collision", .framerate = 170}};
-    window.run(rn, sm::Color(12, 12, 20), update, draw);
+    auto window =
+        sm::Window{{.dims = rn.image.dims, .name = "Collision", .framerate = 164}};
+    window.run(rn, update, draw, 40);
     // sm::file::export_to(rn.image, "temp.tga");
 }
 
-TEST_CASE("App", "main") { /* App(); */ }
+TEST_CASE("App", "main") { App(); }

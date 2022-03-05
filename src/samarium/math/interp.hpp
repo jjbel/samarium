@@ -10,7 +10,7 @@
 #include "../core/types.hpp"
 #include "../graphics/Color.hpp"
 
-#include "Extents.hpp"
+#include "./Extents.hpp"
 
 namespace sm::interp
 {
@@ -105,4 +105,11 @@ template <typename T, typename Output_t = T>
                                                     to_range / from_range);
     };
 }
+
 } // namespace sm::interp
+
+namespace sm::concepts
+{
+template <typename T>
+concept Interpolator = std::invocable<T, f64>;
+}
