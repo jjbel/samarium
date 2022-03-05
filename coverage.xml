@@ -1,2 +1,491 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<coverage version="1"><file path="samarium/core/DynArray.hpp"><lineToCover lineNumber="31" covered="true"/><lineToCover lineNumber="32" covered="true" branchesToCover="4" coveredBranches="3"/><lineToCover lineNumber="41" covered="true" branchesToCover="4" coveredBranches="3"/><lineToCover lineNumber="43" covered="true"/><lineToCover lineNumber="44" covered="true"/><lineToCover lineNumber="80" covered="true"/><lineToCover lineNumber="81" covered="true"/><lineToCover lineNumber="83" covered="true"/><lineToCover lineNumber="86" covered="true"/><lineToCover lineNumber="88" covered="true"/><lineToCover lineNumber="90" covered="true"/><lineToCover lineNumber="92" covered="true"/><lineToCover lineNumber="113" covered="true"/><lineToCover lineNumber="115" covered="true"/><lineToCover lineNumber="116" covered="true"/><lineToCover lineNumber="118" covered="true" branchesToCover="2" coveredBranches="1"/></file><file path="samarium/core/ThreadPool.hpp"><lineToCover lineNumber="71" covered="true"/><lineToCover lineNumber="72" covered="true" branchesToCover="2" coveredBranches="1"/><lineToCover lineNumber="73" covered="false"/><lineToCover lineNumber="74" covered="true"/><lineToCover lineNumber="75" covered="true" branchesToCover="2" coveredBranches="1"/><lineToCover lineNumber="76" covered="true" branchesToCover="6" coveredBranches="4"/><lineToCover lineNumber="78" covered="true" branchesToCover="2" coveredBranches="1"/><lineToCover lineNumber="79" covered="true"/><lineToCover lineNumber="364" covered="true"/><lineToCover lineNumber="366" covered="true" branchesToCover="2" coveredBranches="2"/><lineToCover lineNumber="368" covered="true" branchesToCover="2" coveredBranches="1"/><lineToCover lineNumber="370" covered="true"/><lineToCover lineNumber="387" covered="true"/><lineToCover lineNumber="389" covered="true" branchesToCover="2" coveredBranches="1"/><lineToCover lineNumber="390" covered="true" branchesToCover="2" coveredBranches="1"/><lineToCover lineNumber="393" covered="false"/><lineToCover lineNumber="394" covered="false"/><lineToCover lineNumber="395" covered="false"/><lineToCover lineNumber="397" covered="true"/><lineToCover lineNumber="404" covered="true"/><lineToCover lineNumber="406" covered="true" branchesToCover="2" coveredBranches="1"/><lineToCover lineNumber="407" covered="true" branchesToCover="2" coveredBranches="1"/><lineToCover lineNumber="408" covered="true"/><lineToCover lineNumber="410" covered="false"/><lineToCover lineNumber="411" covered="true"/><lineToCover lineNumber="418" covered="true"/><lineToCover lineNumber="420" covered="true" branchesToCover="2" coveredBranches="2"/><lineToCover lineNumber="422" covered="true"/><lineToCover lineNumber="423" covered="true" branchesToCover="8" coveredBranches="4"/><lineToCover lineNumber="425" covered="false" branchesToCover="2" coveredBranches="0"/><lineToCover lineNumber="426" covered="false"/><lineToCover lineNumber="430" covered="true" branchesToCover="2" coveredBranches="1"/><lineToCover lineNumber="432" covered="true"/><lineToCover lineNumber="433" covered="true"/></file><file path="samarium/graphics/Image.hpp"><lineToCover lineNumber="50" covered="true"/><lineToCover lineNumber="51" covered="true"/><lineToCover lineNumber="53" covered="true"/><lineToCover lineNumber="99" covered="true"/></file><file path="samarium/graphics/Renderer.hpp"><lineToCover lineNumber="49" covered="true"/><lineToCover lineNumber="51" covered="true" branchesToCover="2" coveredBranches="1"/><lineToCover lineNumber="54" covered="true"/><lineToCover lineNumber="56" covered="true"/></file><file path="samarium/graphics/Trail.hpp"><lineToCover lineNumber="24" covered="true"/></file><file path="samarium/gui/Window.hpp"><lineToCover lineNumber="42" covered="true"/><lineToCover lineNumber="44" covered="true"/><lineToCover lineNumber="45" covered="true"/><lineToCover lineNumber="49" covered="true"/><lineToCover lineNumber="51" covered="true"/><lineToCover lineNumber="52" covered="true"/><lineToCover lineNumber="53" covered="true"/><lineToCover lineNumber="58" covered="true"/><lineToCover lineNumber="59" covered="true" branchesToCover="2" coveredBranches="1"/><lineToCover lineNumber="60" covered="true" branchesToCover="2" coveredBranches="1"/><lineToCover lineNumber="61" covered="true" branchesToCover="2" coveredBranches="1"/><lineToCover lineNumber="63" covered="true" branchesToCover="4" coveredBranches="2"/><lineToCover lineNumber="65" covered="true" branchesToCover="2" coveredBranches="1"/><lineToCover lineNumber="66" covered="true"/><lineToCover lineNumber="87" covered="true"/><lineToCover lineNumber="89" covered="true" branchesToCover="2" coveredBranches="2"/><lineToCover lineNumber="91" covered="true" branchesToCover="2" coveredBranches="1"/><lineToCover lineNumber="92" covered="true" branchesToCover="2" coveredBranches="2"/><lineToCover lineNumber="94" covered="true"/><lineToCover lineNumber="97" covered="true" branchesToCover="2" coveredBranches="1"/><lineToCover lineNumber="99" covered="true"/></file><file path="samarium/math/Extents.hpp"><lineToCover lineNumber="27" covered="true"/><lineToCover lineNumber="29" covered="true" branchesToCover="4" coveredBranches="4"/><lineToCover lineNumber="41" covered="true"/><lineToCover lineNumber="43" covered="true"/></file><file path="samarium/math/Vector2.hpp"><lineToCover lineNumber="33" covered="true"/><lineToCover lineNumber="35" covered="true"/><lineToCover lineNumber="38" covered="true"/><lineToCover lineNumber="40" covered="true"/><lineToCover lineNumber="43" covered="true"/><lineToCover lineNumber="45" covered="true"/><lineToCover lineNumber="48" covered="true"/><lineToCover lineNumber="51" covered="true"/><lineToCover lineNumber="53" covered="true"/><lineToCover lineNumber="56" covered="true"/><lineToCover lineNumber="58" covered="true"/><lineToCover lineNumber="59" covered="true"/><lineToCover lineNumber="62" covered="true"/><lineToCover lineNumber="64" covered="true"/><lineToCover lineNumber="72" covered="true"/><lineToCover lineNumber="74" covered="true"/><lineToCover lineNumber="75" covered="true"/><lineToCover lineNumber="76" covered="true"/><lineToCover lineNumber="79" covered="true"/><lineToCover lineNumber="81" covered="true"/><lineToCover lineNumber="82" covered="true"/><lineToCover lineNumber="83" covered="true"/><lineToCover lineNumber="93" covered="true"/><lineToCover lineNumber="95" covered="true"/><lineToCover lineNumber="96" covered="true"/><lineToCover lineNumber="97" covered="true"/><lineToCover lineNumber="107" covered="true"/><lineToCover lineNumber="109" covered="true"/><lineToCover lineNumber="110" covered="true"/><lineToCover lineNumber="111" covered="true"/><lineToCover lineNumber="114" covered="true"/><lineToCover lineNumber="116" covered="true"/><lineToCover lineNumber="119" covered="true"/><lineToCover lineNumber="121" covered="true"/><lineToCover lineNumber="129" covered="true"/><lineToCover lineNumber="132" covered="true"/><lineToCover lineNumber="135" covered="true"/><lineToCover lineNumber="137" covered="true"/><lineToCover lineNumber="138" covered="true"/><lineToCover lineNumber="147" covered="true"/><lineToCover lineNumber="149" covered="true"/><lineToCover lineNumber="150" covered="true"/><lineToCover lineNumber="154" covered="true"/><lineToCover lineNumber="157" covered="true" branchesToCover="4" coveredBranches="2"/><lineToCover lineNumber="175" covered="true"/><lineToCover lineNumber="178" covered="true"/><lineToCover lineNumber="179" covered="true"/><lineToCover lineNumber="183" covered="true"/><lineToCover lineNumber="186" covered="true"/><lineToCover lineNumber="187" covered="true"/><lineToCover lineNumber="199" covered="true"/><lineToCover lineNumber="201" covered="true"/><lineToCover lineNumber="202" covered="true"/><lineToCover lineNumber="206" covered="true"/><lineToCover lineNumber="208" covered="true"/><lineToCover lineNumber="209" covered="true"/><lineToCover lineNumber="221" covered="true"/><lineToCover lineNumber="223" covered="true"/><lineToCover lineNumber="224" covered="true"/><lineToCover lineNumber="242" covered="true"/><lineToCover lineNumber="245" covered="true"/><lineToCover lineNumber="247" covered="true"/><lineToCover lineNumber="251" covered="true"/></file><file path="samarium/math/geometry.hpp"><lineToCover lineNumber="17" covered="true"/><lineToCover lineNumber="19" covered="true"/><lineToCover lineNumber="35" covered="true"/><lineToCover lineNumber="38" covered="true"/><lineToCover lineNumber="39" covered="true"/><lineToCover lineNumber="40" covered="true"/><lineToCover lineNumber="67" covered="true"/><lineToCover lineNumber="69" covered="true"/><lineToCover lineNumber="70" covered="true"/><lineToCover lineNumber="73" covered="true"/><lineToCover lineNumber="76" covered="true"/><lineToCover lineNumber="77" covered="true"/><lineToCover lineNumber="79" covered="true"/><lineToCover lineNumber="80" covered="true"/><lineToCover lineNumber="82" covered="true" branchesToCover="4" coveredBranches="3"/><lineToCover lineNumber="84" covered="true" branchesToCover="2" coveredBranches="1"/><lineToCover lineNumber="86" covered="false"/><lineToCover lineNumber="87" covered="true" branchesToCover="2" coveredBranches="2"/><lineToCover lineNumber="89" covered="true"/><lineToCover lineNumber="92" covered="true"/><lineToCover lineNumber="93" covered="true"/><lineToCover lineNumber="95" covered="true"/><lineToCover lineNumber="96" covered="true"/><lineToCover lineNumber="97" covered="true"/><lineToCover lineNumber="102" covered="true"/><lineToCover lineNumber="104" covered="true"/><lineToCover lineNumber="105" covered="true" branchesToCover="2" coveredBranches="2"/><lineToCover lineNumber="106" covered="true" branchesToCover="6" coveredBranches="5"/><lineToCover lineNumber="108" covered="true"/><lineToCover lineNumber="112" covered="true"/></file><file path="samarium/math/interp.hpp"><lineToCover lineNumber="28" covered="true"/><lineToCover lineNumber="30" covered="true"/><lineToCover lineNumber="40" covered="true"/><lineToCover lineNumber="42" covered="true"/></file><file path="samarium/math/math.hpp"><lineToCover lineNumber="16" covered="true"/><lineToCover lineNumber="18" covered="true"/><lineToCover lineNumber="49" covered="true"/><lineToCover lineNumber="51" covered="true"/></file><file path="samarium/math/shapes.hpp"><lineToCover lineNumber="25" covered="true"/><lineToCover lineNumber="29" covered="true"/><lineToCover lineNumber="31" covered="true"/><lineToCover lineNumber="34" covered="true"/></file><file path="samarium/physics/Dual.hpp"><lineToCover lineNumber="19" covered="true"/><lineToCover lineNumber="21" covered="true"/><lineToCover lineNumber="23" covered="true"/><lineToCover lineNumber="24" covered="true"/><lineToCover lineNumber="25" covered="true"/></file><file path="samarium/physics/Particle.hpp"><lineToCover lineNumber="26" covered="true"/><lineToCover lineNumber="28" covered="true"/><lineToCover lineNumber="30" covered="true"/><lineToCover lineNumber="31" covered="true"/><lineToCover lineNumber="32" covered="true"/><lineToCover lineNumber="33" covered="true"/></file><file path="samarium/physics/collision.hpp"><lineToCover lineNumber="17" covered="false"/><lineToCover lineNumber="20" covered="false" branchesToCover="2" coveredBranches="0"/><lineToCover lineNumber="21" covered="false"/><lineToCover lineNumber="23" covered="false"/><lineToCover lineNumber="26" covered="false"/><lineToCover lineNumber="33" covered="false" branchesToCover="2" coveredBranches="0"/><lineToCover lineNumber="36" covered="false"/><lineToCover lineNumber="37" covered="false"/><lineToCover lineNumber="38" covered="false"/><lineToCover lineNumber="39" covered="false"/><lineToCover lineNumber="41" covered="false"/><lineToCover lineNumber="42" covered="false"/><lineToCover lineNumber="43" covered="false"/><lineToCover lineNumber="44" covered="false"/><lineToCover lineNumber="47" covered="false"/><lineToCover lineNumber="48" covered="false"/><lineToCover lineNumber="50" covered="false"/><lineToCover lineNumber="51" covered="false"/><lineToCover lineNumber="53" covered="false"/><lineToCover lineNumber="54" covered="false"/><lineToCover lineNumber="59" covered="false"/><lineToCover lineNumber="61" covered="false"/><lineToCover lineNumber="63" covered="false"/><lineToCover lineNumber="64" covered="false"/><lineToCover lineNumber="65" covered="false"/><lineToCover lineNumber="68" covered="false"/><lineToCover lineNumber="69" covered="false"/><lineToCover lineNumber="72" covered="true"/><lineToCover lineNumber="74" covered="true"/><lineToCover lineNumber="75" covered="true"/><lineToCover lineNumber="77" covered="true"/><lineToCover lineNumber="78" covered="true"/><lineToCover lineNumber="82" covered="true"/><lineToCover lineNumber="83" covered="true"/><lineToCover lineNumber="85" covered="true" branchesToCover="2" coveredBranches="2"/><lineToCover lineNumber="87" covered="true"/><lineToCover lineNumber="89" covered="true"/><lineToCover lineNumber="90" covered="true"/><lineToCover lineNumber="91" covered="true"/><lineToCover lineNumber="92" covered="true"/></file><file path="samarium/util/random.hpp"><lineToCover lineNumber="23" covered="true"/><lineToCover lineNumber="26" covered="true" branchesToCover="2" coveredBranches="1"/><lineToCover lineNumber="28" covered="true" branchesToCover="2" coveredBranches="1"/><lineToCover lineNumber="29" covered="true" branchesToCover="2" coveredBranches="1"/><lineToCover lineNumber="30" covered="true" branchesToCover="2" coveredBranches="1"/><lineToCover lineNumber="31" covered="true"/><lineToCover lineNumber="32" covered="true"/><lineToCover lineNumber="38" covered="false"/><lineToCover lineNumber="40" covered="false"/><lineToCover lineNumber="42" covered="false"/><lineToCover lineNumber="44" covered="false"/><lineToCover lineNumber="47" covered="false"/><lineToCover lineNumber="49" covered="false"/><lineToCover lineNumber="50" covered="false"/><lineToCover lineNumber="53" covered="false"/><lineToCover lineNumber="56" covered="false"/><lineToCover lineNumber="57" covered="false"/><lineToCover lineNumber="58" covered="false"/></file><file path="samarium/util/terminal_dims.hpp"><lineToCover lineNumber="26" covered="false"/><lineToCover lineNumber="36" covered="false"/><lineToCover lineNumber="37" covered="false"/></file><file path="samarium/util/util.hpp"><lineToCover lineNumber="38" covered="true"/><lineToCover lineNumber="40" covered="false"/><lineToCover lineNumber="42" covered="false"/><lineToCover lineNumber="43" covered="false" branchesToCover="2" coveredBranches="0"/><lineToCover lineNumber="44" covered="false" branchesToCover="2" coveredBranches="0"/></file></coverage>
+<coverage version="1">
+    <file path="build/_deps/catch2-src/src/catch2/catch_section_info.hpp">
+        <lineToCover lineNumber="24" covered="true" />
+        <lineToCover lineNumber="25" covered="true" />
+        <lineToCover lineNumber="26" covered="true" />
+        <lineToCover lineNumber="27" covered="true" />
+        <lineToCover lineNumber="28" covered="true" />
+    </file>
+    <file path="build/_deps/catch2-src/src/catch2/catch_tostring.hpp">
+        <lineToCover lineNumber="80" covered="false" />
+        <lineToCover lineNumber="81" covered="false" />
+        <lineToCover lineNumber="130" covered="false" />
+        <lineToCover lineNumber="132" covered="false" />
+        <lineToCover lineNumber="144" covered="false" />
+        <lineToCover lineNumber="145" covered="false" />
+        <lineToCover lineNumber="269" covered="false" />
+        <lineToCover lineNumber="271" covered="false" branchesToCover="2" coveredBranches="0" />
+    </file>
+    <file path="build/_deps/catch2-src/src/catch2/internal/catch_assertion_handler.hpp">
+        <lineToCover lineNumber="39" covered="true" />
+        <lineToCover lineNumber="40" covered="true" branchesToCover="2" coveredBranches="1" />
+        <lineToCover lineNumber="41" covered="false" />
+        <lineToCover lineNumber="43" covered="true" />
+        <lineToCover lineNumber="47" covered="true" />
+        <lineToCover lineNumber="48" covered="true" branchesToCover="2" coveredBranches="1" />
+        <lineToCover lineNumber="49" covered="true" />
+    </file>
+    <file path="build/_deps/catch2-src/src/catch2/internal/catch_decomposer.hpp">
+        <lineToCover lineNumber="41" covered="true" />
+        <lineToCover lineNumber="42" covered="true" />
+        <lineToCover lineNumber="43" covered="true" />
+        <lineToCover lineNumber="44" covered="true" />
+        <lineToCover lineNumber="70" covered="false" />
+        <lineToCover lineNumber="72" covered="false" branchesToCover="4" coveredBranches="0" />
+        <lineToCover lineNumber="76" covered="true" />
+        <lineToCover lineNumber="78" covered="true" />
+        <lineToCover lineNumber="79" covered="true" />
+        <lineToCover lineNumber="80" covered="true" />
+        <lineToCover lineNumber="81" covered="true" />
+        <lineToCover lineNumber="144" covered="false" />
+        <lineToCover lineNumber="145" covered="false" branchesToCover="2" coveredBranches="0" />
+        <lineToCover lineNumber="149" covered="true" />
+        <lineToCover lineNumber="151" covered="true" />
+        <lineToCover lineNumber="152" covered="true" />
+        <lineToCover lineNumber="158" covered="true" />
+        <lineToCover lineNumber="184" covered="true" />
+        <lineToCover lineNumber="187" covered="true" />
+        <lineToCover lineNumber="188" covered="true" />
+        <lineToCover lineNumber="238" covered="true" />
+        <lineToCover lineNumber="239" covered="true" />
+        <lineToCover lineNumber="245" covered="true" />
+        <lineToCover lineNumber="246" covered="true" />
+        <lineToCover lineNumber="250" covered="true" />
+        <lineToCover lineNumber="251" covered="true" />
+    </file>
+    <file path="build/_deps/catch2-src/src/catch2/internal/catch_source_line_info.hpp">
+        <lineToCover lineNumber="19" covered="true" />
+        <lineToCover lineNumber="20" covered="true" />
+        <lineToCover lineNumber="21" covered="true" />
+        <lineToCover lineNumber="22" covered="true" />
+    </file>
+    <file path="build/_deps/catch2-src/src/catch2/internal/catch_stringref.hpp">
+        <lineToCover lineNumber="33" covered="true" />
+        <lineToCover lineNumber="37" covered="true" />
+        <lineToCover lineNumber="38" covered="true" />
+        <lineToCover lineNumber="39" covered="true" />
+        <lineToCover lineNumber="40" covered="true" />
+        <lineToCover lineNumber="47" covered="true" />
+        <lineToCover lineNumber="48" covered="true" branchesToCover="2" coveredBranches="1" />
+        <lineToCover lineNumber="107" covered="true" />
+        <lineToCover lineNumber="108" covered="true" />
+        <lineToCover lineNumber="112" covered="true" />
+        <lineToCover lineNumber="113" covered="true" />
+    </file>
+    <file path="build/_deps/catch2-src/src/catch2/internal/catch_test_registry.hpp">
+        <lineToCover lineNumber="49" covered="true" />
+        <lineToCover lineNumber="50" covered="true" />
+        <lineToCover lineNumber="51" covered="true" />
+    </file>
+    <file path="build/_deps/catch2-src/src/catch2/internal/catch_unique_ptr.hpp">
+        <lineToCover lineNumber="69" covered="true" />
+        <lineToCover lineNumber="70" covered="true" branchesToCover="2" coveredBranches="2" />
+        <lineToCover lineNumber="71" covered="true" />
+    </file>
+    <file path="src/samarium/core/DynArray.hpp">
+        <lineToCover lineNumber="31" covered="true" />
+        <lineToCover lineNumber="32" covered="true" branchesToCover="4" coveredBranches="3" />
+        <lineToCover lineNumber="41" covered="true" branchesToCover="4" coveredBranches="3" />
+        <lineToCover lineNumber="43" covered="true" />
+        <lineToCover lineNumber="44" covered="true" />
+        <lineToCover lineNumber="80" covered="true" />
+        <lineToCover lineNumber="81" covered="true" />
+        <lineToCover lineNumber="83" covered="true" />
+        <lineToCover lineNumber="86" covered="true" />
+        <lineToCover lineNumber="88" covered="true" />
+        <lineToCover lineNumber="90" covered="true" />
+        <lineToCover lineNumber="92" covered="true" />
+        <lineToCover lineNumber="113" covered="true" />
+        <lineToCover lineNumber="115" covered="true" />
+        <lineToCover lineNumber="116" covered="true" />
+        <lineToCover lineNumber="118" covered="true" branchesToCover="2" coveredBranches="1" />
+    </file>
+    <file path="src/samarium/core/ThreadPool.hpp">
+        <lineToCover lineNumber="71" covered="true" />
+        <lineToCover lineNumber="72" covered="true" branchesToCover="2" coveredBranches="1" />
+        <lineToCover lineNumber="73" covered="false" />
+        <lineToCover lineNumber="74" covered="true" />
+        <lineToCover lineNumber="75" covered="true" branchesToCover="2" coveredBranches="1" />
+        <lineToCover lineNumber="76" covered="true" branchesToCover="6" coveredBranches="4" />
+        <lineToCover lineNumber="78" covered="true" branchesToCover="2" coveredBranches="1" />
+        <lineToCover lineNumber="79" covered="true" />
+        <lineToCover lineNumber="364" covered="true" />
+        <lineToCover lineNumber="366" covered="true" branchesToCover="2" coveredBranches="2" />
+        <lineToCover lineNumber="368" covered="true" branchesToCover="2" coveredBranches="1" />
+        <lineToCover lineNumber="370" covered="true" />
+        <lineToCover lineNumber="387" covered="true" />
+        <lineToCover lineNumber="389" covered="true" branchesToCover="2" coveredBranches="1" />
+        <lineToCover lineNumber="390" covered="true" branchesToCover="2" coveredBranches="1" />
+        <lineToCover lineNumber="393" covered="false" />
+        <lineToCover lineNumber="394" covered="false" />
+        <lineToCover lineNumber="395" covered="false" />
+        <lineToCover lineNumber="397" covered="true" />
+        <lineToCover lineNumber="404" covered="true" />
+        <lineToCover lineNumber="406" covered="true" branchesToCover="2" coveredBranches="1" />
+        <lineToCover lineNumber="407" covered="true" branchesToCover="2" coveredBranches="1" />
+        <lineToCover lineNumber="408" covered="true" />
+        <lineToCover lineNumber="410" covered="false" />
+        <lineToCover lineNumber="411" covered="true" />
+        <lineToCover lineNumber="418" covered="true" />
+        <lineToCover lineNumber="420" covered="true" branchesToCover="2" coveredBranches="2" />
+        <lineToCover lineNumber="422" covered="true" />
+        <lineToCover lineNumber="423" covered="true" branchesToCover="8" coveredBranches="4" />
+        <lineToCover lineNumber="425" covered="false" branchesToCover="2" coveredBranches="0" />
+        <lineToCover lineNumber="426" covered="false" />
+        <lineToCover lineNumber="430" covered="true" branchesToCover="2" coveredBranches="1" />
+        <lineToCover lineNumber="432" covered="true" />
+        <lineToCover lineNumber="433" covered="true" />
+    </file>
+    <file path="src/samarium/graphics/Image.hpp">
+        <lineToCover lineNumber="50" covered="true" />
+        <lineToCover lineNumber="51" covered="true" />
+        <lineToCover lineNumber="53" covered="true" />
+        <lineToCover lineNumber="99" covered="true" />
+    </file>
+    <file path="src/samarium/graphics/Renderer.hpp">
+        <lineToCover lineNumber="49" covered="true" />
+        <lineToCover lineNumber="51" covered="true" branchesToCover="2" coveredBranches="1" />
+        <lineToCover lineNumber="54" covered="true" />
+        <lineToCover lineNumber="56" covered="true" />
+    </file>
+    <file path="src/samarium/graphics/Trail.hpp">
+        <lineToCover lineNumber="24" covered="true" />
+    </file>
+    <file path="src/samarium/gui/Window.hpp">
+        <lineToCover lineNumber="42" covered="true" />
+        <lineToCover lineNumber="44" covered="true" />
+        <lineToCover lineNumber="45" covered="true" />
+        <lineToCover lineNumber="49" covered="true" />
+        <lineToCover lineNumber="51" covered="true" />
+        <lineToCover lineNumber="52" covered="true" />
+        <lineToCover lineNumber="53" covered="true" />
+        <lineToCover lineNumber="58" covered="true" />
+        <lineToCover lineNumber="59" covered="true" branchesToCover="2" coveredBranches="1" />
+        <lineToCover lineNumber="60" covered="true" branchesToCover="2" coveredBranches="1" />
+        <lineToCover lineNumber="61" covered="true" branchesToCover="2" coveredBranches="1" />
+        <lineToCover lineNumber="63" covered="true" branchesToCover="4" coveredBranches="2" />
+        <lineToCover lineNumber="65" covered="true" branchesToCover="2" coveredBranches="1" />
+        <lineToCover lineNumber="66" covered="true" />
+        <lineToCover lineNumber="87" covered="true" />
+        <lineToCover lineNumber="89" covered="true" branchesToCover="2" coveredBranches="2" />
+        <lineToCover lineNumber="91" covered="true" branchesToCover="2" coveredBranches="1" />
+        <lineToCover lineNumber="92" covered="true" branchesToCover="2" coveredBranches="2" />
+        <lineToCover lineNumber="94" covered="true" />
+        <lineToCover lineNumber="97" covered="true" branchesToCover="2" coveredBranches="1" />
+        <lineToCover lineNumber="99" covered="true" />
+    </file>
+    <file path="src/samarium/math/Extents.hpp">
+        <lineToCover lineNumber="27" covered="true" />
+        <lineToCover lineNumber="29" covered="true" branchesToCover="4" coveredBranches="4" />
+        <lineToCover lineNumber="41" covered="true" />
+        <lineToCover lineNumber="43" covered="true" />
+    </file>
+    <file path="src/samarium/math/Vector2.hpp">
+        <lineToCover lineNumber="33" covered="true" />
+        <lineToCover lineNumber="35" covered="true" />
+        <lineToCover lineNumber="38" covered="true" />
+        <lineToCover lineNumber="40" covered="true" />
+        <lineToCover lineNumber="43" covered="true" />
+        <lineToCover lineNumber="45" covered="true" />
+        <lineToCover lineNumber="48" covered="true" />
+        <lineToCover lineNumber="51" covered="true" />
+        <lineToCover lineNumber="53" covered="true" />
+        <lineToCover lineNumber="56" covered="true" />
+        <lineToCover lineNumber="58" covered="true" />
+        <lineToCover lineNumber="59" covered="true" />
+        <lineToCover lineNumber="62" covered="true" />
+        <lineToCover lineNumber="64" covered="true" />
+        <lineToCover lineNumber="72" covered="true" />
+        <lineToCover lineNumber="74" covered="true" />
+        <lineToCover lineNumber="75" covered="true" />
+        <lineToCover lineNumber="76" covered="true" />
+        <lineToCover lineNumber="79" covered="true" />
+        <lineToCover lineNumber="81" covered="true" />
+        <lineToCover lineNumber="82" covered="true" />
+        <lineToCover lineNumber="83" covered="true" />
+        <lineToCover lineNumber="93" covered="true" />
+        <lineToCover lineNumber="95" covered="true" />
+        <lineToCover lineNumber="96" covered="true" />
+        <lineToCover lineNumber="97" covered="true" />
+        <lineToCover lineNumber="107" covered="true" />
+        <lineToCover lineNumber="109" covered="true" />
+        <lineToCover lineNumber="110" covered="true" />
+        <lineToCover lineNumber="111" covered="true" />
+        <lineToCover lineNumber="114" covered="true" />
+        <lineToCover lineNumber="116" covered="true" />
+        <lineToCover lineNumber="119" covered="true" />
+        <lineToCover lineNumber="121" covered="true" />
+        <lineToCover lineNumber="129" covered="true" />
+        <lineToCover lineNumber="132" covered="true" />
+        <lineToCover lineNumber="135" covered="true" />
+        <lineToCover lineNumber="137" covered="true" />
+        <lineToCover lineNumber="138" covered="true" />
+        <lineToCover lineNumber="147" covered="true" />
+        <lineToCover lineNumber="149" covered="true" />
+        <lineToCover lineNumber="150" covered="true" />
+        <lineToCover lineNumber="154" covered="true" />
+        <lineToCover lineNumber="157" covered="true" branchesToCover="4" coveredBranches="2" />
+        <lineToCover lineNumber="175" covered="true" />
+        <lineToCover lineNumber="178" covered="true" />
+        <lineToCover lineNumber="179" covered="true" />
+        <lineToCover lineNumber="183" covered="true" />
+        <lineToCover lineNumber="186" covered="true" />
+        <lineToCover lineNumber="187" covered="true" />
+        <lineToCover lineNumber="199" covered="true" />
+        <lineToCover lineNumber="201" covered="true" />
+        <lineToCover lineNumber="202" covered="true" />
+        <lineToCover lineNumber="206" covered="true" />
+        <lineToCover lineNumber="208" covered="true" />
+        <lineToCover lineNumber="209" covered="true" />
+        <lineToCover lineNumber="221" covered="true" />
+        <lineToCover lineNumber="223" covered="true" />
+        <lineToCover lineNumber="224" covered="true" />
+        <lineToCover lineNumber="242" covered="true" />
+        <lineToCover lineNumber="245" covered="true" />
+        <lineToCover lineNumber="247" covered="true" />
+        <lineToCover lineNumber="251" covered="true" />
+    </file>
+    <file path="src/samarium/math/geometry.hpp">
+        <lineToCover lineNumber="17" covered="true" />
+        <lineToCover lineNumber="19" covered="true" />
+        <lineToCover lineNumber="35" covered="true" />
+        <lineToCover lineNumber="38" covered="true" />
+        <lineToCover lineNumber="39" covered="true" />
+        <lineToCover lineNumber="40" covered="true" />
+        <lineToCover lineNumber="67" covered="true" />
+        <lineToCover lineNumber="69" covered="true" />
+        <lineToCover lineNumber="70" covered="true" />
+        <lineToCover lineNumber="73" covered="true" />
+        <lineToCover lineNumber="76" covered="true" />
+        <lineToCover lineNumber="77" covered="true" />
+        <lineToCover lineNumber="79" covered="true" />
+        <lineToCover lineNumber="80" covered="true" />
+        <lineToCover lineNumber="82" covered="true" branchesToCover="4" coveredBranches="3" />
+        <lineToCover lineNumber="84" covered="true" branchesToCover="2" coveredBranches="1" />
+        <lineToCover lineNumber="86" covered="false" />
+        <lineToCover lineNumber="87" covered="true" branchesToCover="2" coveredBranches="2" />
+        <lineToCover lineNumber="89" covered="true" />
+        <lineToCover lineNumber="92" covered="true" />
+        <lineToCover lineNumber="93" covered="true" />
+        <lineToCover lineNumber="95" covered="true" />
+        <lineToCover lineNumber="96" covered="true" />
+        <lineToCover lineNumber="97" covered="true" />
+        <lineToCover lineNumber="102" covered="true" />
+        <lineToCover lineNumber="104" covered="true" />
+        <lineToCover lineNumber="105" covered="true" branchesToCover="2" coveredBranches="2" />
+        <lineToCover lineNumber="106" covered="true" branchesToCover="6" coveredBranches="5" />
+        <lineToCover lineNumber="108" covered="true" />
+        <lineToCover lineNumber="112" covered="true" />
+    </file>
+    <file path="src/samarium/math/interp.hpp">
+        <lineToCover lineNumber="28" covered="true" />
+        <lineToCover lineNumber="30" covered="true" />
+        <lineToCover lineNumber="40" covered="true" />
+        <lineToCover lineNumber="42" covered="true" />
+    </file>
+    <file path="src/samarium/math/math.hpp">
+        <lineToCover lineNumber="16" covered="true" />
+        <lineToCover lineNumber="18" covered="true" />
+        <lineToCover lineNumber="49" covered="true" />
+        <lineToCover lineNumber="51" covered="true" />
+    </file>
+    <file path="src/samarium/math/shapes.hpp">
+        <lineToCover lineNumber="25" covered="true" />
+        <lineToCover lineNumber="29" covered="true" />
+        <lineToCover lineNumber="31" covered="true" />
+        <lineToCover lineNumber="34" covered="true" />
+    </file>
+    <file path="src/samarium/physics/Dual.hpp">
+        <lineToCover lineNumber="19" covered="true" />
+        <lineToCover lineNumber="21" covered="true" />
+        <lineToCover lineNumber="23" covered="true" />
+        <lineToCover lineNumber="24" covered="true" />
+        <lineToCover lineNumber="25" covered="true" />
+    </file>
+    <file path="src/samarium/physics/Particle.hpp">
+        <lineToCover lineNumber="26" covered="true" />
+        <lineToCover lineNumber="28" covered="true" />
+        <lineToCover lineNumber="30" covered="true" />
+        <lineToCover lineNumber="31" covered="true" />
+        <lineToCover lineNumber="32" covered="true" />
+        <lineToCover lineNumber="33" covered="true" />
+    </file>
+    <file path="src/samarium/physics/collision.hpp">
+        <lineToCover lineNumber="17" covered="false" />
+        <lineToCover lineNumber="20" covered="false" branchesToCover="2" coveredBranches="0" />
+        <lineToCover lineNumber="21" covered="false" />
+        <lineToCover lineNumber="23" covered="false" />
+        <lineToCover lineNumber="26" covered="false" />
+        <lineToCover lineNumber="33" covered="false" branchesToCover="2" coveredBranches="0" />
+        <lineToCover lineNumber="36" covered="false" />
+        <lineToCover lineNumber="37" covered="false" />
+        <lineToCover lineNumber="38" covered="false" />
+        <lineToCover lineNumber="39" covered="false" />
+        <lineToCover lineNumber="41" covered="false" />
+        <lineToCover lineNumber="42" covered="false" />
+        <lineToCover lineNumber="43" covered="false" />
+        <lineToCover lineNumber="44" covered="false" />
+        <lineToCover lineNumber="47" covered="false" />
+        <lineToCover lineNumber="48" covered="false" />
+        <lineToCover lineNumber="50" covered="false" />
+        <lineToCover lineNumber="51" covered="false" />
+        <lineToCover lineNumber="53" covered="false" />
+        <lineToCover lineNumber="54" covered="false" />
+        <lineToCover lineNumber="59" covered="false" />
+        <lineToCover lineNumber="61" covered="false" />
+        <lineToCover lineNumber="63" covered="false" />
+        <lineToCover lineNumber="64" covered="false" />
+        <lineToCover lineNumber="65" covered="false" />
+        <lineToCover lineNumber="68" covered="false" />
+        <lineToCover lineNumber="69" covered="false" />
+        <lineToCover lineNumber="72" covered="true" />
+        <lineToCover lineNumber="74" covered="true" />
+        <lineToCover lineNumber="75" covered="true" />
+        <lineToCover lineNumber="77" covered="true" />
+        <lineToCover lineNumber="78" covered="true" />
+        <lineToCover lineNumber="82" covered="true" />
+        <lineToCover lineNumber="83" covered="true" />
+        <lineToCover lineNumber="85" covered="true" branchesToCover="2" coveredBranches="2" />
+        <lineToCover lineNumber="87" covered="true" />
+        <lineToCover lineNumber="89" covered="true" />
+        <lineToCover lineNumber="90" covered="true" />
+        <lineToCover lineNumber="91" covered="true" />
+        <lineToCover lineNumber="92" covered="true" />
+    </file>
+    <file path="src/samarium/util/random.hpp">
+        <lineToCover lineNumber="23" covered="true" />
+        <lineToCover lineNumber="26" covered="true" branchesToCover="2" coveredBranches="1" />
+        <lineToCover lineNumber="28" covered="true" branchesToCover="2" coveredBranches="1" />
+        <lineToCover lineNumber="29" covered="true" branchesToCover="2" coveredBranches="1" />
+        <lineToCover lineNumber="30" covered="true" branchesToCover="2" coveredBranches="1" />
+        <lineToCover lineNumber="31" covered="true" />
+        <lineToCover lineNumber="32" covered="true" />
+        <lineToCover lineNumber="38" covered="false" />
+        <lineToCover lineNumber="40" covered="false" />
+        <lineToCover lineNumber="42" covered="false" />
+        <lineToCover lineNumber="44" covered="false" />
+        <lineToCover lineNumber="47" covered="false" />
+        <lineToCover lineNumber="49" covered="false" />
+        <lineToCover lineNumber="50" covered="false" />
+        <lineToCover lineNumber="53" covered="false" />
+        <lineToCover lineNumber="56" covered="false" />
+        <lineToCover lineNumber="57" covered="false" />
+        <lineToCover lineNumber="58" covered="false" />
+    </file>
+    <file path="src/samarium/util/terminal_dims.hpp">
+        <lineToCover lineNumber="26" covered="false" />
+        <lineToCover lineNumber="36" covered="false" />
+        <lineToCover lineNumber="37" covered="false" />
+    </file>
+    <file path="src/samarium/util/util.hpp">
+        <lineToCover lineNumber="38" covered="true" />
+        <lineToCover lineNumber="40" covered="false" />
+        <lineToCover lineNumber="42" covered="false" />
+        <lineToCover lineNumber="43" covered="false" branchesToCover="2" coveredBranches="0" />
+        <lineToCover lineNumber="44" covered="false" branchesToCover="2" coveredBranches="0" />
+    </file>
+    <file path="test/samarium_tests.cpp">
+        <lineToCover lineNumber="15" covered="false" />
+        <lineToCover lineNumber="21" covered="false" />
+        <lineToCover lineNumber="22" covered="false" />
+        <lineToCover lineNumber="23" covered="false" />
+        <lineToCover lineNumber="24" covered="false" />
+        <lineToCover lineNumber="27" covered="true" />
+        <lineToCover lineNumber="29" covered="true" branchesToCover="4" coveredBranches="2" />
+        <lineToCover lineNumber="31" covered="true" />
+        <lineToCover lineNumber="32" covered="true" branchesToCover="2" coveredBranches="1" />
+        <lineToCover lineNumber="34" covered="true" />
+        <lineToCover lineNumber="36" covered="true" />
+        <lineToCover lineNumber="38" covered="true" />
+        <lineToCover lineNumber="40" covered="true" />
+        <lineToCover lineNumber="42" covered="true" />
+        <lineToCover lineNumber="43" covered="true" />
+        <lineToCover lineNumber="44" covered="true" />
+        <lineToCover lineNumber="45" covered="true" branchesToCover="2" coveredBranches="2" />
+        <lineToCover lineNumber="46" covered="true" />
+        <lineToCover lineNumber="48" covered="true" />
+        <lineToCover lineNumber="50" covered="true" branchesToCover="2" coveredBranches="1" />
+        <lineToCover lineNumber="51" covered="true" />
+        <lineToCover lineNumber="52" covered="true" />
+        <lineToCover lineNumber="53" covered="true" />
+        <lineToCover lineNumber="55" covered="true" />
+        <lineToCover lineNumber="58" covered="true" branchesToCover="4" coveredBranches="2" />
+        <lineToCover lineNumber="59" covered="true" branchesToCover="2" coveredBranches="1" />
+        <lineToCover lineNumber="61" covered="true" />
+        <lineToCover lineNumber="63" covered="true" />
+    </file>
+    <file path="test/tests/Vector2.hpp">
+        <lineToCover lineNumber="11" covered="true" />
+        <lineToCover lineNumber="14" covered="true" branchesToCover="16" coveredBranches="6" />
+        <lineToCover lineNumber="15" covered="true" branchesToCover="16" coveredBranches="6" />
+        <lineToCover lineNumber="16" covered="true" />
+        <lineToCover lineNumber="18" covered="true" />
+        <lineToCover lineNumber="22" covered="true" />
+        <lineToCover lineNumber="23" covered="true" />
+        <lineToCover lineNumber="24" covered="true" branchesToCover="14" coveredBranches="5" />
+        <lineToCover lineNumber="26" covered="true" />
+        <lineToCover lineNumber="27" covered="true" />
+        <lineToCover lineNumber="28" covered="true" branchesToCover="14" coveredBranches="5" />
+        <lineToCover lineNumber="29" covered="true" />
+        <lineToCover lineNumber="31" covered="true" />
+        <lineToCover lineNumber="35" covered="true" branchesToCover="8" coveredBranches="5" />
+        <lineToCover lineNumber="37" covered="true" />
+        <lineToCover lineNumber="38" covered="true" branchesToCover="12" coveredBranches="4" />
+        <lineToCover lineNumber="39" covered="true" branchesToCover="12" coveredBranches="4" />
+        <lineToCover lineNumber="40" covered="true" branchesToCover="12" coveredBranches="4" />
+        <lineToCover lineNumber="41" covered="true" branchesToCover="12" coveredBranches="4" />
+        <lineToCover lineNumber="42" covered="true" />
+        <lineToCover lineNumber="44" covered="true" branchesToCover="8" coveredBranches="5" />
+        <lineToCover lineNumber="46" covered="true" />
+        <lineToCover lineNumber="47" covered="true" branchesToCover="12" coveredBranches="4" />
+        <lineToCover lineNumber="48" covered="true" branchesToCover="12" coveredBranches="4" />
+        <lineToCover lineNumber="49" covered="true" branchesToCover="12" coveredBranches="4" />
+        <lineToCover lineNumber="50" covered="true" branchesToCover="12" coveredBranches="4" />
+        <lineToCover lineNumber="51" covered="true" />
+        <lineToCover lineNumber="53" covered="true" branchesToCover="8" coveredBranches="5" />
+        <lineToCover lineNumber="55" covered="true" />
+        <lineToCover lineNumber="56" covered="true" branchesToCover="12" coveredBranches="4" />
+        <lineToCover lineNumber="57" covered="true" branchesToCover="12" coveredBranches="4" />
+        <lineToCover lineNumber="58" covered="true" branchesToCover="12" coveredBranches="4" />
+        <lineToCover lineNumber="59" covered="true" />
+        <lineToCover lineNumber="61" covered="true" branchesToCover="8" coveredBranches="5" />
+        <lineToCover lineNumber="63" covered="true" />
+        <lineToCover lineNumber="64" covered="true" branchesToCover="12" coveredBranches="4" />
+        <lineToCover lineNumber="65" covered="true" branchesToCover="12" coveredBranches="4" />
+        <lineToCover lineNumber="66" covered="true" />
+        <lineToCover lineNumber="67" covered="true" />
+        <lineToCover lineNumber="69" covered="true" />
+        <lineToCover lineNumber="71" covered="true" branchesToCover="8" coveredBranches="4" />
+        <lineToCover lineNumber="73" covered="true" branchesToCover="8" coveredBranches="5" />
+        <lineToCover lineNumber="75" covered="true" />
+        <lineToCover lineNumber="77" covered="true" branchesToCover="12" coveredBranches="4" />
+        <lineToCover lineNumber="78" covered="true" branchesToCover="14" coveredBranches="5" />
+        <lineToCover lineNumber="80" covered="true" />
+        <lineToCover lineNumber="82" covered="true" branchesToCover="12" coveredBranches="4" />
+        <lineToCover lineNumber="83" covered="true" branchesToCover="14" coveredBranches="5" />
+        <lineToCover lineNumber="85" covered="true" />
+        <lineToCover lineNumber="87" covered="true" branchesToCover="12" coveredBranches="4" />
+        <lineToCover lineNumber="88" covered="true" />
+        <lineToCover lineNumber="90" covered="true" branchesToCover="8" coveredBranches="5" />
+        <lineToCover lineNumber="92" covered="true" />
+        <lineToCover lineNumber="94" covered="true" branchesToCover="12" coveredBranches="4" />
+        <lineToCover lineNumber="95" covered="true" branchesToCover="14" coveredBranches="5" />
+        <lineToCover lineNumber="97" covered="true" />
+        <lineToCover lineNumber="99" covered="true" branchesToCover="12" coveredBranches="4" />
+        <lineToCover lineNumber="100" covered="true" branchesToCover="14" coveredBranches="5" />
+        <lineToCover lineNumber="102" covered="true" />
+        <lineToCover lineNumber="104" covered="true" branchesToCover="12" coveredBranches="4" />
+        <lineToCover lineNumber="106" covered="true" />
+        <lineToCover lineNumber="108" covered="true" branchesToCover="12" coveredBranches="4" />
+        <lineToCover lineNumber="110" covered="true" />
+        <lineToCover lineNumber="112" covered="true" branchesToCover="12" coveredBranches="4" />
+        <lineToCover lineNumber="113" covered="true" />
+        <lineToCover lineNumber="114" covered="true" />
+        <lineToCover lineNumber="115" covered="true" />
+    </file>
+    <file path="test/tests/concepts.hpp">
+        <lineToCover lineNumber="10" covered="true" />
+        <lineToCover lineNumber="35" covered="true" />
+    </file>
+</coverage>
