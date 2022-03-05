@@ -77,16 +77,13 @@ jobs:
           cmake    --version
           c++      --version
 
-      - name: View Source Tree
-        run: tree
-
       - name: Configure Conan
         run: |
           conan profile new default --detect
           conan profile update settings.compiler.libcxx=libstdc++11 default
 
       - name: CMake Configure
-        run: cmake -B build
+        run: cmake -B build -DCMAKE_BUILD_TYPE="Debug"
 
       - name: CMake Build
         run: build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }}  cmake --build build -j 2
@@ -105,6 +102,12 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           sonar-scanner --define sonar.host.url="${{ env.SONAR_SERVER_URL }}" --define sonar.cfamily.build-wrapper-output="${{ env.BUILD_WRAPPER_OUT_DIR }}"
+
+      - run: cat coverage.html
+
+      - name: View Source Tree
+        run: tree
+
 
   linux-install:
     runs-on: ubuntu-latest
