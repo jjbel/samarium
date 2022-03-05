@@ -104,13 +104,13 @@ class Renderer
 
     void draw(const Trail& trail,
               Color color     = Color{100, 255, 80},
-              f64 fade_factor = 0.0,
-              f64 radius      = 1.0,
+              f64 fade_factor = 1.0,
+              f64 radius      = 0.2,
               f64 aa_factor   = 0.1);
 
     void draw(const Trail& trail,
               concepts::Interpolator auto&& fn,
-              f64 fade_factor = 0.0,
+              f64 fade_factor = 1.0,
               f64 radius      = 1.0,
               f64 aa_factor   = 0.1);
 

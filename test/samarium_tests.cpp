@@ -33,12 +33,13 @@ auto App()
 
     auto ball = sm::Dual{sm::Particle{
         .vel = {30, 96}, .radius = 2.8, .color = sm::Color{255, 0, 0}}};
-    auto t    = sm::Trail{100};
+    auto t    = sm::Trail{200};
 
     sm::util::Stopwatch watch{};
 
     const auto update = [&](auto delta)
     {
+        delta /= 4.0;
         ball->apply_force(ball->mass * gravity);
         ball.update(delta);
         for (auto&& i : viewport_box) sm::phys::collide(ball, i);
@@ -48,19 +49,13 @@ auto App()
     {
         rn.fill(sm::Color{16, 18, 20});
         t.push_back(ball.now.pos);
-        for (auto&& i : t.span())
-        {
-            rn.draw(
-                sm::Particle{.pos    = i,
-                             .radius = 0.3,
-                             .color  = sm::Color{145, 231, 255}.with_alpha(170)});
-        }
+        rn.draw(t, sm::colors::orange, 1.0);
         rn.draw(ball.now);
-        tmp(watch);
+        // tmp(watch);
     };
 
     auto window =
-        sm::Window{{.dims = rn.image.dims, .name = "Collision", .framerate = 164}};
+        sm::Window{{.dims = rn.image.dims, .name = "Collision", .framerate = 64}};
     window.run(rn, update, draw, 40);
     // sm::file::export_to(rn.image, "temp.tga");
 }

@@ -60,15 +60,20 @@ void Renderer::draw_line(const LineSegment& ls,
         });
 }
 
-// void Renderer::draw_grid(bool axes, bool grid, bool dots)
-// {
-// if (axes)
-// {
-//     this->draw_line_segment(
-//         transform.apply_inverse(LineSegment{{image.dims.x / 2.0},
-//         {image.dims.x / 2.0, image.dims.y}}), Color{255, 255, 255, 0});
-// }
-// }
+void Renderer::draw(
+    const Trail& trail, Color color, f64 fade_factor, f64 radius, f64 aa_factor)
+{
+    const auto factor = 1.0 / static_cast<f64>(trail.size());
+    const auto mapper =
+        interp::make_mapper<f64>({0.0, 1.0}, {1.0 - fade_factor, 1.0});
+
+    for (double i = 0.0; const auto& pos : trail.span())
+    {
+        this->draw(Circle{pos, radius},
+                   color.with_multiplied_alpha(mapper(i * factor)), aa_factor);
+        i += 1.0;
+    }
+}
 
 std::array<LineSegment, 4> Renderer::viewport_box() const
 {
