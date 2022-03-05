@@ -90,7 +90,7 @@ jobs:
 
       - name: CTest
         working-directory: ./build
-        run: ctest -vv
+        run: ./test/samarium_tests
 
       - name: Generate Coverage
         working-directory: ./build
@@ -171,7 +171,7 @@ jobs:
 
       - name: CTest
         working-directory: build
-        run: ctest -vv -C Release
+        run: ./test/samarium_tests
 
   windows-install:
     runs-on: windows-latest

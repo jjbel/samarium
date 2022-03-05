@@ -1,7 +1,7 @@
 <h1 align="center">Samarium</h1>
 
 <p align="center">
-    <a href="https://github.com/strangeQuark1041/samarium/actions">
+    <a href="https://github.com/strangeQuark1041/samarium/actions/workflows/build.yml">
          <img alt="CI status" src="https://github.com/strangeQuark1041/samarium/actions/workflows/build.yml/badge.svg">
     </a>
     <img alt="Lines of code" src="https://img.shields.io/tokei/lines/github/strangeQuark1041/samarium">
