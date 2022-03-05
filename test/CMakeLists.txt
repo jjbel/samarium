@@ -28,10 +28,7 @@ target_link_libraries(samarium_tests PRIVATE samarium)
 target_link_libraries(samarium_tests PRIVATE fmt::fmt)
 target_link_libraries(samarium_tests PRIVATE sfml-graphics)
 target_link_libraries(samarium_tests PRIVATE Catch2::Catch2WithMain)
-# target_link_libraries(samarium_tests PRIVATE gcov)
 
 if(WARNINGS)
     target_compile_options(samarium_tests PRIVATE ${WARNINGS})
 endif()
-
-# target_compile_options(samarium_tests PRIVATE "--coverage")

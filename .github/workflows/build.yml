@@ -65,6 +65,9 @@ jobs:
         id: conan
         uses: turtlebrowser/get-conan@main
 
+      - name: Install gcovr
+        run: pip3 install gcovr
+
       - name: Install other deps
         run: sudo apt-get update && sudo apt-get install libtbb-dev tree
 
@@ -91,6 +94,10 @@ jobs:
       - name: CTest
         working-directory: ./build
         run: ctest -vv
+
+      - name: Generate Coverage
+        working-directory: ./build
+        run: make coverage
 
       - name: Run sonar-scanner
         env:

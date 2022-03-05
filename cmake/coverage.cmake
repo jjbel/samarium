@@ -5,7 +5,16 @@
 
 cmake_minimum_required(VERSION 3.16)
 
-function(generate_coverage)
+function(generate_coverage target)
+    find_program(GCOVR_PATH gcov REQUIRED)
     find_program(GCOVR_PATH gcovr REQUIRED)
 
+    target_compile_options(${target} PRIVATE "--coverage")
+    target_link_libraries(${target} PRIVATE gcov)
+
+    add_custom_target(coverage)
+    add_custom_command(
+        TARGET coverage
+        COMMAND "../scripts/coverage.sh"
+    )
 endfunction()
