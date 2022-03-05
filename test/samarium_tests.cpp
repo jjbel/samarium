@@ -60,4 +60,4 @@ auto App()
     // sm::file::export_to(rn.image, "temp.tga");
 }
 
-TEST_CASE("App", "main") { App(); }
+TEST_CASE("App", "main") { /* App(); */ }
