@@ -47,11 +47,11 @@ auto App()
 
     const auto draw = [&]
     {
-        rn.fill(sm::Color{16, 18, 20});
-        t.push_back(ball.now.pos);
-        rn.draw(t, sm::colors::orange, 1.0);
-        rn.draw(ball.now);
-        // tmp(watch);
+        // rn.fill(sm::Color{16, 18, 20});
+        // t.push_back(ball.now.pos);
+        // rn.draw(t, sm::colors::orange, 1.0);
+        // rn.draw(ball.now);
+        tmp(watch);
     };
 
     auto window =
@@ -60,4 +60,4 @@ auto App()
     // sm::file::export_to(rn.image, "temp.tga");
 }
 
-TEST_CASE("App", "main") { /* App(); */ }
+TEST_CASE("App", "main") { App(); }

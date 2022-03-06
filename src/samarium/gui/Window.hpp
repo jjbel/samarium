@@ -84,9 +84,9 @@ class Window
     }
 
     template <typename T, typename U>
-    void run(Renderer& rn, T&& update, U&& draw, size_t substeps = 1)
+    void run(Renderer& rn, T&& update, U&& draw, size_t substeps = 1, size_t frame_limit = 1000)
     {
-        while (this->is_open())
+        while (this->is_open() && this->frame_counter < frame_limit)
         {
             const auto wm = Manager(*this, rn);
             for (size_t i = 0; i < substeps; i++)
