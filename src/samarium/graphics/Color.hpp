@@ -13,7 +13,7 @@
 #include "fmt/format.h"
 
 #include "../core/concepts.hpp" // for u8
-#include "../util/util.hpp"  // for util::strlen
+#include "../util/util.hpp"     // for util::strlen
 
 namespace sm
 {
@@ -38,6 +38,15 @@ constexpr inline auto rgb  = RGB_t{};
 constexpr inline auto rgba = RGBA_t{};
 constexpr inline auto bgr  = BGR_t{};
 constexpr inline auto bgra = BGRA_t{};
+
+namespace detail
+{
+[[nodiscard]] constexpr auto lerp(auto min, auto max, f64 factor)
+{
+    return min * (1. - factor) + max * factor;
+    // return min + (max - min) * factor;
+}
+} // namespace detail
 
 class Color
 {
@@ -88,11 +97,20 @@ class Color
 
     constexpr auto add_alpha_over(const Color& that) noexcept
     {
+        // if (that.a == 0) return;
         const auto alpha = 1.0 / 255 * that.a;
-        r = static_cast<u8>(that.a / 255.0 * that.r + (1.0 - alpha) * r);
+        r = static_cast<u8(that.a / 255.0 * that.r + (1.0 - alpha) * r);
         g = static_cast<u8>(that.a / 255.0 * that.g + (1.0 - alpha) * g);
         b = static_cast<u8>(that.a / 255.0 * that.b + (1.0 - alpha) * b);
         a = static_cast<u8>((a / 255.0 + (1.0 - a / 255.0) * alpha) * 255);
+        // const auto alpha    = 1.0 / 255 * that.a;
+        // const auto oneminus = 1.0 - alpha;
+        // const auto a255     = a / 255.0;
+
+        // r = static_cast<u8>(detail::lerp(this->r, that.r, alpha));
+        // g = static_cast<u8>(detail::lerp(this->r, that.r, alpha));
+        // b = static_cast<u8>(detail::lerp(this->r, that.r, alpha));
+        // a = static_cast<u8>(detail::lerp(a, 1.0, alpha) * 255);
     }
 
     [[nodiscard]] constexpr auto with_alpha(u8 alpha) const

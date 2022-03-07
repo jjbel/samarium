@@ -64,7 +64,7 @@ function(set_project_warnings)
     #     set(MSVC_WARNINGS ${MSVC_WARNINGS} /WX)
     # endif()
 
-    set(CLANG_WARNINGS ${COMMON_WARNINGS} -fcolor-diagnostics -ferror-limit=5)
+    set(CLANG_WARNINGS ${COMMON_WARNINGS} -fcolor-diagnostics -ferror-limit=1)
 
     set(GCC_WARNINGS
         ${COMMON_WARNINGS}
@@ -74,7 +74,7 @@ function(set_project_warnings)
         -Wlogical-op # warn about logical operations being used where bitwise were probably wanted
         -Wno-useless-cast # warn if you perform a cast to the same type
         -fdiagnostics-color=always
-        -fmax-errors=5
+        -fmax-errors=1
     )
 
     if(MSVC)

@@ -32,9 +32,10 @@ class Transform
 
     constexpr auto apply_inverse(const Rect<f64>& rect) const
     {
-        return Rect<f64>::find_min_max( // -ve sign may invalidate min, max
-                                        // so recalculate it
-            apply_inverse(rect.min), apply_inverse(rect.max));
+        return Rect<f64>::find_min_max(
+            this->apply_inverse(rect.min),
+            this->apply_inverse(
+                rect.max)); // -ve sign may invalidate min, max, so recalculate it
     }
 
     constexpr auto apply_inverse(const LineSegment& l) const

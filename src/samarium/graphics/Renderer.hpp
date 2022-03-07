@@ -20,12 +20,10 @@ namespace sm
 {
 namespace concepts
 {
+// takes a const Vector2& and returns a Color
 template <typename T>
-concept DrawableLambda =
-    std::is_invocable_r<Color, T, const Vector2&>::value; // takes a const
-                                                          // Vector2& and returns
-                                                          // a Color
-}
+concept DrawableLambda = std::is_invocable_r<Color, T, const Vector2&>::value;
+} // namespace concepts
 
 class Renderer
 {
@@ -42,6 +40,8 @@ class Renderer
             rasterize(distance, radius, aa_factor));
     }
 
+    // -----------------MEMBERS---------------//
+    std::mutex mut;
     Image image;
     Transform transform{.pos   = image.dims.as<f64>() / 2.,
                         .scale = Vector2{10, 10} * Vector2{1.0, -1.0}};
@@ -55,45 +55,64 @@ class Renderer
 
     void fill(const Color& color) { this->image.fill(color); }
 
-    void draw(concepts::DrawableLambda auto&& fn)
+    template <concepts::DrawableLambda T> void draw(T&& fn)
     {
-        // const auto rect = image.rect();
-        // this->draw_funcs.emplace_back(
-        //     Drawer(fn, transform.apply_inverse(
-        //                    Rect{.min = rect.min, .max = rect.max + Indices{1,
-        //                    1}}
-        //                        .template as<f64>())));
+        const auto rect = image.rect();
+        this->draw(std::forward<T>(fn),
+                   transform.apply_inverse(Rect{
+                       .min = rect.min,
+                       .max = rect.max +
+                              Indices{1, 1}}.template as<f64>()));
     }
 
-    void draw(concepts::DrawableLambda auto&& fn, Rect<f64> rect)
+    void draw(concepts::DrawableLambda auto&& fn, const Rect<f64>& rect)
     {
-        // this->draw_funcs.emplace_back(Drawer{fn, rect});
         const auto box = this->transform.apply(rect)
                              .clamped_to(image.rect().template as<f64>())
                              .template as<size_t>();
 
-        if (math::area(box) == 0) return;
+        if (math::area(box) == 0ul) return;
 
-        const auto task = [box, fn, dims = image.dims, tr = this->transform,
-                           &image = this->image]
+        const auto height = box.height();
+
+        const auto current_thread_count =
+            std::min(static_cast<size_t>(this->thread_count), height);
+
+        auto j = size_t{};
+
+        for (size_t i{}; i < current_thread_count; i++)
         {
-            for (size_t y = box.min.y; y <= box.max.y; y++)
+            const auto chunk_size = i < height % current_thread_count
+                                        ? height / current_thread_count + 1
+                                        : height / current_thread_count;
+
+            const auto task = [chunk_size, j, box, fn, tr = this->transform,
+                               &image = this->image, &mut = mut]
             {
-                for (size_t x = box.min.x; x <= box.max.x; x++)
+                static std::mutex m;
+                for (size_t y = j + box.min.y; y < j + box.min.y + chunk_size;
+                     y++)
                 {
-                    const auto coords = Indices{x, y};
-                    const auto coords_transformed =
-                        tr.apply_inverse(coords.template as<f64>());
-                    // image[coords].add_alpha_over(Color{80, 255, 80, 70});
-                    if (box.contains(coords))
+                    for (size_t x = box.min.x; x <= box.max.x; x++)
                     {
-                        image[coords].add_alpha_over(fn(coords_transformed));
+                        const auto coords = Indices{x, y};
+                        const auto coords_transformed =
+                            tr.apply_inverse(coords.template as<f64>());
+
+                        // image[coords].add_alpha_over(Color{255, 80, 200, 100});
+                        if (box.contains(coords))
+                        {
+                            const auto col = fn(coords_transformed);
+
+                            image[coords].add_alpha_over(col);
+                        }
                     }
                 }
-            }
-        };
-        task();
-        // this->thread_pool.push_task(task);
+            };
+            this->thread_pool.push_task(task);
+            j += chunk_size;
+        }
+        // this->render();
     }
 
     void draw(Circle circle, Color color, f64 aa_factor = 1.6);
@@ -130,7 +149,7 @@ class Renderer
                            f64 aa_factor = 0.1)
     {
         const auto vector = ls.vector().abs();
-        const auto extra  = 2 * aa_factor;
+        const auto extra  = 2 * (aa_factor + thickness);
         this->draw(
             [&function_along_line, &ls, thickness,
              aa_factor](const Vector2& coords)
@@ -161,6 +180,8 @@ class Renderer
     }
 
     void draw_grid(bool axes = true, bool grid = true, bool dots = true);
+
+    void render() { this->thread_pool.wait_for_tasks(); }
 
     std::array<LineSegment, 4> viewport_box() const;
 

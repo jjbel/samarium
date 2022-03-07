@@ -42,7 +42,8 @@ template <concepts::Number T = f64> struct Rect
     [[nodiscard]] static constexpr auto
     from_centre_width_height(Vector2_t<T> centre, T width, T height) noexcept
     {
-        const auto vec = Vector2_t{.x = width, .y = height};
+        const auto vec = Vector2_t{.x = width / static_cast<T>(2),
+                                   .y = height / static_cast<T>(2)};
         return Rect{centre - vec, centre + vec};
     }
 
@@ -60,6 +61,9 @@ template <concepts::Number T = f64> struct Rect
         return Rect<T>{{ext_x.clamp(min.x), ext_y.clamp(min.y)},
                        {ext_x.clamp(max.x), ext_y.clamp(max.y)}};
     }
+
+    [[nodiscard]] constexpr auto width() const { return max.x - min.x; }
+    [[nodiscard]] constexpr auto height() const { return max.y - min.y; }
 
     [[nodiscard]] constexpr friend bool
     operator==(const Rect<T>& lhs, const Rect<T>& rhs) noexcept = default;

@@ -5,9 +5,21 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
-#include "samarium/samarium.hpp"
-#include "samarium/graphics/gradients.hpp"
 #include "samarium/graphics/colors.hpp"
+#include "samarium/graphics/gradients.hpp"
+#include "samarium/samarium.hpp"
+
+auto tmp(sm::util::Stopwatch& watch)
+{
+    // fmt::print(stderr, "\r{:>{}}", "",
+    //            sm::util::get_terminal_dims()
+    //                .x); // clear line by padding spaces to width of
+    //                terminal
+    fmt::print(stderr, "{:4.2f}\n",
+               1.0 /
+                   watch.time().count()); // print to stderr for no line buffering
+    watch.reset();
+}
 
 int main()
 {
@@ -31,9 +43,11 @@ int main()
 
     const auto dims         = rn.image.dims.as<double>();
     const auto viewport_box = rn.viewport_box();
+    sm::util::Stopwatch watch{};
 
     const auto run_every_frame = [&]
     {
+        rn.fill(sm::Color{16, 18, 20});
         p1.apply_force(p1.mass * gravity);
         const auto spring = p1.pos - anchor;
         const auto force =
@@ -49,8 +63,11 @@ int main()
         rn.draw_line_segment(sm::LineSegment{anchor, p1.pos}, "#c471ed"_c, .06);
         rn.draw(p1);
         p2 = p1;
+        rn.render();
+        tmp(watch);
     };
 
+    run_every_frame();
     auto window = sm::Window{{rn.image.dims, "Collision", 60}};
     window.run(rn, run_every_frame);
 }
