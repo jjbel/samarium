@@ -59,7 +59,8 @@ function(_get_msvc_ide_version result)
         set(${result} 17 PARENT_SCOPE)
     else()
         message(FATAL_ERROR "Conan: Unknown MSVC compiler version [${MSVC_VERSION}]")
-    endif()git clone https://github.com/panr/hugo-theme-terminal.git themes/terminal
+    endif()
+    
 macro(_conan_detect_build_type)
     conan_parse_arguments(${ARGV})
 
