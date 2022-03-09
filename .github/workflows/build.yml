@@ -149,7 +149,7 @@ jobs:
         run: conan create samarium -b missing
 
       - name: Run Example
-      - run: |
+        run: |
           git clone --depth 1 https://github.com/strangeQuark1041/samarium_example.git .
           conan install . -b missing -if build
           cmake -B build
@@ -203,7 +203,7 @@ jobs:
         run: conan create samarium -b missing
 
       - name: Run Example
-      - run: |
+        run: |
           git clone --depth 1 https://github.com/strangeQuark1041/samarium_example.git .
           conan install . -b missing -if build
           cmake -B build
