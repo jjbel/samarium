@@ -48,6 +48,8 @@ Clang [does not yet support C++20](https://clang.llvm.org/cxx_status.html#cxx20)
 
 ## Installation
 
+To install the library locally:
+
 ```sh
 git clone --depth 1 https://github.com/strangeQuark1041/samarium.git
 conan create samarium -b missing
@@ -55,51 +57,14 @@ conan create samarium -b missing
 
 ## Example
 
-In a new folder, create the following files:
+For a fully-featured and self-contained example, run:
 
-`conanfile.txt`:
-
-```Yaml
-[requires]
-samarium/1.0.0 # use samarium version 1.0.0 (the current stable version)
-
-[generators]
-cmake # use the default (and easiest to use) cmake config
-```
-
-`example.cpp`:
-
-```cpp
-#include "samarium/samarium.hpp"
-
-int main()
-{
-    sm::print(sm::version); // sm::print calls fmt::print on all its args
-    sm::print("A Vector2: ", sm::Vector2{.x = 5, .y = -3});
-    sm::print("A Color:   ", sm::Color{.r = 5, .g = 200, .b = 255});
-}
-```
-
-`CMakeLists.txt`:
-
-```cmake
-cmake_minimum_required(VERSION 3.16)
-project(Example CXX)
-
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
-
-include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-conan_basic_setup()
-
-add_executable(example example.cpp)
-target_link_libraries(example ${CONAN_LIBS})
-```
-
-Then run:
 ```sh
-cmake -B build # cmake
-cmake --build build # compile
+git clone --depth 1 https://github.com/strangeQuark1041/samarium_example.git .
+conan install . -b missing -if ./build # Install deps in build folder
+cmake -B ./build
+cmake --build ./build
+./build/bin/example
 ```
 
 ## Documentation
