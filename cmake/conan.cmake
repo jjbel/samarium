@@ -60,7 +60,8 @@ function(_get_msvc_ide_version result)
     else()
         message(FATAL_ERROR "Conan: Unknown MSVC compiler version [${MSVC_VERSION}]")
     endif()
-    
+endfunction()
+
 macro(_conan_detect_build_type)
     conan_parse_arguments(${ARGV})
 
