@@ -154,14 +154,14 @@ template <concepts::FloatingPoint T>
 [[nodiscard]] constexpr bool operator==(const Vector2_t<T>& lhs,
                                         const Vector2_t<T>& rhs) noexcept
 {
-    return math::almost_equal(lhs.x, rhs.x) && math::almost_equal(lhs.y, rhs.y);
+    return math::almost_equal(lhs.x, rhs.x) and math::almost_equal(lhs.y, rhs.y);
 }
 
 template <concepts::Integral T>
 [[nodiscard]] constexpr bool operator==(const Vector2_t<T>& lhs,
                                         const Vector2_t<T>& rhs) noexcept
 {
-    return lhs.x == rhs.x && lhs.y == rhs.y;
+    return lhs.x == rhs.x and lhs.y == rhs.y;
 }
 
 template <concepts::Number T>

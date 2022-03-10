@@ -7,29 +7,33 @@
 
 #include "samarium/core/concepts.hpp"
 
-TEST_CASE("core.concepts", "vector2")
+
+boost::ut::suite concepts = []
 {
-    static_assert(sm::concepts::Integral<sm::u8>);
-    static_assert(sm::concepts::Integral<sm::u16>);
-    static_assert(sm::concepts::Integral<sm::u32>);
-    static_assert(sm::concepts::Integral<sm::u64>);
+    using namespace boost::ut;
+    "core.concepts"_test = []
+    {
+        expect(sm::concepts::Integral<sm::u8>);
+        expect(sm::concepts::Integral<sm::u16>);
+        expect(sm::concepts::Integral<sm::u32>);
+        expect(sm::concepts::Integral<sm::u64>);
 
-    static_assert(sm::concepts::Integral<sm::i8>);
-    static_assert(sm::concepts::Integral<sm::i16>);
-    static_assert(sm::concepts::Integral<sm::i32>);
-    static_assert(sm::concepts::Integral<sm::i64>);
+        expect(sm::concepts::Integral<sm::i8>);
+        expect(sm::concepts::Integral<sm::i16>);
+        expect(sm::concepts::Integral<sm::i32>);
+        expect(sm::concepts::Integral<sm::i64>);
 
+        expect(sm::concepts::Number<sm::u8>);
+        expect(sm::concepts::Number<sm::u16>);
+        expect(sm::concepts::Number<sm::u32>);
+        expect(sm::concepts::Number<sm::u64>);
 
-    static_assert(sm::concepts::Number<sm::u8>);
-    static_assert(sm::concepts::Number<sm::u16>);
-    static_assert(sm::concepts::Number<sm::u32>);
-    static_assert(sm::concepts::Number<sm::u64>);
+        expect(sm::concepts::Number<sm::i8>);
+        expect(sm::concepts::Number<sm::i16>);
+        expect(sm::concepts::Number<sm::i32>);
+        expect(sm::concepts::Number<sm::i64>);
 
-    static_assert(sm::concepts::Number<sm::i8>);
-    static_assert(sm::concepts::Number<sm::i16>);
-    static_assert(sm::concepts::Number<sm::i32>);
-    static_assert(sm::concepts::Number<sm::i64>);
-
-    static_assert(sm::concepts::Number<sm::f32>);
-    static_assert(sm::concepts::Number<sm::f64>);
-}
+        expect(sm::concepts::Number<sm::f32>);
+        expect(sm::concepts::Number<sm::f64>);
+    };
+};

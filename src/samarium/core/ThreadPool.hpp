@@ -420,7 +420,7 @@ class ThreadPool
         while (running)
         {
             std::function<void()> task;
-            if (!paused && pop_task(task))
+            if (!paused and pop_task(task))
             {
                 task();
                 tasks_total--;

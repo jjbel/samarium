@@ -33,7 +33,7 @@
 // We did not mean to shout.
 
 #ifndef HAS_STRING_VIEW
-#if __cplusplus >= 201703 || (defined(_MSVC_LANG) && _MSVC_LANG >= 201703L)
+#if __cplusplus >= 201703 || (defined(_MSVC_LANG) and _MSVC_LANG >= 201703L)
 #define HAS_STRING_VIEW 1
 #else
 #define HAS_STRING_VIEW 0
@@ -69,7 +69,7 @@
 
 #ifdef __GNUC__
 #pragma GCC diagnostic push
-#if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ > 7)
+#if __GNUC__ > 4 || (__GNUC__ == 4 and __GNUC_MINOR__ > 7)
 #pragma GCC diagnostic ignored "-Wpedantic"
 #endif
 #if __GNUC__ < 5
@@ -95,7 +95,7 @@ namespace date
 #define ONLY_C_LOCALE 0
 #endif
 
-#if defined(_MSC_VER) && (!defined(__clang__) || (_MSC_VER < 1910))
+#if defined(_MSC_VER) and (!defined(__clang__) || (_MSC_VER < 1910))
 // MSVC
 #ifndef _SILENCE_CXX17_UNCAUGHT_EXCEPTION_DEPRECATION_WARNING
 #define _SILENCE_CXX17_UNCAUGHT_EXCEPTION_DEPRECATION_WARNING
@@ -114,7 +114,7 @@ namespace date
 #define NOEXCEPT noexcept
 #endif
 
-#elif defined(__SUNPRO_CC) && __SUNPRO_CC <= 0x5150
+#elif defined(__SUNPRO_CC) and __SUNPRO_CC <= 0x5150
 // Oracle Developer Studio 12.6 and earlier
 #define CONSTDATA constexpr const
 #define CONSTCD11 constexpr
@@ -136,7 +136,7 @@ namespace date
 #endif
 
 #ifndef HAS_UNCAUGHT_EXCEPTIONS
-#if __cplusplus >= 201703 || (defined(_MSVC_LANG) && _MSVC_LANG >= 201703L)
+#if __cplusplus >= 201703 || (defined(_MSVC_LANG) and _MSVC_LANG >= 201703L)
 #define HAS_UNCAUGHT_EXCEPTIONS 1
 #else
 #define HAS_UNCAUGHT_EXCEPTIONS 0
@@ -144,7 +144,7 @@ namespace date
 #endif // HAS_UNCAUGHT_EXCEPTIONS
 
 #ifndef HAS_VOID_T
-#if __cplusplus >= 201703 || (defined(_MSVC_LANG) && _MSVC_LANG >= 201703L)
+#if __cplusplus >= 201703 || (defined(_MSVC_LANG) and _MSVC_LANG >= 201703L)
 #define HAS_VOID_T 1
 #else
 #define HAS_VOID_T 0
@@ -1151,10 +1151,10 @@ CONSTCD14 inline
     CONSTDATA auto max  = I{1} << (digits - 1);
     CONSTDATA auto min  = -max;
     const auto negative = t < T{0};
-    if (min <= t && t <= max && t != 0 && t == t)
+    if (min <= t and t <= max and t != 0 and t == t)
     {
         t = static_cast<T>(static_cast<I>(t));
-        if (t == 0 && negative) t = -t;
+        if (t == 0 and negative) t = -t;
     }
     return t;
 }
@@ -1201,7 +1201,7 @@ template <class R1, class R2> struct no_overflow
     };
 
   public:
-    static const bool value = (n1 <= max / d2) && (n2 <= max / d1);
+    static const bool value = (n1 <= max / d2) and (n2 <= max / d1);
     typedef std::ratio<mul<n1, d2, !value>::value, mul<n2, d1, !value>::value>
         type;
 };
@@ -1230,14 +1230,15 @@ CONSTCD11 inline typename std::
 }
 
 #ifndef HAS_CHRONO_ROUNDING
-#if defined(_MSC_FULL_VER) &&      \
+#if defined(_MSC_FULL_VER) and     \
     (_MSC_FULL_VER >= 190023918 || \
-     (_MSC_FULL_VER >= 190000000 && defined(__clang__)))
+     (_MSC_FULL_VER >= 190000000 and defined(__clang__)))
 #define HAS_CHRONO_ROUNDING 1
-#elif defined(__cpp_lib_chrono) && __cplusplus > 201402 && \
+#elif defined(__cpp_lib_chrono) and __cplusplus > 201402 and \
     __cpp_lib_chrono >= 201510
 #define HAS_CHRONO_ROUNDING 1
-#elif defined(_LIBCPP_VERSION) && __cplusplus > 201402 && _LIBCPP_VERSION >= 3800
+#elif defined(_LIBCPP_VERSION) and __cplusplus > 201402 and \
+    _LIBCPP_VERSION >= 3800
 #define HAS_CHRONO_ROUNDING 1
 #else
 #define HAS_CHRONO_ROUNDING 0
@@ -1272,7 +1273,7 @@ CONSTCD14 inline To round(const std::chrono::duration<Rep, Period>& d)
 {
     auto t0 = floor<To>(d);
     auto t1 = t0 + To{1};
-    if (t1 == To{0} && t0 < To{0}) t1 = -t1;
+    if (t1 == To{0} and t0 < To{0}) t1 = -t1;
     auto diff0 = d - t0;
     auto diff1 = t1 - d;
     if (diff0 == diff1)
@@ -1417,7 +1418,7 @@ CONSTCD14 inline day& day::operator-=(const days& d) NOEXCEPT
     return *this;
 }
 CONSTCD11 inline day::operator unsigned() const NOEXCEPT { return d_; }
-CONSTCD11 inline bool day::ok() const NOEXCEPT { return 1 <= d_ && d_ <= 31; }
+CONSTCD11 inline bool day::ok() const NOEXCEPT { return 1 <= d_ and d_ <= 31; }
 
 CONSTCD11
 inline bool operator==(const day& x, const day& y) NOEXCEPT
@@ -1532,7 +1533,7 @@ inline month& month::operator-=(const months& m) NOEXCEPT
 }
 
 CONSTCD11 inline month::operator unsigned() const NOEXCEPT { return m_; }
-CONSTCD11 inline bool month::ok() const NOEXCEPT { return 1 <= m_ && m_ <= 12; }
+CONSTCD11 inline bool month::ok() const NOEXCEPT { return 1 <= m_ and m_ <= 12; }
 
 CONSTCD11
 inline bool operator==(const month& x, const month& y) NOEXCEPT
@@ -1661,7 +1662,7 @@ CONSTCD11 inline year year::operator+() const NOEXCEPT { return *this; }
 CONSTCD11
 inline bool year::is_leap() const NOEXCEPT
 {
-    return y_ % 4 == 0 && (y_ % 100 != 0 || y_ % 400 == 0);
+    return y_ % 4 == 0 and (y_ % 100 != 0 || y_ % 400 == 0);
 }
 
 CONSTCD11 inline year::operator int() const NOEXCEPT { return y_; }
@@ -1972,7 +1973,7 @@ CONSTCD11 inline unsigned weekday_indexed::index() const NOEXCEPT
 CONSTCD11
 inline bool weekday_indexed::ok() const NOEXCEPT
 {
-    return weekday().ok() && 1 <= index_ && index_ <= 5;
+    return weekday().ok() and 1 <= index_ and index_ <= 5;
 }
 
 #ifdef __GNUC__
@@ -2023,7 +2024,7 @@ CONSTCD11
 inline bool operator==(const weekday_indexed& x,
                        const weekday_indexed& y) NOEXCEPT
 {
-    return x.weekday() == y.weekday() && x.index() == y.index();
+    return x.weekday() == y.weekday() and x.index() == y.index();
 }
 
 CONSTCD11
@@ -2097,7 +2098,7 @@ CONSTCD11 inline year year_month::year() const NOEXCEPT { return y_; }
 CONSTCD11 inline month year_month::month() const NOEXCEPT { return m_; }
 CONSTCD11 inline bool year_month::ok() const NOEXCEPT
 {
-    return y_.ok() && m_.ok();
+    return y_.ok() and m_.ok();
 }
 
 template <class>
@@ -2131,7 +2132,7 @@ inline year_month& year_month::operator-=(const years& dy) NOEXCEPT
 CONSTCD11
 inline bool operator==(const year_month& x, const year_month& y) NOEXCEPT
 {
-    return x.year() == y.year() && x.month() == y.month();
+    return x.year() == y.year() and x.month() == y.month();
 }
 
 CONSTCD11
@@ -2257,14 +2258,14 @@ inline bool month_day::ok() const NOEXCEPT
                                date::day(30), date::day(31), date::day(30),
                                date::day(31), date::day(31), date::day(30),
                                date::day(31), date::day(30), date::day(31)};
-    return m_.ok() && date::day{1} <= d_ &&
+    return m_.ok() and date::day{1} <= d_ &&
            d_ <= d[static_cast<unsigned>(m_) - 1];
 }
 
 CONSTCD11
 inline bool operator==(const month_day& x, const month_day& y) NOEXCEPT
 {
-    return x.month() == y.month() && x.day() == y.day();
+    return x.month() == y.month() and x.day() == y.day();
 }
 
 CONSTCD11
@@ -2406,12 +2407,12 @@ inline weekday_indexed month_weekday::weekday_indexed() const NOEXCEPT
 }
 
 CONSTCD11
-inline bool month_weekday::ok() const NOEXCEPT { return m_.ok() && wdi_.ok(); }
+inline bool month_weekday::ok() const NOEXCEPT { return m_.ok() and wdi_.ok(); }
 
 CONSTCD11
 inline bool operator==(const month_weekday& x, const month_weekday& y) NOEXCEPT
 {
-    return x.month() == y.month() && x.weekday_indexed() == y.weekday_indexed();
+    return x.month() == y.month() and x.weekday_indexed() == y.weekday_indexed();
 }
 
 CONSTCD11
@@ -2462,14 +2463,14 @@ inline weekday_last month_weekday_last::weekday_last() const NOEXCEPT
 CONSTCD11
 inline bool month_weekday_last::ok() const NOEXCEPT
 {
-    return m_.ok() && wdl_.ok();
+    return m_.ok() and wdl_.ok();
 }
 
 CONSTCD11
 inline bool operator==(const month_weekday_last& x,
                        const month_weekday_last& y) NOEXCEPT
 {
-    return x.month() == y.month() && x.weekday_last() == y.weekday_last();
+    return x.month() == y.month() and x.weekday_last() == y.weekday_last();
 }
 
 CONSTCD11
@@ -2562,7 +2563,7 @@ inline day year_month_day_last::day() const NOEXCEPT
                                date::day(30), date::day(31), date::day(30),
                                date::day(31), date::day(31), date::day(30),
                                date::day(31), date::day(30), date::day(31)};
-    return (month() != February || !y_.is_leap()) && mdl_.ok()
+    return (month() != February || !y_.is_leap()) and mdl_.ok()
                ? d[static_cast<unsigned>(month()) - 1]
                : date::day{29};
 }
@@ -2582,14 +2583,14 @@ inline year_month_day_last::operator local_days() const NOEXCEPT
 CONSTCD11
 inline bool year_month_day_last::ok() const NOEXCEPT
 {
-    return y_.ok() && mdl_.ok();
+    return y_.ok() and mdl_.ok();
 }
 
 CONSTCD11
 inline bool operator==(const year_month_day_last& x,
                        const year_month_day_last& y) NOEXCEPT
 {
-    return x.year() == y.year() && x.month_day_last() == y.month_day_last();
+    return x.year() == y.year() and x.month_day_last() == y.month_day_last();
 }
 
 CONSTCD11
@@ -2795,14 +2796,14 @@ inline year_month_day::operator local_days() const NOEXCEPT
 CONSTCD14
 inline bool year_month_day::ok() const NOEXCEPT
 {
-    if (!(y_.ok() && m_.ok())) return false;
-    return date::day{1} <= d_ && d_ <= (y_ / m_ / last).day();
+    if (!(y_.ok() and m_.ok())) return false;
+    return date::day{1} <= d_ and d_ <= (y_ / m_ / last).day();
 }
 
 CONSTCD11
 inline bool operator==(const year_month_day& x, const year_month_day& y) NOEXCEPT
 {
-    return x.year() == y.year() && x.month() == y.month() && x.day() == y.day();
+    return x.year() == y.year() and x.month() == y.month() and x.day() == y.day();
 }
 
 CONSTCD11
@@ -3045,7 +3046,7 @@ CONSTCD11
 inline bool operator==(const year_month_weekday& x,
                        const year_month_weekday& y) NOEXCEPT
 {
-    return x.year() == y.year() && x.month() == y.month() &&
+    return x.year() == y.year() and x.month() == y.month() &&
            x.weekday_indexed() == y.weekday_indexed();
 }
 
@@ -3189,7 +3190,7 @@ inline year_month_weekday_last::operator local_days() const NOEXCEPT
 CONSTCD11
 inline bool year_month_weekday_last::ok() const NOEXCEPT
 {
-    return y_.ok() && m_.ok() && wdl_.ok();
+    return y_.ok() and m_.ok() and wdl_.ok();
 }
 
 CONSTCD14
@@ -3203,7 +3204,7 @@ CONSTCD11
 inline bool operator==(const year_month_weekday_last& x,
                        const year_month_weekday_last& y) NOEXCEPT
 {
-    return x.year() == y.year() && x.month() == y.month() &&
+    return x.year() == y.year() and x.month() == y.month() &&
            x.weekday_last() == y.weekday_last();
 }
 
@@ -3576,7 +3577,7 @@ struct undocumented
 template <std::uint64_t n,
           std::uint64_t d,
           unsigned w           = 0,
-          bool should_continue = n % d != 0 && (w < 19)>
+          bool should_continue = n % d != 0 and (w < 19)>
 struct width
 {
     static_assert(d > 0, "width called with zero denominator");
@@ -3636,7 +3637,7 @@ template <class Duration> class decimal_format_seconds
 
     CONSTCD11 bool in_conventional_range() const NOEXCEPT
     {
-        return sub_s_ < std::chrono::seconds{1} && s_ < std::chrono::minutes{1};
+        return sub_s_ < std::chrono::seconds{1} and s_ < std::chrono::minutes{1};
     }
 
     template <class CharT, class Traits>
@@ -3752,7 +3753,7 @@ template <class Duration> class hh_mm_ss
 
     CONSTCD11 bool in_conventional_range() const NOEXCEPT
     {
-        return !neg_ && h_ < days{1} && m_ < std::chrono::hours{1} &&
+        return !neg_ and h_ < days{1} and m_ < std::chrono::hours{1} &&
                s_.in_conventional_range();
     }
 
@@ -3789,13 +3790,13 @@ template <class Duration> class hh_mm_ss
 inline CONSTCD14 bool is_am(std::chrono::hours const& h) NOEXCEPT
 {
     using std::chrono::hours;
-    return hours{0} <= h && h < hours{12};
+    return hours{0} <= h and h < hours{12};
 }
 
 inline CONSTCD14 bool is_pm(std::chrono::hours const& h) NOEXCEPT
 {
     using std::chrono::hours;
-    return hours{12} <= h && h < hours{24};
+    return hours{12} <= h and h < hours{24};
 }
 
 inline CONSTCD14 std::chrono::hours make12(std::chrono::hours h) NOEXCEPT
@@ -3993,8 +3994,8 @@ operator+(std::basic_string<CharT, Traits, Alloc> x,
     return x;
 }
 
-#if __cplusplus >= 201402 &&                                \
-    (!defined(__EDG_VERSION__) || __EDG_VERSION__ > 411) && \
+#if __cplusplus >= 201402 and                                \
+    (!defined(__EDG_VERSION__) || __EDG_VERSION__ > 411) and \
     (!defined(__SUNPRO_CC) || __SUNPRO_CC > 0x5150)
 
 template <class CharT,
@@ -4057,7 +4058,7 @@ msl(std::ratio<N, D>) NOEXCEPT
 }
 
 
-#else // __cplusplus < 201402 || (defined(__EDG_VERSION__) && __EDG_VERSION__ <=
+#else // __cplusplus < 201402 || (defined(__EDG_VERSION__) and __EDG_VERSION__ <=
       // 411)
 
 inline std::string to_string(std::uint64_t x) { return std::to_string(x); }
@@ -4088,7 +4089,7 @@ msl(std::ratio<N, D>)
            CharT{']'};
 }
 
-#endif // __cplusplus < 201402 || (defined(__EDG_VERSION__) && __EDG_VERSION__ <=
+#endif // __cplusplus < 201402 || (defined(__EDG_VERSION__) and __EDG_VERSION__ <=
        // 411)
 
 template <class CharT>
@@ -4277,7 +4278,7 @@ template <class Duration> struct fields
     hh_mm_ss<Duration> tod{};
     bool has_tod = false;
 
-#if !defined(__clang__) && defined(__GNUC__) && \
+#if !defined(__clang__) and defined(__GNUC__) and \
     (__GNUC__ * 100 + __GNUC_MINOR__ <= 409)
     fields() : ymd{nanyear / 0 / 0}, wd{8u}, tod{}, has_tod{false} {}
 #else
@@ -4312,7 +4313,7 @@ template <class CharT, class Traits, class Duration>
 unsigned extract_weekday(std::basic_ostream<CharT, Traits>& os,
                          const fields<Duration>& fds)
 {
-    if (!fds.ymd.ok() && !fds.wd.ok())
+    if (!fds.ymd.ok() and !fds.wd.ok())
     {
         // fds does not contain a valid weekday
         os.setstate(std::ios::failbit);
@@ -4322,7 +4323,7 @@ unsigned extract_weekday(std::basic_ostream<CharT, Traits>& os,
     if (fds.ymd.ok())
     {
         wd = weekday{sys_days(fds.ymd)};
-        if (fds.wd.ok() && wd != fds.wd)
+        if (fds.wd.ok() and wd != fds.wd)
         {
             // fds.ymd and fds.wd are inconsistent
             os.setstate(std::ios::failbit);
@@ -4412,7 +4413,7 @@ scan_keyword(std::basic_istream<CharT, Traits>& is, FwdIter kb, FwdIter ke)
         }
     }
     // While there might be a match, test keywords against the next CharT
-    for (size_t indx = 0; is && n_might_match > 0; ++indx)
+    for (size_t indx = 0; is and n_might_match > 0; ++indx)
     {
         // Peek at the next CharT but don't consume it
         auto ic = is.peek();
@@ -4465,7 +4466,7 @@ scan_keyword(std::basic_istream<CharT, Traits>& is, FwdIter kb, FwdIter ke)
                 st = status;
                 for (auto ky = kb; ky != ke; ++ky, ++st)
                 {
-                    if (*st == does_match && ky->size() != indx + 1)
+                    if (*st == does_match and ky->size() != indx + 1)
                     {
                         *st = doesnt_match;
                         --n_does_match;
@@ -4514,7 +4515,7 @@ to_stream(std::basic_ostream<CharT, Traits>& os,
     os.width(0);
     tm tm{};
     bool insert_negative =
-        fds.has_tod && fds.tod.to_duration() < Duration::zero();
+        fds.has_tod and fds.tod.to_duration() < Duration::zero();
 #if !ONLY_C_LOCALE
     auto& facet = std::use_facet<std::time_put<CharT>>(os.getloc());
 #endif
@@ -4582,7 +4583,7 @@ to_stream(std::basic_ostream<CharT, Traits>& os,
                 else
                 {
                     if (!fds.ymd.ok()) os.setstate(std::ios::failbit);
-                    if (*fmt == 'c' && !fds.has_tod)
+                    if (*fmt == 'c' and !fds.has_tod)
                         os.setstate(std::ios::failbit);
 #if !ONLY_C_LOCALE
                     tm              = std::tm{};
@@ -5731,7 +5732,7 @@ unsigned read_unsigned(std::basic_istream<CharT, Traits>& is,
         auto ic = is.peek();
         if (Traits::eq_int_type(ic, Traits::eof())) break;
         auto c = static_cast<char>(Traits::to_char_type(ic));
-        if (!('0' <= c && c <= '9')) break;
+        if (!('0' <= c and c <= '9')) break;
         (void)is.get();
         ++count;
         x = 10 * x + static_cast<unsigned>(c - '0');
@@ -5750,7 +5751,7 @@ int read_signed(std::basic_istream<CharT, Traits>& is,
     if (!Traits::eq_int_type(ic, Traits::eof()))
     {
         auto c = static_cast<char>(Traits::to_char_type(ic));
-        if (('0' <= c && c <= '9') || c == '-' || c == '+')
+        if (('0' <= c and c <= '9') || c == '-' || c == '+')
         {
             if (c == '-' || c == '+') (void)is.get();
             auto x = static_cast<int>(read_unsigned(is, std::max(m, 1u), M));
@@ -5793,7 +5794,7 @@ long double read_long_double(std::basic_istream<CharT, Traits>& is,
         else
         {
             auto c = static_cast<char>(Traits::to_char_type(ic));
-            if (!('0' <= c && c <= '9')) break;
+            if (!('0' <= c and c <= '9')) break;
             if (!parsing_fraction)
             {
                 i = 10 * i + static_cast<unsigned>(c - '0');
@@ -5909,7 +5910,7 @@ void read(std::basic_istream<CharT, Traits>& is, int a0, Args&&... args)
             u /= 10;
         } while (u > 0);
         std::reverse(buf, e);
-        for (auto p = buf; p != e && is.rdstate() == std::ios::goodbit; ++p)
+        for (auto p = buf; p != e and is.rdstate() == std::ios::goodbit; ++p)
             read(is, *p);
     }
     if (is.rdstate() == std::ios::goodbit) read(is, std::forward<Args>(args)...);
@@ -6012,7 +6013,7 @@ from_stream(std::basic_istream<CharT, Traits>& is,
         using detail::rld;
         using detail::rs;
         using detail::ru;
-        for (; *fmt != CharT{} && !is.fail(); ++fmt)
+        for (; *fmt != CharT{} and !is.fail(); ++fmt)
         {
             switch (*fmt)
             {
@@ -6059,7 +6060,7 @@ from_stream(std::basic_istream<CharT, Traits>& is,
                             {
                                 if (*fmt == 'u')
                                 {
-                                    if (!(1 <= trial_wd && trial_wd <= 7))
+                                    if (!(1 <= trial_wd and trial_wd <= 7))
                                     {
                                         trial_wd = not_a_weekday;
                                         is.setstate(ios::failbit);
@@ -6069,7 +6070,7 @@ from_stream(std::basic_istream<CharT, Traits>& is,
                                 }
                                 else // *fmt == 'w'
                                 {
-                                    if (!(0 <= trial_wd && trial_wd <= 6))
+                                    if (!(0 <= trial_wd and trial_wd <= 6))
                                     {
                                         trial_wd = not_a_weekday;
                                         is.setstate(ios::failbit);
@@ -6437,7 +6438,7 @@ from_stream(std::basic_istream<CharT, Traits>& is,
                         read(is,
                              rs{tI, 1,
                                 width == -1 ? 2u : static_cast<unsigned>(width)});
-                        if (!(1 <= tI && tI <= 12)) is.setstate(ios::failbit);
+                        if (!(1 <= tI and tI <= 12)) is.setstate(ios::failbit);
                         checked_set(I, tI, not_a_hour_12_value, is);
                     }
                     else
@@ -6955,7 +6956,7 @@ from_stream(std::basic_istream<CharT, Traits>& is,
                             {
                                 auto c =
                                     static_cast<char>(Traits::to_char_type(ic));
-                                if ('0' <= c && c <= '9')
+                                if ('0' <= c and c <= '9')
                                 {
                                     read(is, ru{tM, 2, 2});
                                     if (!is.fail()) toff += minutes{tM};
@@ -7010,7 +7011,7 @@ from_stream(std::basic_istream<CharT, Traits>& is,
                             auto c  = static_cast<char>(wc);
                             // is c a valid time zone name or abbreviation
                             // character?
-                            if (!(CharT{1} < wc && wc < CharT{127}) ||
+                            if (!(CharT{1} < wc and wc < CharT{127}) ||
                                 !(isalnum(c) || c == '_' || c == '/' ||
                                   c == '-' || c == '+'))
                                 break;
@@ -7032,11 +7033,11 @@ from_stream(std::basic_istream<CharT, Traits>& is,
             default:
                 if (command)
                 {
-                    if (width == -1 && modified == CharT{} && '0' <= *fmt &&
+                    if (width == -1 and modified == CharT{} and '0' <= *fmt &&
                         *fmt <= '9')
                     {
                         width = static_cast<char>(*fmt) - '0';
-                        while ('0' <= fmt[1] && fmt[1] <= '9')
+                        while ('0' <= fmt[1] and fmt[1] <= '9')
                             width = 10 * width + static_cast<char>(*++fmt) - '0';
                     }
                     else
@@ -7064,7 +7065,7 @@ from_stream(std::basic_istream<CharT, Traits>& is,
             }
         }
         // is.fail() || *fmt == CharT{}
-        if (is.rdstate() == ios::goodbit && command)
+        if (is.rdstate() == ios::goodbit and command)
         {
             if (modified == CharT{}) read(is, CharT{'%'}, width);
             else
@@ -7075,7 +7076,7 @@ from_stream(std::basic_istream<CharT, Traits>& is,
             if (y != not_a_2digit_year)
             {
                 // Convert y and an optional C to Y
-                if (!(0 <= y && y <= 99)) goto broken;
+                if (!(0 <= y and y <= 99)) goto broken;
                 if (C == not_a_century)
                 {
                     if (Y == not_a_year)
@@ -7093,13 +7094,13 @@ from_stream(std::basic_istream<CharT, Traits>& is,
                 if (C >= 0) tY = 100 * C + y;
                 else
                     tY = 100 * (C + 1) - (y == 0 ? 100 : y);
-                if (Y != not_a_year && Y != tY) goto broken;
+                if (Y != not_a_year and Y != tY) goto broken;
                 Y = tY;
             }
             if (g != not_a_2digit_year)
             {
                 // Convert g and an optional C to G
-                if (!(0 <= g && g <= 99)) goto broken;
+                if (!(0 <= g and g <= 99)) goto broken;
                 if (C == not_a_century)
                 {
                     if (G == not_a_year)
@@ -7117,14 +7118,14 @@ from_stream(std::basic_istream<CharT, Traits>& is,
                 if (C >= 0) tG = 100 * C + g;
                 else
                     tG = 100 * (C + 1) - (g == 0 ? 100 : g);
-                if (G != not_a_year && G != tG) goto broken;
+                if (G != not_a_year and G != tG) goto broken;
                 G = tG;
             }
             if (Y < static_cast<int>(year::min()) ||
                 Y > static_cast<int>(year::max()))
                 Y = not_a_year;
             bool computed = false;
-            if (G != not_a_year && V != not_a_week_num && wd != not_a_weekday)
+            if (G != not_a_year and V != not_a_week_num and wd != not_a_weekday)
             {
                 year_month_day ymd_trial =
                     sys_days(year{G - 1} / December / Thursday[last]) +
@@ -7144,7 +7145,7 @@ from_stream(std::basic_istream<CharT, Traits>& is,
                     goto broken;
                 computed = true;
             }
-            if (Y != not_a_year && U != not_a_week_num && wd != not_a_weekday)
+            if (Y != not_a_year and U != not_a_week_num and wd != not_a_weekday)
             {
                 year_month_day ymd_trial =
                     sys_days(year{Y} / January / Sunday[1]) + weeks{U - 1} +
@@ -7163,7 +7164,7 @@ from_stream(std::basic_istream<CharT, Traits>& is,
                     goto broken;
                 computed = true;
             }
-            if (Y != not_a_year && W != not_a_week_num && wd != not_a_weekday)
+            if (Y != not_a_year and W != not_a_week_num and wd != not_a_weekday)
             {
                 year_month_day ymd_trial =
                     sys_days(year{Y} / January / Monday[1]) + weeks{W - 1} +
@@ -7182,7 +7183,7 @@ from_stream(std::basic_istream<CharT, Traits>& is,
                     goto broken;
                 computed = true;
             }
-            if (j != not_a_doy && Y != not_a_year)
+            if (j != not_a_doy and Y != not_a_year)
             {
                 auto ymd_trial =
                     year_month_day{local_days(year{Y} / 1 / 1) + days{j - 1}};
@@ -7223,7 +7224,7 @@ from_stream(std::basic_istream<CharT, Traits>& is,
                                                  Thursday[last]) +
                                         (Monday - Thursday);
                         }
-                        if (G != not_a_year && G != static_cast<int>(G_trial))
+                        if (G != not_a_year and G != static_cast<int>(G_trial))
                             goto broken;
                         if (V != not_a_week_num)
                         {
@@ -7251,7 +7252,7 @@ from_stream(std::basic_istream<CharT, Traits>& is,
             fds.ymd = ymd;
             if (I != not_a_hour_12_value)
             {
-                if (!(1 <= I && I <= 12)) goto broken;
+                if (!(1 <= I and I <= 12)) goto broken;
                 if (p != not_a_ampm)
                 {
                     // p is in [0, 1] == [AM, PM]
@@ -7270,7 +7271,7 @@ from_stream(std::basic_istream<CharT, Traits>& is,
                     {
                         if (I == 12)
                         {
-                            if (H != 0 && H != 12) goto broken;
+                            if (H != 0 and H != 12) goto broken;
                         }
                         else if (!(I == H || I == H + 12))
                         {
@@ -7303,7 +7304,7 @@ from_stream(std::basic_istream<CharT, Traits>& is,
             }
             if (wd != not_a_weekday) fds.wd = weekday{static_cast<unsigned>(wd)};
             if (abbrev != nullptr) *abbrev = std::move(temp_abbrev);
-            if (offset != nullptr && temp_offset != not_a_offset)
+            if (offset != nullptr and temp_offset != not_a_offset)
                 *offset = temp_offset;
         }
         return is;

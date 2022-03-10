@@ -5,25 +5,13 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
-#include "catch2/catch_test_macros.hpp"
+#include "ut.hpp"
 
 #include "samarium/graphics/colors.hpp"
 #include "samarium/samarium.hpp"
+
 #include "tests/Vector2.hpp"
 #include "tests/concepts.hpp"
-
-auto tmp(sm::util::Stopwatch& watch)
-{
-    // fmt::print(stderr, "\r{:>{}}", "",
-    //            sm::util::get_terminal_dims()
-    //                .x); // clear line by padding spaces to width of
-    //                terminal
-    const auto r = 1.0 / watch.time().count();
-    fmt::print(stderr, "{:4.2f}\n",
-               r); // print to stderr for no line buffering
-    watch.reset();
-    return r;
-}
 
 auto App()
 {
@@ -49,6 +37,15 @@ auto App()
         for (auto&& i : viewport_box) sm::phys::collide(ball, i);
     };
 
+    const auto tmp = [](sm::util::Stopwatch& w)
+    {
+        const auto r = 1.0 / w.time().count();
+        fmt::print(stderr, "{:4.2f}\n",
+                   r); // print to stderr for no line buffering
+        w.reset();
+        return r;
+    };
+
     const auto draw = [&]
     {
         rn.fill(sm::Color{16, 18, 20});
@@ -61,8 +58,10 @@ auto App()
 
     auto window =
         sm::Window{{.dims = rn.image.dims, .name = "Collision", .framerate = 64}};
-    window.run(rn, update, draw, 40, 100);
+    window.run(rn, update, draw, 40, 300);
     sm::print("Average: ", sum / 100.0);
 }
 
-TEST_CASE("App", "main") { App(); }
+int main()
+{ /* App(); */
+}

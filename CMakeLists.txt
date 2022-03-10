@@ -31,8 +31,6 @@ add_compile_options(${WARNINGS})
 add_subdirectory(src)
 
 include(CTest)
-include(setup_catch2)
-setup_catch2()
 enable_testing()
 add_subdirectory(test)
 add_test(NAME SamariumTests COMMAND samarium_tests)

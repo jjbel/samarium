@@ -79,7 +79,7 @@ namespace sm::math
     const auto denom1_is_0 = almost_equal(denom1, 0.0);
     const auto denom2_is_0 = almost_equal(denom2, 0.0);
 
-    if (denom1_is_0 && denom2_is_0) return std::nullopt;
+    if (denom1_is_0 and denom2_is_0) return std::nullopt;
 
     if (denom1_is_0)
         return std::optional{
@@ -103,7 +103,7 @@ clamped_intersection(const LineSegment& l1, const LineSegment& l2)
 {
     const auto point = intersection(l1, l2);
     if (!point) return std::nullopt;
-    if (lies_in_segment(*point, l1) && lies_in_segment(*point, l2))
+    if (lies_in_segment(*point, l1) and lies_in_segment(*point, l2))
     {
         return point;
     }

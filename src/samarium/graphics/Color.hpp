@@ -75,7 +75,7 @@ class Color
         const auto length = util::strlen(str);
         if (str[0] != '#')
             throw std::invalid_argument("Hex string must start with #");
-        if (length != 7u && length != 9u)
+        if (length != 7u and length != 9u)
             throw std::invalid_argument(
                 "Hex string must be either 7 or 9 characters long");
 

@@ -27,7 +27,6 @@ target_include_directories(samarium_tests PRIVATE ${CMAKE_SOURCE_DIR}/src)
 target_link_libraries(samarium_tests PRIVATE samarium)
 target_link_libraries(samarium_tests PRIVATE fmt::fmt)
 target_link_libraries(samarium_tests PRIVATE sfml-graphics)
-target_link_libraries(samarium_tests PRIVATE Catch2::Catch2WithMain)
 
 if(WARNINGS)
     target_compile_options(samarium_tests PRIVATE ${WARNINGS})
