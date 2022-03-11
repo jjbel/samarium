@@ -1,0 +1,52 @@
+{
+    "version": 4,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 20,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "default",
+            "displayName": "Default Config",
+            "description": "Default build using Ninja generator",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "coverage",
+            "displayName": "Build for Coverage Analysis",
+            "description": "use GCC's coverage feature",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/bin/",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "GENERATE_COVERAGE": "ON"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "default",
+            "configurePreset": "default",
+            "cleanFirst": true
+        },
+        {
+            "name": "coverage",
+            "configurePreset": "coverage",
+            "targets": "coverage",
+            "cleanFirst": true
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "default",
+            "configurePreset": "default",
+            "output": { "outputOnFailure": true },
+            "execution": { "noTestsAction": "error", "stopOnFailure": true }
+        }
+    ]
+}
