@@ -1,5 +1,5 @@
 {
-    "version": 4,
+    "version": 3,
     "cmakeMinimumRequired": {
         "major": 3,
         "minor": 20,
@@ -21,10 +21,20 @@
             "displayName": "Build for Coverage Analysis",
             "description": "use GCC's coverage feature",
             "generator": "Ninja",
-            "binaryDir": "${sourceDir}/bin/",
+            "binaryDir": "${sourceDir}/build/",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
                 "GENERATE_COVERAGE": "ON"
+            }
+        },
+        {
+            "name": "debug",
+            "displayName": "Debug Build",
+            "description": "Debug Build",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
             }
         }
     ],
@@ -32,11 +42,14 @@
         {
             "name": "default",
             "configurePreset": "default",
-            "cleanFirst": true
+            "configuration": "Release",
+            "cleanFirst": true,
+            "jobs": 6
         },
         {
             "name": "coverage",
             "configurePreset": "coverage",
+            "configuration": "Debug",
             "targets": "coverage",
             "cleanFirst": true
         }
@@ -45,7 +58,13 @@
         {
             "name": "default",
             "configurePreset": "default",
-            "output": { "outputOnFailure": true },
+            "output": { "outputOnFailure": true, "verbosity": "extra" },
+            "execution": { "noTestsAction": "error", "stopOnFailure": true }
+        },
+        {
+            "name": "coverage",
+            "configurePreset": "coverage",
+            "output": { "outputOnFailure": true, "verbosity": "extra" },
             "execution": { "noTestsAction": "error", "stopOnFailure": true }
         }
     ]

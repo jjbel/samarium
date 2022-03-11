@@ -6,12 +6,11 @@ on:
   pull_request:
     branches: [main]
   schedule:
-    - cron: "0 7 * * *" # run at 7am everyday to keep fresh
+    - cron: "0 2 * * *" # run everyday to keep fresh
 
 env:
   # Path to the CMake build directory.
   build: "${{ github.workspace }}/build"
-  config: "Release"
   CONAN_SYSREQUIRES_MODE: "enabled"
 
 jobs:
@@ -83,21 +82,16 @@ jobs:
           conan profile update settings.compiler.libcxx=libstdc++11 default
 
       - name: CMake Configure
-        run: cmake -B build -DCMAKE_BUILD_TYPE="Debug"
+        run: cmake --preset=coverage
 
       - name: CMake Build
-        run: build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }}  cmake --build build --config Release -j 2
+        run: build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} cmake --build --preset=coverage
 
       - name: CTest
-        working-directory: ./build
-        run: ./test/samarium_tests
+        run: ctest --preset=coverage
         continue-on-error: true
       - name: Allow failures
         run: true # https://github.com/actions/toolkit/issues/399#issuecomment-1058231820
-
-      - name: Generate Coverage
-        working-directory: ./build
-        run: make coverage
 
       - name: Run sonar-scanner
         env:
@@ -174,15 +168,13 @@ jobs:
           conan profile new default --detect
 
       - name: CMake Configure
-        run: cmake -B build
+        run: cmake --preset=default
 
       - name: CMake Build
-        run: cmake --build build --config Release -j 2
-        # https://stackoverflow.com/a/20423820
+        run: cmake --build --preset=default
 
       - name: CTest
-        working-directory: build/test
-        run: samarium_tests
+        run: ctest --preset=default
         continue-on-error: true
       - name: Allow failures
         run: true

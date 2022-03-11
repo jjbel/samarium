@@ -25,7 +25,7 @@ use_ccache()
 # set compilation warnings and flags
 include(compiler_warnings)
 set_project_warnings()
-message(STATUS "Compiler options: ${WARNINGS}")
+# message(STATUS "Compiler options: ${WARNINGS}")
 add_compile_options(${WARNINGS})
 
 add_subdirectory(src)
@@ -37,6 +37,5 @@ add_test(NAME SamariumTests COMMAND samarium_tests)
 
 option(GENERATE_COVERAGE "Generate coverage reports" FALSE)
 include(coverage)
-if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND GENERATE_COVERAGE)
-    generate_coverage(samarium_tests)
-endif()
+generate_coverage(samarium_tests)
+add_dependencies(coverage samarium_tests)

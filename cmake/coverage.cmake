@@ -6,15 +6,19 @@
 cmake_minimum_required(VERSION 3.16)
 
 function(generate_coverage target)
-    find_program(GCOVR_PATH gcov REQUIRED)
-    find_program(GCOVR_PATH gcovr REQUIRED)
-
-    target_compile_options(${target} PRIVATE "--coverage")
-    target_link_libraries(${target} PRIVATE gcov)
-
-    add_custom_target(coverage)
-    add_custom_command(
-        TARGET coverage
-        COMMAND "../scripts/coverage.sh"
-    )
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND GENERATE_COVERAGE)
+        find_program(GCOVR_PATH gcov REQUIRED)
+        find_program(GCOVR_PATH gcovr REQUIRED)
+        
+        target_compile_options(${target} PRIVATE "--coverage")
+        target_link_libraries(${target} PRIVATE gcov)
+        
+        message(STATUS "Will generate Coverage")
+        
+        add_custom_target(coverage)
+        add_custom_command(
+            TARGET coverage
+            COMMAND "../scripts/coverage.sh"
+        )
+    endif()
 endfunction()
