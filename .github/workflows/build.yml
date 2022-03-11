@@ -170,6 +170,9 @@ jobs:
         run: |
           conan profile new default --detect
 
+      - name: Install Ninja
+        uses: seanmiddleditch/gha-setup-ninja@master
+
       - name: CMake Configure
         run: cmake --preset=default
 
