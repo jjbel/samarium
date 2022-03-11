@@ -34,28 +34,36 @@ template <typename T>
         return value1;
 }
 
-template <u32 n> [[nodiscard]] constexpr auto power(auto x)
+template <u32 n> [[nodiscard]] constexpr auto power(auto x) noexcept
 {
     if constexpr (n == 0) return 1;
 
     return x * power<n - 1>(x);
 }
 
-[[nodiscard]] constexpr auto to_degrees(auto angle)
+[[nodiscard]] constexpr auto to_degrees(auto angle) noexcept
 {
     return angle * 180.0 / std::numbers::pi;
 }
 
-[[nodiscard]] constexpr auto to_radians(auto angle)
+[[nodiscard]] constexpr auto to_radians(auto angle) noexcept
 {
     return angle / 180.0 * std::numbers::pi;
+}
+
+template <concepts::Number T> [[nodiscard]] constexpr auto abs(T x) noexcept
+{
+    return x >= T{} ? x : -x;
 }
 
 } // namespace sm::math
 
 namespace sm::literals
 {
-consteval auto operator"" _degrees(f80 angle) { return math::to_radians(angle); }
+consteval auto operator"" _degrees(f80 angle) noexcept
+{
+    return math::to_radians(angle);
+}
 
-consteval auto operator"" _radians(f80 angle) { return angle; }
+consteval auto operator"" _radians(f80 angle) noexcept { return angle; }
 } // namespace sm::literals
