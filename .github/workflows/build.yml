@@ -85,13 +85,13 @@ jobs:
           conan profile update settings.compiler.libcxx=libstdc++11 default
 
       - name: CMake Configure
-        run: cmake --preset=coverage
+        run: cmake --preset=default
 
       - name: CMake Build
-        run: build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} cmake --build --preset=coverage
+        run: build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} cmake --build --preset=default
 
       - name: CTest
-        run: ctest --preset=coverage
+        run: ctest --preset=default
         continue-on-error: true
       - name: Allow failures
         run: true # https://github.com/actions/toolkit/issues/399#issuecomment-1058231820

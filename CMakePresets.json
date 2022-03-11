@@ -11,7 +11,7 @@
             "displayName": "Default Config",
             "description": "Default build using Ninja generator",
             "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build/",
+            "binaryDir": "${sourceDir}/build/default/",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release"
             }
@@ -21,7 +21,7 @@
             "displayName": "Build for Coverage Analysis",
             "description": "use GCC's coverage feature",
             "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build/",
+            "binaryDir": "${sourceDir}/build/coverage/",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
                 "GENERATE_COVERAGE": "ON"
@@ -32,7 +32,7 @@
             "displayName": "Debug Build",
             "description": "Debug Build",
             "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build/",
+            "binaryDir": "${sourceDir}/build/debug/",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug"
             }

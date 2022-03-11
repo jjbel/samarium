@@ -18,7 +18,7 @@ function(generate_coverage target)
         add_custom_target(coverage)
         add_custom_command(
             TARGET coverage
-            COMMAND "../scripts/coverage.sh"
+            COMMAND "${CMAKE_SOURCE_DIR}/scripts/coverage.sh"
         )
         add_dependencies(coverage ${target})
     endif()
