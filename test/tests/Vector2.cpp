@@ -38,7 +38,7 @@ boost::ut::suite _Vector2 = []
     {
         static_assert(std::is_same_v<sm::Vector2::value_type, sm::f64>);
 
-        should("x vector") = [=]() mutable
+        should("x vector") = [] 
         {
             const auto a = sm::Vector2{1.0, 0.0};
             expect(sm::math::almost_equal(a.length(), 1.0));
@@ -47,7 +47,7 @@ boost::ut::suite _Vector2 = []
             expect(sm::math::almost_equal(a.slope(), 0.0));
         };
 
-        should("xy vector") = [=]() mutable
+        should("xy vector") = [] 
         {
             const auto b = sm::Vector2{1.0, 1.0};
             expect(sm::math::almost_equal(b.length(), std::sqrt(2.0)));
@@ -56,7 +56,7 @@ boost::ut::suite _Vector2 = []
             expect(sm::math::almost_equal(b.slope(), 1.0));
         };
 
-        should("y vector") = [=]() mutable
+        should("y vector") = [] 
         {
             const auto c = sm::Vector2{0.0, 1.0};
             expect(sm::math::almost_equal(c.length(), 1.0));
@@ -64,7 +64,7 @@ boost::ut::suite _Vector2 = []
             expect(sm::math::almost_equal(c.angle(), sm::math::to_radians(90)));
         };
 
-        should("origin vector") = [=]() mutable
+        should("origin vector") = []
         {
             const auto d = sm::Vector2{0.0, 0.0};
             expect(sm::math::almost_equal(d.length(), 0.0));
@@ -74,9 +74,9 @@ boost::ut::suite _Vector2 = []
 
     "math.Vector2.geometry"_test = []
     {
-        should("intersection") = [=]() mutable
+        should("intersection") = []
         {
-            should("free") = [=]() mutable
+            should("free") = []
             {
                 const auto a = sm::math::intersection({{-1.0, 0.0}, {1.0, 0.0}},
                                                       {{0.0, 1.0}, {0.0, -1.0}});
@@ -93,7 +93,7 @@ boost::ut::suite _Vector2 = []
                 expect(!c.has_value());
             };
 
-            should("clamped") = [=]() mutable
+            should("clamped") = []
             {
                 const auto a = sm::math::clamped_intersection(
                     {{-1.0, 0.0}, {1.0, 0.0}}, {{0.0, 1.0}, {0.0, -1.0}});
@@ -116,6 +116,23 @@ boost::ut::suite _Vector2 = []
                 const auto e = sm::math::clamped_intersection(
                     {{}, {0.0, 1.0}}, {{1.0, 0.0}, {1.0, 1.0}});
                 expect(!e.has_value());
+            };
+        };
+
+        should("area") = []
+        {
+            should("Circle") = []
+            {
+                expect(sm::math::area(sm::Circle{}) == 0.0_d);
+                expect(sm::math::area(sm::Circle{.radius = 12.0}) ==
+                       452.3893421169302_d);
+            };
+
+            should("Rect") = []
+            {
+                expect(sm::math::area(sm::Rect<double>{}) == 0.0_d);
+                expect(sm::math::area(sm::Rect<double>{
+                           {-10.0, -11.0}, {12.0, 13.0}}) == 528.0_d);
             };
         };
     };

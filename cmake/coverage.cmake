@@ -20,5 +20,6 @@ function(generate_coverage target)
             TARGET coverage
             COMMAND "../scripts/coverage.sh"
         )
+        add_dependencies(coverage ${target})
     endif()
 endfunction()

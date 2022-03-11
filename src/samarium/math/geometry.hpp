@@ -123,4 +123,14 @@ template <typename T> [[nodiscard]] constexpr auto area(Rect<T> rect)
 {
     return std::numbers::pi * circle.radius * circle.radius;
 }
+
+template <typename T> [[nodiscard]] constexpr auto abs_area(Rect<T> rect)
+{
+    return std::abs(area(rect));
+}
+
+[[nodiscard]] constexpr auto abs_area(Circle circle)
+{
+    return std::abs(area(circle));
+}
 } // namespace sm::math
