@@ -19,8 +19,13 @@ if(NOT TEST_FILE)
     set(TEST_FILE "${CMAKE_CURRENT_SOURCE_DIR}/samarium_tests.cpp")
 endif()
 
-message(STATUS "Using test file: ${TEST_FILE}")
-add_executable(samarium_tests ${TEST_FILE})
+message(STATUS "Using test file for main(): ${TEST_FILE}")
+add_executable(
+    samarium_tests
+    ${TEST_FILE}
+    tests/Vector2.cpp
+    tests/concepts.cpp
+)
 
 target_include_directories(samarium_tests PRIVATE ${CMAKE_SOURCE_DIR}/src)
 

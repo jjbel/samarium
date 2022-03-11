@@ -35,7 +35,7 @@ enable_testing()
 add_subdirectory(test)
 add_test(NAME SamariumTests COMMAND samarium_tests)
 
-option(GENERATE_COVERAGE "Generate coverage reports" TRUE)
+option(GENERATE_COVERAGE "Generate coverage reports" FALSE)
 include(coverage)
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND GENERATE_COVERAGE)
     generate_coverage(samarium_tests)

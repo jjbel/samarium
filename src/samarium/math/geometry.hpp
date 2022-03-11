@@ -9,6 +9,7 @@
 
 #include <optional>
 
+#include "Rect.hpp"
 #include "interp.hpp"
 #include "shapes.hpp"
 
@@ -113,13 +114,13 @@ clamped_intersection(const LineSegment& l1, const LineSegment& l2)
     }
 }
 
-[[nodiscard]] constexpr auto area(Circle circle)
-{
-    return std::numbers::pi * circle.radius * circle.radius;
-}
-
 template <typename T> [[nodiscard]] constexpr auto area(Rect<T> rect)
 {
     return (rect.max.x - rect.min.x) * (rect.max.y - rect.min.y);
+}
+
+[[nodiscard]] constexpr auto area(Circle circle)
+{
+    return std::numbers::pi * circle.radius * circle.radius;
 }
 } // namespace sm::math

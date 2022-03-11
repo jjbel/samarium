@@ -5,15 +5,17 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
-#include "ut.hpp"
+#include "../src/samarium/gui/Window.hpp"
+#include "../src/samarium/physics/Dual.hpp"
+#include "../src/samarium/physics/collision.hpp"
 
-#include "samarium/graphics/colors.hpp"
-#include "samarium/samarium.hpp"
+void App();
 
-#include "tests/Vector2.hpp"
-#include "tests/concepts.hpp"
+int main()
+{ /* App(); */
+}
 
-auto App()
+void App()
 {
     auto rn = sm::Renderer{sm::Image{sm::dims720}};
 
@@ -60,8 +62,4 @@ auto App()
         sm::Window{{.dims = rn.image.dims, .name = "Collision", .framerate = 64}};
     window.run(rn, update, draw, 40, 300);
     sm::print("Average: ", sum / 100.0);
-}
-
-int main()
-{ /* App(); */
 }

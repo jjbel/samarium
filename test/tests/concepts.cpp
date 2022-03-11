@@ -5,8 +5,9 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
-#include "samarium/core/concepts.hpp"
+#include "../ut.hpp"
 
+#include "samarium/core/concepts.hpp"
 
 boost::ut::suite concepts = []
 {

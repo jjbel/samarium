@@ -5,8 +5,10 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
-#include "samarium/math/Vector2.hpp"
-#include "samarium/math/geometry.hpp"
+#include "../ut.hpp"
+
+#include "../../src/samarium/math/Vector2.hpp"
+#include "../../src/samarium/math/geometry.hpp"
 
 using namespace boost::ut;
 
