@@ -41,7 +41,6 @@ class Renderer
     }
 
     // -----------------MEMBERS---------------//
-    std::mutex mut;
     Image image;
     Transform transform{.pos   = image.dims.as<f64>() / 2.,
                         .scale = Vector2{10, 10} * Vector2{1.0, -1.0}};
@@ -87,9 +86,8 @@ class Renderer
                                         : height / current_thread_count;
 
             const auto task = [chunk_size, j, box, fn, tr = this->transform,
-                               &image = this->image, &mut = mut]
+                               &image = this->image]
             {
-                static std::mutex m;
                 for (size_t y = j + box.min.y; y < j + box.min.y + chunk_size;
                      y++)
                 {

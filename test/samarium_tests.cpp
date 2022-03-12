@@ -12,7 +12,7 @@
 void App();
 
 int main()
-{ /* App(); */
+{ App();
 }
 
 void App()

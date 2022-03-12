@@ -1,18 +1,14 @@
-<h1 align="center">Samarium</h1>
+# Samarium
 
-<p align="center">
-    <a href="https://github.com/strangeQuark1041/samarium/actions/workflows/build.yml">
-         <img alt="CI status" src="https://github.com/strangeQuark1041/samarium/actions/workflows/build.yml/badge.svg">
-    </a>
-    <img alt="Lines of code" src="https://img.shields.io/tokei/lines/github/strangeQuark1041/samarium">
-    <img alt="Repo Size" src="https://img.shields.io/github/repo-size/strangeQuark1041/samarium">
-    <a href="https://github.com/strangeQuark1041/samarium/blob/main/LICENSE.md">
-         <img alt="MIT License" src="https://img.shields.io/badge/license-MIT-yellow">
-    </a>
-    <img alt="language: C++20" src="https://img.shields.io/badge/language-C%2B%2B20-yellow">
-    <br>
-    Samarium is a 2d physics simulation library written in modern C++20.
-</p>
+[![CI Status](https://github.com/strangeQuark1041/samarium/actions/workflows/build.yml/badge.svg)](https://github.com/strangeQuark1041/samarium/actions/workflows/build.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=strangeQuark1041_samarium&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=strangeQuark1041_samarium)
+
+![Lines of Code](https://img.shields.io/tokei/lines/github/strangeQuark1041/samarium)
+![Repo Size](https://img.shields.io/github/repo-size/strangeQuark1041/samarium)
+[![MIT License](https://img.shields.io/badge/license-MIT-yellow)](https://github.com/strangeQuark1041/samarium/blob/main/LICENSE.md)
+![language: C++20](https://img.shields.io/badge/language-C%2B%2B20-yellow)
+
+Samarium is a 2d physics simulation library written in modern C++20.
 
 ## Contents
 
