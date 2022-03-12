@@ -19,7 +19,6 @@ Samarium is a 2d physics simulation library written in modern C++20.
 - [Example](#example)
 - [Documentation](#documentation)
 - [License](#license)
-- [Todo](#todo)
 - [References](#references)
 
 ## Quickstart
@@ -70,13 +69,6 @@ Documentation is located on [Github Pages here](https://strangequark1041.github.
 ## License
 
 Samarium is distributed under the permissive [MIT License](LICENSE.md).
-
-## Todo
-
-- make Rendering multithreaded
-- refactor, Color, Gradient handling into Material
-- specify bounding box for `Renderer::draw_line`
-- add modules support
 
 ## References
 
