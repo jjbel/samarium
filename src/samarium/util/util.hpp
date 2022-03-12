@@ -40,13 +40,9 @@ class Stopwatch
     auto time() const
     {
         const auto finish = std::chrono::steady_clock::now();
-        return std::chrono::duration_cast<std::chrono::duration<f64>>(finish -
-                                                                      start);
+        return std::chrono::duration_cast<std::chrono::duration<f64>>(finish - start);
     }
 
-    auto print() const
-    {
-        fmt::print("Took {:.3}ms\n", this->time().count() * 1000);
-    }
+    auto print() const { fmt::print("Took {:.3}ms\n", this->time().count() * 1000); }
 };
 } // namespace sm::util

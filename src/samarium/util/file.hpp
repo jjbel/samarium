@@ -13,9 +13,7 @@
 
 namespace sm::file
 {
-void export_tga(const Image& image,
-                const std::string& file_path = util::get_date_filename("tga"));
+void export_tga(const Image& image, const std::string& file_path = util::get_date_filename("tga"));
 
-void export_to(const Image& image,
-               const std::string& file_path = util::get_date_filename("tga"));
+void export_to(const Image& image, const std::string& file_path = util::get_date_filename("tga"));
 } // namespace sm::file

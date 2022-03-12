@@ -36,8 +36,7 @@ class Renderer
 
     static auto rasterize(Color color, f64 distance, f64 radius, f64 aa_factor)
     {
-        return color.with_multiplied_alpha(
-            rasterize(distance, radius, aa_factor));
+        return color.with_multiplied_alpha(rasterize(distance, radius, aa_factor));
     }
 
     // -----------------MEMBERS---------------//
@@ -45,8 +44,7 @@ class Renderer
     Transform transform{.pos   = image.dims.as<f64>() / 2.,
                         .scale = Vector2{10, 10} * Vector2{1.0, -1.0}};
 
-    Renderer(const Image& image_,
-             u32 thread_count_ = std::thread::hardware_concurrency())
+    Renderer(const Image& image_, u32 thread_count_ = std::thread::hardware_concurrency())
         : image{image_}, thread_count{thread_count_}, thread_pool{thread_count_}
 
     {
@@ -58,10 +56,8 @@ class Renderer
     {
         const auto rect = image.rect();
         this->draw(std::forward<T>(fn),
-                   transform.apply_inverse(Rect{
-                       .min = rect.min,
-                       .max = rect.max +
-                              Indices{1, 1}}.template as<f64>()));
+                   transform.apply_inverse(
+                       Rect{.min = rect.min, .max = rect.max + Indices{1, 1}}.template as<f64>()));
     }
 
     void draw(concepts::DrawableLambda auto&& fn, const Rect<f64>& rect)
@@ -74,9 +70,7 @@ class Renderer
 
         const auto height = box.height();
 
-        const auto current_thread_count =
-            std::min(static_cast<size_t>(this->thread_count), height);
-        fmt::print("{}", current_thread_count);
+        const auto current_thread_count = std::min(static_cast<size_t>(this->thread_count), height);
 
         auto j = size_t{};
 
@@ -86,28 +80,25 @@ class Renderer
                                         ? height / current_thread_count + 1
                                         : height / current_thread_count;
 
-            const auto task = [chunk_size, j, box, fn, tr = this->transform,
-                               &image = this->image]
+            const auto task = [chunk_size, j, box, fn, tr = this->transform, &image = this->image]
             {
-                Extents<size_t>{j + box.min.y, j + box.min.y + chunk_size - 1}
-                    .for_each(
-                        [box, &tr, &image, &fn](auto y)
-                        {
-                            Extents<size_t>{box.min.x, box.max.x}.for_each(
-                                [y, &tr, &image, &fn](auto x)
-                                {
-                                    const auto coords = Indices{x, y};
-                                    const auto coords_transformed =
-                                        tr.apply_inverse(
-                                            coords.template as<f64>());
+                Extents{j + box.min.y, j + box.min.y + chunk_size - 1}.for_each(
+                    [box, &tr, &image, &fn](auto y)
+                    {
+                        Extents{box.min.x, box.max.x}.for_each(
+                            [y, &tr, &image, &fn](auto x)
+                            {
+                                const auto coords = Indices{x, y};
+                                const auto coords_transformed =
+                                    tr.apply_inverse(coords.template as<f64>());
 
-                                    // image[coords].add_alpha_over(
-                                    //     Color{255, 80, 200, 100});
-                                    const auto col = fn(coords_transformed);
+                                // image[coords].add_alpha_over(
+                                //     Color{255, 80, 200, 100});
+                                const auto col = fn(coords_transformed);
 
-                                    image[coords].add_alpha_over(col);
-                                });
-                        });
+                                image[coords].add_alpha_over(col);
+                            });
+                    });
             };
             this->thread_pool.push_task(task);
             j += chunk_size;
@@ -151,15 +142,13 @@ class Renderer
         const auto vector = ls.vector().abs();
         const auto extra  = 2 * (aa_factor + thickness);
         this->draw(
-            [&function_along_line, &ls, thickness,
-             aa_factor](const Vector2& coords)
+            [&function_along_line, &ls, thickness, aa_factor](const Vector2& coords)
             {
-                return rasterize(
-                    function_along_line(math::lerp_along(coords, ls)),
-                    math::clamped_distance(coords, ls), thickness, aa_factor);
+                return rasterize(function_along_line(math::lerp_along(coords, ls)),
+                                 math::clamped_distance(coords, ls), thickness, aa_factor);
             },
-            Rect<f64>::from_centre_width_height(
-                (ls.p1 + ls.p2) / 2.0, vector.x + extra, vector.y + extra));
+            Rect<f64>::from_centre_width_height((ls.p1 + ls.p2) / 2.0, vector.x + extra,
+                                                vector.y + extra));
     }
 
     void draw_line(const LineSegment& ls,
@@ -170,12 +159,10 @@ class Renderer
         const auto vector = ls.vector().abs();
         const auto extra  = 2 * aa_factor;
         this->draw(
-            [&function_along_line, &ls, thickness,
-             aa_factor](const Vector2& coords)
+            [&function_along_line, &ls, thickness, aa_factor](const Vector2& coords)
             {
-                return rasterize(
-                    function_along_line(math::clamped_lerp_along(coords, ls)),
-                    math::distance(coords, ls), thickness, aa_factor);
+                return rasterize(function_along_line(math::clamped_lerp_along(coords, ls)),
+                                 math::distance(coords, ls), thickness, aa_factor);
             });
     }
 

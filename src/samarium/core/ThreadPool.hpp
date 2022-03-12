@@ -29,12 +29,12 @@
 
 // #define THREAD_POOL_VERSION "v2.0.0 (2021-08-14)"
 
-#include <atomic>      // std::atomic
-#include <future>      // std::future, std::promise
-#include <memory>      // std::shared_ptr, std::unique_ptr
-#include <mutex>       // std::mutex, std::scoped_lock
-#include <queue>       // std::queue
-#include <thread>      // std::this_thread, std::thread
+#include <atomic> // std::atomic
+#include <future> // std::future, std::promise
+#include <memory> // std::shared_ptr, std::unique_ptr
+#include <mutex>  // std::mutex, std::scoped_lock
+#include <queue>  // std::queue
+#include <thread> // std::this_thread, std::thread
 #include <type_traits> // std::common_type_t, std::decay_t, std::enable_if_t, std::is_void_v, std::invoke_result_t
 
 
@@ -69,11 +69,9 @@ class ThreadPool
      * CPU cores. If the argument is zero, the default value will be used instead.
      */
     ThreadPool(const ui32& _thread_count = std::thread::hardware_concurrency())
-        : thread_count(_thread_count ? _thread_count
-                                     : std::thread::hardware_concurrency()),
-          threads(new std::thread[_thread_count
-                                      ? _thread_count
-                                      : std::thread::hardware_concurrency()])
+        : thread_count(_thread_count ? _thread_count : std::thread::hardware_concurrency()),
+          threads(
+              new std::thread[_thread_count ? _thread_count : std::thread::hardware_concurrency()])
     {
         create_threads();
     }
@@ -173,9 +171,8 @@ class ThreadPool
         for (ui32 t = 0; t < num_blocks; t++)
         {
             T start = ((T)(t * block_size) + the_first_index);
-            T end   = (t == num_blocks - 1)
-                          ? last_index + 1
-                          : ((T)((t + 1) * block_size) + the_first_index);
+            T end   = (t == num_blocks - 1) ? last_index + 1
+                                            : ((T)((t + 1) * block_size) + the_first_index);
             blocks_running++;
             push_task(
                 [start, end, &loop, &blocks_running]
@@ -217,8 +214,7 @@ class ThreadPool
      * @param task The function to push.
      * @param args The arguments to pass to the function.
      */
-    template <typename F, typename... A>
-    void push_task(const F& task, const A&... args)
+    template <typename F, typename... A> void push_task(const F& task, const A&... args)
     {
         push_task([task, args...] { task(args...); });
     }
@@ -252,8 +248,8 @@ class ThreadPool
      */
     template <typename F,
               typename... A,
-              typename = std::enable_if_t<std::is_void_v<
-                  std::invoke_result_t<std::decay_t<F>, std::decay_t<A>...>>>>
+              typename = std::enable_if_t<
+                  std::is_void_v<std::invoke_result_t<std::decay_t<F>, std::decay_t<A>...>>>>
     std::future<bool> submit(const F& task, const A&... args)
     {
         std::shared_ptr<std::promise<bool>> task_promise(new std::promise<bool>);
@@ -292,11 +288,10 @@ class ThreadPool
      * @return A future to be used later to obtain the function's returned value,
      * waiting for it to finish its execution if needed.
      */
-    template <
-        typename F,
-        typename... A,
-        typename R = std::invoke_result_t<std::decay_t<F>, std::decay_t<A>...>,
-        typename   = std::enable_if_t<!std::is_void_v<R>>>
+    template <typename F,
+              typename... A,
+              typename R = std::invoke_result_t<std::decay_t<F>, std::decay_t<A>...>,
+              typename   = std::enable_if_t<!std::is_void_v<R>>>
     std::future<R> submit(const F& task, const A&... args)
     {
         std::shared_ptr<std::promise<R>> task_promise(new std::promise<R>);
@@ -403,9 +398,7 @@ class ThreadPool
      */
     void sleep_or_yield()
     {
-        if (sleep_duration)
-            std::this_thread::sleep_for(
-                std::chrono::microseconds(sleep_duration));
+        if (sleep_duration) std::this_thread::sleep_for(std::chrono::microseconds(sleep_duration));
         else
             std::this_thread::yield();
     }

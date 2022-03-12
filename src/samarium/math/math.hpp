@@ -12,22 +12,19 @@ namespace sm::math
 {
 constexpr inline auto EPSILON = 1.e-4;
 
-template <concepts::FloatingPoint T>
-[[nodiscard]] constexpr auto almost_equal(T a, T b) noexcept
+template <concepts::FloatingPoint T> [[nodiscard]] constexpr auto almost_equal(T a, T b) noexcept
 {
     return std::abs(a - b) <= EPSILON;
 }
 
-template <typename T>
-[[nodiscard]] constexpr auto min(T value0, T value1) noexcept
+template <typename T> [[nodiscard]] constexpr auto min(T value0, T value1) noexcept
 {
     if (value0 < value1) return value0;
     else
         return value1;
 }
 
-template <typename T>
-[[nodiscard]] constexpr auto max(T value0, T value1) noexcept
+template <typename T> [[nodiscard]] constexpr auto max(T value0, T value1) noexcept
 {
     if (value0 > value1) return value0;
     else
@@ -60,10 +57,7 @@ template <concepts::Number T> [[nodiscard]] constexpr auto abs(T x) noexcept
 
 namespace sm::literals
 {
-consteval auto operator"" _degrees(f80 angle) noexcept
-{
-    return math::to_radians(angle);
-}
+consteval auto operator"" _degrees(f80 angle) noexcept { return math::to_radians(angle); }
 
 consteval auto operator"" _radians(f80 angle) noexcept { return angle; }
 } // namespace sm::literals

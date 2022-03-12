@@ -24,10 +24,7 @@ template <concepts::Arithmetic T> class Extents
 
     [[nodiscard]] constexpr auto size() const { return max - min; }
 
-    [[nodiscard]] constexpr auto contains(T value) const
-    {
-        return min <= value and value <= max;
-    }
+    [[nodiscard]] constexpr auto contains(T value) const { return min <= value and value <= max; }
 
     [[nodiscard]] constexpr auto clamp(T value) const
     {
@@ -48,14 +45,11 @@ template <concepts::Arithmetic T> class Extents
         return min * (1. - this->clamp(factor)) + max * factor;
     }
 
-    [[nodiscard]] constexpr f64 lerp_inverse(T value) const
-    {
-        return (value - min) / this->size();
-    }
+    [[nodiscard]] constexpr f64 lerp_inverse(T value) const { return (value - min) / this->size(); }
 
     template <typename Function>
-    constexpr auto for_each(Function&& fn)
-        const requires concepts::Integral<T> && std::invocable<Function, T>
+    constexpr auto
+    for_each(Function&& fn) const requires concepts::Integral<T> && std::invocable<Function, T>
     {
         for (auto i = min; i <= max; i++) { fn(i); }
     }

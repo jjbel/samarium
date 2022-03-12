@@ -3,4 +3,5 @@
 !*.cpp
 !*.hpp
 build/*
+.history/*
 date.hpp

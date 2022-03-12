@@ -31,8 +31,7 @@ void ThreadPool::reset(const ui32& _thread_count)
     wait_for_tasks();
     running = false;
     destroy_threads();
-    thread_count =
-        _thread_count ? _thread_count : std::thread::hardware_concurrency();
+    thread_count = _thread_count ? _thread_count : std::thread::hardware_concurrency();
     threads.reset(new std::thread[thread_count]);
     paused  = was_paused;
     running = true;

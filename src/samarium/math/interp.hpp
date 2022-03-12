@@ -24,45 +24,39 @@ namespace sm::interp
     return [](auto x) { return x * x * x * (x * (x * 6. - 15.) + 10.); };
 }
 
-template <typename T>
-[[nodiscard]] constexpr auto in_range(T value, Extents<T> range)
+template <typename T> [[nodiscard]] constexpr auto in_range(T value, Extents<T> range)
 {
     return range.contains(value);
 }
 
-template <typename T>
-[[nodiscard]] constexpr auto clamp(T value, Extents<T> range) noexcept
+template <typename T> [[nodiscard]] constexpr auto clamp(T value, Extents<T> range) noexcept
 {
     return range.clamp(value);
 }
 
-template <typename T>
-[[nodiscard]] constexpr auto lerp(f64 factor, Extents<T> range)
+template <typename T> [[nodiscard]] constexpr auto lerp(f64 factor, Extents<T> range)
 {
     return range.lerp(factor);
 }
 
-template <typename T>
-[[nodiscard]] constexpr auto clamped_lerp(f64 factor, Extents<T> range)
+template <typename T> [[nodiscard]] constexpr auto clamped_lerp(f64 factor, Extents<T> range)
 {
     return range.clamped_lerp(factor);
 }
 
 [[nodiscard]] constexpr auto lerp_rgb(f64 factor, Color from, Color to)
 {
-    return Color{
-        static_cast<u8>(lerp(factor, Extents<f64>{static_cast<f64>(from.r),
-                                                  static_cast<f64>(to.r)})),
-        static_cast<u8>(lerp(factor, Extents<f64>{static_cast<f64>(from.g),
-                                                  static_cast<f64>(to.g)})),
-        static_cast<u8>(lerp(factor, Extents<f64>{static_cast<f64>(from.b),
-                                                  static_cast<f64>(to.b)})),
-        static_cast<u8>(lerp(factor, Extents<f64>{static_cast<f64>(from.a),
-                                                  static_cast<f64>(to.a)}))};
+    return Color{static_cast<u8>(
+                     lerp(factor, Extents<f64>{static_cast<f64>(from.r), static_cast<f64>(to.r)})),
+                 static_cast<u8>(
+                     lerp(factor, Extents<f64>{static_cast<f64>(from.g), static_cast<f64>(to.g)})),
+                 static_cast<u8>(
+                     lerp(factor, Extents<f64>{static_cast<f64>(from.b), static_cast<f64>(to.b)})),
+                 static_cast<u8>(
+                     lerp(factor, Extents<f64>{static_cast<f64>(from.a), static_cast<f64>(to.a)}))};
 }
 
-template <typename T>
-[[nodiscard]] constexpr auto lerp_inverse(f64 value, Extents<T> range)
+template <typename T> [[nodiscard]] constexpr auto lerp_inverse(f64 value, Extents<T> range)
 {
     return range.lerp_inverse(value);
 }
@@ -72,16 +66,13 @@ template <typename T>
 template <typename T, typename Output_t = T>
 [[nodiscard]] constexpr auto map_range(T value, Extents<T> from, Extents<T> to)
 {
-    return static_cast<Output_t>(to.min +
-                                 (value - from.min) * to.size() / from.size());
+    return static_cast<Output_t>(to.min + (value - from.min) * to.size() / from.size());
 }
 
 template <typename T, typename Output_t = T>
-[[nodiscard]] constexpr auto
-map_range_clamp(T value, Extents<T> from, Extents<T> to)
+[[nodiscard]] constexpr auto map_range_clamp(T value, Extents<T> from, Extents<T> to)
 {
-    return static_cast<Output_t>(to.min + (from.clamp(value) - from.min) *
-                                              to.size() / from.size());
+    return static_cast<Output_t>(to.min + (from.clamp(value) - from.min) * to.size() / from.size());
 }
 
 template <typename T, typename Output_t = T>
@@ -89,21 +80,16 @@ template <typename T, typename Output_t = T>
 {
     return [from_min = from.min, from_max = from.max, from_range = from.size(),
             to_range = to.size(), to_min = to.min](T value)
-    {
-        return static_cast<Output_t>(to_min +
-                                     (value - from_min) * to_range / from_range);
-    };
+    { return static_cast<Output_t>(to_min + (value - from_min) * to_range / from_range); };
 }
 
 template <typename T, typename Output_t = T>
 [[nodiscard]] constexpr auto make_clamped_mapper(Extents<T> from, Extents<T> to)
 {
-    return [from, from_min = from.min, from_max = from.max,
-            from_range = from.max - from.min, to_range = to.size(),
-            to_min = to.min](T value)
-    {
-        return static_cast<Output_t>(to_min + (from.clamp(value) - from_min) *
-                                                  to_range / from_range);
+    return [from, from_min = from.min, from_max = from.max, from_range = from.max - from.min,
+            to_range = to.size(), to_min = to.min](T value) {
+        return static_cast<Output_t>(to_min +
+                                     (from.clamp(value) - from_min) * to_range / from_range);
     };
 }
 

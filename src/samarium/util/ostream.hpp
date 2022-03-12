@@ -16,8 +16,7 @@ std::ostream& operator<<(std::ostream& os, const sm::Version& a);
 
 std::ostream& operator<<(std::ostream& os, const sm::Color& a);
 
-template <sm::concepts::Number T>
-std::ostream& operator<<(std::ostream& os, const sm::Rect<T>& a)
+template <sm::concepts::Number T> std::ostream& operator<<(std::ostream& os, const sm::Rect<T>& a)
 {
     os << fmt::format("{}", a);
     return os;

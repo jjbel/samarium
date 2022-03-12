@@ -28,8 +28,7 @@ template <typename T> void print_single(T&& arg) { print(std::forward<T>(arg)); 
 void error(const auto&... args)
 {
     fmt::print(stderr, fg(fmt::color::red) | fmt::emphasis::bold, "Error: ");
-    (fmt::print(stderr, fg(fmt::color::red) | fmt::emphasis::bold, "{}", args),
-     ...);
+    (fmt::print(stderr, fg(fmt::color::red) | fmt::emphasis::bold, "{}", args), ...);
     fmt::print(stderr, "\n");
 }
 

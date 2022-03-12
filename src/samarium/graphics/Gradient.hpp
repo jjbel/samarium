@@ -24,10 +24,7 @@ template <> class Gradient<2>
 
   public:
     constexpr Gradient(Color from_, Color to_) : from{from_}, to{to_} {}
-    constexpr auto operator()(f64 factor) const
-    {
-        return interp::lerp_rgb(factor, from, to);
-    }
+    constexpr auto operator()(f64 factor) const { return interp::lerp_rgb(factor, from, to); }
 };
 
 template <> class Gradient<3>
@@ -37,10 +34,7 @@ template <> class Gradient<3>
     Color to{};
 
   public:
-    constexpr Gradient(Color from_, Color mid_, Color to_)
-        : from{from_}, mid{mid_}, to{to_}
-    {
-    }
+    constexpr Gradient(Color from_, Color mid_, Color to_) : from{from_}, mid{mid_}, to{to_} {}
     constexpr auto operator()(f64 factor) const
     {
         factor = Extents<f64>{0.0, 1.0}.clamp(factor);

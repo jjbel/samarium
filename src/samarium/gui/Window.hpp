@@ -39,10 +39,7 @@ class Window
         Window& window;
         const Renderer& renderer;
 
-        Manager(Window& win, const Renderer& rn) : window(win), renderer(rn)
-        {
-            window.get_input();
-        }
+        Manager(Window& win, const Renderer& rn) : window(win), renderer(rn) { window.get_input(); }
 
         Manager(const Manager&) = delete;
 
@@ -83,11 +80,7 @@ class Window
     }
 
     template <typename T, typename U>
-    void run(Renderer& rn,
-             T&& update,
-             U&& draw,
-             size_t substeps    = 1,
-             size_t frame_limit = 1000)
+    void run(Renderer& rn, T&& update, U&& draw, size_t substeps = 1, size_t frame_limit = 1000)
     {
         while (this->is_open() and this->frame_counter < frame_limit)
         {

@@ -1,4 +1,4 @@
-/* 
+/*
  * SPDX-License-Identifier: MIT
  * Copyright (c) 2022 Jai Bellare
  * Project homepage: https://github.com/strangeQuark1041/samarium
@@ -28,14 +28,11 @@ template <typename T> class DynArray
     using size_type       = std::size_t;
 
     // Constructors
-    explicit DynArray(size_t size_ = {})
-        : m_size(size_), data(new T[size_]{}) {} // NOSONAR
+    explicit DynArray(size_t size_ = {}) : m_size(size_), data(new T[size_]{}) {} // NOSONAR
 
-    explicit DynArray(size_t size_, T init_value)
-        : m_size(size_), data(new T[size_]) // NOSONAR
+    explicit DynArray(size_t size_, T init_value) : m_size(size_), data(new T[size_]) // NOSONAR
     {
-        std::fill(std::execution::par_unseq, &this->data[0], &this->data[size_],
-                  init_value);
+        std::fill(std::execution::par_unseq, &this->data[0], &this->data[size_], init_value);
     }
 
     DynArray(const DynArray& arr) : m_size(arr.m_size), data(new T[arr.m_size])
@@ -43,10 +40,7 @@ template <typename T> class DynArray
         std::copy(std::execution::par_unseq, arr.begin(), arr.end(), this->data);
     }
 
-    DynArray(DynArray&& arr) noexcept : m_size(arr.m_size)
-    {
-        std::swap(data, arr.data);
-    }
+    DynArray(DynArray&& arr) noexcept : m_size(arr.m_size) { std::swap(data, arr.data); }
 
     // Operator overloads
     DynArray& operator=(const DynArray& arr)
@@ -62,53 +56,33 @@ template <typename T> class DynArray
     T& at(size_t index)
     {
         if (index >= this->m_size)
-            throw std::out_of_range(
-                fmt::format("sm::DynArray: index {} out of range for m_size {}",
-                            index, this->m_size));
+            throw std::out_of_range(fmt::format("sm::DynArray: index {} out of range for m_size {}",
+                                                index, this->m_size));
         return this->data[index];
     }
 
     const T& at(size_t index) const
     {
         if (index >= this->m_size)
-            throw std::out_of_range(
-                fmt::format("sm::DynArray: index {} out of range for m_size {}",
-                            index, this->m_size));
+            throw std::out_of_range(fmt::format("sm::DynArray: index {} out of range for m_size {}",
+                                                index, this->m_size));
         return this->data[index];
     }
 
     auto begin() noexcept { return static_cast<iterator>(&this->data[0]); }
-    auto end() noexcept
-    {
-        return static_cast<iterator>(&this->data[this->m_size]);
-    }
+    auto end() noexcept { return static_cast<iterator>(&this->data[this->m_size]); }
 
-    auto begin() const noexcept
-    {
-        return static_cast<const_iterator>(&this->data[0]);
-    }
-    auto end() const noexcept
-    {
-        return static_cast<const_iterator>(&this->data[this->m_size]);
-    }
+    auto begin() const noexcept { return static_cast<const_iterator>(&this->data[0]); }
+    auto end() const noexcept { return static_cast<const_iterator>(&this->data[this->m_size]); }
 
-    auto cbegin() const noexcept
-    {
-        return static_cast<const_iterator>(&this->data[0]);
-    }
-    auto cend() const noexcept
-    {
-        return static_cast<const_iterator>(&this->data[this->m_size]);
-    }
+    auto cbegin() const noexcept { return static_cast<const_iterator>(&this->data[0]); }
+    auto cend() const noexcept { return static_cast<const_iterator>(&this->data[this->m_size]); }
 
     auto size() const noexcept { return this->m_size; }
-    auto max_size() const noexcept
-    {
-        return this->m_size;
-    } // for stl compatibility
+    auto max_size() const noexcept { return this->m_size; } // for stl compatibility
     auto empty() const noexcept { return this->m_size == 0; }
 
-    auto as_span() { return std::span{this->begin(), this->m_size}; }
+    auto as_span() noexcept { return std::span{this->begin(), this->m_size}; }
 
     auto fill(const T& value)
     {

@@ -16,8 +16,7 @@ void Trail::push_back(Vector2 pos)
     if (this->max_length > this->trail.size()) { this->trail.push_back(pos); }
     else
     {
-        std::rotate(this->trail.begin(), this->trail.begin() + 1,
-                    this->trail.end());
+        std::rotate(this->trail.begin(), this->trail.begin() + 1, this->trail.end());
         this->trail.back() = std::move(pos);
     }
 }

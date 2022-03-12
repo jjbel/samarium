@@ -20,11 +20,9 @@ void App()
     const auto gravity      = sm::Vector2{0, -100.0};
     const auto viewport_box = rn.viewport_box();
 
-    auto ball = sm::Dual{sm::Particle{.vel    = {30, 96},
-                                      .radius = 2.8,
-                                      .mass   = 3.0,
-                                      .color  = sm::Color{255, 0, 0}}};
-    auto t    = sm::Trail{200};
+    auto ball = sm::Dual{
+        sm::Particle{.vel = {30, 96}, .radius = 2.8, .mass = 3.0, .color = sm::Color{255, 0, 0}}};
+    auto t = sm::Trail{200};
 
     sm::util::Stopwatch watch{};
     auto sum = 0.0;
@@ -56,8 +54,7 @@ void App()
         // sum += tmp(watch);
     };
 
-    auto window =
-        sm::Window{{.dims = rn.image.dims, .name = "Collision", .framerate = 64}};
+    auto window = sm::Window{{.dims = rn.image.dims, .name = "Collision", .framerate = 64}};
     window.run(rn, update, draw, 40, 300);
     // sm::print("Average: ", sum\);
 }

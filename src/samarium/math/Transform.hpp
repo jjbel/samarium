@@ -25,17 +25,13 @@ class Transform
         return Rect<f64>{apply(rect.min), apply(rect.max)}.validated();
     }
 
-    constexpr auto apply_inverse(Vector2 vec) const
-    {
-        return (vec - pos) / scale;
-    }
+    constexpr auto apply_inverse(Vector2 vec) const { return (vec - pos) / scale; }
 
     constexpr auto apply_inverse(const Rect<f64>& rect) const
     {
         return Rect<f64>::find_min_max(
             this->apply_inverse(rect.min),
-            this->apply_inverse(
-                rect.max)); // -ve sign may invalidate min, max, so recalculate it
+            this->apply_inverse(rect.max)); // -ve sign may invalidate min, max, so recalculate it
     }
 
     constexpr auto apply_inverse(const LineSegment& l) const
@@ -49,15 +45,10 @@ class Transform
 template <> class fmt::formatter<sm::Transform>
 {
   public:
-    constexpr auto parse(const format_parse_context& ctx) const
-    {
-        return ctx.begin();
-    }
+    constexpr auto parse(const format_parse_context& ctx) const { return ctx.begin(); }
 
-    template <typename FormatContext>
-    auto format(const sm::Transform& p, FormatContext& ctx)
+    template <typename FormatContext> auto format(const sm::Transform& p, FormatContext& ctx)
     {
-        return format_to(ctx.out(), "Transform[pos: {}, scale: {}]", p.pos,
-                         p.scale);
+        return format_to(ctx.out(), "Transform[pos: {}, scale: {}]", p.pos, p.scale);
     }
 };

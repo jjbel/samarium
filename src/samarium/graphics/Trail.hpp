@@ -30,4 +30,3 @@ class Trail
     std::span<const Vector2> span() const;
 };
 } // namespace sm
-

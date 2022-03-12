@@ -47,13 +47,9 @@ template <typename T> class Grid
     const Dimensions dims;
 
     // Constructors
-    explicit Grid(Dimensions dims_ = dimsFHD)
-        : data(dims_.x * dims_.y), dims{dims_}
-    {
-    }
+    explicit Grid(Dimensions dims_ = dimsFHD) : data(dims_.x * dims_.y), dims{dims_} {}
 
-    explicit Grid(Dimensions dims_, T init_value)
-        : data(dims_.x * dims_.y, init_value), dims{dims_}
+    explicit Grid(Dimensions dims_, T init_value) : data(dims_.x * dims_.y, init_value), dims{dims_}
     {
     }
 
@@ -67,10 +63,7 @@ template <typename T> class Grid
     }
 
     // Member functions
-    T& operator[](Indices indices)
-    {
-        return this->data[indices.y * this->dims.x + indices.x];
-    }
+    T& operator[](Indices indices) { return this->data[indices.y * this->dims.x + indices.x]; }
 
     const T& operator[](Indices indices) const
     {
@@ -102,12 +95,10 @@ template <typename T> class Grid
     DynArray<std::array<u8, Format::length>> formatted_data(Format format) const
     {
         const auto format_length = Format::length;
-        auto fmt_data = DynArray<std::array<u8, format_length>>(this->size());
+        auto fmt_data            = DynArray<std::array<u8, format_length>>(this->size());
 
-        std::transform(std::execution::par_unseq, this->begin(), this->end(),
-                       fmt_data.begin(),
-                       [format](auto color)
-                       { return color.get_formatted(format); });
+        std::transform(std::execution::par_unseq, this->begin(), this->end(), fmt_data.begin(),
+                       [format](auto color) { return color.get_formatted(format); });
 
         return fmt_data;
     }
