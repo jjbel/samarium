@@ -52,5 +52,12 @@ template <concepts::Arithmetic T> class Extents
     {
         return (value - min) / this->size();
     }
+
+    template <typename Function>
+    constexpr auto for_each(Function&& fn)
+        const requires concepts::Integral<T> && std::invocable<Function, T>
+    {
+        for (auto i = min; i <= max; i++) { fn(i); }
+    }
 };
 } // namespace sm

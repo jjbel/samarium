@@ -76,10 +76,11 @@ class Renderer
 
         const auto current_thread_count =
             std::min(static_cast<size_t>(this->thread_count), height);
+        fmt::print("{}", current_thread_count);
 
         auto j = size_t{};
 
-        for (size_t i{}; i < current_thread_count; i++)
+        for (auto i = size_t{}; i < current_thread_count; i++)
         {
             const auto chunk_size = i < height % current_thread_count
                                         ? height / current_thread_count + 1
@@ -88,24 +89,25 @@ class Renderer
             const auto task = [chunk_size, j, box, fn, tr = this->transform,
                                &image = this->image]
             {
-                for (size_t y = j + box.min.y; y < j + box.min.y + chunk_size;
-                     y++)
-                {
-                    for (size_t x = box.min.x; x <= box.max.x; x++)
-                    {
-                        const auto coords = Indices{x, y};
-                        const auto coords_transformed =
-                            tr.apply_inverse(coords.template as<f64>());
-
-                        // image[coords].add_alpha_over(Color{255, 80, 200, 100});
-                        if (box.contains(coords))
+                Extents<size_t>{j + box.min.y, j + box.min.y + chunk_size - 1}
+                    .for_each(
+                        [box, &tr, &image, &fn](auto y)
                         {
-                            const auto col = fn(coords_transformed);
+                            Extents<size_t>{box.min.x, box.max.x}.for_each(
+                                [y, &tr, &image, &fn](auto x)
+                                {
+                                    const auto coords = Indices{x, y};
+                                    const auto coords_transformed =
+                                        tr.apply_inverse(
+                                            coords.template as<f64>());
 
-                            image[coords].add_alpha_over(col);
-                        }
-                    }
-                }
+                                    // image[coords].add_alpha_over(
+                                    //     Color{255, 80, 200, 100});
+                                    const auto col = fn(coords_transformed);
+
+                                    image[coords].add_alpha_over(col);
+                                });
+                        });
             };
             this->thread_pool.push_task(task);
             j += chunk_size;

@@ -11,9 +11,7 @@
 
 void App();
 
-int main()
-{ App();
-}
+int main() { App(); }
 
 void App()
 {
@@ -55,11 +53,11 @@ void App()
         rn.draw(t, sm::Color{66, 149, 245}, 1.0);
         rn.draw(ball.now);
         rn.render();
-        sum += tmp(watch);
+        // sum += tmp(watch);
     };
 
     auto window =
         sm::Window{{.dims = rn.image.dims, .name = "Collision", .framerate = 64}};
     window.run(rn, update, draw, 40, 300);
-    sm::print("Average: ", sum / 100.0);
+    // sm::print("Average: ", sum\);
 }
