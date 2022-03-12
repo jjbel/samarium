@@ -186,7 +186,7 @@ jobs:
         run: true
 
   windows-install:
-    runs-on: windows-latest
+    runs-on: windows-2022
     steps:
       - name: Install Conan
         id: conan
