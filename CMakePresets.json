@@ -56,12 +56,14 @@
         {
             "name": "default",
             "configurePreset": "default",
+            "configuration": "Release",
             "output": { "outputOnFailure": true, "verbosity": "extra" },
             "execution": { "noTestsAction": "error", "stopOnFailure": true }
         },
         {
             "name": "coverage",
             "configurePreset": "coverage",
+            "configuration": "Debug",
             "output": { "outputOnFailure": true, "verbosity": "extra" },
             "execution": { "noTestsAction": "error", "stopOnFailure": true }
         }
