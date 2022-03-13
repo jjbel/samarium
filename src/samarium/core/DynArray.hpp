@@ -35,7 +35,7 @@ template <typename T> class DynArray
         std::fill(std::execution::par_unseq, &this->data[0], &this->data[size_], init_value);
     }
 
-    DynArray(const DynArray& arr) : m_size(arr.m_size), data(new T[arr.m_size])
+    DynArray(const DynArray& arr) : data(new T[arr.m_size]), m_size(arr.m_size)
     {
         std::copy(std::execution::par_unseq, arr.begin(), arr.end(), this->data);
     }

@@ -11,7 +11,7 @@
 #include "../src/samarium/physics/Dual.hpp"
 #include "../src/samarium/physics/collision.hpp"
 
-#if 0
+#if 1
 
 void App();
 
@@ -86,15 +86,15 @@ void App()
 
     const auto gravity = -100.0_y;
 
-    const sm::Vector2 anchor   = 30.0_y;
+    const sm::Vector2 anchor   = 35.0_y;
     const auto rest_length     = 14.0;
     const auto spring_constant = 100.0;
 
     auto p1 =
-        sm::Particle{.pos = {}, .vel = {50, 0}, .radius = 3, .mass = 40, .color = sm::colors::red};
+        sm::Particle{.pos = {}, .vel = {50, 0}, .radius = 5, .mass = 40, .color = sm::colors::red};
     auto p2 = p1;
 
-    const auto l = sm::LineSegment{{-30, -30}, {30, -9}};
+    const auto l = sm::LineSegment{{-60, -30}, {40, -9}};
 
     const auto dims         = rn.image.dims.as<double>();
     const auto viewport_box = rn.viewport_box();
@@ -114,7 +114,7 @@ void App()
         std::tie(p1, p2) = std::tuple{dual.now, dual.prev};
 
         rn.draw_line_segment(l, sm::gradients::blue_green, 0.4);
-        rn.draw_line_segment(sm::LineSegment{anchor, p1.pos}, "#c471ed"_c, .6);
+        rn.draw_line_segment(sm::LineSegment{anchor, p1.pos}, "#98aab5"_c, .6);
         rn.draw(p1);
         p2 = p1;
         rn.render();

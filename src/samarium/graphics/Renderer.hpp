@@ -68,42 +68,19 @@ class Renderer
 
         if (math::area(box) == 0ul) return;
 
-        const auto height = box.height();
-
-        const auto current_thread_count = std::min(static_cast<size_t>(this->thread_count), height);
-
-        auto j = size_t{};
-
-        for (auto i = size_t{}; i < current_thread_count; i++)
+        for (size_t y = box.min.y; y < box.max.y; y++)
         {
-            const auto chunk_size = i < height % current_thread_count
-                                        ? height / current_thread_count + 1
-                                        : height / current_thread_count;
-
-            const auto task = [chunk_size, j, box, fn, tr = this->transform, &image = this->image]
+            for (size_t x = box.min.x; x < box.max.x; x++)
             {
-                Extents{j + box.min.y, j + box.min.y + chunk_size - 1}.for_each(
-                    [box, tr, &image, &fn](auto y)
-                    {
-                        Extents{box.min.x, box.max.x}.for_each(
-                            [y, tr, &image, &fn](auto x)
-                            {
-                                const auto coords = Indices{x, y};
-                                const auto coords_transformed =
-                                    tr.apply_inverse(coords.template as<f64>());
+                const auto coords             = Indices{x, y};
+                const auto coords_transformed = transform.apply_inverse(coords.template as<f64>());
 
-                                // image[coords].add_alpha_over(
-                                //     Color{255, 80, 200, 100});
-                                const auto col = fn(coords_transformed);
+                // image[coords].add_alpha_over(Color{255, 80, 200, 100});
+                const auto col = fn(coords_transformed);
 
-                                image[coords].add_alpha_over(col);
-                            });
-                    });
-            };
-            this->thread_pool.push_task(task);
-            j += chunk_size;
+                image[coords].add_alpha_over(col);
+            }
         }
-        // this->render();
     }
 
     void draw(Circle circle, Color color, f64 aa_factor = 1.6);
