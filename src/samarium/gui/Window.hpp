@@ -15,6 +15,8 @@
 #include "../graphics/Renderer.hpp"
 #include "../util/util.hpp"
 
+#include "Keymap.hpp"
+
 namespace sm
 {
 class Window
@@ -51,6 +53,7 @@ class Window
     };
 
     size_t frame_counter{};
+    Keymap keymap;
 
     Window(Settings settings)
         : window(sf::VideoMode(static_cast<uint32_t>(settings.dims.x),
@@ -60,6 +63,8 @@ class Window
           target_framerate{settings.framerate}
     {
         window.setFramerateLimit(settings.framerate);
+        keymap.push_back({sf::Keyboard::LControl, sf::Keyboard::Q},
+                         [&window = this->window] { window.close(); });
     }
 
     bool is_open() const;

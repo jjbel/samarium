@@ -18,15 +18,13 @@ void Window::get_input()
     {
         if (event.type == sf::Event::Closed) window.close();
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) &&
-        sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
-        window.close();
+
+    this->keymap.run();
 }
 
 void Window::draw(const Image& image)
 {
-    im.create(static_cast<uint32_t>(image.dims.x),
-              static_cast<uint32_t>(image.dims.y),
+    im.create(static_cast<uint32_t>(image.dims.x), static_cast<uint32_t>(image.dims.y),
               reinterpret_cast<const sf::Uint8*>(&image[0]));
     sftexture.loadFromImage(im);
     sfbufferSprite.setTexture(sftexture, true);
@@ -40,8 +38,5 @@ void Window::display()
     watch.reset();
 }
 
-f64 Window::current_framerate() const
-{
-    return this->watch.time().count() * 1000;
-}
+f64 Window::current_framerate() const { return this->watch.time().count() * 1000; }
 } // namespace sm

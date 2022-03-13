@@ -21,13 +21,14 @@ find_package(SFML 2.5 COMPONENTS system window graphics REQUIRED)
 find_package(fmt REQUIRED)
 
 add_library(samarium
-    ${CMAKE_CURRENT_SOURCE_DIR}/samarium/core/ThreadPool.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/samarium/util/util.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/samarium/util/file.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/samarium/util/ostream.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/samarium/graphics/Renderer.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/samarium/gui/Window.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/samarium/graphics/Trail.cpp
+    ./samarium/core/ThreadPool.cpp
+    ./samarium/util/util.cpp
+    ./samarium/util/file.cpp
+    ./samarium/util/ostream.cpp
+    ./samarium/graphics/Renderer.cpp
+    ./samarium/gui/Window.cpp
+    ./samarium/gui/Keymap.cpp
+    ./samarium/graphics/Trail.cpp
 )
 
 target_compile_features(samarium PUBLIC cxx_std_20)
