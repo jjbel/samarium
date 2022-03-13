@@ -53,7 +53,7 @@ template <typename T> class Grid
     {
     }
 
-    static auto generate(Dimensions dims, auto fn)
+    static auto generate(Dimensions dims, auto&& fn)
     {
         Grid<T> grid(dims);
         const auto beg = grid.begin();

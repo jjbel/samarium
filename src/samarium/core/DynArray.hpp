@@ -28,9 +28,9 @@ template <typename T> class DynArray
     using size_type       = std::size_t;
 
     // Constructors
-    explicit DynArray(size_t size_ = {}) : m_size(size_), data(new T[size_]{}) {} // NOSONAR
+    explicit DynArray(size_t size_ = {}) : data(new T[size_]{}), m_size(size_) {} // NOSONAR
 
-    explicit DynArray(size_t size_, T init_value) : m_size(size_), data(new T[size_]) // NOSONAR
+    explicit DynArray(size_t size_, T init_value) : data(new T[size_]), m_size(size_)
     {
         std::fill(std::execution::par_unseq, &this->data[0], &this->data[size_], init_value);
     }
@@ -92,7 +92,7 @@ template <typename T> class DynArray
     ~DynArray() { delete[] data; }
 
   private:
-    const size_t m_size;
     T* data;
+    const size_t m_size;
 };
 } // namespace sm

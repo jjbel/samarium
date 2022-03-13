@@ -19,19 +19,19 @@ namespace sm
 {
 struct RGB_t
 {
-    constexpr static auto length = size_t{3};
+    constexpr static auto length = 3ul;
 };
 struct RGBA_t
 {
-    constexpr static auto length = size_t{4};
+    constexpr static auto length = 4ul;
 };
 struct BGR_t
 {
-    constexpr static auto length = size_t{3};
+    constexpr static auto length = 3ul;
 };
 struct BGRA_t
 {
-    constexpr static auto length = size_t{4};
+    constexpr static auto length = 4ul;
 };
 
 constexpr inline auto rgb  = RGB_t{};
