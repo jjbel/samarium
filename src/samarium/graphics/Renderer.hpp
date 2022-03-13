@@ -40,7 +40,6 @@ class Renderer
     }
 
     // -----------------MEMBERS---------------//
-    std::mutex m;
     Image image;
     Transform transform{.pos   = image.dims.as<f64>() / 2.,
                         .scale = Vector2{10, 10} * Vector2{1.0, -1.0}};
@@ -81,15 +80,13 @@ class Renderer
                                         ? height / current_thread_count + 1
                                         : height / current_thread_count;
 
-            const auto task =
-                [chunk_size, j, box, fn, tr = this->transform, &image = this->image, &m = this->m]
+            const auto task = [chunk_size, j, box, fn, tr = this->transform, &image = this->image]
             {
-                // std::scoped_lock lock1{m};
                 Extents{j + box.min.y, j + box.min.y + chunk_size - 1}.for_each(
-                    [box, tr, &image, &fn, &m](auto y)
+                    [box, tr, &image, &fn](auto y)
                     {
                         Extents{box.min.x, box.max.x}.for_each(
-                            [y, tr, &image, &fn, &m](auto x)
+                            [y, tr, &image, &fn](auto x)
                             {
                                 const auto coords = Indices{x, y};
                                 const auto coords_transformed =

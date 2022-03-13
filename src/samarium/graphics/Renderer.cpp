@@ -33,9 +33,9 @@ void Renderer::draw(const Particle& particle, Color color, f64 aa_factor)
 void Renderer::draw_line_segment(const LineSegment& ls, Color color, f64 thickness, f64 aa_factor)
 {
     const auto vector = ls.vector().abs();
-    const auto extra  = 2 * aa_factor;
+    const auto extra  = 2 * (aa_factor + thickness);
     this->draw(
-        [&ls, color, thickness, aa_factor](const Vector2& coords)
+        [color, &ls, thickness, aa_factor](const Vector2& coords)
         { return rasterize(color, math::clamped_distance(coords, ls), thickness, aa_factor); },
         Rect<f64>::from_centre_width_height((ls.p1 + ls.p2) / 2.0, vector.x + extra,
                                             vector.y + extra));
