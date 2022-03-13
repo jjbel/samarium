@@ -53,12 +53,14 @@ template <typename T> class Grid
     {
     }
 
-    static auto generate(Dimensions dims, auto&& fn)
+    template <typename Function>
+    requires std::invocable<Function, Indices>
+    static auto generate(Dimensions dims, Function&& fn)
     {
         Grid<T> grid(dims);
         const auto beg = grid.begin();
         std::for_each(beg, grid.end(),
-                      [fn = std::move(fn), beg](auto& element)
+                      [fn = std::forward<Function>(fn), beg](auto& element)
                       { element = fn(convert_1d_to_2d(&element - beg)); });
     }
 
