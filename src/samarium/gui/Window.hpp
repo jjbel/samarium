@@ -7,20 +7,17 @@
 
 #pragma once
 
-#include <chrono>
-#include <thread>
-
-#include "SFML/Graphics.hpp"
-
 #include "../graphics/Renderer.hpp"
 #include "../util/util.hpp"
 
 #include "Keymap.hpp"
+#include "Mouse.hpp"
 
 namespace sm
 {
 class Window
 {
+    // --------MEMBER VARS--------
     sf::Image im;
     sf::Texture sftexture;
     sf::Sprite sfbufferSprite;
@@ -29,6 +26,12 @@ class Window
     size_t target_framerate{};
 
   public:
+    size_t frame_counter{};
+    Keymap keymap;
+    Mouse mouse{window};
+
+
+    // --------MEMBER TYPES--------
     struct Settings
     {
         Dimensions dims{sm::dimsFHD};
@@ -52,18 +55,17 @@ class Window
         }
     };
 
-    size_t frame_counter{};
-    Keymap keymap;
+    // --------MEMBER FUNCTIONS--------
 
     Window(Settings settings)
-        : window(sf::VideoMode(static_cast<uint32_t>(settings.dims.x),
-                               static_cast<uint32_t>(settings.dims.y)),
-                 settings.name,
-                 sf::Style::Titlebar | sf::Style::Close),
+        : window(
+              sf::VideoMode(static_cast<u32>(settings.dims.x), static_cast<u32>(settings.dims.y)),
+              settings.name,
+              sf::Style::Titlebar | sf::Style::Close),
           target_framerate{settings.framerate}
     {
         window.setFramerateLimit(settings.framerate);
-        keymap.push_back({sf::Keyboard::LControl, sf::Keyboard::Q},
+        keymap.push_back({sf::Keyboard::LControl, sf::Keyboard::Q}, // exit by default with Ctrl+Q
                          [&window = this->window] { window.close(); });
     }
 
@@ -75,7 +77,7 @@ class Window
 
     void display();
 
-    template <std::invocable T> void run(Renderer& rn, T&& call_every_frame)
+    template <std::invocable Function> void run(Renderer& rn, Function&& call_every_frame)
     {
         while (this->is_open())
         {
@@ -84,8 +86,12 @@ class Window
         }
     }
 
-    template <typename T, typename U>
-    void run(Renderer& rn, T&& update, U&& draw, size_t substeps = 1, size_t frame_limit = 1000)
+    template <typename UpdateFunction, typename DrawFunction>
+    void run(Renderer& rn,
+             UpdateFunction&& update,
+             DrawFunction&& draw,
+             size_t substeps    = 1,
+             size_t frame_limit = 1000)
     {
         while (this->is_open() and this->frame_counter < frame_limit)
         {
@@ -100,5 +106,9 @@ class Window
     }
 
     f64 current_framerate() const;
+
+    f64 time_delta() const;
+
+    const sf::Window& sf_window() const;
 };
 } // namespace sm

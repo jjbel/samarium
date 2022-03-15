@@ -20,6 +20,11 @@ namespace sm::math
     return (p1 - p2).length();
 }
 
+[[nodiscard]] constexpr auto distance_sq(Vector2 p1, Vector2 p2) noexcept
+{
+    return (p1 - p2).length_sq();
+}
+
 [[nodiscard]] constexpr auto lerp_along(Vector2 point, const LineSegment& ls) noexcept
 {
     return Vector2::dot(point - ls.p1, ls.vector()) / ls.length_sq();

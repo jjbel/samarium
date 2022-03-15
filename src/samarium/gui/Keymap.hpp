@@ -5,8 +5,8 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
-#include <vector>
 #include <functional>
+#include <vector>
 
 #include "SFML/Window/Keyboard.hpp"
 
@@ -18,24 +18,27 @@ class Keymap
     using Action_t = std::function<void()>;
 
     std::vector<Keys_t> map;
-    std::vector<Action_t> functions;
+    std::vector<Action_t> actions;
 
   public:
     Keymap() = default;
 
     Keymap(std::vector<std::pair<Keys_t, Action_t>>&& _)
     {
+        map.reserve(_.size());
+        actions.reserve(_.size());
+
         for (auto&& i : _)
         {
             map.push_back(i.first);
-            functions.push_back(i.second);
+            actions.push_back(i.second);
         }
     }
 
     template <typename Fn> void push_back(Keys_t keys, Fn&& fn) requires std::invocable<Fn>
     {
         map.push_back(keys);
-        functions.emplace_back(fn);
+        actions.emplace_back(fn);
     }
 
     void clear();

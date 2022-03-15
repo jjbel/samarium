@@ -12,7 +12,7 @@ namespace sm
 void Keymap::clear()
 {
     this->map.clear();
-    this->functions.clear();
+    this->actions.clear();
 }
 
 void Keymap::run() const
@@ -24,7 +24,7 @@ void Keymap::run() const
             if (!sf::Keyboard::isKeyPressed(key)) return;
         }
 
-        functions[i]();
+        actions[i]();
     }
 }
 } // namespace sm

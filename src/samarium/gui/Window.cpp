@@ -20,6 +20,7 @@ void Window::get_input()
     }
 
     this->keymap.run();
+    this->mouse.update(this->window);
 }
 
 void Window::draw(const Image& image)
@@ -39,4 +40,9 @@ void Window::display()
 }
 
 f64 Window::current_framerate() const { return this->watch.time().count() * 1000; }
+
+const sf::Window& Window::sf_window() const { return this->window; }
+
+f64 Window::time_delta() const { return 1.0 / static_cast<f64>(this->target_framerate); }
+
 } // namespace sm

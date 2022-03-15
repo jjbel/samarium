@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "fmt/format.h"
+#include "fmt/color.h"
 
 #include "math.hpp"
 
@@ -219,7 +219,7 @@ template <sm::concepts::Number T> class fmt::formatter<sm::Vector2_t<T>>
     {
         return format_to(
             ctx.out(),
-            (std::is_floating_point<T>::value ? "Vec({: 6.3f}, {: 6.3f})" : "Vec({:>3}, {:>3})"),
+            (std::is_floating_point<T>::value ? "\033[1mVec\033[0m({: 6.3f}, {: 6.3f})" : "Vec({:>3}, {:>3})"),
             p.x, p.y);
     }
 };

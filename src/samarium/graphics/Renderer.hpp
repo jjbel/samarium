@@ -97,9 +97,18 @@ class Renderer
 
     void draw(const Trail& trail,
               concepts::Interpolator auto&& fn,
-              f64 fade_factor = 1.0,
-              f64 radius      = 1.0,
-              f64 aa_factor   = 0.1);
+              f64 radius    = 1.0,
+              f64 aa_factor = 0.1)
+    {
+        const auto mapper =
+            interp::make_mapper<f64>({0.0, static_cast<double>(trail.size())}, {0.0, 1.0});
+
+        for (double i = 0.0; const auto& pos : trail.span())
+        {
+            this->draw(Circle{pos, radius}, fn(mapper(i)), aa_factor);
+            i += 1.0;
+        }
+    }
 
     void draw_line_segment(const LineSegment& ls,
                            Color color   = Color{255, 255, 255},

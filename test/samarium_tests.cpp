@@ -8,8 +8,11 @@
 #include "../src/samarium/graphics/colors.hpp"
 #include "../src/samarium/graphics/gradients.hpp"
 #include "../src/samarium/gui/Window.hpp"
-#include "../src/samarium/physics/Dual.hpp"
+#include "../src/samarium/gui/sfml.hpp"
+#include "../src/samarium/math/Dual.hpp"
 #include "../src/samarium/physics/collision.hpp"
+
+using sm::print;
 
 #if 1
 
@@ -28,9 +31,6 @@ void App()
         sm::Particle{.vel = {30, 96}, .radius = 2.8, .mass = 3.0, .color = sm::Color{255, 0, 0}}};
     auto t = sm::Trail{200};
 
-    sm::util::Stopwatch watch{};
-    auto sum = 0.0;
-
     const auto update = [&](auto delta)
     {
         delta /= 4.0;
@@ -39,28 +39,37 @@ void App()
         for (auto&& i : viewport_box) sm::phys::collide(ball, i);
     };
 
+    auto window = sm::Window{{.dims = rn.image.dims, .name = "Collision", .framerate = 64}};
+
     const auto tmp = [](sm::util::Stopwatch& w)
     {
-        const auto r = 1.0 / w.time().count();
-        fmt::print(stderr, "{:4.2f}\n",
-                   r); // print to stderr for no line buffering
+        const auto seconds = 1.0 / w.time().count();
+
+        // print to stderr for no line buffering
+        fmt::print(stderr, "{:4.2f}\n", seconds);
         w.reset();
-        return r;
+        return seconds;
     };
 
     const auto draw = [&]
     {
         rn.fill(sm::Color{16, 18, 20});
         t.push_back(ball.now.pos);
-        rn.draw(t, sm::Color{66, 149, 245}, 1.0);
+        rn.draw(t, sm::gradients::heat, 0.3);
         rn.draw(ball.now);
         rn.render();
-        // sum += tmp(watch);
+
+        if (window.mouse.left)
+        {
+            const auto mouse_pos = rn.transform.apply_inverse(window.mouse.pos.now);
+            if (sm::math::distance_sq(mouse_pos, ball.now.pos) <= ball->radius * ball->radius)
+                ball.now.pos += window.mouse.vel() / rn.transform.scale;
+            else
+                rn.transform.pos += window.mouse.vel().as<sm::f64>();
+        }
     };
 
-    auto window = sm::Window{{.dims = rn.image.dims, .name = "Collision", .framerate = 64}};
-    window.run(rn, update, draw, 40, 300);
-    // sm::print("Average: ", sum\);
+    window.run(rn, update, draw, 40, 70000);
 }
 
 #else

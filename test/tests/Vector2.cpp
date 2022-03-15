@@ -14,13 +14,6 @@ using namespace boost::ut;
 
 boost::ut::suite _Vector2 = []
 {
-    "util.format.Vector2"_test = []
-    {
-        using namespace std::literals;
-        expect(fmt::format("{}", sm::Vector2{2, 3}) == "Vec( 2.000,  3.000)"s);
-        expect(fmt::format("{}", sm::Indices{2, 3}) == "Vec(  2,   3)"s);
-    };
-
     "math.Vector2.literals"_test = []
     {
         using namespace sm::literals;
@@ -38,7 +31,7 @@ boost::ut::suite _Vector2 = []
     {
         static_assert(std::is_same_v<sm::Vector2::value_type, sm::f64>);
 
-        should("x vector") = [] 
+        should("x vector") = []
         {
             const auto a = sm::Vector2{1.0, 0.0};
             expect(sm::math::almost_equal(a.length(), 1.0));
@@ -47,7 +40,7 @@ boost::ut::suite _Vector2 = []
             expect(sm::math::almost_equal(a.slope(), 0.0));
         };
 
-        should("xy vector") = [] 
+        should("xy vector") = []
         {
             const auto b = sm::Vector2{1.0, 1.0};
             expect(sm::math::almost_equal(b.length(), std::sqrt(2.0)));
@@ -56,7 +49,7 @@ boost::ut::suite _Vector2 = []
             expect(sm::math::almost_equal(b.slope(), 1.0));
         };
 
-        should("y vector") = [] 
+        should("y vector") = []
         {
             const auto c = sm::Vector2{0.0, 1.0};
             expect(sm::math::almost_equal(c.length(), 1.0));
@@ -78,43 +71,42 @@ boost::ut::suite _Vector2 = []
         {
             should("free") = []
             {
-                const auto a = sm::math::intersection({{-1.0, 0.0}, {1.0, 0.0}},
-                                                      {{0.0, 1.0}, {0.0, -1.0}});
+                const auto a =
+                    sm::math::intersection({{-1.0, 0.0}, {1.0, 0.0}}, {{0.0, 1.0}, {0.0, -1.0}});
                 expect(a.has_value());
                 expect(*a == sm::Vector2{});
 
-                const auto b = sm::math::intersection({{-1.0, -1.0}, {1.0, 1.0}},
-                                                      {{1.0, -1.0}, {-1.0, 1.0}});
+                const auto b =
+                    sm::math::intersection({{-1.0, -1.0}, {1.0, 1.0}}, {{1.0, -1.0}, {-1.0, 1.0}});
                 expect(b.has_value());
                 expect(*b == sm::Vector2{});
 
-                const auto c = sm::math::intersection({{}, {0.0, 1.0}},
-                                                      {{1.0, 0.0}, {1.0, 1.0}});
+                const auto c = sm::math::intersection({{}, {0.0, 1.0}}, {{1.0, 0.0}, {1.0, 1.0}});
                 expect(!c.has_value());
             };
 
             should("clamped") = []
             {
-                const auto a = sm::math::clamped_intersection(
-                    {{-1.0, 0.0}, {1.0, 0.0}}, {{0.0, 1.0}, {0.0, -1.0}});
+                const auto a = sm::math::clamped_intersection({{-1.0, 0.0}, {1.0, 0.0}},
+                                                              {{0.0, 1.0}, {0.0, -1.0}});
                 expect(a.has_value());
                 expect(*a == sm::Vector2{});
 
-                const auto b = sm::math::clamped_intersection(
-                    {{-1.0, -1.0}, {1.0, 1.0}}, {{1.0, -1.0}, {-1.0, 1.0}});
+                const auto b = sm::math::clamped_intersection({{-1.0, -1.0}, {1.0, 1.0}},
+                                                              {{1.0, -1.0}, {-1.0, 1.0}});
                 expect(b.has_value());
                 expect(*b == sm::Vector2{});
 
-                const auto c = sm::math::clamped_intersection(
-                    {{-1.0, -1.0}, {-0.5, -0.5}}, {{1.0, -1.0}, {0.5, -0.5}});
+                const auto c = sm::math::clamped_intersection({{-1.0, -1.0}, {-0.5, -0.5}},
+                                                              {{1.0, -1.0}, {0.5, -0.5}});
                 expect(!c.has_value());
 
-                const auto d = sm::math::clamped_intersection(
-                    {{-1.0, 0.0}, {-0.5, 0.0}}, {{0.0, 1.0}, {0.0, 0.5}});
+                const auto d = sm::math::clamped_intersection({{-1.0, 0.0}, {-0.5, 0.0}},
+                                                              {{0.0, 1.0}, {0.0, 0.5}});
                 expect(!d.has_value());
 
-                const auto e = sm::math::clamped_intersection(
-                    {{}, {0.0, 1.0}}, {{1.0, 0.0}, {1.0, 1.0}});
+                const auto e =
+                    sm::math::clamped_intersection({{}, {0.0, 1.0}}, {{1.0, 0.0}, {1.0, 1.0}});
                 expect(!e.has_value());
             };
         };
@@ -124,15 +116,13 @@ boost::ut::suite _Vector2 = []
             should("Circle") = []
             {
                 expect(sm::math::area(sm::Circle{}) == 0.0_d);
-                expect(sm::math::area(sm::Circle{.radius = 12.0}) ==
-                       452.3893421169302_d);
+                expect(sm::math::area(sm::Circle{.radius = 12.0}) == 452.3893421169302_d);
             };
 
             should("Rect") = []
             {
                 expect(sm::math::area(sm::Rect<double>{}) == 0.0_d);
-                expect(sm::math::area(sm::Rect<double>{
-                           {-10.0, -11.0}, {12.0, 13.0}}) == 528.0_d);
+                expect(sm::math::area(sm::Rect<double>{{-10.0, -11.0}, {12.0, 13.0}}) == 528.0_d);
             };
         };
     };

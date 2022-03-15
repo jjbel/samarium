@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <utility> // for std::forward
+
 namespace sm
 {
 template <typename T> struct Dual
