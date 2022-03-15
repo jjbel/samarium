@@ -67,10 +67,10 @@ void App()
             else
                 rn.transform.pos += window.mouse.vel().as<sm::f64>();
         }
-        fmt::print(stderr, "{}: ", window.frame_counter);
+        fmt::print(stderr, "Frame {}: ", window.frame_counter);
     };
 
-    window.run(rn, update, draw, 40, 70000);
+    window.run(rn, update, draw, 40, 700);
 }
 
 #else
