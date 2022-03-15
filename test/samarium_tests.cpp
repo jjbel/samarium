@@ -41,7 +41,7 @@ void App()
 
     auto window = sm::Window{{.dims = rn.image.dims, .name = "Collision", .framerate = 64}};
 
-    const auto tmp = [](sm::util::Stopwatch& w)
+    /* const auto tmp = [](sm::util::Stopwatch& w)
     {
         const auto seconds = 1.0 / w.time().count();
 
@@ -49,7 +49,7 @@ void App()
         fmt::print(stderr, "{:4.2f}\n", seconds);
         w.reset();
         return seconds;
-    };
+    }; */
 
     const auto draw = [&]
     {
@@ -67,6 +67,7 @@ void App()
             else
                 rn.transform.pos += window.mouse.vel().as<sm::f64>();
         }
+        fmt::print(stderr, "{}: ", window.frame_counter);
     };
 
     window.run(rn, update, draw, 40, 70000);
@@ -130,7 +131,6 @@ void App()
         tmp(watch);
     };
 
-    run_every_frame();
     auto window = sm::Window{{rn.image.dims, "Collision", 60}};
     window.run(rn, run_every_frame);
 }

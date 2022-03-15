@@ -10,12 +10,32 @@
 #include <array>
 
 #include "../math/interp.hpp"
+#include "../util/print.hpp"
 
 #include "Color.hpp"
 
 namespace sm
 {
-template <size_t size> class Gradient;
+template <size_t size> class Gradient
+{
+    std::array<Color, size> colors;
+
+  public:
+    explicit constexpr Gradient(std::array<Color, size> colors_) : colors(colors_) {}
+
+    [[nodiscard]] auto operator()(f64 factor) const
+    {
+        const auto mapped = factor * (size - 1ul) + 0.01;
+        // TODO the +0.1 prevents the map range from dividing by 0
+
+        const auto lower = static_cast<size_t>(mapped);            // static_cast rounds down
+        const auto upper = static_cast<size_t>(std::ceil(mapped)); // round up
+        const auto mapped_factor =
+            interp::map_range<f64>(mapped, {std::floor(mapped), std::ceil(mapped)}, {0.0, 1.0});
+
+        return interp::lerp_rgb(mapped_factor, colors[lower], colors[upper]);
+    }
+};
 
 template <> class Gradient<2>
 {
@@ -23,7 +43,8 @@ template <> class Gradient<2>
     Color to{};
 
   public:
-    constexpr Gradient(Color from_, Color to_) : from{from_}, to{to_} {}
+    explicit constexpr Gradient(std::array<Color, 2> colors) : from{colors[0]}, to{colors[1]} {}
+
     constexpr auto operator()(f64 factor) const { return interp::lerp_rgb(factor, from, to); }
 };
 
@@ -34,7 +55,11 @@ template <> class Gradient<3>
     Color to{};
 
   public:
-    constexpr Gradient(Color from_, Color mid_, Color to_) : from{from_}, mid{mid_}, to{to_} {}
+    explicit constexpr Gradient(std::array<Color, 3> colors)
+        : from{colors[0]}, mid{colors[1]}, to{colors[2]}
+    {
+    }
+
     constexpr auto operator()(f64 factor) const
     {
         factor = Extents<f64>{0.0, 1.0}.clamp(factor);

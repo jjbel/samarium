@@ -28,10 +28,10 @@ class Keymap
         map.reserve(_.size());
         actions.reserve(_.size());
 
-        for (auto&& i : _)
+        for (auto&& [key, action] : _)
         {
-            map.push_back(i.first);
-            actions.push_back(i.second);
+            map.push_back(key);
+            actions.push_back(action);
         }
     }
 

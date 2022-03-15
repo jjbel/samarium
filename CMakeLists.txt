@@ -38,3 +38,6 @@ add_test(NAME SamariumTests COMMAND samarium_tests)
 option(GENERATE_COVERAGE "Generate coverage reports" FALSE)
 include(coverage)
 generate_coverage(samarium_tests)
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
