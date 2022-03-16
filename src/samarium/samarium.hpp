@@ -10,6 +10,7 @@
 #include "./core/version.hpp"
 #include "./gui/Window.hpp"
 #include "./physics/collision.hpp"
+#include "./util/Stopwatch.hpp"
 #include "./util/file.hpp"
 #include "./util/random.hpp"
 #include "./util/terminal_dims.hpp"

@@ -25,6 +25,7 @@ add_library(samarium
     ./samarium/util/util.cpp
     ./samarium/util/file.cpp
     ./samarium/util/ostream.cpp
+    ./samarium/util/Stopwatch.cpp
     ./samarium/graphics/Renderer.cpp
     ./samarium/gui/Keymap.cpp
     ./samarium/gui/Mouse.cpp

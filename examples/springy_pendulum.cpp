@@ -11,12 +11,9 @@
 
 auto tmp(sm::util::Stopwatch& watch)
 {
-    // fmt::print(stderr, "\r{:>{}}", "",
-    //            sm::util::get_terminal_dims()
-    //                .x); // clear line by padding spaces to width of
-    //                terminal
-    fmt::print(stderr, "{:4.2f}\n",
-               1.0 / watch.time().count()); // print to stderr for no line buffering
+    // print to stderr for no line buffering
+    fmt::print(stderr, "{:4.2f}\n", 1.0 / watch.time().count());
+
     watch.reset();
 }
 

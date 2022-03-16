@@ -29,20 +29,4 @@ namespace sm::util
 }
 
 std::string get_date_filename(const std::string& extension);
-
-class Stopwatch
-{
-  public:
-    std::chrono::steady_clock::time_point start{std::chrono::steady_clock::now()};
-
-    auto reset() { start = std::chrono::steady_clock::now(); }
-
-    auto time() const
-    {
-        const auto finish = std::chrono::steady_clock::now();
-        return std::chrono::duration_cast<std::chrono::duration<f64>>(finish - start);
-    }
-
-    auto print() const { fmt::print("Took {:.3}ms\n", this->time().count() * 1000); }
-};
 } // namespace sm::util

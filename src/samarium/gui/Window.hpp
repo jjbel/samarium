@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "../graphics/Renderer.hpp"
-#include "../util/util.hpp"
+#include "../graphics/Renderer.hpp" // for Renderer
+#include "../util/Stopwatch.hpp"    // for Stopwatch
 
 #include "Keymap.hpp"
 #include "Mouse.hpp"

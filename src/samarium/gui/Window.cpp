@@ -13,10 +13,18 @@ bool Window::is_open() const { return window.isOpen(); }
 
 void Window::get_input()
 {
+    this->mouse.scroll_amount = 0.0;
+
     sf::Event event;
     while (window.pollEvent(event))
     {
-        if (event.type == sf::Event::Closed) window.close();
+        if (event.type == sf::Event::Closed) { window.close(); }
+        else if (event.type == sf::Event::MouseWheelScrolled &&
+                 event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel)
+        {
+            print("Scroll", event.mouseWheelScroll.delta);
+            this->mouse.scroll_amount = event.mouseWheelScroll.delta;
+        }
     }
 
     this->keymap.run();

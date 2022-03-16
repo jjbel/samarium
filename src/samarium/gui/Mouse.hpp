@@ -21,6 +21,7 @@ struct Mouse
     };
 
     Dual<Vector2> pos;
+    f64 scroll_amount{};
     bool left;
     bool middle;
     bool right;
