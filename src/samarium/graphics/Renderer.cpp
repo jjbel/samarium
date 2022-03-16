@@ -62,6 +62,7 @@ void Renderer::draw(const Trail& trail, Color color, f64 fade_factor, f64 radius
 std::array<LineSegment, 4> Renderer::viewport_box() const
 {
     const auto double_dims = this->image.dims.as<f64>();
+
     return std::array{this->transform.apply_inverse(LineSegment{{}, {0.0, double_dims.y}}),
                       this->transform.apply_inverse(LineSegment{{}, {double_dims.x, 0.0}}),
                       this->transform.apply_inverse(

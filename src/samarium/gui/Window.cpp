@@ -27,14 +27,15 @@ void Window::get_input()
         }
     }
 
+
     this->keymap.run();
     this->mouse.update(this->window);
 }
 
 void Window::draw(const Image& image)
 {
-    im.create(static_cast<uint32_t>(image.dims.x), static_cast<uint32_t>(image.dims.y),
-              reinterpret_cast<const sf::Uint8*>(&image[0]));
+    im.create(static_cast<u32>(image.dims.x), static_cast<u32>(image.dims.y),
+              reinterpret_cast<const u8*>(image.begin()));
     sftexture.loadFromImage(im);
     sfbufferSprite.setTexture(sftexture, true);
 }
@@ -43,7 +44,7 @@ void Window::display()
 {
     window.draw(sfbufferSprite);
     window.display();
-    ++frame_counter;
+    frame_counter++;
     watch.reset();
 }
 
