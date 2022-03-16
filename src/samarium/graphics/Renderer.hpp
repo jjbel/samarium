@@ -44,7 +44,8 @@ class Renderer
     Transform transform{.pos   = image.dims.as<f64>() / 2.,
                         .scale = Vector2{10, 10} * Vector2{1.0, -1.0}};
 
-    Renderer(const Image& image_, u32 thread_count_ = std::thread::hardware_concurrency())
+    Renderer(const Image& image_ = sm::Image{sm::dimsFHD},
+             u32 thread_count_   = std::thread::hardware_concurrency())
         : image{image_}, thread_count{thread_count_}, thread_pool{thread_count_}
 
     {
