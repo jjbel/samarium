@@ -54,8 +54,8 @@ namespace sm::math
 
 [[nodiscard]] constexpr auto distance(Vector2 point, const LineSegment& ls) noexcept
 {
-    const auto l2 = ls.length_sq();
-    if (almost_equal(l2, 0.)) return distance(point, ls.p1); // p1 == p2 case
+    if (almost_equal(ls.length_sq(), 0.0)) return distance(point, ls.p1); // p1 == p2 case
+
     return distance(point, project(point, ls));
 }
 
@@ -80,7 +80,7 @@ namespace sm::math
     const auto denom1_is_0 = almost_equal(denom1, 0.0);
     const auto denom2_is_0 = almost_equal(denom2, 0.0);
 
-    if (denom1_is_0 and denom2_is_0) return std::nullopt;
+    if (denom1_is_0 && denom2_is_0) return std::nullopt;
 
     if (denom1_is_0)
         return std::optional{Vector2{l1.p1.x, l2.slope() * (l1.p1.x - l2.p1.x) + l2.p1.y}};
@@ -101,7 +101,7 @@ namespace sm::math
 {
     const auto point = intersection(l1, l2);
     if (!point) return std::nullopt;
-    if (lies_in_segment(*point, l1) and lies_in_segment(*point, l2)) { return point; }
+    if (lies_in_segment(*point, l1) && lies_in_segment(*point, l2)) { return point; }
     else
     {
         return std::nullopt;

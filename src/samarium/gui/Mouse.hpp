@@ -25,7 +25,7 @@ struct Mouse
     bool middle;
     bool right;
 
-    Mouse(const sf::Window& window) { this->update(window); }
+    explicit Mouse(const sf::Window& window) { this->update(window); }
 
     void update(const sf::Window& window);
 

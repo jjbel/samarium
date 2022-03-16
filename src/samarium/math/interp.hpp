@@ -78,7 +78,7 @@ template <typename T, typename Output_t = T>
 template <typename T, typename Output_t = T>
 [[nodiscard]] constexpr auto make_mapper(Extents<T> from, Extents<T> to)
 {
-    return [from_min = from.min, from_max = from.max, from_range = from.size(),
+    return [from_min = from.min, from_range = from.size(),
             to_range = to.size(), to_min = to.min](T value)
     { return static_cast<Output_t>(to_min + (value - from_min) * to_range / from_range); };
 }

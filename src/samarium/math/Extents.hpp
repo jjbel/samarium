@@ -24,7 +24,7 @@ template <concepts::Arithmetic T> class Extents
 
     [[nodiscard]] constexpr auto size() const { return max - min; }
 
-    [[nodiscard]] constexpr auto contains(T value) const { return min <= value and value <= max; }
+    [[nodiscard]] constexpr auto contains(T value) const { return min <= value && value <= max; }
 
     [[nodiscard]] constexpr auto clamp(T value) const
     {

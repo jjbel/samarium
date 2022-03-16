@@ -23,19 +23,19 @@ class Keymap
   public:
     Keymap() = default;
 
-    Keymap(std::vector<std::pair<Keys_t, Action_t>>&& _)
+    explicit Keymap(std::vector<std::pair<Keys_t, Action_t>>&& input_keymap)
     {
-        map.reserve(_.size());
-        actions.reserve(_.size());
+        map.reserve(input_keymap.size());
+        actions.reserve(input_keymap.size());
 
-        for (auto&& [key, action] : _)
+        for (const auto& [key, action] : input_keymap)
         {
             map.push_back(key);
             actions.push_back(action);
         }
     }
 
-    template <typename Fn> void push_back(Keys_t keys, Fn&& fn) requires std::invocable<Fn>
+    void push_back(const Keys_t& keys, std::invocable auto&& fn)
     {
         map.push_back(keys);
         actions.emplace_back(fn);

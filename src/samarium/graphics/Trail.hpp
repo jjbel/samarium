@@ -21,7 +21,7 @@ class Trail
   public:
     const size_t max_length;
 
-    explicit Trail(size_t length = 50) : trail(), max_length{length} { trail.reserve(length); }
+    explicit Trail(size_t length = 50) : max_length{length} { trail.reserve(length); }
 
     size_t size() const;
 

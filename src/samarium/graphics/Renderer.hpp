@@ -22,7 +22,7 @@ namespace concepts
 {
 // takes a const Vector2& and returns a Color
 template <typename T>
-concept DrawableLambda = std::is_invocable_r<Color, T, const Vector2&>::value;
+concept DrawableLambda = std::is_invocable_r_v<Color, T, const Vector2&>;
 } // namespace concepts
 
 class Renderer
@@ -66,7 +66,7 @@ class Renderer
                              .clamped_to(image.rect().template as<f64>())
                              .template as<size_t>();
 
-        if (math::area(box) == 0ul) return;
+        if (math::area(box) == 0UL) return;
 
         for (size_t y = box.min.y; y < box.max.y; y++)
         {

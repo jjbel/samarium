@@ -47,7 +47,7 @@ template <concepts::Number T = f64> struct Rect
 
     [[nodiscard]] constexpr auto contains(Vector2_t<T> vec) const noexcept
     {
-        return vec.x >= min.x and vec.x <= max.x and vec.y >= min.y && vec.y <= max.y;
+        return vec.x >= min.x && vec.x <= max.x && vec.y >= min.y && vec.y <= max.y;
     }
 
     [[nodiscard]] constexpr auto clamped_to(Rect<T> bounds) const

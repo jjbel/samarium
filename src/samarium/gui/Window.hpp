@@ -57,7 +57,7 @@ class Window
 
     // --------MEMBER FUNCTIONS--------
 
-    Window(Settings settings)
+    Window(const Settings& settings)
         : window(
               sf::VideoMode(static_cast<u32>(settings.dims.x), static_cast<u32>(settings.dims.y)),
               settings.name,
@@ -77,7 +77,7 @@ class Window
 
     void display();
 
-    template <std::invocable Function> void run(Renderer& rn, Function&& call_every_frame)
+    void run(Renderer& rn, std::invocable auto&& call_every_frame)
     {
         while (this->is_open())
         {
@@ -93,7 +93,7 @@ class Window
              size_t substeps    = 1,
              size_t frame_limit = 1000)
     {
-        while (this->is_open() and this->frame_counter < frame_limit)
+        while (this->is_open() && this->frame_counter < frame_limit)
         {
             const auto wm = Manager(*this, rn);
             for (size_t i = 0; i < substeps; i++)

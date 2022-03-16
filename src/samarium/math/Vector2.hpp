@@ -116,7 +116,7 @@ template <concepts::Number T> class Vector2_t
         return to.angle() - from.angle();
     }
 
-    constexpr auto rotate(f64 amount) { *this = this->with_angle(this->angle() + amount); }
+    constexpr void rotate(f64 amount) { *this = this->with_angle(this->angle() + amount); }
 
     [[nodiscard]] constexpr auto rotated_by(f64 amount) const
     {
@@ -125,22 +125,27 @@ template <concepts::Number T> class Vector2_t
         return temp;
     }
 
-    constexpr auto reflect(Vector2_t<T> vec) noexcept
+    constexpr void reflect(Vector2_t<T> vec) noexcept
     {
         this->rotate(2 * angle_between(*this, vec));
+    }
+
+    [[nodiscard]] constexpr auto is_zero() const noexcept
+    {
+        return math::almost_equal(this->length_sq(), 0.0);
     }
 };
 
 template <concepts::FloatingPoint T>
 [[nodiscard]] constexpr bool operator==(const Vector2_t<T>& lhs, const Vector2_t<T>& rhs) noexcept
 {
-    return math::almost_equal(lhs.x, rhs.x) and math::almost_equal(lhs.y, rhs.y);
+    return math::almost_equal(lhs.x, rhs.x) && math::almost_equal(lhs.y, rhs.y);
 }
 
 template <concepts::Integral T>
 [[nodiscard]] constexpr bool operator==(const Vector2_t<T>& lhs, const Vector2_t<T>& rhs) noexcept
 {
-    return lhs.x == rhs.x and lhs.y == rhs.y;
+    return lhs.x == rhs.x && lhs.y == rhs.y;
 }
 
 template <concepts::Number T>
@@ -217,9 +222,9 @@ template <sm::concepts::Number T> class fmt::formatter<sm::Vector2_t<T>>
 
     template <typename FormatContext> auto format(const sm::Vector2_t<T>& p, FormatContext& ctx)
     {
-        return format_to(
-            ctx.out(),
-            (std::is_floating_point<T>::value ? "\033[1mVec\033[0m({: 6.3f}, {: 6.3f})" : "Vec({:>3}, {:>3})"),
-            p.x, p.y);
+        return format_to(ctx.out(),
+                         (std::is_floating_point<T>::value ? "\033[1mVec\033[0m({: 6.3f}, {: 6.3f})"
+                                                           : "Vec({:>3}, {:>3})"),
+                         p.x, p.y);
     }
 };

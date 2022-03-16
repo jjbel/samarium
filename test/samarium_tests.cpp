@@ -55,7 +55,7 @@ void App()
     {
         rn.fill(sm::Color{16, 18, 20});
         t.push_back(ball.now.pos);
-        rn.draw(t, sm::gradients::heat, 0.3);
+        rn.draw(t, sm::gradients::rainbow, 0.3);
         rn.draw(ball.now);
         rn.render();
 
@@ -64,10 +64,10 @@ void App()
             const auto mouse_pos = rn.transform.apply_inverse(window.mouse.pos.now);
             if (sm::math::distance_sq(mouse_pos, ball.now.pos) <= ball->radius * ball->radius)
                 ball.now.pos += window.mouse.vel() / rn.transform.scale;
-            else
-                rn.transform.pos += window.mouse.vel().as<sm::f64>();
         }
-        fmt::print(stderr, "Frame {}: ", window.frame_counter);
+        if (window.mouse.middle) { rn.transform.pos += window.mouse.vel().as<sm::f64>(); }
+
+        fmt::print(stderr, "\nFrame {}: ", window.frame_counter);
     };
 
     window.run(rn, update, draw, 40, 700);

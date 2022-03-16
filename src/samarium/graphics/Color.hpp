@@ -19,19 +19,19 @@ namespace sm
 {
 struct RGB_t
 {
-    constexpr static auto length = 3ul;
+    constexpr static auto length = 3UL;
 };
 struct RGBA_t
 {
-    constexpr static auto length = 4ul;
+    constexpr static auto length = 4UL;
 };
 struct BGR_t
 {
-    constexpr static auto length = 3ul;
+    constexpr static auto length = 3UL;
 };
 struct BGRA_t
 {
-    constexpr static auto length = 4ul;
+    constexpr static auto length = 4UL;
 };
 
 constexpr inline auto rgb  = RGB_t{};
@@ -72,7 +72,7 @@ class Color
     {
         const auto length = util::strlen(str);
         if (str[0] != '#') throw std::invalid_argument("Hex string must start with #");
-        if (length != 7u and length != 9u)
+        if (length != 7u && length != 9u)
             throw std::invalid_argument("Hex string must be either 7 or 9 characters long");
 
         const auto r =

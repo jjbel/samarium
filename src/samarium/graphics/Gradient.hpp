@@ -25,7 +25,7 @@ template <size_t size> class Gradient
 
     [[nodiscard]] auto operator()(f64 factor) const
     {
-        const auto mapped = factor * (size - 1ul) + 0.01;
+        const auto mapped = factor * (size - 1UL) + 0.01;
         // TODO the +0.1 prevents the map range from dividing by 0
 
         const auto lower = static_cast<size_t>(mapped);            // static_cast rounds down
