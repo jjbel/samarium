@@ -54,16 +54,17 @@ class Renderer
 
     template <concepts::DrawableLambda T> void draw(T&& fn)
     {
-        const auto rect = image.rect();
-        this->draw(std::forward<T>(fn),
-                   transform.apply_inverse(
-                       Rect{.min = rect.min, .max = rect.max + Indices{1, 1}}.template as<f64>()));
+        const auto bounding_box = image.bounding_box();
+        this->draw(std::forward<T>(fn), transform.apply_inverse(BoundingBox{
+                                            .min = bounding_box.min,
+                                            .max = bounding_box.max +
+                                                   Indices{1, 1}}.template as<f64>()));
     }
 
-    void draw(concepts::DrawableLambda auto&& fn, const Rect<f64>& rect)
+    void draw(concepts::DrawableLambda auto&& fn, const BoundingBox<f64>& bounding_box)
     {
-        const auto box = this->transform.apply(rect)
-                             .clamped_to(image.rect().template as<f64>())
+        const auto box = this->transform.apply(bounding_box)
+                             .clamped_to(image.bounding_box().template as<f64>())
                              .template as<size_t>();
 
         if (math::area(box) == 0UL) return;
@@ -133,8 +134,8 @@ class Renderer
                 return rasterize(function_along_line(math::lerp_along(coords, ls)),
                                  math::clamped_distance(coords, ls), thickness, aa_factor);
             },
-            Rect<f64>::from_centre_width_height((ls.p1 + ls.p2) / 2.0, vector.x + extra,
-                                                vector.y + extra));
+            BoundingBox<f64>::from_centre_width_height((ls.p1 + ls.p2) / 2.0, vector.x + extra,
+                                                       vector.y + extra));
     }
 
     void draw_line(const LineSegment& ls,

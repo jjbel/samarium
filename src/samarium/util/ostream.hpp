@@ -9,14 +9,15 @@
 
 #include "../core/version.hpp"
 #include "../graphics/Color.hpp"
-#include "../math/Rect.hpp"
+#include "../math/BoundingBox.hpp"
 #include "../math/Vector2.hpp"
 
 std::ostream& operator<<(std::ostream& os, const sm::Version& a);
 
 std::ostream& operator<<(std::ostream& os, const sm::Color& a);
 
-template <sm::concepts::Number T> std::ostream& operator<<(std::ostream& os, const sm::Rect<T>& a)
+template <sm::concepts::Number T>
+std::ostream& operator<<(std::ostream& os, const sm::BoundingBox<T>& a)
 {
     os << fmt::format("{}", a);
     return os;

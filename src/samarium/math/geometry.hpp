@@ -9,7 +9,7 @@
 
 #include <optional>
 
-#include "Rect.hpp"
+#include "BoundingBox.hpp"
 #include "interp.hpp"
 #include "shapes.hpp"
 
@@ -108,9 +108,9 @@ namespace sm::math
     }
 }
 
-template <typename T> [[nodiscard]] constexpr auto area(Rect<T> rect) noexcept
+template <typename T> [[nodiscard]] constexpr auto area(BoundingBox<T> bounding_box) noexcept
 {
-    return (rect.max.x - rect.min.x) * (rect.max.y - rect.min.y);
+    return (bounding_box.max.x - bounding_box.min.x) * (bounding_box.max.y - bounding_box.min.y);
 }
 
 [[nodiscard]] constexpr auto area(Circle circle)
@@ -118,9 +118,9 @@ template <typename T> [[nodiscard]] constexpr auto area(Rect<T> rect) noexcept
     return std::numbers::pi * circle.radius * circle.radius;
 }
 
-template <typename T> [[nodiscard]] constexpr auto abs_area(Rect<T> rect) noexcept
+template <typename T> [[nodiscard]] constexpr auto abs_area(BoundingBox<T> bounding_box) noexcept
 {
-    return math::abs(area(rect));
+    return math::abs(area(bounding_box));
 }
 
 [[nodiscard]] constexpr auto abs_area(Circle circle) noexcept { return math::abs(area(circle)); }

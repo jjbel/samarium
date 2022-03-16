@@ -17,7 +17,7 @@ void Renderer::draw(Circle circle, Color color, f64 aa_factor)
             return rasterize(color, math::distance(coords, circle.centre), circle.radius,
                              aa_factor);
         },
-        Rect<f64>::from_centre_width_height(circle.centre, width, width));
+        BoundingBox<f64>::from_centre_width_height(circle.centre, width, width));
 }
 
 void Renderer::draw(const Particle& particle, f64 aa_factor)
@@ -37,8 +37,8 @@ void Renderer::draw_line_segment(const LineSegment& ls, Color color, f64 thickne
     this->draw(
         [color, &ls, thickness, aa_factor](const Vector2& coords)
         { return rasterize(color, math::clamped_distance(coords, ls), thickness, aa_factor); },
-        Rect<f64>::from_centre_width_height((ls.p1 + ls.p2) / 2.0, vector.x + extra,
-                                            vector.y + extra));
+        BoundingBox<f64>::from_centre_width_height((ls.p1 + ls.p2) / 2.0, vector.x + extra,
+                                                   vector.y + extra));
 }
 
 void Renderer::draw_line(const LineSegment& ls, Color color, f64 thickness, f64 aa_factor)

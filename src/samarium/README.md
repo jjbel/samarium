@@ -11,7 +11,7 @@ It is broken up into modules, each with its own subdirectory.
   - `Vector2` for 2d vectors
   - `geometry` for vector math
   - `shapes` for basic wrappers around shapes
-  - `Extents`, `interp` and `Rect` for bounds and interpolation
+  - `Extents`, `interp` and `BoundingBox` for bounds and interpolation
 
 - `util` for printing, formatting and file output
 

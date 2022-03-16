@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "Rect.hpp"
+#include "BoundingBox.hpp"
 #include "shapes.hpp"
 
 namespace sm
@@ -20,18 +20,19 @@ class Transform
 
     constexpr auto apply(Vector2 vec) const { return vec * scale + pos; }
 
-    constexpr auto apply(const Rect<f64>& rect) const
+    constexpr auto apply(const BoundingBox<f64>& bounding_box) const
     {
-        return Rect<f64>{apply(rect.min), apply(rect.max)}.validated();
+        return BoundingBox<f64>{apply(bounding_box.min), apply(bounding_box.max)}.validated();
     }
 
     constexpr auto apply_inverse(Vector2 vec) const { return (vec - pos) / scale; }
 
-    constexpr auto apply_inverse(const Rect<f64>& rect) const
+    constexpr auto apply_inverse(const BoundingBox<f64>& bounding_box) const
     {
-        return Rect<f64>::find_min_max(
-            this->apply_inverse(rect.min),
-            this->apply_inverse(rect.max)); // -ve sign may invalidate min, max, so recalculate it
+        return BoundingBox<f64>::find_min_max(
+            this->apply_inverse(bounding_box.min),
+            this->apply_inverse(
+                bounding_box.max)); // -ve sign may invalidate min, max, so recalculate it
     }
 
     constexpr auto apply_inverse(const LineSegment& l) const

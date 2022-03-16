@@ -8,7 +8,7 @@
 #pragma once
 
 #include "../core/DynArray.hpp"
-#include "../math/Rect.hpp"
+#include "../math/BoundingBox.hpp"
 #include "../util/print.hpp"
 
 #include "Color.hpp"
@@ -89,7 +89,7 @@ template <typename T> class Grid
     auto max_size() const { return this->data.size(); } // for stl compatibility
     auto empty() const { return this->data.size() == 0; }
 
-    auto rect() const { return Rect<size_t>{Indices{}, dims - Indices{1, 1}}; }
+    auto bounding_box() const { return BoundingBox<size_t>{Indices{}, dims - Indices{1, 1}}; }
 
     auto fill(const T& value) { this->data.fill(value); }
 

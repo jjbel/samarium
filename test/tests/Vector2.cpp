@@ -119,10 +119,11 @@ boost::ut::suite _Vector2 = []
                 expect(sm::math::area(sm::Circle{.radius = 12.0}) == 452.3893421169302_d);
             };
 
-            should("Rect") = []
+            should("BoundingBox") = []
             {
-                expect(sm::math::area(sm::Rect<double>{}) == 0.0_d);
-                expect(sm::math::area(sm::Rect<double>{{-10.0, -11.0}, {12.0, 13.0}}) == 528.0_d);
+                expect(sm::math::area(sm::BoundingBox<double>{}) == 0.0_d);
+                expect(sm::math::area(sm::BoundingBox<double>{{-10.0, -11.0}, {12.0, 13.0}}) ==
+                       528.0_d);
             };
         };
     };
