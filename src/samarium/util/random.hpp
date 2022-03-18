@@ -51,7 +51,7 @@ template <typename T> [[nodiscard]] auto rand_range(Extents<T> range)
 
 [[nodiscard]] auto rand_vector(Extents<f64> radius_range, Extents<f64> angle_range)
 {
-    return Vector2::from_polar(rand_range<f64>({radius_range.min, radius_range.max}),
-                               rand_range<f64>({angle_range.min, angle_range.max}));
+    return Vector2::from_polar({.length = rand_range<f64>({radius_range.min, radius_range.max}),
+                                .angle  = rand_range<f64>({angle_range.min, angle_range.max})});
 }
 } // namespace sm::random

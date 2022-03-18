@@ -11,6 +11,7 @@
 #include "../src/samarium/gui/sfml.hpp"
 #include "../src/samarium/math/Dual.hpp"
 #include "../src/samarium/physics/collision.hpp"
+#include "../src/samarium/physics/Car.hpp"
 #include "../src/samarium/util/file.hpp"
 
 using sm::print;
@@ -22,10 +23,10 @@ int main() { App(); }
 void App()
 {
     auto rn = sm::Renderer{};
+    auto window = sm::Window{{.dims = rn.image.dims, .name = "Samarium", .framerate = 64}};
 
     const auto update = [&](auto /* delta */) {};
 
-    auto window = sm::Window{{.dims = rn.image.dims, .name = "Samarium", .framerate = 64}};
 
     const auto draw = [&]
     {

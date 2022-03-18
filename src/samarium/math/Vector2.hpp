@@ -30,32 +30,56 @@ template <concepts::Number T> class Vector2_t
     T x{};
     T y{};
 
+    struct Polar
+    {
+        f64 length{};
+        f64 angle{};
+    };
+
     [[nodiscard]] constexpr auto length() const noexcept { return std::sqrt(x * x + y * y); }
 
     [[nodiscard]] constexpr auto length_sq() const noexcept { return x * x + y * y; }
 
     [[nodiscard]] constexpr auto angle() const noexcept { return std::atan2(y, x); }
 
-    [[nodiscard]] constexpr auto slope() const { return y / x; }
+    [[nodiscard]] constexpr auto slope() const noexcept { return y / x; }
 
-    [[nodiscard]] static constexpr auto from_polar(f64 length,
-                                                   f64 angle) requires concepts::FloatingPoint<T>
+    [[nodiscard]] static constexpr auto
+    from_polar(Polar polar) noexcept requires concepts::FloatingPoint<T>
     {
-        return Vector2_t<T>{length * std::cos(angle), length * std::sin(angle)};
+        return Vector2_t<T>{polar.length * std::cos(polar.angle),
+                            polar.length * std::sin(polar.angle)};
     }
 
-    [[nodiscard]] constexpr auto with_length(f64 new_length) const
+    [[nodiscard]] constexpr auto to_polar() const noexcept
+    {
+        return Polar{this->length(), std::atan(this->y / this->x)};
+    }
+
+    constexpr auto set_length(f64 new_length) noexcept
+    {
+        const auto factor = new_length / this->length();
+        x *= factor;
+        y *= factor;
+    }
+
+    constexpr auto set_angle(f64 new_angle) noexcept
+    {
+        *this = from_polar({.length = this->length(), .angle = new_angle});
+    }
+
+    [[nodiscard]] constexpr auto with_length(f64 new_length) const noexcept
     {
         const auto factor = new_length / this->length();
         return Vector2_t<T>{x * factor, y * factor};
     }
 
-    [[nodiscard]] constexpr auto with_angle(f64 new_angle) const
+    [[nodiscard]] constexpr auto with_angle(f64 new_angle) const noexcept
     {
-        return from_polar(this->length(), new_angle);
+        return from_polar({.length = this->length(), .angle = new_angle});
     }
 
-    [[nodiscard]] constexpr auto operator-() const { return Vector2_t<T>{-x, -y}; }
+    [[nodiscard]] constexpr auto operator-() const noexcept { return Vector2_t<T>{-x, -y}; }
 
     constexpr auto operator+=(const Vector2_t& rhs) noexcept
     {
@@ -99,26 +123,29 @@ template <concepts::Number T> class Vector2_t
         return *this;
     }
 
-    template <concepts::Number U> constexpr auto as() const
+    template <concepts::Number U> constexpr auto as() const noexcept
     {
         return Vector2_t<U>{static_cast<U>(this->x), static_cast<U>(this->y)};
     }
 
-    [[nodiscard]] static constexpr auto dot(Vector2_t<T> p1, Vector2_t<T> p2)
+    [[nodiscard]] static constexpr auto dot(Vector2_t<T> p1, Vector2_t<T> p2) noexcept
     {
         return p1.x * p2.x + p1.y * p2.y;
     }
 
-    [[nodiscard]] constexpr auto abs() const { return Vector2_t<T>{std::abs(x), std::abs(y)}; }
+    [[nodiscard]] constexpr auto abs() const noexcept
+    {
+        return Vector2_t<T>{std::abs(x), std::abs(y)};
+    }
 
-    [[nodiscard]] static constexpr auto angle_between(Vector2_t<T> from, Vector2_t<T> to)
+    [[nodiscard]] static constexpr auto angle_between(Vector2_t<T> from, Vector2_t<T> to) noexcept
     {
         return to.angle() - from.angle();
     }
 
-    constexpr void rotate(f64 amount) { *this = this->with_angle(this->angle() + amount); }
+    constexpr void rotate(f64 amount) noexcept { *this = this->with_angle(this->angle() + amount); }
 
-    [[nodiscard]] constexpr auto rotated_by(f64 amount) const
+    [[nodiscard]] constexpr auto rotated_by(f64 amount) const noexcept
     {
         auto temp = *this;
         temp.rotate(amount);
@@ -149,7 +176,7 @@ template <concepts::Integral T>
 }
 
 template <concepts::Number T>
-[[nodiscard]] constexpr bool operator!=(const Vector2_t<T>& lhs, const Vector2_t<T>& rhs)
+[[nodiscard]] constexpr bool operator!=(const Vector2_t<T>& lhs, const Vector2_t<T>& rhs) noexcept
 {
     return !operator==(lhs, rhs);
 }
@@ -209,8 +236,8 @@ using Dimensions = Vector2_t<size_t>;
 
 namespace literals
 {
-consteval auto operator"" _x(f80 x) { return Vector2{static_cast<f64>(x), 0}; }
-consteval auto operator"" _y(f80 y) { return Vector2{0, static_cast<f64>(y)}; }
+consteval auto operator"" _x(f80 x) noexcept { return Vector2{static_cast<f64>(x), 0}; }
+consteval auto operator"" _y(f80 y) noexcept { return Vector2{0, static_cast<f64>(y)}; }
 } // namespace literals
 
 } // namespace sm

@@ -53,6 +53,21 @@ template <concepts::Number T> [[nodiscard]] constexpr auto abs(T x) noexcept
     return x >= T{} ? x : -x;
 }
 
+template <typename T> [[nodiscard]] constexpr int sign(T x, std::false_type is_signed)
+{
+    return T(0) < x;
+}
+
+template <typename T> [[nodiscard]] constexpr int sign(T x, std::true_type is_signed)
+{
+    return (T(0) < x) - (x < T(0));
+}
+
+template <typename T> [[nodiscard]] constexpr int sign(T x)
+{
+    return sign(x, std::is_signed<T>());
+}
+
 } // namespace sm::math
 
 namespace sm::literals

@@ -96,6 +96,9 @@ jobs:
       - name: Allow failures
         run: true # https://github.com/actions/toolkit/issues/399#issuecomment-1058231820
 
+      - name: Build Coverage
+        run: ./scripts/coverage_wrapper.sh
+
       - name: Run sonar-scanner
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

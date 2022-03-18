@@ -15,6 +15,17 @@ struct Circle
 {
     Vector2 centre{};
     f64 radius{};
+
+    constexpr auto at_angle(f64 angle) const noexcept
+    {
+        return centre + Vector2::from_polar({.length = radius, .angle = angle});
+    }
+
+    /* Assuming point is on Circle, move it counter-clockwise */
+    constexpr auto move_along(Vector2 point, f64 distance) const noexcept
+    {
+        return centre + (point - centre).rotated_by(distance / this->radius);
+    }
 };
 
 struct LineSegment
@@ -22,15 +33,15 @@ struct LineSegment
     Vector2 p1{};
     Vector2 p2{};
 
-    [[nodiscard]] constexpr auto vector() const { return p2 - p1; }
+    [[nodiscard]] constexpr auto vector() const noexcept { return p2 - p1; }
 
-    [[nodiscard]] constexpr auto length() const { return vector().length(); }
+    [[nodiscard]] constexpr auto length() const noexcept { return vector().length(); }
 
-    [[nodiscard]] constexpr auto length_sq() const { return vector().length_sq(); }
+    [[nodiscard]] constexpr auto length_sq() const noexcept { return vector().length_sq(); }
 
-    [[nodiscard]] constexpr auto slope() const { return vector().slope(); }
+    [[nodiscard]] constexpr auto slope() const noexcept { return vector().slope(); }
 
-    constexpr auto translate(Vector2 amount)
+    constexpr auto translate(Vector2 amount) noexcept
     {
         this->p1 += amount;
         this->p2 += amount;
