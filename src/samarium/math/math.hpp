@@ -5,6 +5,7 @@
 
 #include <cmath>
 #include <numbers>
+#include <ranges>
 
 #include "../core/concepts.hpp"
 
@@ -53,20 +54,19 @@ template <concepts::Number T> [[nodiscard]] constexpr auto abs(T x) noexcept
     return x >= T{} ? x : -x;
 }
 
-template <typename T> [[nodiscard]] constexpr int sign(T x, std::false_type is_signed)
+template <typename T> [[nodiscard]] constexpr int sign(T x, std::false_type /* is_signed */)
 {
     return T(0) < x;
 }
 
-template <typename T> [[nodiscard]] constexpr int sign(T x, std::true_type is_signed)
+template <typename T> [[nodiscard]] constexpr int sign(T x, std::true_type /* is_signed */)
 {
     return (T(0) < x) - (x < T(0));
 }
 
-template <typename T> [[nodiscard]] constexpr int sign(T x)
-{
-    return sign(x, std::is_signed<T>());
-}
+template <typename T> [[nodiscard]] constexpr int sign(T x) { return sign(x, std::is_signed<T>()); }
+
+using range = std::ranges::iota_view<u64, u64>;
 
 } // namespace sm::math
 

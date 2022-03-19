@@ -11,7 +11,7 @@
 #include "../src/samarium/gui/sfml.hpp"
 #include "../src/samarium/math/Dual.hpp"
 #include "../src/samarium/physics/collision.hpp"
-#include "../src/samarium/physics/Car.hpp"
+#include "../src/samarium/physics/fluid/Fluid.hpp"
 #include "../src/samarium/util/file.hpp"
 
 using sm::print;
@@ -22,19 +22,22 @@ int main() { App(); }
 
 void App()
 {
-    auto rn = sm::Renderer{};
-    auto window = sm::Window{{.dims = rn.image.dims, .name = "Samarium", .framerate = 64}};
+    // auto rn     = sm::Renderer{};
+    // auto window = sm::Window{{.dims = rn.image.dims, .name = "Samarium", .framerate = 64}};
 
-    const auto update = [&](auto /* delta */) {};
-
-
-    const auto draw = [&]
-    {
-        rn.fill(sm::Color{16, 18, 20});
+    // const auto update = [&](auto /* delta */) {};
 
 
-        rn.render();
-    };
+    // const auto draw = [&]
+    // {
+    //     rn.fill(sm::Color{16, 18, 20});
 
-    window.run(rn, update, draw, 40, 700);
+
+    //     rn.render();
+    // };
+
+    // window.run(rn, update, draw, 40, 700);
+
+    const auto f = sm::Fluid{};
+    fmt::print(fg(fmt::color::light_green) | fmt::emphasis::bold, "Done\n");
 }

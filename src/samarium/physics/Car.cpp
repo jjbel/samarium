@@ -5,8 +5,6 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
-#pragma once
-
 #include "Car.hpp"
 
 namespace sm
@@ -22,8 +20,8 @@ void Car::update(f64 delta)
         return;
     }
 
-    const auto turning_radius = this->track / std::tan(this->turn_angle);
-    const auto sign           = math::sign(turning_radius);
-    print(turning_radius);
+    // const auto turning_radius = this->track / std::tan(this->turn_angle);
+    // const auto sign           = math::sign(turning_radius);
+    // print(turning_radius);
 }
 } // namespace sm

@@ -106,5 +106,7 @@ template <typename T> class Grid
     }
 };
 
-using Image = Grid<Color>;
+using Image       = Grid<Color>;
+using RealField   = Grid<f64>;
+using VectorField = Grid<Vector2>;
 } // namespace sm

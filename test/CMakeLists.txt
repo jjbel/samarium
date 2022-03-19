@@ -23,8 +23,8 @@ message(STATUS "Using test file for main(): ${TEST_FILE}")
 add_executable(
     samarium_tests
     ${TEST_FILE}
-    tests/Vector2.cpp
-    tests/concepts.cpp
+    # tests/Vector2.cpp
+    # tests/concepts.cpp
 )
 
 target_include_directories(samarium_tests PRIVATE ${CMAKE_SOURCE_DIR}/src)

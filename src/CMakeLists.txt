@@ -31,6 +31,8 @@ add_library(samarium
     ./samarium/gui/Mouse.cpp
     ./samarium/gui/Window.cpp
     ./samarium/graphics/Trail.cpp
+    ./samarium/physics/Car.cpp
+    ./samarium/physics/fluid/Fluid.cpp
 )
 
 target_compile_features(samarium PUBLIC cxx_std_20)
