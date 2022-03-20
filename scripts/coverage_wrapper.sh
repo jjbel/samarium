@@ -2,4 +2,4 @@
 
 cmake --preset=coverage
 cmake --build --preset=coverage
-./coverage.sh
+./scripts/coverage.sh

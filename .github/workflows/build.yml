@@ -78,6 +78,7 @@ jobs:
           conan    --version
           cmake    --version
           c++      --version
+          gcovr    --version
 
       - name: Configure Conan
         run: |
@@ -93,11 +94,12 @@ jobs:
       - name: CTest
         run: ctest --preset=default
         continue-on-error: true
-      - name: Allow failures
-        run: true # https://github.com/actions/toolkit/issues/399#issuecomment-1058231820
+      - run: true # https://github.com/actions/toolkit/issues/399#issuecomment-1058231820
 
       - name: Build Coverage
         run: ./scripts/coverage_wrapper.sh
+        continue-on-error: true
+      - run: true
 
       - name: Run sonar-scanner
         env:
@@ -159,7 +161,7 @@ jobs:
           ./build/bin/example
 
   windows-test:
-    runs-on: windows-latest
+    runs-on: windows-2022
     steps:
       - uses: actions/checkout@v2
         with:

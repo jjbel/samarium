@@ -15,6 +15,7 @@ function(set_project_warnings)
     option(WARNINGS_AS_ERRORS "Treat compiler warnings as errors" OFF)
 
     set(MSVC_WARNINGS
+        /std:c++latest # https://github.com/microsoft/STL/issues/1814#issuecomment-845572895
         /W4 # Baseline reasonable warnings
         /w14242 # 'identifier': conversion from 'type1' to 'type1', possible loss of data
         /w14254 # 'operator': conversion from 'type1:field_bits' to 'type2:field_bits', possible loss of data
