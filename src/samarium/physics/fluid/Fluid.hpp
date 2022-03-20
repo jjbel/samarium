@@ -17,7 +17,7 @@ namespace sm
 {
 struct Fluid
 {
-    Dual<RealField> density;
+    Dual<ScalarField> density;
     Dual<VectorField> vel;
 
     const size_t size;
@@ -28,7 +28,7 @@ struct Fluid
 
 
     Fluid(size_t size_ = 128ul)
-        : density{.now = RealField(Dimensions{size_, size_})},
+        : density{.now = ScalarField(Dimensions{size_, size_})},
           vel{.now = VectorField(Dimensions{size_, size_})}, size{size_}
     {
     }
@@ -41,12 +41,22 @@ struct Fluid
 
     void diffuse();
 
-    void project(VectorField& veloc, RealField p, RealField div);
+    void project(VectorField& veloc, ScalarField p, ScalarField div);
 
-    void advect(Dual<RealField>& d, VectorField& veloc, f64 dt);
+    void advect(Dual<ScalarField>& d, VectorField& veloc);
 
-    void lin_solve(RealField& x_now, RealField& x_prev, f64 a, f64 weight, u64 iter = 1UL);
+    void lin_solve(ScalarField& x_now, ScalarField& x_prev, f64 a, f64 weight, u64 iter = 1UL);
 
-    void set_bnd();
+    void set_bnd(auto...) {}
+
+    Image to_image() const
+    {
+        return Image::generate(Dimensions{size, size},
+                               [&grid = std::as_const(this->density.now)](auto i)
+                               {
+                                   const auto value = grid[i];
+                                   return Color::from_double_array(std::array{value, value, value});
+                               });
+    }
 };
 } // namespace sm

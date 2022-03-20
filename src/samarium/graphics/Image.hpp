@@ -60,11 +60,14 @@ template <typename T> class Grid
         Grid<T> grid(dims);
         const auto beg = grid.begin();
         std::for_each(beg, grid.end(),
-                      [fn = std::forward<Fn>(fn), beg](auto& element)
-                      { element = fn(convert_1d_to_2d(&element - beg)); });
+                      [fn = std::forward<Fn>(fn), beg, dims](auto& element)
+                      { element = fn(convert_1d_to_2d(dims, static_cast<u64>(&element - beg))); });
+
+        return grid;
     }
 
-    // Member functions
+    // -------------------------------Member functions------------------------------------
+
     T& operator[](Indices indices) { return this->data[indices.y * this->dims.x + indices.x]; }
 
     const T& operator[](Indices indices) const
@@ -107,6 +110,6 @@ template <typename T> class Grid
 };
 
 using Image       = Grid<Color>;
-using RealField   = Grid<f64>;
+using ScalarField = Grid<f64>;
 using VectorField = Grid<Vector2>;
 } // namespace sm

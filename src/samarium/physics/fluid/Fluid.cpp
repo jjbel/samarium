@@ -9,9 +9,7 @@
 
 namespace sm
 {
-void Fluid::set_bnd() {}
-
-void Fluid::lin_solve(RealField& x_now, RealField& x_prev, f64 a, f64 weight, u64 iter)
+void Fluid::lin_solve(ScalarField& x_now, ScalarField& x_prev, f64 a, f64 weight, u64 iter)
 {
     for (auto k : math::range({}, iter))
     {
@@ -77,7 +75,7 @@ void Fluid::diffuse()
     lin_solve(density.now, density.prev, factor, 1 + 4 * factor);
 }
 
-void Fluid::project(VectorField& veloc, RealField p, RealField div)
+void Fluid::project(VectorField& veloc, ScalarField p, ScalarField div)
 {
     for (auto j : math::range(1, size - 1))
     {
@@ -108,10 +106,8 @@ void Fluid::project(VectorField& veloc, RealField p, RealField div)
     set_bnd();
 }
 
-void Fluid::advect(Dual<RealField>& d, VectorField& veloc, f64 dt)
+void Fluid::advect(Dual<ScalarField>& d, VectorField& veloc)
 {
-    f64 i0, i1, j0, j1;
-
     f64 dtx = dt * static_cast<f64>(size - 2UL);
     f64 dty = dt * static_cast<f64>(size - 2UL);
 
@@ -131,14 +127,14 @@ void Fluid::advect(Dual<RealField>& d, VectorField& veloc, f64 dt)
             if (x < 0.5) x = 0.5;
             if (x > Nf64 + 0.5) x = Nf64 + 0.5;
 
-            i0 = floor(x);
-            i1 = i0 + 1.0;
+            f64 i0 = std::floor(x);
+            f64 i1 = i0 + 1.0;
 
             if (y < 0.5) y = 0.5;
             if (y > Nf64 + 0.5) y = Nf64 + 0.5;
-            j0 = floor(y);
+            f64 j0 = std::floor(y);
 
-            j1 = j0 + 1.0;
+            f64 j1 = j0 + 1.0;
 
             s1 = x - i0;
             s0 = 1.0 - s1;

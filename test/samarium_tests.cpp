@@ -38,6 +38,11 @@ void App()
 
     // window.run(rn, update, draw, 40, 700);
 
-    const auto f = sm::Fluid{};
+    auto f = sm::Fluid{};
+
+    for (auto _ : sm::math::range(0, 10)) f.update();
+
+    sm::file::export_tga(f.to_image());
+
     fmt::print(fg(fmt::color::light_green) | fmt::emphasis::bold, "Done\n");
 }
