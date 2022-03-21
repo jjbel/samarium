@@ -1,11 +1,14 @@
-// SPDX-License-Identifier: MIT
-// Copyright (c) 2022 Jai Bellare
-// Project homepage: https://github.com/strangeQuark1041/samarium
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2022 Jai Bellare
+ * See <https://opensource.org/licenses/MIT/> or LICENSE.md
+ * Project homepage: https://github.com/strangeQuark1041/samarium
+ */
+
 #pragma once
 
 #include <cmath>
 #include <numbers>
-#include <ranges>
 
 #include "../core/concepts.hpp"
 
@@ -39,12 +42,12 @@ template <u32 n> [[nodiscard]] constexpr auto power(auto x) noexcept
     return x * power<n - 1>(x);
 }
 
-[[nodiscard]] constexpr auto to_degrees(auto angle) noexcept
+[[nodiscard]] constexpr auto to_degrees(concepts::FloatingPoint auto angle) noexcept
 {
     return angle * 180.0 / std::numbers::pi;
 }
 
-[[nodiscard]] constexpr auto to_radians(auto angle) noexcept
+[[nodiscard]] constexpr auto to_radians(concepts::FloatingPoint auto angle) noexcept
 {
     return angle / 180.0 * std::numbers::pi;
 }
@@ -66,13 +69,14 @@ template <typename T> [[nodiscard]] constexpr int sign(T x, std::true_type /* is
 
 template <typename T> [[nodiscard]] constexpr int sign(T x) { return sign(x, std::is_signed<T>()); }
 
-using range = std::ranges::iota_view<u64, u64>;
-
 } // namespace sm::math
 
 namespace sm::literals
 {
-consteval auto operator"" _degrees(f80 angle) noexcept { return math::to_radians(angle); }
+consteval auto operator"" _degrees(f80 angle) noexcept
+{
+    return math::to_radians(static_cast<f64>(angle));
+}
 
-consteval auto operator"" _radians(f80 angle) noexcept { return angle; }
+consteval auto operator"" _radians(f80 angle) noexcept { return static_cast<f64>(angle); }
 } // namespace sm::literals

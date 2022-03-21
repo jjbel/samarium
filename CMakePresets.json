@@ -10,17 +10,24 @@
             "name": "default",
             "displayName": "Default Config",
             "description": "Default build",
-            "binaryDir": "${sourceDir}/build/default/",
+            "binaryDir": "${sourceDir}/build/",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release"
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": true
             }
+        },
+        {
+            "name": "custom",
+            "inherits": "default",
+            "binaryDir": "${sourceDir}/build/",
+            "generator": "Ninja"
         },
         {
             "name": "coverage",
             "displayName": "Build for Coverage Analysis",
             "description": "use GCC's coverage feature",
             "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build/coverage/",
+            "binaryDir": "${sourceDir}/build/",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
                 "GENERATE_COVERAGE": "ON"
@@ -30,7 +37,7 @@
             "name": "debug",
             "displayName": "Debug Build",
             "description": "Debug Build",
-            "binaryDir": "${sourceDir}/build/debug/",
+            "binaryDir": "${sourceDir}/build/",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug"
             }

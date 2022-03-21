@@ -38,8 +38,7 @@ conan create samarium -b missing
 | cmake      | <https://cmake.org/download/> | https://cmake.org/cmake/help/latest/ |
 | conan      | <https://conan.io/downloads.html/> | https://docs.conan.io/en/latest/ |
 
-Compiler wise, at least gcc-11 or Visual C++ 2019 is required
-Clang [does not yet support C++20](https://clang.llvm.org/cxx_status.html#cxx20)
+A compiler supporting C++20 is required, namely GCC-11, Clang-13, or Visual C++ 2019
 
 ## Installation
 

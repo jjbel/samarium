@@ -56,7 +56,7 @@ class Renderer
     template <concepts::DrawableLambda T> void draw(T&& fn)
     {
         const auto bounding_box = image.bounding_box();
-        this->draw(std::forward<T>(fn), transform.apply_inverse(BoundingBox{
+        this->draw(std::forward<T>(fn), transform.apply_inverse(BoundingBox<u64>{
                                             .min = bounding_box.min,
                                             .max = bounding_box.max +
                                                    Indices{1, 1}}.template as<f64>()));
@@ -144,8 +144,8 @@ class Renderer
                    f64 thickness = 0.1,
                    f64 aa_factor = 2)
     {
-        const auto vector = ls.vector().abs();
-        const auto extra  = 2 * aa_factor;
+        // const auto vector = ls.vector().abs();
+        // const auto extra  = 2 * aa_factor;
         this->draw(
             [&function_along_line, &ls, thickness, aa_factor](const Vector2& coords)
             {

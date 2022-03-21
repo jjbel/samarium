@@ -22,11 +22,9 @@ void Window::get_input()
         else if (event.type == sf::Event::MouseWheelScrolled &&
                  event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel)
         {
-            print("Scroll", event.mouseWheelScroll.delta);
-            this->mouse.scroll_amount = event.mouseWheelScroll.delta;
+            this->mouse.scroll_amount = static_cast<f64>(event.mouseWheelScroll.delta);
         }
     }
-
 
     this->keymap.run();
     this->mouse.update(this->window);

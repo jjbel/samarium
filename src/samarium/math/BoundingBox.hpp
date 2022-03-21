@@ -41,13 +41,19 @@ template <concepts::Number T = f64> struct BoundingBox
     [[nodiscard]] static constexpr auto
     from_centre_width_height(Vector2_t<T> centre, T width, T height) noexcept
     {
-        const auto vec = Vector2_t{.x = width / static_cast<T>(2), .y = height / static_cast<T>(2)};
+        const auto vec = Vector2_t<T>{.x = width / static_cast<T>(2), .y = height / static_cast<T>(2)};
         return BoundingBox{centre - vec, centre + vec};
     }
 
     [[nodiscard]] constexpr auto contains(Vector2_t<T> vec) const noexcept
     {
         return vec.x >= min.x && vec.x <= max.x && vec.y >= min.y && vec.y <= max.y;
+    }
+
+    [[nodiscard]] constexpr auto clamp(Vector2_t<T> vec) const
+    {
+        return Vector2_t<T>{Extents<T>{min.x, max.x}.clamp(vec.x),
+                            Extents<T>{min.y, max.y}.clamp(vec.y)};
     }
 
     [[nodiscard]] constexpr auto clamped_to(BoundingBox<T> bounds) const

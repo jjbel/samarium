@@ -14,35 +14,34 @@
 #include "../src/samarium/physics/fluid/Fluid.hpp"
 #include "../src/samarium/util/file.hpp"
 
-using sm::print;
-
 void App();
 
 int main() { App(); }
 
 void App()
 {
-    // auto rn     = sm::Renderer{};
-    // auto window = sm::Window{{.dims = rn.image.dims, .name = "Samarium", .framerate = 64}};
+    using namespace sm;
 
-    // const auto update = [&](auto /* delta */) {};
+    const auto dims = Dimensions{512, 512};
+    const auto bbox = BoundingBox<i64>{{}, dims.as<i64>()};
+    auto fluid      = Fluid{};
 
+    auto window = Window{{dims}};
 
-    // const auto draw = [&]
-    // {
-    //     rn.fill(sm::Color{16, 18, 20});
+    for (auto i : Range(10)) print(i);
 
+    while (window.is_open())
+    {
+        fmt::print(stderr, "\n{}: ", window.frame_counter);
+        window.get_input();
 
-    //     rn.render();
-    // };
+        if (const auto pos = window.mouse.pos->as<i64>(); window.mouse.left && bbox.contains(pos))
+        {
+            print("Click!");
+            // image[pos.as<u64>()] = colors::white;
+        }
 
-    // window.run(rn, update, draw, 40, 700);
-
-    auto f = sm::Fluid{};
-
-    for (auto _ : sm::math::range(0, 10)) f.update();
-
-    sm::file::export_tga(f.to_image());
-
-    fmt::print(fg(fmt::color::light_green) | fmt::emphasis::bold, "Done\n");
+        window.draw(fluid.to_image());
+        window.display();
+    }
 }
