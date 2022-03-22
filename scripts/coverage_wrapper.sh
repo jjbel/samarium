@@ -1,6 +1,6 @@
 #!/bin/bash
 
- m -rf ./build
-cmake --preset=coverage
-cmake --build --preset=coverage
+rm -rf ./build
+cmake --preset=coverage >/dev/null
+cmake --build --preset=default >/dev/null
 ./scripts/coverage.sh

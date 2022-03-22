@@ -41,7 +41,7 @@
             "name": "coverage",
             "displayName": "Build for Coverage Analysis",
             "description": "use GCC's coverage feature",
-            "generator": "Ninja",
+            "generator": "Unix Makefiles",
             "binaryDir": "${sourceDir}/build/",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
@@ -85,10 +85,7 @@
         },
         {
             "name": "coverage",
-            "configurePreset": "coverage",
-            "configuration": "Debug",
-            "output": { "outputOnFailure": true, "verbosity": "extra" },
-            "execution": { "noTestsAction": "error", "stopOnFailure": true }
+            "configurePreset": "coverage"
         }
     ]
 }

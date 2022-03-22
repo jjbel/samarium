@@ -14,7 +14,7 @@ env:
   CONAN_SYSREQUIRES_MODE: "enabled"
 
 jobs:
-  gcc:
+  test:
     runs-on: ubuntu-latest
 
     env:

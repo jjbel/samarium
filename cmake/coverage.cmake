@@ -9,17 +9,10 @@ function(generate_coverage target)
     if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND GENERATE_COVERAGE)
         find_program(GCOVR_PATH gcov REQUIRED)
         find_program(GCOVR_PATH gcovr REQUIRED)
-        
+
         target_compile_options(${target} PRIVATE "--coverage")
         target_link_libraries(${target} PRIVATE gcov)
-        
-        message(STATUS "Will generate Coverage")
-        
-        add_custom_target(coverage)
-        add_custom_command(
-            TARGET coverage
-            COMMAND "${CMAKE_SOURCE_DIR}/scripts/coverage.sh"
-        )
-        add_dependencies(coverage ${target})
+
+        message(STATUS "Will generate Coverage for ${target}")
     endif()
 endfunction()

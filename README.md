@@ -1,6 +1,8 @@
 # Samarium
 
-[![CI Status](https://github.com/strangeQuark1041/samarium/actions/workflows/build.yml/badge.svg)](https://github.com/strangeQuark1041/samarium/actions/workflows/build.yml)
+[![GCC](https://github.com/strangeQuark1041/samarium/actions/workflows/gcc.yml/badge.svg)](https://github.com/strangeQuark1041/samarium/actions/workflows/gcc.yml)
+[![Clang](https://github.com/strangeQuark1041/samarium/actions/workflows/clang.yml/badge.svg)](https://github.com/strangeQuark1041/samarium/actions/workflows/clang.yml)
+[![MSVC](https://github.com/strangeQuark1041/samarium/actions/workflows/msvc.yml/badge.svg)](https://github.com/strangeQuark1041/samarium/actions/workflows/msvc.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=strangeQuark1041_samarium&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=strangeQuark1041_samarium)
 
 ![Lines of Code](https://img.shields.io/tokei/lines/github/strangeQuark1041/samarium)

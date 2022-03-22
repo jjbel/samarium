@@ -1,9 +1,8 @@
 #!/bin/bash
 
-./test/samarium_tests
+./build/test/samarium_tests
 
 echo "Generating coverage..."
-gcovr -r ../.. . -e "_deps/" -e "../../test/ut.hpp"  --sonarqube -o ../../coverage.xml
-# gcovr -r ../.. . -e "_deps/" --html -o ../../coverage.html
-gcovr -r ../.. . -e "_deps/" -e "../../test/ut.hpp"
+gcovr -r ./ ./build -e ./test/ut.hpp
+gcovr -r ./ ./build -e ./test/ut.hpp --sonarqube -o ./coverage.xml
 echo "Done"

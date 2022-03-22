@@ -45,7 +45,7 @@ boost::ut::suite _Vector2 = []
             const auto b = sm::Vector2{1.0, 1.0};
             expect(sm::math::almost_equal(b.length(), std::sqrt(2.0)));
             expect(sm::math::almost_equal(b.length_sq(), 2.0));
-            expect(sm::math::almost_equal(b.angle(), sm::math::to_radians(45)));
+            expect(sm::math::almost_equal(b.angle(), sm::math::to_radians(45.0)));
             expect(sm::math::almost_equal(b.slope(), 1.0));
         };
 
@@ -54,7 +54,7 @@ boost::ut::suite _Vector2 = []
             const auto c = sm::Vector2{0.0, 1.0};
             expect(sm::math::almost_equal(c.length(), 1.0));
             expect(sm::math::almost_equal(c.length_sq(), 1.0));
-            expect(sm::math::almost_equal(c.angle(), sm::math::to_radians(90)));
+            expect(sm::math::almost_equal(c.angle(), sm::math::to_radians(90.0)));
         };
 
         should("origin vector") = []

@@ -42,7 +42,7 @@ void App()
             // image[pos.as<u64>()] = colors::white;
         }
 
-        window.draw(fluid.to_image());
+        // window.draw(fluid.to_image());
         window.display();
     }
 }
