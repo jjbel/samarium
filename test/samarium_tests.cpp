@@ -30,7 +30,8 @@ void App()
 
     for (auto i : Range(10)) print(i);
 
-    while (window.is_open())
+    size_t _{};
+    while (window.is_open() && ++_ <= 200)
     {
         fmt::print(stderr, "\n{}: ", window.frame_counter);
         window.get_input();

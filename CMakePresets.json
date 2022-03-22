@@ -17,10 +17,25 @@
             }
         },
         {
-            "name": "custom",
+            "name": "ninja",
             "inherits": "default",
-            "binaryDir": "${sourceDir}/build/",
             "generator": "Ninja"
+        },
+        {
+            "name": "gcc",
+            "inherits": "ninja",
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "gcc",
+                "CMAKE_CXX_COMPILER": "g++"
+            }
+        },
+        {
+            "name": "clang",
+            "inherits": "ninja",
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "clang",
+                "CMAKE_CXX_COMPILER": "clang++"
+            }
         },
         {
             "name": "coverage",
@@ -32,15 +47,6 @@
                 "CMAKE_BUILD_TYPE": "Debug",
                 "GENERATE_COVERAGE": "ON"
             }
-        },
-        {
-            "name": "debug",
-            "displayName": "Debug Build",
-            "description": "Debug Build",
-            "binaryDir": "${sourceDir}/build/",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug"
-            }
         }
     ],
     "buildPresets": [
@@ -50,6 +56,16 @@
             "configuration": "Release",
             "cleanFirst": true,
             "jobs": 6
+        },
+        {
+            "name": "gcc",
+            "inherits": "default",
+            "configurePreset": "gcc"
+        },
+        {
+            "name": "clang",
+            "inherits": "default",
+            "configurePreset": "clang"
         },
         {
             "name": "coverage",

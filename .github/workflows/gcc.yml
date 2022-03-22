@@ -1,4 +1,4 @@
-name: CI
+name: GCC
 
 on:
   push:
@@ -14,7 +14,7 @@ env:
   CONAN_SYSREQUIRES_MODE: "enabled"
 
 jobs:
-  linux-test:
+  gcc:
     runs-on: ubuntu-latest
 
     env:
@@ -77,7 +77,7 @@ jobs:
         run: |
           conan    --version
           cmake    --version
-          c++      --version
+          g++      --version
           gcovr    --version
 
       - name: Configure Conan
@@ -86,10 +86,10 @@ jobs:
           conan profile update settings.compiler.libcxx=libstdc++11 default
 
       - name: CMake Configure
-        run: cmake --preset=default
+        run: cmake --preset=gcc
 
       - name: CMake Build
-        run: build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} cmake --build --preset=default
+        run: build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} cmake --build --preset=gcc
 
       - name: CTest
         run: ctest --preset=default
@@ -111,8 +111,7 @@ jobs:
       - name: View Source Tree
         run: tree
 
-
-  linux-install:
+  install:
     runs-on: ubuntu-latest
     steps:
       - name: Set up GCC
@@ -159,60 +158,3 @@ jobs:
           cmake -B build
           cmake --build build --config Release
           ./build/bin/example
-
-  windows-test:
-    runs-on: windows-2022
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      - name: Install Conan
-        id: conan
-        uses: turtlebrowser/get-conan@main
-
-      - name: Configure Conan
-        run: |
-          conan profile new default --detect
-
-      - name: Install Ninja
-        uses: seanmiddleditch/gha-setup-ninja@master
-
-      - name: CMake Configure
-        run: cmake --preset=default
-
-      - name: CMake Build
-        run: cmake --build --preset=default
-
-      - name: CTest
-        run: ctest --preset=default
-        continue-on-error: true
-      - name: Allow failures
-        run: true
-
-  windows-install:
-    runs-on: windows-2022
-    steps:
-      - name: Install Conan
-        id: conan
-        uses: turtlebrowser/get-conan@main
-
-      - name: Configure Conan
-        run: |
-          conan profile new default --detect
-
-      - name: Git Clone
-        run: git clone https://github.com/strangeQuark1041/samarium.git
-
-      - name: Conan Create
-        run: conan create samarium -b missing
-
-      - name: Run Example
-        run: |
-          mkdir -p example
-          cd example
-          git clone --depth 1 https://github.com/strangeQuark1041/samarium_example.git .
-          conan install . -b missing -if build
-          cmake -B build
-          cmake --build build --config Release
-          .\build\bin\example

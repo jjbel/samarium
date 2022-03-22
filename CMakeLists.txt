@@ -3,9 +3,6 @@
 # See <https://opensource.org/licenses/MIT/> or LICENSE.md
 # Project homepage: <https://github.com/strangeQuark1041/samarium>
 
-set(CMAKE_C_COMPILER "/usr/bin/clang")
-set(CMAKE_CXX_COMPILER "/usr/bin/clang++")
-
 cmake_minimum_required(VERSION 3.16)
 project(samarium_dev LANGUAGES CXX)
 
@@ -41,7 +38,3 @@ add_test(NAME SamariumTests COMMAND samarium_tests)
 option(GENERATE_COVERAGE "Generate coverage reports" FALSE)
 include(coverage)
 generate_coverage(samarium_tests)
-
-# set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-# set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "")
-message(STATUS "HELLO?? ${CMAKE_EXPORT_COMPILE_COMMANDS} ??")
