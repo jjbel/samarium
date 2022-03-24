@@ -21,10 +21,10 @@ template <sm::concepts::Number T> class fmt::formatter<sm::Vector2_t<T>>
   public:
     constexpr auto parse(const format_parse_context& ctx) { return ctx.begin(); }
 
-    template <typename FormatContext> auto format(const sm::Vector2_t<T>& p, FormatContext& ctx)
+    constexpr auto format(sm::Vector2_t<T> p, auto& ctx)
     {
         return format_to(ctx.out(),
-                         (std::is_floating_point<T>::value ? "\033[1mVec\033[0m({: 6.3f}, {: 6.3f})"
+                         (sm::concepts::FloatingPoint<T> ? "\033[1mVec\033[0m({: 6.3f}, {: 6.3f})"
                                                            : "Vec({:>3}, {:>3})"),
                          p.x, p.y);
     }
@@ -35,7 +35,7 @@ template <> class fmt::formatter<sm::Version>
   public:
     constexpr auto parse(const format_parse_context& ctx) { return ctx.begin(); }
 
-    template <typename FormatContext> auto format(const sm::Version& p, FormatContext& ctx)
+    auto format(const sm::Version& p, auto& ctx)
     {
         return format_to(ctx.out(), "samarium version {}.{}.{}", p.major, p.minor, p.patch);
     }
@@ -82,13 +82,12 @@ template <> class fmt::formatter<sm::LineSegment>
     }
 };
 
-
 template <> class fmt::formatter<sm::Transform>
 {
   public:
     constexpr auto parse(const format_parse_context& ctx) const { return ctx.begin(); }
 
-    template <typename FormatContext> auto format(const sm::Transform& p, FormatContext& ctx)
+    auto format(const sm::Transform& p, auto& ctx)
     {
         return format_to(ctx.out(), "Transform[pos: {}, scale: {}]", p.pos, p.scale);
     }

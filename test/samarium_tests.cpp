@@ -13,6 +13,7 @@
 #include "../src/samarium/physics/collision.hpp"
 #include "../src/samarium/physics/fluid/Fluid.hpp"
 #include "../src/samarium/util/file.hpp"
+#include "../src/samarium/util/format.hpp"
 
 void App();
 
@@ -28,17 +29,15 @@ void App()
 
     auto window = Window{{dims}};
 
-    for (auto i : range(10)) print(i);
-
-    size_t _{};
-    while (window.is_open() && ++_ <= 200)
+    size_t frame{};
+    while (window.is_open() && ++frame <= 200)
     {
         fmt::print(stderr, "\n{}: ", window.frame_counter);
         window.get_input();
 
         if (const auto pos = window.mouse.pos->as<i64>(); window.mouse.left && bbox.contains(pos))
         {
-            print("Click!");
+            print("Click!", pos);
             // image[pos.as<u64>()] = colors::white;
         }
 
