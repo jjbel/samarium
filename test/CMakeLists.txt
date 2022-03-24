@@ -20,12 +20,12 @@ if(NOT TEST_FILE)
 endif()
 
 message(STATUS "Using test file for main(): ${TEST_FILE}")
-add_executable(
-    samarium_tests
-    ${TEST_FILE}
-    tests/Vector2.cpp
-    tests/concepts.cpp
-)
+add_executable(samarium_tests ${TEST_FILE})
+
+option(SKIP_TESTS "Only run the main program and not the tests" OFF)
+if(NOT SKIP_TESTS)
+    target_sources(samarium_tests PRIVATE tests/Vector2.cpp tests/concepts.cpp)
+endif()
 
 target_include_directories(samarium_tests PRIVATE ${CMAKE_SOURCE_DIR}/src)
 
