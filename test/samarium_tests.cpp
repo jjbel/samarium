@@ -28,7 +28,7 @@ void App()
 
     auto window = Window{{dims}};
 
-    for (auto i : Range(10)) print(i);
+    for (auto i : range(10)) print(i);
 
     size_t _{};
     while (window.is_open() && ++_ <= 200)

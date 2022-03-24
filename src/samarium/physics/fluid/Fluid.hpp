@@ -8,7 +8,7 @@
 #pragma once
 
 #include "../../graphics/Image.hpp"
-#include "../../math/Range.hpp"
+#include "../../math/Extents.hpp"
 
 namespace sm
 {
@@ -55,13 +55,13 @@ struct Fluid
 
     void set_bnd(int b, ScalarField& x)
     {
-        for (auto i : Range(1, size - 1))
+        for (auto i : range(1, size - 1))
         {
             x[{i, 0}]        = b == 2 ? -x[{i, 1}] : x[{i, 1}];
             x[{i, size - 1}] = b == 2 ? -x[{i, size - 2}] : x[{i, size - 2}];
         }
 
-        for (auto j : Range(1, size - 1))
+        for (auto j : range(1, size - 1))
         {
             x[{0, j}]        = b == 1 ? -x[{1, j}] : x[{1, j}];
             x[{size - 1, j}] = b == 1 ? -x[{size - 2, j}] : x[{size - 2, j}];
@@ -82,13 +82,13 @@ struct Fluid
     void lin_solve(int b, ScalarField& x, const ScalarField& x0, f64 a, f64 c, u64 iter = 4)
     {
         f64 cRecip = 1.0 / c;
-        for (auto k : Range(iter))
+        for (auto k : range(iter))
         {
             std::ignore = k;
 
-            for (auto j : Range(1, size - 1))
+            for (auto j : range(1, size - 1))
             {
-                for (auto i : Range(1, size - 1))
+                for (auto i : range(1, size - 1))
                 {
                     x[{i, j}] = (x0[{i, j}] + a * (x[{i + 1, j}] + x[{i - 1, j}] + x[{i, j + 1}] +
                                                    x[{i, j - 1}])) *
@@ -102,9 +102,9 @@ struct Fluid
 
     void project(ScalarField& velocX, ScalarField& velocY, ScalarField& p, ScalarField& div)
     {
-        for (auto j : Range(1, size - 1))
+        for (auto j : range(1, size - 1))
         {
-            for (auto i : Range(1, size - 1))
+            for (auto i : range(1, size - 1))
             {
                 div[{i, j}] = -0.5 *
                               (velocX[{i + 1, j}] - velocX[{i - 1, j}] + velocY[{i, j + 1}] -
@@ -118,9 +118,9 @@ struct Fluid
         set_bnd(0, p);
         lin_solve(0, p, div, 1, 4);
 
-        for (auto j : Range(1, size - 1))
+        for (auto j : range(1, size - 1))
         {
-            for (auto i : Range(1, size - 1))
+            for (auto i : range(1, size - 1))
             {
                 velocX[{i, j}] -= 0.5 * (p[{i + 1, j}] - p[{i - 1, j}]) * static_cast<f64>(size);
                 velocY[{i, j}] -= 0.5 * (p[{i, j + 1}] - p[{i, j - 1}]) * static_cast<f64>(size);
@@ -130,18 +130,18 @@ struct Fluid
         set_bnd(2, velocY);
     }
 
-    void
-    advect(int b, ScalarField& d, ScalarField& d0, ScalarField& velocX, ScalarField& velocY, f64 dt_)
+    void advect(
+        int b, ScalarField& d, ScalarField& d0, ScalarField& velocX, ScalarField& velocY, f64 dt_)
     {
         f64 dtx    = dt_ * static_cast<f64>(size - 2);
         f64 dty    = dt_ * static_cast<f64>(size - 2);
         f64 Nfloat = static_cast<f64>(size);
 
-        for (auto j : Range(1, size - 1))
+        for (auto j : range(1, size - 1))
         {
             const auto jfloat = static_cast<f64>(j);
 
-            for (auto i : Range(1, size - 1))
+            for (auto i : range(1, size - 1))
             {
                 const auto ifloat = static_cast<f64>(i);
 
@@ -182,8 +182,8 @@ struct Fluid
     Image to_image() const
     {
         auto image = Image{{size, size}};
-        for (auto y : Range(size))
-            for (auto x : Range(size))
+        for (auto y : range(size))
+            for (auto x : range(size))
             {
                 const auto pos   = Indices{x, y};
                 const auto value = density[pos];

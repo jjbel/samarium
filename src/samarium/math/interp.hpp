@@ -24,24 +24,24 @@ namespace sm::interp
     return [](auto x) { return x * x * x * (x * (x * 6. - 15.) + 10.); };
 }
 
-template <typename T> [[nodiscard]] constexpr auto in_range(T value, Extents<T> range)
+template <typename T> [[nodiscard]] constexpr auto in_range(T value, Extents<T> range_)
 {
-    return range.contains(value);
+    return range_.contains(value);
 }
 
-template <typename T> [[nodiscard]] constexpr auto clamp(T value, Extents<T> range) noexcept
+template <typename T> [[nodiscard]] constexpr auto clamp(T value, Extents<T> range_) noexcept
 {
-    return range.clamp(value);
+    return range_.clamp(value);
 }
 
-template <typename T> [[nodiscard]] constexpr auto lerp(f64 factor, Extents<T> range)
+template <typename T> [[nodiscard]] constexpr auto lerp(f64 factor, Extents<T> range_)
 {
-    return range.lerp(factor);
+    return range_.lerp(factor);
 }
 
-template <typename T> [[nodiscard]] constexpr auto clamped_lerp(f64 factor, Extents<T> range)
+template <typename T> [[nodiscard]] constexpr auto clamped_lerp(f64 factor, Extents<T> range_)
 {
-    return range.clamped_lerp(factor);
+    return range_.clamped_lerp(factor);
 }
 
 [[nodiscard]] constexpr auto lerp_rgb(f64 factor, Color from, Color to)
@@ -56,9 +56,9 @@ template <typename T> [[nodiscard]] constexpr auto clamped_lerp(f64 factor, Exte
                      lerp(factor, Extents<f64>{static_cast<f64>(from.a), static_cast<f64>(to.a)}))};
 }
 
-template <typename T> [[nodiscard]] constexpr auto lerp_inverse(f64 value, Extents<T> range)
+template <typename T> [[nodiscard]] constexpr auto lerp_inverse(f64 value, Extents<T> range_)
 {
-    return range.lerp_inverse(value);
+    return range_.lerp_inverse(value);
 }
 
 // https://stackoverflow.com/questions/1969240/mapping-a-range-of-values-to-another
@@ -78,8 +78,8 @@ template <typename T, typename Output_t = T>
 template <typename T, typename Output_t = T>
 [[nodiscard]] constexpr auto make_mapper(Extents<T> from, Extents<T> to)
 {
-    return [from_min = from.min, from_range = from.size(),
-            to_range = to.size(), to_min = to.min](T value)
+    return [from_min = from.min, from_range = from.size(), to_range = to.size(),
+            to_min = to.min](T value)
     { return static_cast<Output_t>(to_min + (value - from_min) * to_range / from_range); };
 }
 

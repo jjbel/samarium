@@ -38,9 +38,9 @@ auto fill_cache(size_t size) { cache = std::move(detail::get_random(size)); }
 
 auto random() { return cache[current++ % cache_length]; }
 
-template <typename T> [[nodiscard]] auto rand_range(Extents<T> range)
+template <typename T> [[nodiscard]] auto rand_range(Extents<T> range_)
 {
-    return static_cast<T>(range.lerp(random()));
+    return static_cast<T>(range_.lerp(random()));
 }
 
 [[nodiscard]] auto rand_vector(BoundingBox<f64> bounding_box)
