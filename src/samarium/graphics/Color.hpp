@@ -10,7 +10,6 @@
 #include <array>
 #include <string_view>
 
-#include "fmt/format.h"
 
 #include "../core/concepts.hpp" // for u8
 #include "../util/util.hpp"     // for util::strlen
@@ -159,17 +158,3 @@ concept ColorFormat = concepts::AnyOf<T, RGB_t, RGBA_t, BGR_t, BGRA_t>;
 } // namespace concepts
 
 } // namespace sm
-
-
-template <> class fmt::formatter<sm::Color>
-{
-  public:
-    constexpr auto parse(const format_parse_context& ctx) const { return ctx.begin(); }
-
-    auto format(const sm::Color& p, auto& ctx)
-    {
-        return format_to(ctx.out(),
-                         "\x1b[38;2;{0};{1};{2}mCol\x1b[0m[{0:>3}, {1:>3}, {2:>3}, {3:>3}]", p.r,
-                         p.g, p.b, p.a);
-    }
-};

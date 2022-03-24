@@ -8,7 +8,6 @@
 #pragma once
 
 #include "../graphics/Image.hpp"
-#include "../util/print.hpp"
 #include "../util/util.hpp"
 
 namespace sm::file

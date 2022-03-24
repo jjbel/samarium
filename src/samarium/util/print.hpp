@@ -12,7 +12,6 @@
 #include <string_view>
 
 #include "fmt/color.h"
-#include "fmt/format.h"
 
 namespace sm
 {

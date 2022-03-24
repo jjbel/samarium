@@ -45,14 +45,3 @@ class Transform
     }
 };
 } // namespace sm
-
-template <> class fmt::formatter<sm::Transform>
-{
-  public:
-    constexpr auto parse(const format_parse_context& ctx) const { return ctx.begin(); }
-
-    template <typename FormatContext> auto format(const sm::Transform& p, FormatContext& ctx)
-    {
-        return format_to(ctx.out(), "Transform[pos: {}, scale: {}]", p.pos, p.scale);
-    }
-};

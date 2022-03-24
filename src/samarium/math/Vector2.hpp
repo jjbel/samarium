@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include "fmt/color.h"
-
 #include "math.hpp"
 
 namespace sm
@@ -241,17 +239,3 @@ consteval auto operator"" _y(f80 y) noexcept { return Vector2{0, static_cast<f64
 } // namespace literals
 
 } // namespace sm
-
-template <sm::concepts::Number T> class fmt::formatter<sm::Vector2_t<T>>
-{
-  public:
-    constexpr auto parse(const format_parse_context& ctx) { return ctx.begin(); }
-
-    template <typename FormatContext> auto format(const sm::Vector2_t<T>& p, FormatContext& ctx)
-    {
-        return format_to(ctx.out(),
-                         (std::is_floating_point<T>::value ? "\033[1mVec\033[0m({: 6.3f}, {: 6.3f})"
-                                                           : "Vec({:>3}, {:>3})"),
-                         p.x, p.y);
-    }
-};

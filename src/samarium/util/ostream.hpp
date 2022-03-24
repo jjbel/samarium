@@ -7,10 +7,7 @@
 
 #include <iostream>
 
-#include "../core/version.hpp"
-#include "../graphics/Color.hpp"
-#include "../math/BoundingBox.hpp"
-#include "../math/Vector2.hpp"
+#include "../util/format.hpp"
 
 std::ostream& operator<<(std::ostream& os, const sm::Version& a);
 

@@ -10,6 +10,7 @@
 #include <execution>
 #include <iterator>
 #include <span>
+#include <stdexcept>
 
 #include "fmt/format.h"
 

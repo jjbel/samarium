@@ -9,7 +9,6 @@
 
 #include "../core/DynArray.hpp"
 #include "../math/BoundingBox.hpp"
-#include "../util/print.hpp"
 
 #include "Color.hpp"
 

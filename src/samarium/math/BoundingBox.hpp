@@ -72,19 +72,3 @@ template <concepts::Number T = f64> struct BoundingBox
                                                    const BoundingBox<T>& rhs) noexcept = default;
 };
 } // namespace sm
-
-
-template <sm::concepts::Number T> class fmt::formatter<sm::BoundingBox<T>>
-{
-  public:
-    constexpr auto parse(const format_parse_context& ctx) { return ctx.begin(); }
-
-    auto format(const sm::BoundingBox<T>& p, auto& ctx)
-    {
-        return format_to(ctx.out(),
-                         R"(
-BoundingBox(min = {},
-     max = {}))",
-                         p.min, p.max);
-    }
-};

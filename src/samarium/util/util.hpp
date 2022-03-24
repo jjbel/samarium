@@ -8,8 +8,8 @@
 #pragma once
 
 #include <chrono>
+#include <stdexcept>
 
-#include "fmt/format.h"
 
 #include "../core/types.hpp"
 
