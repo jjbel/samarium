@@ -1,4 +1,6 @@
-# Samarium
+<div style="text-align: center;">
+
+<h1> Samarium </h1>
 
 [![GCC](https://github.com/strangeQuark1041/samarium/actions/workflows/gcc.yml/badge.svg)](https://github.com/strangeQuark1041/samarium/actions/workflows/gcc.yml)
 [![Clang](https://github.com/strangeQuark1041/samarium/actions/workflows/clang.yml/badge.svg)](https://github.com/strangeQuark1041/samarium/actions/workflows/clang.yml)
@@ -7,10 +9,12 @@
 
 ![Lines of Code](https://img.shields.io/tokei/lines/github/strangeQuark1041/samarium)
 ![Repo Size](https://img.shields.io/github/repo-size/strangeQuark1041/samarium)
-[![MIT License](https://img.shields.io/badge/license-MIT-yellow)](https://github.com/strangeQuark1041/samarium/blob/main/LICENSE.md)
-![language: C++20](https://img.shields.io/badge/language-C%2B%2B20-yellow)
+<!-- [![MIT License](https://img.shields.io/badge/license-MIT-yellow)](https://github.com/strangeQuark1041/samarium/blob/main/LICENSE.md) -->
+<!-- ![language: C++20](https://img.shields.io/badge/language-C%2B%2B20-yellow) -->
 
 Samarium is a 2d physics simulation library written in modern C++20.
+
+</div>
 
 ## Contents
 
@@ -35,10 +39,10 @@ conan create samarium -b missing
 
 | Dependency | URL | Documentation |
 | ---        | --- | --- |
-| python     | <https://www.python.org/downloads/> | https://www.python.org/doc/ |
-| git        | <https://git-scm.com/downloads/> | https://git-scm.com/docs/ |
-| cmake      | <https://cmake.org/download/> | https://cmake.org/cmake/help/latest/ |
-| conan      | <https://conan.io/downloads.html/> | https://docs.conan.io/en/latest/ |
+| python     | <https://www.python.org/downloads/> | <https://www.python.org/doc/> |
+| git        | <https://git-scm.com/downloads/> | <https://git-scm.com/docs/> |
+| cmake      | <https://cmake.org/download/> | <https://cmake.org/cmake/help/latest/> |
+| conan      | <https://conan.io/downloads.html/> | <https://docs.conan.io/en/latest/> |
 
 A compiler supporting C++20 is required, namely GCC-11, Clang-13, or Visual C++ 2019
 
@@ -65,8 +69,7 @@ cmake --build ./build
 
 ## Documentation
 
-Documentation is located on [Github Pages here](https://strangequark1041.github.io/samarium/) or locally in  [docs/README.md](docs/README.md)
-
+Documentation is located at [Github Pages](https://strangequark1041.github.io/samarium_docs/)
 ## License
 
 Samarium is distributed under the permissive [MIT License](LICENSE.md).
@@ -75,5 +78,5 @@ Samarium is distributed under the permissive [MIT License](LICENSE.md).
 
 These sources were of invaluable help during development:
 
-1. C++ Standard: https://en.cppreference.com/
-2. Custom iterators: https://internalpointers.com/post/writing-custom-iterators-modern-cpp
+1. C++ Standard: <https://en.cppreference.com/>
+2. Custom iterators: <https://internalpointers.com/post/writing-custom-iterators-modern-cpp>
