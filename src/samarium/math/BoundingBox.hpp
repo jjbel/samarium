@@ -41,7 +41,8 @@ template <concepts::Number T = f64> struct BoundingBox
     [[nodiscard]] static constexpr auto
     from_centre_width_height(Vector2_t<T> centre, T width, T height) noexcept
     {
-        const auto vec = Vector2_t<T>{.x = width / static_cast<T>(2), .y = height / static_cast<T>(2)};
+        const auto vec =
+            Vector2_t<T>{.x = width / static_cast<T>(2), .y = height / static_cast<T>(2)};
         return BoundingBox{centre - vec, centre + vec};
     }
 
@@ -67,6 +68,9 @@ template <concepts::Number T = f64> struct BoundingBox
 
     [[nodiscard]] constexpr auto width() const { return max.x - min.x; }
     [[nodiscard]] constexpr auto height() const { return max.y - min.y; }
+
+    [[nodiscard]] constexpr auto x_range() const { return Extents<T>{min.x, max.x}; }
+    [[nodiscard]] constexpr auto y_range() const { return Extents<T>{min.y, max.y}; }
 
     [[nodiscard]] constexpr friend bool operator==(const BoundingBox<T>& lhs,
                                                    const BoundingBox<T>& rhs) noexcept = default;
