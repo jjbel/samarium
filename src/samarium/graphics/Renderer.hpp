@@ -70,9 +70,9 @@ class Renderer
 
         if (math::area(box) == 0UL) return;
 
-        for (size_t y = box.min.y; y < box.max.y; y++)
+        for (auto y : box.y_range())
         {
-            for (size_t x = box.min.x; x < box.max.x; x++)
+            for (auto x : box.x_range())
             {
                 const auto coords             = Indices{x, y};
                 const auto coords_transformed = transform.apply_inverse(coords.template as<f64>());
