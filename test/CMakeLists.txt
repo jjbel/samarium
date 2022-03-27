@@ -19,7 +19,11 @@ option(SKIP_EXTRA_TESTS "Only run the main program and not the tests" OFF)
 if(SKIP_EXTRA_TESTS)
     set(TEST_SOURCES "samarium_tests.cpp")
 else()
-    set(TEST_SOURCES "tests/Vector2.cpp" "tests/concepts.cpp")
+    set(TEST_SOURCES
+        tests/Vector2.cpp
+        tests/concepts.cpp
+        tests/main.cpp
+    )
 endif()
 
 message(STATUS "Test sources: ${TEST_SOURCES}")
