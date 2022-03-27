@@ -25,7 +25,6 @@
             "name": "gcc",
             "inherits": "ninja",
             "cacheVariables": {
-                "CMAKE_C_COMPILER": "gcc",
                 "CMAKE_CXX_COMPILER": "g++"
             }
         },
@@ -33,7 +32,6 @@
             "name": "clang",
             "inherits": "ninja",
             "cacheVariables": {
-                "CMAKE_C_COMPILER": "clang",
                 "CMAKE_CXX_COMPILER": "clang++"
             }
         },
@@ -50,6 +48,7 @@
         },
         {
             "name": "home",
+            "description": "Use gcc, Ninja, and skip tests",
             "inherits": "gcc",
             "cacheVariables": {
                 "SKIP_TESTS": "ON"
@@ -61,7 +60,6 @@
             "name": "default",
             "configurePreset": "default",
             "configuration": "Release",
-            "cleanFirst": true,
             "jobs": 6
         },
         {
