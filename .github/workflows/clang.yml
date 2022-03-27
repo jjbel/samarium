@@ -39,11 +39,6 @@ jobs:
       - name: Install TBB
         run: sudo apt-get update && sudo apt-get install libtbb-dev
 
-      - name: Install mold
-        run: |
-          wget https://github.com/rui314/mold/releases/download/v1.1.1/mold-1.1.1-x86_64-linux.tar.gz
-          tar -xf ./mold-1.1.1-x86_64-linux.tar.gz
-
       - name: Check Tool Versions
         run: |
           conan    --version
@@ -58,7 +53,7 @@ jobs:
         run: cmake --preset=clang
 
       - name: CMake Build
-        run: ./mold-1.1.1-x86_64-linux/bin/mold -run cmake --build --preset=clang
+        run: cmake --build --preset=clang
 
       - name: CTest
         run: ctest --preset=default
