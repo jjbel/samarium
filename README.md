@@ -1,4 +1,4 @@
-<div style="text-align: center;">
+<p align="center;">
 
 <h1> Samarium </h1>
 
@@ -14,7 +14,7 @@
 
 Samarium is a 2d physics simulation library written in modern C++20.
 
-</div>
+</p>
 
 ## Contents
 
