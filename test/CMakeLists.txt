@@ -15,17 +15,15 @@ list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})
 find_package(SFML COMPONENTS system window graphics REQUIRED)
 find_package(fmt REQUIRED)
 
-if(NOT TEST_FILE)
-    set(TEST_FILE "${CMAKE_CURRENT_SOURCE_DIR}/samarium_tests.cpp")
+option(SKIP_EXTRA_TESTS "Only run the main program and not the tests" OFF)
+if(SKIP_EXTRA_TESTS)
+    set(TEST_SOURCES "samarium_tests.cpp")
+else()
+    set(TEST_SOURCES "tests/Vector2.cpp" "tests/concepts.cpp")
 endif()
 
-message(STATUS "Using test file for main(): ${TEST_FILE}")
-add_executable(samarium_tests ${TEST_FILE})
-
-option(SKIP_TESTS "Only run the main program and not the tests" OFF)
-if(NOT SKIP_TESTS)
-    target_sources(samarium_tests PRIVATE tests/Vector2.cpp tests/concepts.cpp)
-endif()
+message(STATUS "Test sources: ${TEST_SOURCES}")
+add_executable(samarium_tests ${TEST_SOURCES})
 
 target_include_directories(samarium_tests PRIVATE ${CMAKE_SOURCE_DIR}/src)
 

@@ -48,10 +48,10 @@
         },
         {
             "name": "home",
-            "description": "Use gcc, Ninja, and skip tests",
+            "description": "Use gcc, Ninja, and skip extra tests",
             "inherits": "gcc",
             "cacheVariables": {
-                "SKIP_TESTS": "ON"
+                "SKIP_EXTRA_TESTS": "ON"
             }
         }
     ],
