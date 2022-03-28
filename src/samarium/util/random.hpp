@@ -34,7 +34,7 @@ static auto get_random(size_t size)
 
 static std::vector<f64> cache = detail::get_random(4000u);
 
-auto fill_cache(size_t size) { cache = std::move(detail::get_random(size)); }
+auto fill_cache(size_t size) { cache = detail::get_random(size); }
 
 auto random() { return cache[current++ % cache_length]; }
 
