@@ -9,6 +9,7 @@
 
 #include "./core/version.hpp"
 #include "./gui/Window.hpp"
+#include "./math/interp.hpp"
 #include "./physics/collision.hpp"
 #include "./util/Stopwatch.hpp"
 #include "./util/file.hpp"
