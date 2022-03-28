@@ -65,7 +65,7 @@ class Window
           target_framerate{settings.framerate}
     {
         window.setFramerateLimit(settings.framerate);
-        keymap.push_back({sf::Keyboard::LControl, sf::Keyboard::Q}, // exit by default with Ctrl+Q
+        keymap.push_back({Keyboard::LControl, Keyboard::Q}, // exit by default with Ctrl+Q
                          [&window = this->window] { window.close(); });
     }
 
