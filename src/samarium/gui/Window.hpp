@@ -10,7 +10,7 @@
 #include "../graphics/Renderer.hpp" // for Renderer
 #include "../util/Stopwatch.hpp"    // for Stopwatch
 
-#include "Keymap.hpp"
+#include "Keyboard.hpp"
 #include "Mouse.hpp"
 
 namespace sm

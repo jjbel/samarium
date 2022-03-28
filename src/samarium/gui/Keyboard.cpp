@@ -5,7 +5,7 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
-#include "Keymap.hpp"
+#include "Keyboard.hpp"
 
 namespace sm
 {
