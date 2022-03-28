@@ -67,7 +67,7 @@ class Color
                      static_cast<u8>(colors[2] * 255), static_cast<u8>(colors[3] * 255)};
     }
 
-    static consteval auto from_hex(const char* str)
+    [[nodiscard]] static consteval auto from_hex(const char* str)
     {
         const auto length = util::strlen(str);
         if (str[0] != '#') throw std::invalid_argument("Hex string must start with #");
@@ -87,8 +87,12 @@ class Color
         return Color{r, g, b, a};
     }
 
-    // https://en.m.wikipedia.org/wiki/Alpha_compositing
+    [[nodiscard]] static constexpr auto from_grayscale(u8 value)
+    {
+        return Color{value, value, value};
+    }
 
+    // https://en.m.wikipedia.org/wiki/Alpha_compositing
     constexpr auto add_alpha_over(const Color& that) noexcept
     {
         // if (that.a == 0) return;
