@@ -103,6 +103,8 @@ template <concepts::Arithmetic T> class Extents
     {
         return Iterator{max};
     }
+
+    [[nodiscard]] constexpr auto operator[](u64 index) const { return min + index; }
 };
 
 
