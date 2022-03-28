@@ -21,7 +21,7 @@ void Keymap::run() const
     {
         for (auto key : map[i])
         {
-            if (!sf::Keyboard::isKeyPressed(key)) return;
+            if (!Keyboard::is_key_pressed(key)) return;
         }
 
         actions[i]();
