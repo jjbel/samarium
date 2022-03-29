@@ -21,7 +21,7 @@ template <size_t size> class Gradient
     std::array<Color, size> colors;
 
   public:
-    explicit constexpr Gradient(std::array<Color, size> colors_) : colors(colors_) {}
+    constexpr Gradient(auto&&... colors_) : colors{colors_...} {}
 
     [[nodiscard]] auto operator()(f64 factor) const
     {
@@ -37,13 +37,15 @@ template <size_t size> class Gradient
     }
 };
 
+template <typename... Args> Gradient(Args... args) -> Gradient<sizeof...(Args)>;
+
 template <> class Gradient<2>
 {
     Color from{};
     Color to{};
 
   public:
-    explicit constexpr Gradient(std::array<Color, 2> colors) : from{colors[0]}, to{colors[1]} {}
+    explicit constexpr Gradient(Color from_, Color to_) : from{from_}, to{to_} {}
 
     constexpr auto operator()(f64 factor) const { return interp::lerp_rgb(factor, from, to); }
 };
@@ -55,8 +57,8 @@ template <> class Gradient<3>
     Color to{};
 
   public:
-    explicit constexpr Gradient(std::array<Color, 3> colors)
-        : from{colors[0]}, mid{colors[1]}, to{colors[2]}
+    explicit constexpr Gradient(Color from_, Color mid_, Color to_)
+        : from{from_}, mid{mid_}, to{to_}
     {
     }
 
