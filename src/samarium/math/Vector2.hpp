@@ -42,6 +42,11 @@ template <concepts::Number T> class Vector2_t
 
     [[nodiscard]] constexpr auto slope() const noexcept { return y / x; }
 
+    [[nodiscard]] static constexpr auto combine(T value)
+    {
+        return Vector2_t{.x = value, .y = value};
+    }
+
     [[nodiscard]] static constexpr auto
     from_polar(Polar polar) noexcept requires concepts::FloatingPoint<T>
     {
