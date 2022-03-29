@@ -14,10 +14,11 @@
 
 namespace sm
 {
-constexpr inline auto dims4K  = Dimensions{3840u, 2160u};
-constexpr inline auto dims720 = Dimensions{1280u, 720u};
-constexpr inline auto dimsFHD = Dimensions{1920u, 1080u};
-constexpr inline auto dimsP2  = Dimensions{2048u, 1024u};
+constexpr inline auto dims4K  = Dimensions{3840UL, 2160UL};
+constexpr inline auto dimsFHD = Dimensions{1920UL, 1080UL};
+constexpr inline auto dims720 = Dimensions{1280UL, 720UL};
+constexpr inline auto dims480 = Dimensions{640UL, 480UL};
+constexpr inline auto dimsP2  = Dimensions{2048UL, 1024UL};
 
 constexpr auto convert_1d_to_2d(Dimensions dims, size_t index)
 {
