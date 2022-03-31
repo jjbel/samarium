@@ -14,5 +14,6 @@
 #include "./util/Stopwatch.hpp"
 #include "./util/file.hpp"
 #include "./util/format.hpp"
+#include "./util/print.hpp"
 #include "./util/random.hpp"
 #include "./util/terminal_dims.hpp"
