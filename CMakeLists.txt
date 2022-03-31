@@ -20,7 +20,10 @@ include(conan_install)
 conan_install()
 
 include(ccache)
-use_ccache()
+option(USE_CCACHE "Use Ccache" TRUE)
+if(USE_CCACHE)
+    use_ccache()
+endif()
 
 # set compilation warnings and flags
 include(compiler_warnings)
@@ -38,3 +41,9 @@ add_test(NAME SamariumTests COMMAND samarium_tests)
 option(GENERATE_COVERAGE "Generate coverage reports" FALSE)
 include(coverage)
 generate_coverage(samarium_tests)
+
+option(USE_IWYU "Use include what you use" FALSE)
+if(USE_IWYU)
+    find_program(iwyu_path NAMES include-what-you-use iwyu REQUIRED)
+    set_property(TARGET samarium_tests PROPERTY CXX_INCLUDE_WHAT_YOU_USE ${iwyu_path})
+endif()

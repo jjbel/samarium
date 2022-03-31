@@ -7,11 +7,10 @@
 
 #pragma once
 
-#include <chrono>
-#include <stdexcept>
-
-
-#include "../core/types.hpp"
+#include "../core/types.hpp" // for u8
+#include <stddef.h>          // for size_t
+#include <stdexcept>         // for invalid_argument
+#include <string>            // for string
 
 namespace sm::util
 {

@@ -7,14 +7,26 @@
 
 #pragma once
 
-#include "../core/ThreadPool.hpp"
-#include "../math/Transform.hpp"
-#include "../math/geometry.hpp"
-#include "../physics/Particle.hpp"
+#include <array>   // for array
+#include <cstddef> // for size_t
+#include <span>    // for span
+#include <thread>  // for thread
+#include <utility> // for forward
 
-#include "Gradient.hpp"
-#include "Image.hpp"
-#include "Trail.hpp"
+#include "../core/ThreadPool.hpp"  // for ThreadPool
+#include "../core/types.hpp"       // for f64, u64, u32
+#include "../graphics/Color.hpp"   // for Color
+#include "../math/BoundingBox.hpp" // for BoundingBox
+#include "../math/Extents.hpp"     // for Extents, Extents<>::Iterator
+#include "../math/Transform.hpp"   // for Transform
+#include "../math/Vector2.hpp"     // for Vector2_t, Vector2, operator+
+#include "../math/geometry.hpp"    // for area, clamped_distance, cla...
+#include "../math/interp.hpp"      // for clamp, make_mapper
+#include "../math/shapes.hpp"      // for LineSegment, Circle
+#include "../physics/Particle.hpp" // for Particle
+
+#include "Image.hpp" // for Image, dimsFHD
+#include "Trail.hpp" // for Trail
 
 namespace sm
 {

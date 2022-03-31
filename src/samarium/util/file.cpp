@@ -5,13 +5,18 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
-#include <array>
-#include <filesystem>
-#include <fstream>
+#include <array>     // for to_array, array
+#include <chrono>    // for filesystem
+#include <execution> // for transform
+#include <fstream>   // for ofstream, basic_ostream::write
+#include <new>       // for bad_alloc
+#include <string>    // for string
 
-#include "../graphics/Image.hpp"
-
-#include "print.hpp"
+#include "../core/DynArray.hpp"  // for DynArray
+#include "../core/types.hpp"     // for u8
+#include "../graphics/Color.hpp" // for BGR_t, bgr
+#include "../graphics/Image.hpp" // for Image
+#include "../math/Vector2.hpp"   // for Dimensions
 
 namespace sm::file
 {

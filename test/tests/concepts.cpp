@@ -5,9 +5,11 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
-#include "../ut.hpp"
+#include <exception> // for exception
+#include <vector>    // for vector
 
-#include "samarium/core/concepts.hpp"
+#include "../../src/samarium/core/concepts.hpp" // for i16, i32, i64, i8, u16, u32, u64, u8
+#include "../ut.hpp"                            // for expect, fatal_assertion, operator...
 
 boost::ut::suite concepts = []
 {

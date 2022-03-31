@@ -29,13 +29,18 @@
 
 // #define THREAD_POOL_VERSION "v2.0.0 (2021-08-14)"
 
-#include <atomic> // std::atomic
-#include <future> // std::future, std::promise
-#include <memory> // std::shared_ptr, std::unique_ptr
-#include <mutex>  // std::mutex, std::scoped_lock
-#include <queue>  // std::queue
-#include <thread> // std::this_thread, std::thread
-#include <type_traits> // std::common_type_t, std::decay_t, std::enable_if_t, std::is_void_v, std::invoke_result_t
+#include <atomic>      // for atomic, __atomic_base
+#include <chrono>      // for microseconds
+#include <exception>   // for current_exception
+#include <functional>  // for function
+#include <future>      // for promise, future
+#include <memory>      // for shared_ptr, __shared_ptr_access
+#include <mutex>       // for scoped_lock, mutex
+#include <queue>       // for queue
+#include <stdint.h>    // for uint_fast32_t, uint_fast64_t
+#include <thread>      // for thread, yield
+#include <type_traits> // for decay_t, enable_if_t, invoke_res...
+#include <utility>     // for swap, move
 
 
 namespace sm

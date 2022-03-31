@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "./util/util.hpp"
 #include "./util/file.hpp"
 #include "./util/print.hpp"
 #include "./util/random.hpp"

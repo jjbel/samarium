@@ -53,6 +53,15 @@
             "cacheVariables": {
                 "SKIP_EXTRA_TESTS": "ON"
             }
+        },
+        {
+            "name": "iwyu",
+            "description": "Run Include What You Use",
+            "inherits": "clang",
+            "generator": "Unix Makefiles",
+            "cacheVariables": {
+                "USE_IWYU": "TRUE"
+            }
         }
     ],
     "buildPresets": [
@@ -83,6 +92,12 @@
             "configuration": "Debug",
             "targets": "coverage",
             "cleanFirst": true
+        },
+        {
+            "name": "iwyu",
+            "configurePreset": "iwyu",
+            "configuration": "Debug",
+            "jobs": 1
         }
     ],
     "testPresets": [

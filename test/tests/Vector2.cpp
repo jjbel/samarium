@@ -5,10 +5,21 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
-#include "../ut.hpp"
+#include <cmath>            // for sqrt
+#include <exception>        // for exception
+#include <initializer_list> // for initializer_list
+#include <optional>         // for optional
+#include <type_traits>      // for is_same_v
+#include <vector>           // for vector
 
-#include "../../src/samarium/math/Vector2.hpp"
-#include "../../src/samarium/math/geometry.hpp"
+#include "../ut.hpp" // for testing
+
+#include "../../src/samarium/core/types.hpp"       // for f64
+#include "../../src/samarium/math/BoundingBox.hpp" // for BoundingBox
+#include "../../src/samarium/math/Vector2.hpp"     // for Vector2_t, operator==
+#include "../../src/samarium/math/geometry.hpp"    // for clamped_intersection
+#include "../../src/samarium/math/math.hpp"        // for almost_equal, to_rad...
+#include "../../src/samarium/math/shapes.hpp"      // for Circle
 
 using namespace boost::ut;
 
