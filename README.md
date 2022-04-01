@@ -70,6 +70,9 @@ cmake --build ./build
 ## Documentation
 
 Documentation is located at [Github Pages](https://strangequark1041.github.io/samarium_docs/)
+
+For development, see [BUILDING.md](BUILDING.md)
+
 ## License
 
 Samarium is distributed under the permissive [MIT License](LICENSE.md).
