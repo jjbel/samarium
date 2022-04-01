@@ -10,4 +10,5 @@ rm -f ./build/test/samarium_tests
 
 echo "Compiling..."
 ./scripts/build.sh
+echo "Done"
 ~/bin/tryrun ./build/test/samarium_tests
