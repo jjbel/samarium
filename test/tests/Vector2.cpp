@@ -127,7 +127,8 @@ boost::ut::suite _Vector2 = []
             should("Circle") = []
             {
                 expect(sm::math::area(sm::Circle{}) == 0.0_d);
-                expect(sm::math::area(sm::Circle{.radius = 12.0}) == 452.3893421169302_d);
+                expect(sm::math::almost_equal(sm::math::area(sm::Circle{.radius = 12.0}),
+                                              452.3893421169302));
             };
 
             should("BoundingBox") = []
