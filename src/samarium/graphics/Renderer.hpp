@@ -81,20 +81,25 @@ class Renderer
                              .template as<size_t>();
 
         if (math::area(box) == 0UL) return;
+        const auto r = box.y_range();
 
-        for (auto y : box.y_range())
+        const auto job = [&](auto a, auto b)
         {
-            for (auto x : box.x_range())
-            {
-                const auto coords             = Indices{x, y};
-                const auto coords_transformed = transform.apply_inverse(coords.template as<f64>());
+            for (u64 y = a; y < b; y++)
+                for (auto x : box.x_range())
+                {
+                    const auto coords = Indices{x, y};
+                    const auto coords_transformed =
+                        transform.apply_inverse(coords.template as<f64>());
 
-                // image[coords].add_alpha_over(Color{255, 80, 200, 100});
-                const auto col = fn(coords_transformed);
+                    // image[coords].add_alpha_over(Color{255, 80, 200, 100});
+                    const auto col = fn(coords_transformed);
 
-                image[coords].add_alpha_over(col);
-            }
-        }
+                    image[coords].add_alpha_over(col);
+                }
+        };
+
+        thread_pool.parallelize_loop(r.min, r.max + 1, job, 6);
     }
 
     void draw(Circle circle, Color color, f64 aa_factor = 1.6);
