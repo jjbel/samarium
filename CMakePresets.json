@@ -47,7 +47,7 @@
             }
         },
         {
-            "name": "home",
+            "name": "dev",
             "description": "Use gcc, Ninja, and skip extra tests",
             "inherits": "gcc",
             "cacheVariables": {
@@ -82,9 +82,9 @@
             "configurePreset": "clang"
         },
         {
-            "name": "home",
+            "name": "dev",
             "inherits": "default",
-            "configurePreset": "home"
+            "configurePreset": "dev"
         },
         {
             "name": "coverage",
@@ -107,6 +107,9 @@
             "configuration": "Release",
             "output": { "outputOnFailure": true, "verbosity": "extra" },
             "execution": { "noTestsAction": "error", "stopOnFailure": true }
+        },
+        {
+            
         },
         {
             "name": "coverage",
