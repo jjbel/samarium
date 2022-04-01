@@ -8,6 +8,8 @@ cmake_minimum_required(VERSION 3.16)
 project(
     samarium
     VERSION 1.0.0
+    DESCRIPTION "2-D physics simulation engine written in modern C++"
+    HOMEPAGE_URL "https://github.com/strangeQuark1041/samarium"
     LANGUAGES CXX
 )
 
@@ -43,11 +45,11 @@ if(WARNINGS)
     target_compile_options(samarium PUBLIC ${WARNINGS})
 endif()
 
-target_link_libraries(samarium PUBLIC fmt::fmt)
-target_link_libraries(samarium PUBLIC sfml-graphics)
+target_link_libraries(samarium PRIVATE fmt::fmt)
+target_link_libraries(samarium PRIVATE sfml-graphics)
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND NOT WIN32)
     find_package(TBB REQUIRED)
     message(STATUS "Using TBB")
-    target_link_libraries(samarium PUBLIC TBB::tbb)
+    target_link_libraries(samarium PRIVATE TBB::tbb)
 endif()
