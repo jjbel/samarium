@@ -109,7 +109,8 @@
             "execution": { "noTestsAction": "error", "stopOnFailure": true }
         },
         {
-            
+            "name": "dev",
+            "inherits": "default"
         },
         {
             "name": "coverage",
