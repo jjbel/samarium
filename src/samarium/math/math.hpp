@@ -57,17 +57,27 @@ template <concepts::Number T> [[nodiscard]] constexpr auto abs(T x) noexcept
     return x >= T{} ? x : -x;
 }
 
-template <typename T> [[nodiscard]] constexpr int sign(T x, std::false_type /* is_signed */)
+template <typename T>
+[[nodiscard]] constexpr int sign(T x, std::false_type /* is_signed */) noexcept
 {
     return T(0) < x;
 }
 
-template <typename T> [[nodiscard]] constexpr int sign(T x, std::true_type /* is_signed */)
+template <typename T> [[nodiscard]] constexpr int sign(T x, std::true_type /* is_signed */) noexcept
 {
     return (T(0) < x) - (x < T(0));
 }
 
-template <typename T> [[nodiscard]] constexpr int sign(T x) { return sign(x, std::is_signed<T>()); }
+template <typename T> [[nodiscard]] constexpr int sign(T x) noexcept
+{
+    return sign(x, std::is_signed<T>());
+}
+
+template <concepts::FloatingPoint T> constexpr auto mod(T x, T y) noexcept
+{
+    return x - trunc(x / y) * y;
+}
+// https://stackoverflow.com/a/67098028
 
 } // namespace sm::math
 
