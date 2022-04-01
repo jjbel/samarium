@@ -20,17 +20,17 @@ class LinearCongruentialGenerator
   public:
     constexpr LinearCongruentialGenerator(u16 new_seed = 0) noexcept : seed{new_seed} {}
 
-[[nodiscard]] constexpr auto next() noexcept
-{
-    seed = seed * a + c;
-    return (seed >> 16) & 0x7fff;
-}
+    [[nodiscard]] constexpr auto next() noexcept
+    {
+        seed = seed * a + c;
+        return (seed >> 16) & 0x7fff;
+    }
 
-u32 seed;
+    u32 seed;
 
-private:
-const u16 a = u16(214013);
-const u16 c = u16(2531011);
+  private:
+    const u16 a = u16(214013);
+    const u16 c = u16(2531011);
 };
 
 template <size_t size> class Cache
