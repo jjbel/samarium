@@ -22,7 +22,7 @@ list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})
 find_package(SFML 2.5 COMPONENTS system window graphics REQUIRED)
 find_package(fmt REQUIRED)
 
-add_library(samarium_samarium
+add_library(samarium
     ./samarium/core/ThreadPool.cpp
     ./samarium/util/util.cpp
     ./samarium/util/file.cpp
@@ -34,23 +34,38 @@ add_library(samarium_samarium
     ./samarium/gui/Window.cpp
     ./samarium/graphics/Trail.cpp
     ./samarium/physics/Car.cpp
-    # ./samarium/physics/fluid/Fluid.cpp
+    ./samarium/physics/fluid/Fluid.cpp
 )
-add_library(samarium::samarium ALIAS samarium_samarium)
+add_library(samarium::samarium ALIAS samarium)
 
-target_compile_features(samarium_samarium PUBLIC cxx_std_20)
+set_target_properties(
+    samarium PROPERTIES
+    CXX_VISIBILITY_PRESET hidden
+    VISIBILITY_INLINES_HIDDEN YES
+    VERSION "${PROJECT_VERSION}"
+    SOVERSION "${PROJECT_VERSION_MAJOR}"
+    EXPORT_NAME samarium
+    OUTPUT_NAME samarium
+)
 
-target_include_directories(samarium_samarium PUBLIC "${CMAKE_CURRENT_LIST_DIR}")
+set_target_properties(samarium
+    PROPERTIES
+        CXX_STANDARD 20
+        CXX_STANDARD_REQUIRED YES
+        CXX_EXTENSIONS NO
+)
+
+target_include_directories(samarium PUBLIC "${CMAKE_CURRENT_LIST_DIR}")
 
 if(WARNINGS)
-    target_compile_options(samarium_samarium PUBLIC ${WARNINGS})
+    target_compile_options(samarium PUBLIC ${WARNINGS})
 endif()
 
-target_link_libraries(samarium_samarium PRIVATE fmt::fmt)
-target_link_libraries(samarium_samarium PRIVATE sfml-graphics)
+target_link_libraries(samarium PRIVATE fmt::fmt)
+target_link_libraries(samarium PRIVATE sfml-graphics)
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND NOT WIN32)
     find_package(TBB REQUIRED)
     message(STATUS "Using TBB")
-    target_link_libraries(samarium_samarium PRIVATE TBB::tbb)
+    target_link_libraries(samarium PRIVATE TBB::tbb)
 endif()
