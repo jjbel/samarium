@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ ! -d "./build" ]; then
-    cmake --preset=home &> /dev/null
+    cmake --preset=dev &> /dev/null
 fi
 
 find ./build -name "*.gcda" -type f -delete &> /dev/null
