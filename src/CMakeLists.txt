@@ -34,7 +34,6 @@ add_library(samarium
     ./samarium/gui/Window.cpp
     ./samarium/graphics/Trail.cpp
     ./samarium/physics/Car.cpp
-    ./samarium/physics/fluid/Fluid.cpp
 )
 add_library(samarium::samarium ALIAS samarium)
 
