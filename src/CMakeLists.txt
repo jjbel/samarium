@@ -22,19 +22,73 @@ list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})
 find_package(SFML 2.5 COMPONENTS system window graphics REQUIRED)
 find_package(fmt REQUIRED)
 
-add_library(samarium
+set(
+    SAMARIUM_HEADERS
+    ./samarium/core/concepts.hpp
+    ./samarium/core/DynArray.hpp
+    ./samarium/core/ThreadPool.hpp
+    ./samarium/core/types.hpp
+    ./samarium/core/version.hpp
+    ./samarium/gui/Window.hpp
+    ./samarium/gui/sfml.hpp
+    ./samarium/gui/Mouse.hpp
+    ./samarium/gui/Keyboard.hpp
+    ./samarium/math/Extents.hpp
+    ./samarium/math/interp.hpp
+    ./samarium/math/math.hpp
+    ./samarium/math/shapes.hpp
+    ./samarium/math/Transform.hpp
+    ./samarium/math/Vector2.hpp
+    ./samarium/math/geometry.hpp
+    ./samarium/math/Dual.hpp
+    ./samarium/math/BoundingBox.hpp
+    ./samarium/math/complex.hpp
+    ./samarium/graphics/Color.hpp
+    ./samarium/graphics/Image.hpp
+    ./samarium/graphics/Renderer.hpp
+    ./samarium/graphics/colors.hpp
+    ./samarium/graphics/Gradient.hpp
+    ./samarium/graphics/gradients.hpp
+    ./samarium/graphics/Trail.hpp
+    ./samarium/physics/Particle.hpp
+    ./samarium/physics/collision.hpp
+    ./samarium/physics/Car.hpp
+    ./samarium/physics/fluid/Fluid.hpp
+    ./samarium/util/file.hpp
+    ./samarium/util/print.hpp
+    ./samarium/util/random.hpp
+    ./samarium/util/util.hpp
+    ./samarium/util/terminal_dims.hpp
+    ./samarium/util/date.hpp
+    ./samarium/util/ostream.hpp
+    ./samarium/util/Stopwatch.hpp
+    ./samarium/util/format.hpp
+    ./samarium/core.hpp
+    ./samarium/graphics.hpp
+    ./samarium/gui.hpp
+    ./samarium/math.hpp
+    ./samarium/physics.hpp
+    ./samarium/util.hpp
+    ./samarium/samarium.hpp
+)
+
+set(
+    SAMARIUM_SOURCES
     ./samarium/core/ThreadPool.cpp
-    ./samarium/util/util.cpp
-    ./samarium/util/file.cpp
-    ./samarium/util/ostream.cpp
-    ./samarium/util/Stopwatch.cpp
-    ./samarium/graphics/Renderer.cpp
-    ./samarium/gui/Keyboard.cpp
-    ./samarium/gui/Mouse.cpp
     ./samarium/gui/Window.cpp
+    ./samarium/gui/Mouse.cpp
+    ./samarium/gui/Keyboard.cpp
+    ./samarium/graphics/Renderer.cpp
     ./samarium/graphics/Trail.cpp
     ./samarium/physics/Car.cpp
+    ./samarium/util/file.cpp
+    ./samarium/util/util.cpp
+    ./samarium/util/ostream.cpp
+    ./samarium/util/Stopwatch.cpp
 )
+
+add_library(samarium "${SAMARIUM_SOURCES}" ${SAMARIUM_HEADERS})
+
 add_library(samarium::samarium ALIAS samarium)
 
 set_target_properties(
@@ -45,13 +99,9 @@ set_target_properties(
     SOVERSION "${PROJECT_VERSION_MAJOR}"
     EXPORT_NAME samarium
     OUTPUT_NAME samarium
-)
-
-set_target_properties(samarium
-    PROPERTIES
-        CXX_STANDARD 20
-        CXX_STANDARD_REQUIRED YES
-        CXX_EXTENSIONS NO
+    CXX_STANDARD 20
+    CXX_STANDARD_REQUIRED YES
+    CXX_EXTENSIONS NO
 )
 
 target_include_directories(samarium PUBLIC "${CMAKE_CURRENT_LIST_DIR}")
@@ -68,3 +118,17 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND NOT WIN32)
     message(STATUS "Using TBB")
     target_link_libraries(samarium PRIVATE TBB::tbb)
 endif()
+
+install(
+    TARGETS samarium
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+)
+
+install(
+    DIRECTORY "${CMAKE_SOURCE_DIR}/src/samarium" # source directory
+    DESTINATION "include" # target directory
+    FILES_MATCHING # install only matched files
+    PATTERN "*.hpp" # select header files
+)

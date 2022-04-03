@@ -11,6 +11,7 @@
             "displayName": "Default Config",
             "description": "Default build",
             "binaryDir": "${sourceDir}/build/",
+            "installDir": "${sourceDir}/build/install/",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release",
                 "CMAKE_EXPORT_COMPILE_COMMANDS": true
