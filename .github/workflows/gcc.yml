@@ -152,7 +152,6 @@ jobs:
           mkdir -p example
           cd example
           git clone --depth 1 https://github.com/strangeQuark1041/samarium_example.git .
-          conan install . -b missing -if build
-          cmake -B build
-          cmake --build build --config Release
+          cmake --preset=default
+          cmake --build --preset=default
           ./build/bin/example
