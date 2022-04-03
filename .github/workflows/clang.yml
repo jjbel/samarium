@@ -57,6 +57,3 @@ jobs:
 
       - name: CTest
         run: ctest --preset=default
-        continue-on-error: true
-      - name: Allow failures
-        run: true

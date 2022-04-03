@@ -40,9 +40,6 @@ jobs:
 
       - name: CTest
         run: ctest --preset=default
-        continue-on-error: true
-      - name: Allow failures
-        run: true
 
   windows-install:
     runs-on: windows-2022

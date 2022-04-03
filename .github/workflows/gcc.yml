@@ -93,8 +93,6 @@ jobs:
 
       - name: CTest
         run: ctest --preset=default
-        continue-on-error: true
-      - run: true # https://github.com/actions/toolkit/issues/399#issuecomment-1058231820
 
       # - name: Build Coverage
       #   run: ./scripts/coverage_wrapper.sh
