@@ -44,3 +44,9 @@ __pycache__/
 *.exe
 *.out
 *.app
+
+# System Headers
+/usr/include/c++
+
+# Conan libraries
+**/.conan/data

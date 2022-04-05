@@ -14,10 +14,10 @@ namespace sm
 {
 struct Keyboard
 {
-    enum Key
+    enum class Key
     {
         Unknown = -1, //!< Unhandled key
-        A       = 0,  //!< The A key
+        A,            //!< The A key
         B,            //!< The B key
         C,            //!< The C key
         D,            //!< The D key
@@ -122,7 +122,7 @@ struct Keyboard
         KeyCount //!< Keep last -- the total number of keyboard keys
     };
 
-    static bool is_key_pressed(Key key)
+    static auto is_key_pressed(Key key)
     {
         return sf::Keyboard::isKeyPressed(static_cast<sf::Keyboard::Key>(key));
     }
@@ -139,7 +139,7 @@ class Keymap
   public:
     Keymap() = default;
 
-    explicit Keymap(std::vector<std::pair<Keys_t, Action_t>>&& input_keymap)
+    explicit Keymap(const std::vector<std::pair<Keys_t, Action_t>>& input_keymap)
     {
         map.reserve(input_keymap.size());
         actions.reserve(input_keymap.size());

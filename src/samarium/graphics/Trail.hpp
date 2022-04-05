@@ -23,10 +23,10 @@ class Trail
 
     explicit Trail(size_t length = 50) : max_length{length} { trail.reserve(length); }
 
-    size_t size() const;
+    [[nodiscard]] auto size() const -> size_t;
 
     void push_back(Vector2 pos);
 
-    std::span<const Vector2> span() const;
+    [[nodiscard]] auto span() const -> std::span<const Vector2>;
 };
 } // namespace sm

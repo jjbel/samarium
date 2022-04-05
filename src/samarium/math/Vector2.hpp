@@ -20,9 +20,8 @@ namespace sm
  * auto vec = Vector2{.x = 4.2, .y = -1.4};
  * @endcode
  */
-template <concepts::Number T> class Vector2_t
+template <concepts::Number T> struct Vector2_t
 {
-  public:
     using value_type = T;
 
     T x{};

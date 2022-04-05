@@ -31,18 +31,23 @@ void error(const auto&... args)
     fmt::print(stderr, "\n");
 }
 
-// #ifdef __cpp_lib_source_location
+#ifdef __cpp_lib_source_location
 
-// #include <source_location>
-// inline void log(const std::string_view message)
-// {
-//     const std::source_location location = std::source_location::current();
-//     fmt::print(fg(fmt::color::steel_blue) | fmt::emphasis::bold, "[{}:{}: {}]:
-//     ",
-//                std::filesystem::path(location.file_name()).filename().string(),
-//                location.line(), location.function_name());
-//     print(message);
-// }
+#include <source_location>
 
-// #endif
+inline void log(const std::string_view message)
+{
+    const std::source_location location = std::source_location::current();
+    fmt::print(fg(fmt::color::steel_blue) | fmt::emphasis::bold,
+               "[{}:{}: {}]:
+               ",
+               std::filesystem::path(location.file_name())
+                   .filename()
+                   .string(),
+               location.line(), location.function_name());
+    print(message);
+}
+
+#endif
+
 } // namespace sm

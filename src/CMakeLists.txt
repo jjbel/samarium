@@ -87,7 +87,7 @@ set(
     ./samarium/util/Stopwatch.cpp
 )
 
-add_library(samarium "${SAMARIUM_SOURCES}" ${SAMARIUM_HEADERS})
+add_library(samarium "${SAMARIUM_SOURCES}")
 
 add_library(samarium::samarium ALIAS samarium)
 

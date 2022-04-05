@@ -34,11 +34,15 @@ template <concepts::Arithmetic T> class Extents
 
     [[nodiscard]] constexpr auto clamp(T value) const noexcept
     {
-        if (value < min) return min;
+        if (value < min) { return min; }
         else if (value > max)
+        {
             return max;
+        }
         else
+        {
             return value;
+        }
     }
 
     [[nodiscard]] constexpr auto lerp(f64 factor) const noexcept
@@ -51,7 +55,7 @@ template <concepts::Arithmetic T> class Extents
         return min * (1.0 - this->clamp(factor)) + max * factor;
     }
 
-    [[nodiscard]] constexpr f64 lerp_inverse(T value) const noexcept
+    [[nodiscard]] constexpr auto lerp_inverse(T value) const noexcept -> f64
     {
         return (value - min) / this->size();
     }
@@ -74,19 +78,19 @@ template <concepts::Arithmetic T> class Extents
         T index;
         constexpr auto operator<=>(const Iterator&) const noexcept = default;
 
-        constexpr reference operator*() const noexcept { return index; }
+        constexpr auto operator*() const noexcept -> reference { return index; }
 
-        constexpr pointer operator->() noexcept { return &index; }
+        constexpr auto operator->() noexcept -> pointer { return &index; }
 
         // Prefix increment
-        constexpr Iterator& operator++() noexcept
+        constexpr auto operator++() noexcept -> Iterator&
         {
             index++;
             return *this;
         }
 
         // Postfix increment
-        constexpr Iterator operator++(int) noexcept
+        constexpr auto operator++(int) noexcept -> Iterator
         {
             Iterator tmp = *this;
             ++(*this);

@@ -16,9 +16,8 @@
 
 namespace sm
 {
-template <typename T> class DynArray
+template <typename T> struct DynArray
 {
-  public:
     // Container types
     using value_type      = T;
     using reference       = T&;
@@ -44,29 +43,42 @@ template <typename T> class DynArray
     DynArray(DynArray&& arr) noexcept : m_size(arr.m_size) { std::swap(data, arr.data); }
 
     // Operator overloads
-    DynArray& operator=(const DynArray& arr)
+    auto operator=(const DynArray& arr) -> DynArray&
     {
-        std::copy(arr.begin(), arr.end(), this->data);
+        std::copy(std::execution::par_unseq, arr.begin(), arr.end(), this->data);
         return *this;
     }
 
-    T& operator[](size_t index) noexcept { return this->data[index]; }
+    auto operator=(DynArray&& other) noexcept -> DynArray&
+    {
+        data   = std::move(other.data);
+        m_size = std::move(other.m_size);
+        return *this;
+    }
 
-    const T& operator[](size_t index) const noexcept { return this->data[index]; }
+    auto operator[](size_t index) noexcept -> T& { return this->data[index]; }
 
-    T& at(size_t index)
+    auto operator[](size_t index) const noexcept -> const T& { return this->data[index]; }
+
+    auto at(size_t index) -> T&
     {
         if (index >= this->m_size)
+        {
             throw std::out_of_range(fmt::format("sm::DynArray: index {} out of range for m_size {}",
                                                 index, this->m_size));
+        }
+
         return this->data[index];
     }
 
-    const T& at(size_t index) const
+    auto at(size_t index) const -> const T&
     {
         if (index >= this->m_size)
+        {
             throw std::out_of_range(fmt::format("sm::DynArray: index {} out of range for m_size {}",
                                                 index, this->m_size));
+        }
+
         return this->data[index];
     }
 

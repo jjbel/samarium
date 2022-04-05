@@ -12,7 +12,7 @@
 
 namespace sm::util
 {
-std::string get_date_filename(const std::string& extension)
+auto get_date_filename(const std::string& extension) -> std::string
 {
     return date::format("%F_%T.", std::chrono::system_clock::now()) + extension;
 }

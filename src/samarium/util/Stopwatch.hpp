@@ -21,7 +21,7 @@ struct Stopwatch
 
     void reset();
 
-    Duration_t time() const;
+    [[nodiscard]] auto time() const -> Duration_t;
 
     void print() const;
 };

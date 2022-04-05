@@ -68,16 +68,19 @@ template <typename T> class Grid
 
     // -------------------------------Member functions------------------------------------
 
-    T& operator[](Indices indices) { return this->data[indices.y * this->dims.x + indices.x]; }
-
-    const T& operator[](Indices indices) const
+    auto operator[](Indices indices) -> T&
     {
         return this->data[indices.y * this->dims.x + indices.x];
     }
 
-    T& operator[](size_t index) { return this->data[index]; }
+    auto operator[](Indices indices) const -> const T&
+    {
+        return this->data[indices.y * this->dims.x + indices.x];
+    }
 
-    const T& operator[](size_t index) const { return this->data[index]; }
+    auto operator[](size_t index) noexcept -> T& { return this->data[index]; }
+
+    auto operator[](size_t index) const noexcept -> const T& { return this->data[index]; }
 
     auto begin() { return this->data.begin(); }
     auto end() { return this->data.end(); }
@@ -97,7 +100,7 @@ template <typename T> class Grid
     auto fill(const T& value) { this->data.fill(value); }
 
     template <concepts::ColorFormat Format>
-    DynArray<std::array<u8, Format::length>> formatted_data(Format format) const
+    auto formatted_data(Format format) const -> DynArray<std::array<u8, Format::length>>
     {
         const auto format_length = Format::length;
         auto fmt_data            = DynArray<std::array<u8, format_length>>(this->size());

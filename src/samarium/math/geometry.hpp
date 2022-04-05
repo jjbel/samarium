@@ -61,8 +61,10 @@ namespace sm::math
 
 [[nodiscard]] constexpr auto clamped_distance(Vector2 point, const LineSegment& ls) noexcept
 {
-    const auto l2 = ls.length_sq();
-    if (almost_equal(l2, 0.)) return distance(point, ls.p1); // p1 == p2 case
+    if (const auto l2 = ls.length_sq(); almost_equal(l2, 0.))
+    {
+        return distance(point, ls.p1); // p1 == p2 case
+    }
     return distance(point, project_clamped(point, ls));
 }
 
@@ -96,11 +98,12 @@ namespace sm::math
     }
 }
 
-[[nodiscard]] inline std::optional<Vector2> clamped_intersection(const LineSegment& l1,
-                                                                 const LineSegment& l2) noexcept
+[[nodiscard]] inline auto clamped_intersection(const LineSegment& l1,
+                                               const LineSegment& l2) noexcept
+    -> std::optional<Vector2>
 {
     const auto point = intersection(l1, l2);
-    if (!point) return std::nullopt;
+    if (!point) { return std::nullopt; }
     if (lies_in_segment(*point, l1) && lies_in_segment(*point, l2)) { return point; }
     else
     {

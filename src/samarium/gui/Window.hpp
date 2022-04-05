@@ -20,7 +20,7 @@ class Window
     // --------MEMBER VARS--------
     sf::Image im;
     sf::Texture sftexture;
-    sf::Sprite sfbufferSprite;
+    sf::Sprite sf_buffer_sprite;
     sf::RenderWindow window;
     sm::util::Stopwatch watch{};
     size_t target_framerate{};
@@ -29,7 +29,6 @@ class Window
     size_t frame_counter{};
     Keymap keymap;
     Mouse mouse{window};
-
 
     // --------MEMBER TYPES--------
     struct Settings
@@ -57,7 +56,7 @@ class Window
 
     // --------MEMBER FUNCTIONS--------
 
-    Window(const Settings& settings)
+    explicit Window(const Settings& settings)
         : window(
               sf::VideoMode(static_cast<u32>(settings.dims.x), static_cast<u32>(settings.dims.y)),
               settings.name,
@@ -65,11 +64,11 @@ class Window
           target_framerate{settings.framerate}
     {
         window.setFramerateLimit(settings.framerate);
-        keymap.push_back({Keyboard::LControl, Keyboard::Q}, // exit by default with Ctrl+Q
+        keymap.push_back({Keyboard::Key::LControl, Keyboard::Key::Q}, // exit by default with Ctrl+Q
                          [&window = this->window] { window.close(); });
     }
 
-    bool is_open() const;
+    auto is_open() const -> bool;
 
     void get_input();
 
@@ -77,7 +76,7 @@ class Window
 
     void display();
 
-    void run(Renderer& rn, std::invocable auto&& call_every_frame)
+    void run(const Renderer& rn, std::invocable auto&& call_every_frame)
     {
         while (this->is_open())
         {
@@ -87,7 +86,7 @@ class Window
     }
 
     template <typename UpdateFunction, typename DrawFunction>
-    void run(Renderer& rn,
+    void run(const Renderer& rn,
              UpdateFunction&& update,
              DrawFunction&& draw,
              size_t substeps    = 1,
@@ -105,10 +104,10 @@ class Window
         }
     }
 
-    f64 current_framerate() const;
+    auto current_framerate() const -> f64;
 
-    f64 time_delta() const;
+    auto time_delta() const -> f64;
 
-    const sf::Window& sf_window() const;
+    auto sf_window() const -> const sf::Window&;
 };
 } // namespace sm

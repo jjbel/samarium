@@ -7,6 +7,7 @@
 Checks: "*,\
   -google-readability-todo,\
   -altera-unroll-loops,\
+  -altera-struct-pack-align,\
   -fuchsia-*,\
   fuchsia-multiple-inheritance,\
   -llvm-header-guard,\
@@ -46,11 +47,10 @@ CheckOptions:
     value: 'true'
   - key: 'readability-redundant-access-specifiers.CheckFirstDeclaration'
     value: 'true'
-# These seem to be the most common identifier styles
   - key: 'readability-identifier-naming.AbstractClassCase'
-    value: 'lower_case'
+    value: 'CamelCase'
   - key: 'readability-identifier-naming.ClassCase'
-    value: 'lower_case'
+    value: 'CamelCase'
   - key: 'readability-identifier-naming.ClassConstantCase'
     value: 'lower_case'
   - key: 'readability-identifier-naming.ClassMemberCase'
@@ -72,9 +72,9 @@ CheckOptions:
   - key: 'readability-identifier-naming.ConstexprVariableCase'
     value: 'lower_case'
   - key: 'readability-identifier-naming.EnumCase'
-    value: 'lower_case'
+    value: 'aNy_CasE'
   - key: 'readability-identifier-naming.EnumConstantCase'
-    value: 'lower_case'
+    value: 'aNy_CasE'
   - key: 'readability-identifier-naming.FunctionCase'
     value: 'lower_case'
   - key: 'readability-identifier-naming.GlobalConstantCase'
@@ -113,14 +113,14 @@ CheckOptions:
     value: 'lower_case'
   - key: 'readability-identifier-naming.PrivateMemberCase'
     value: 'lower_case'
-  - key: 'readability-identifier-naming.PrivateMemberPrefix'
-    value: 'm_'
+  # - key: 'readability-identifier-naming.PrivateMemberPrefix'
+  #   value: 'm_'
   - key: 'readability-identifier-naming.PrivateMethodCase'
     value: 'lower_case'
   - key: 'readability-identifier-naming.ProtectedMemberCase'
     value: 'lower_case'
-  - key: 'readability-identifier-naming.ProtectedMemberPrefix'
-    value: 'm_'
+  # - key: 'readability-identifier-naming.ProtectedMemberPrefix'
+  #   value: 'm_'
   - key: 'readability-identifier-naming.ProtectedMethodCase'
     value: 'lower_case'
   - key: 'readability-identifier-naming.PublicMemberCase'
@@ -128,13 +128,13 @@ CheckOptions:
   - key: 'readability-identifier-naming.PublicMethodCase'
     value: 'lower_case'
   - key: 'readability-identifier-naming.ScopedEnumConstantCase'
-    value: 'lower_case'
+    value: 'aNy_CasE'
   - key: 'readability-identifier-naming.StaticConstantCase'
     value: 'lower_case'
   - key: 'readability-identifier-naming.StaticVariableCase'
     value: 'lower_case'
   - key: 'readability-identifier-naming.StructCase'
-    value: 'lower_case'
+    value: 'CamelCase'
   - key: 'readability-identifier-naming.TemplateParameterCase'
     value: 'CamelCase'
   - key: 'readability-identifier-naming.TemplateTemplateParameterCase'

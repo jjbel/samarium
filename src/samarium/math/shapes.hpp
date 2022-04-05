@@ -16,13 +16,13 @@ struct Circle
     Vector2 centre{};
     f64 radius{};
 
-    constexpr auto at_angle(f64 angle) const noexcept
+    [[nodiscard]] constexpr auto at_angle(f64 angle) const noexcept
     {
         return centre + Vector2::from_polar({.length = radius, .angle = angle});
     }
 
     /* Assuming point is on Circle, move it counter-clockwise */
-    constexpr auto move_along(Vector2 point, f64 distance) const noexcept
+    [[nodiscard]] constexpr auto move_along(Vector2 point, f64 distance) const noexcept
     {
         return centre + (point - centre).rotated_by(distance / this->radius);
     }

@@ -25,7 +25,7 @@ template <sm::concepts::Number T> class fmt::formatter<sm::Vector2_t<T>>
     {
         return format_to(ctx.out(),
                          (sm::concepts::FloatingPoint<T> ? "\033[1mVec\033[0m({: 6.3f}, {: 6.3f})"
-                                                           : "Vec({:>3}, {:>3})"),
+                                                         : "Vec({:>3}, {:>3})"),
                          p.x, p.y);
     }
 };

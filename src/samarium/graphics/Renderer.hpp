@@ -37,9 +37,8 @@ template <typename T>
 concept DrawableLambda = std::is_invocable_r_v<Color, T, const Vector2&>;
 } // namespace concepts
 
-class Renderer
+struct Renderer
 {
-  public:
     static auto rasterize(f64 distance, f64 radius, f64 aa_factor)
     {
         // https://www.desmos.com/calculator/jhewyqc2wy
@@ -52,12 +51,13 @@ class Renderer
     }
 
     // -----------------MEMBERS---------------//
-    Image image;
+
+    Image image; //!< The image to draw to
     Transform transform{.pos   = image.dims.as<f64>() / 2.,
                         .scale = Vector2{10, 10} * Vector2{1.0, -1.0}};
 
-    Renderer(const Image& image_ = sm::Image{sm::dimsFHD},
-             u32 thread_count_   = std::thread::hardware_concurrency())
+    explicit Renderer(const Image& image_ = sm::Image{sm::dimsFHD},
+                      u32 thread_count_   = std::thread::hardware_concurrency())
         : image{image_}, thread_count{thread_count_}, thread_pool{thread_count_}
 
     {
@@ -80,7 +80,7 @@ class Renderer
                              .clamped_to(image.bounding_box().template as<f64>())
                              .template as<size_t>();
 
-        if (math::area(box) == 0UL) return;
+        if (math::area(box) == 0UL) { return; }
         const auto r = box.y_range();
 
         const auto job = [&](auto a, auto b)
@@ -92,14 +92,13 @@ class Renderer
                     const auto coords_transformed =
                         transform.apply_inverse(coords.template as<f64>());
 
-                    // image[coords].add_alpha_over(Color{255, 80, 200, 100});
                     const auto col = fn(coords_transformed);
 
                     image[coords].add_alpha_over(col);
                 }
         };
 
-        thread_pool.parallelize_loop(r.min, r.max + 1, job, 6);
+        thread_pool.parallelize_loop(r.min, r.max + 1, job, thread_count);
     }
 
     void draw(Circle circle, Color color, f64 aa_factor = 1.6);
@@ -161,8 +160,6 @@ class Renderer
                    f64 thickness = 0.1,
                    f64 aa_factor = 2)
     {
-        // const auto vector = ls.vector().abs();
-        // const auto extra  = 2 * aa_factor;
         this->draw(
             [&function_along_line, &ls, thickness, aa_factor](const Vector2& coords)
             {
@@ -175,7 +172,7 @@ class Renderer
 
     void render() { this->thread_pool.wait_for_tasks(); }
 
-    std::array<LineSegment, 4> viewport_box() const;
+    auto viewport_box() -> std::array<LineSegment, 4> const;
 
   private:
     u32 thread_count;

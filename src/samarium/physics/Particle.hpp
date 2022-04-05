@@ -21,7 +21,7 @@ struct Particle
     f64 mass{1};
     Color color{};
 
-    constexpr auto as_circle() const noexcept { return Circle{pos, radius}; }
+    [[nodiscard]] constexpr auto as_circle() const noexcept { return Circle{pos, radius}; }
 
     constexpr auto apply_force(Vector2 force) noexcept { acc += force / mass; }
 
@@ -33,5 +33,5 @@ struct Particle
     }
 };
 
-constexpr auto update(auto& object, f64 time_delta = 1.0 / 60) { object.update(time_delta); }
+constexpr auto update(auto& object, f64 time_delta = 1.0 / 60.0) { object.update(time_delta); }
 } // namespace sm

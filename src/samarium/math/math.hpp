@@ -14,30 +14,34 @@
 
 namespace sm::math
 {
-constexpr inline auto EPSILON = 1.e-4;
+constexpr inline auto epsilon = 1.e-4;
 
 template <concepts::FloatingPoint T> [[nodiscard]] constexpr auto almost_equal(T a, T b) noexcept
 {
-    return std::abs(a - b) <= EPSILON;
+    return std::abs(a - b) <= epsilon;
 }
 
 template <typename T> [[nodiscard]] constexpr auto min(T value0, T value1) noexcept
 {
-    if (value0 < value1) return value0;
+    if (value0 < value1) { return value0; }
     else
+    {
         return value1;
+    }
 }
 
 template <typename T> [[nodiscard]] constexpr auto max(T value0, T value1) noexcept
 {
-    if (value0 > value1) return value0;
+    if (value0 > value1) { return value0; }
     else
+    {
         return value1;
+    }
 }
 
 template <u32 n> [[nodiscard]] constexpr auto power(auto x) noexcept
 {
-    if constexpr (n == 0) return 1;
+    if constexpr (n == 0) { return 1; }
 
     return x * power<n - 1>(x);
 }
@@ -58,19 +62,20 @@ template <concepts::Number T> [[nodiscard]] constexpr auto abs(T x) noexcept
 }
 
 template <typename T>
-[[nodiscard]] constexpr int sign(T x, std::false_type /* is_signed */) noexcept
+[[nodiscard]] constexpr auto sign(T x, std::false_type /* is_signed */) noexcept -> i32
 {
     return T(0) < x;
 }
 
-template <typename T> [[nodiscard]] constexpr int sign(T x, std::true_type /* is_signed */) noexcept
+template <typename T>
+[[nodiscard]] constexpr auto sign(T x, std::true_type /* is_signed */) noexcept -> i32
 {
     return (T(0) < x) - (x < T(0));
 }
 
-template <typename T> [[nodiscard]] constexpr int sign(T x) noexcept
+template <typename T> [[nodiscard]] constexpr auto sign(T x) noexcept -> i32
 {
-    return sign(x, std::is_signed<T>());
+    return sign(x, std::is_signed<T>{});
 }
 
 template <concepts::FloatingPoint T> constexpr auto mod(T x, T y) noexcept

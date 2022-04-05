@@ -18,5 +18,5 @@ struct Version
     u8 patch{0};
 };
 
-static constexpr auto version = Version{};
+[[maybe_unused]] static constexpr auto version = Version{};
 } // namespace sm

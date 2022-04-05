@@ -21,7 +21,7 @@ template <size_t size> class Gradient
     std::array<Color, size> colors;
 
   public:
-    constexpr Gradient(auto&&... colors_) : colors{colors_...} {}
+    explicit constexpr Gradient(auto&&... colors_) : colors{colors_...} {}
 
     [[nodiscard]] auto operator()(f64 factor) const
     {
@@ -67,7 +67,9 @@ template <> class Gradient<3>
         factor = Extents<f64>{0.0, 1.0}.clamp(factor);
         if (factor < 0.5) { return interp::lerp_rgb(2.0 * factor, from, mid); }
         else
+        {
             return interp::lerp_rgb(2.0 * (factor - 0.5), mid, to);
+        }
     }
 };
 } // namespace sm

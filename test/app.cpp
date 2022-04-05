@@ -23,7 +23,7 @@ auto get_iter(Vector2 pos, f64 threshold, u64 max_iterations) -> std::optional<u
     for (auto i : range(max_iterations))
     {
         z = z * z + pos_complex;
-        if (std::abs(z) > threshold) return std::optional<u64>{i};
+        if (std::abs(z) > threshold) { return std::optional<u64>{i}; }
     }
 
     return std::nullopt;

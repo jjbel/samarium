@@ -9,19 +9,19 @@
 
 #include "../util/format.hpp"
 
-std::ostream& operator<<(std::ostream& os, const sm::Version& a);
+auto operator<<(std::ostream& os, const sm::Version& a) -> std::ostream&;
 
-std::ostream& operator<<(std::ostream& os, const sm::Color& a);
+auto operator<<(std::ostream& os, const sm::Color& a) -> std::ostream&;
 
 template <sm::concepts::Number T>
-std::ostream& operator<<(std::ostream& os, const sm::BoundingBox<T>& a)
+auto operator<<(std::ostream& os, const sm::BoundingBox<T>& a) -> std::ostream&
 {
     os << fmt::format("{}", a);
     return os;
 }
 
 template <sm::concepts::Number T>
-std::ostream& operator<<(std::ostream& os, const sm::Vector2_t<T>& a)
+auto operator<<(std::ostream& os, const sm::Vector2_t<T>& a) -> std::ostream&
 {
     os << fmt::format("{}", a);
     return os;

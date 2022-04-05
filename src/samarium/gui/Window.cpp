@@ -9,7 +9,7 @@
 
 namespace sm
 {
-bool Window::is_open() const { return window.isOpen(); }
+auto Window::is_open() const -> bool { return window.isOpen(); }
 
 void Window::get_input()
 {
@@ -35,21 +35,21 @@ void Window::draw(const Image& image)
     im.create(static_cast<u32>(image.dims.x), static_cast<u32>(image.dims.y),
               reinterpret_cast<const u8*>(image.begin()));
     sftexture.loadFromImage(im);
-    sfbufferSprite.setTexture(sftexture, true);
+    sf_buffer_sprite.setTexture(sftexture, true);
 }
 
 void Window::display()
 {
-    window.draw(sfbufferSprite);
+    window.draw(sf_buffer_sprite);
     window.display();
     frame_counter++;
     watch.reset();
 }
 
-f64 Window::current_framerate() const { return this->watch.time().count() * 1000; }
+auto Window::current_framerate() const -> f64 { return this->watch.time().count() * 1000; }
 
-const sf::Window& Window::sf_window() const { return this->window; }
+auto Window::sf_window() const -> const sf::Window& { return this->window; }
 
-f64 Window::time_delta() const { return 1.0 / static_cast<f64>(this->target_framerate); }
+auto Window::time_delta() const -> f64 { return 1.0 / static_cast<f64>(this->target_framerate); }
 
 } // namespace sm

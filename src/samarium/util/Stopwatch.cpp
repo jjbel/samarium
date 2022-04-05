@@ -13,12 +13,12 @@ namespace sm::util
 {
 void Stopwatch::reset() { start = std::chrono::steady_clock::now(); }
 
-Stopwatch::Duration_t Stopwatch::time() const
+auto Stopwatch::time() const -> Stopwatch::Duration_t
 {
     const auto finish = std::chrono::steady_clock::now();
     return std::chrono::duration_cast<Duration_t>(finish - start);
 }
 
-void Stopwatch::print() const { fmt::print("Took {:.3}ms\n", this->time().count() * 1000); }
+void Stopwatch::print() const { fmt::print("Took {:.3}ms\n", this->time().count() * 1000.0); }
 
 }; // namespace sm::util

@@ -30,8 +30,9 @@ struct Mouse
 
     void update(const sf::Window& window);
 
-    Transform apply(Transform transform, Mouse::Button btn = Button::Left) const;
+    [[nodiscard]] auto apply(Transform transform, Mouse::Button btn = Button::Left) const
+        -> Transform;
 
-    Vector2 vel() const;
+    [[nodiscard]] auto vel() const -> Vector2;
 };
 } // namespace sm

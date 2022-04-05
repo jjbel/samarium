@@ -72,7 +72,8 @@ template <concepts::Number T = f64> struct BoundingBox
     [[nodiscard]] constexpr auto x_range() const { return Extents<T>{min.x, max.x}; }
     [[nodiscard]] constexpr auto y_range() const { return Extents<T>{min.y, max.y}; }
 
-    [[nodiscard]] constexpr friend bool operator==(const BoundingBox<T>& lhs,
-                                                   const BoundingBox<T>& rhs) noexcept = default;
+    [[nodiscard]] constexpr friend auto operator==(const BoundingBox<T>& lhs,
+                                                   const BoundingBox<T>& rhs) noexcept
+        -> bool = default;
 };
 } // namespace sm
