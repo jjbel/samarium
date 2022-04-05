@@ -8,6 +8,8 @@ build/
 
 .history
 
+.cache/
+
 __pycache__/
 
 *.tga

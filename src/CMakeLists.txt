@@ -116,7 +116,7 @@ target_link_libraries(samarium PRIVATE sfml-graphics)
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND NOT WIN32)
     find_package(TBB REQUIRED)
     message(STATUS "Using TBB")
-    target_link_libraries(samarium PRIVATE TBB::tbb)
+    target_link_libraries(samarium PUBLIC TBB::tbb)
 endif()
 
 install(
