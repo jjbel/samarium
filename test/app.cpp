@@ -65,7 +65,7 @@ int main()
 
         const auto scale = 1.0 + 0.1 * window.mouse.scroll_amount;
         rn.transform.scale *= Vector2::combine(scale);
-        const auto pos    = (window.mouse.pos.now);
+        const auto pos    = window.mouse.pos.now;
         rn.transform.pos  = pos + scale * (rn.transform.pos - pos);
         mandelbrot::iters = static_cast<u64>(3 * std::log(rn.transform.scale.x) + 9);
 

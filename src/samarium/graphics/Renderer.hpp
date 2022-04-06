@@ -86,6 +86,7 @@ struct Renderer
         const auto job = [&](auto a, auto b)
         {
             for (u64 y = a; y < b; y++)
+            {
                 for (auto x : box.x_range())
                 {
                     const auto coords = Indices{x, y};
@@ -96,6 +97,7 @@ struct Renderer
 
                     image[coords].add_alpha_over(col);
                 }
+            }
         };
 
         thread_pool.parallelize_loop(r.min, r.max + 1, job, thread_count);
@@ -172,7 +174,7 @@ struct Renderer
 
     void render() { this->thread_pool.wait_for_tasks(); }
 
-    auto viewport_box() -> std::array<LineSegment, 4> const;
+    auto viewport_box() const -> std::array<LineSegment, 4>;
 
   private:
     u32 thread_count;

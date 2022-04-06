@@ -59,7 +59,7 @@ void Renderer::draw(const Trail& trail, Color color, f64 fade_factor, f64 radius
     }
 }
 
-std::array<LineSegment, 4> Renderer::viewport_box() const
+auto Renderer::viewport_box() const -> std::array<LineSegment, 4>
 {
     const auto double_dims = this->image.dims.as<f64>();
 
