@@ -11,6 +11,10 @@
 #include <iomanip>
 #include <string_view>
 
+#ifdef __cpp_lib_source_location
+#include <source_location>
+#endif // __cpp_lib_source_location
+
 #include "fmt/color.h"
 
 namespace sm
@@ -33,21 +37,15 @@ void error(const auto&... args)
 
 #ifdef __cpp_lib_source_location
 
-#include <source_location>
-
 inline void log(const std::string_view message)
 {
     const std::source_location location = std::source_location::current();
     fmt::print(fg(fmt::color::steel_blue) | fmt::emphasis::bold,
-               "[{}:{}: {}]:
-               ",
-               std::filesystem::path(location.file_name())
-                   .filename()
-                   .string(),
+               "[{}:{}: {}]:", std::filesystem::path(location.file_name()).filename().string(),
                location.line(), location.function_name());
     print(message);
 }
 
-#endif
+#endif // __cpp_lib_source_location
 
 } // namespace sm
