@@ -58,7 +58,7 @@ struct Renderer
 
     explicit Renderer(const Image& image_ = sm::Image{sm::dimsFHD},
                       u32 thread_count_   = std::thread::hardware_concurrency())
-        : image{image_}, thread_count{thread_count_}, thread_pool{thread_count_}
+        : image{image_}, thread_pool{thread_count_}
 
     {
     }
@@ -100,7 +100,7 @@ struct Renderer
             }
         };
 
-        thread_pool.parallelize_loop(r.min, r.max + 1, job, thread_count);
+        thread_pool.parallelize_loop(r.min, r.max + 1, job, thread_pool.get_thread_count());
     }
 
     void draw(Circle circle, Color color, f64 aa_factor = 1.6);
@@ -177,7 +177,6 @@ struct Renderer
     auto viewport_box() const -> std::array<LineSegment, 4>;
 
   private:
-    u32 thread_count;
     sm::ThreadPool thread_pool;
 };
 } // namespace sm
