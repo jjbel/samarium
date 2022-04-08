@@ -176,6 +176,8 @@ struct Renderer
 
     auto viewport_box() const -> std::array<LineSegment, 4>;
 
+    auto get_thread_count() const { return thread_pool.get_thread_count(); }
+
   private:
     sm::ThreadPool thread_pool;
 };
