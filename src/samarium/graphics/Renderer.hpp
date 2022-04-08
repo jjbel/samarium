@@ -55,6 +55,8 @@ struct Renderer
     Image image; //!< The image to draw to
     Transform transform{.pos   = image.dims.as<f64>() / 2.,
                         .scale = Vector2{10, 10} * Vector2{1.0, -1.0}};
+    ThreadPool thread_pool;
+
 
     explicit Renderer(const Image& image_ = sm::Image{sm::dimsFHD},
                       u32 thread_count_   = std::thread::hardware_concurrency())
@@ -177,8 +179,5 @@ struct Renderer
     auto viewport_box() const -> std::array<LineSegment, 4>;
 
     auto get_thread_count() const { return thread_pool.get_thread_count(); }
-
-  private:
-    sm::ThreadPool thread_pool;
 };
 } // namespace sm
