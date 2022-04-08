@@ -17,7 +17,7 @@
 #ifndef __clang__
 #define SM_CUSTOM_CONSTEXPR constexpr
 #else
-#define SM_CUSTOM_CONSTEXPR
+#define SM_CUSTOM_CONSTEXPR inline
 #endif // __clang__
 
 #ifndef __clang__
@@ -28,27 +28,36 @@
 
 namespace sm::random
 {
-class LinearCongruentialGenerator
+// PCG-based random number generator, see https://www.pcg-random.org/
+struct Generator
 {
-  public:
-    SM_CUSTOM_CONSTEXPR explicit LinearCongruentialGenerator(u16 new_seed = 0) noexcept
-        : seed{new_seed}
+    static constexpr auto magic_number = 6364136223846793005ULL;
+
+    u64 state;
+    u64 inc;
+
+    constexpr Generator(u64 new_state = 69, u64 new_inc = 69) noexcept
+        : state{new_state * magic_number + (new_inc | 1)}, inc{new_inc}
     {
     }
 
-    [[nodiscard]] SM_CUSTOM_CONSTEXPR auto next() noexcept
+    [[nodiscard]] constexpr auto next() noexcept
     {
-        seed                         = seed * a + c;
-        constexpr auto magic_number0 = 16U;
-        constexpr auto magic_number1 = 0x7fff;
-        return (seed >> magic_number0) & magic_number1;
+        const auto oldstate = this->state;
+        // Advance internal state
+        this->state = oldstate * magic_number + (this->inc | 1);
+        // Calculate output function (XSH RR), uses old state for max ILP
+        const auto xorshifted = static_cast<u32>(((oldstate >> 18UL) ^ oldstate) >> 27UL);
+        const auto rot        = static_cast<u32>(oldstate >> 59UL);
+        return (xorshifted >> rot) | (xorshifted << ((-rot) & 31));
     }
 
-  private:
-    u32 seed;
-    const u16 a = u16(214013);
-    const u16 c = u16(2531011);
+    [[nodiscard]] constexpr auto next_scaled() noexcept
+    {
+        return static_cast<f64>(this->next()) / static_cast<f64>(std::numeric_limits<u32>::max());
+    }
 };
+
 
 template <size_t Size> class Cache
 {
@@ -58,9 +67,8 @@ template <size_t Size> class Cache
   public:
     SM_CUSTOM_CONSTEXPR Cache() noexcept
     {
-        auto rng = sm::random::LinearCongruentialGenerator{};
-        std::generate(cache.begin(), cache.end(),
-                      [&rng] { return static_cast<f64>(rng.next()) / 32768.0; });
+        auto rng = Generator{};
+        std::generate(cache.begin(), cache.end(), [&rng] { return rng.next_scaled(); });
     }
 
     [[nodiscard]] SM_CUSTOM_CONSTEXPR auto operator[](u32 index) noexcept { return cache[index]; }
@@ -73,9 +81,8 @@ template <size_t Size> class Cache
 
     SM_CUSTOM_CONSTEXPR auto reseed(u16 new_seed) noexcept
     {
-        auto rng = sm::random::LinearCongruentialGenerator{new_seed};
-        std::generate(cache.begin(), cache.end(),
-                      [&rng] { return static_cast<f64>(rng.next()) / 32768.0; });
+        auto rng = Generator{new_seed};
+        std::generate(cache.begin(), cache.end(), [&rng] { return rng.next_scaled(); });
 
         current_index = 0UL;
     }
@@ -83,23 +90,21 @@ template <size_t Size> class Cache
 
 static SM_CUSTOM_CONSTINIT auto cache = Cache<1024UL>{};
 
-SM_CUSTOM_CONSTEXPR inline auto random() { return cache.next(); }
+SM_CUSTOM_CONSTEXPR auto random() { return cache.next(); }
 
-template <typename T>
-[[nodiscard]] SM_CUSTOM_CONSTEXPR inline auto rand_range(Extents<T> extents) noexcept
+template <typename T> [[nodiscard]] SM_CUSTOM_CONSTEXPR auto rand_range(Extents<T> extents) noexcept
 {
     return static_cast<T>(extents.lerp(random()));
 }
 
-[[nodiscard]] SM_CUSTOM_CONSTEXPR inline auto
-rand_vector(const BoundingBox<f64>& bounding_box) noexcept
+[[nodiscard]] SM_CUSTOM_CONSTEXPR auto rand_vector(const BoundingBox<f64>& bounding_box) noexcept
 {
     return Vector2{rand_range<f64>({bounding_box.min.x, bounding_box.max.x}),
                    rand_range<f64>({bounding_box.min.y, bounding_box.max.y})};
 }
 
-[[nodiscard]] SM_CUSTOM_CONSTEXPR inline auto rand_vector(Extents<f64> radius_range,
-                                                          Extents<f64> angle_range) noexcept
+[[nodiscard]] SM_CUSTOM_CONSTEXPR auto rand_vector(Extents<f64> radius_range,
+                                                   Extents<f64> angle_range) noexcept
 {
     return Vector2::from_polar({.length = rand_range<f64>({radius_range.min, radius_range.max}),
                                 .angle  = rand_range<f64>({angle_range.min, angle_range.max})});
