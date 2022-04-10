@@ -30,7 +30,7 @@ void Window::get_input()
     this->mouse.update(this->window);
 }
 
-void Window::draw(const Image& image)
+void Window::draw_image(const Image& image)
 {
     im.create(static_cast<u32>(image.dims.x), static_cast<u32>(image.dims.y),
               reinterpret_cast<const u8*>(image.begin()));

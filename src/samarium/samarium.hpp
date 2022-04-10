@@ -7,9 +7,10 @@
 
 #pragma once
 
+#include "./App.hpp"
 #include "./core/version.hpp"
-#include "./gui/Window.hpp"
 #include "./math/interp.hpp"
+#include "./math/complex.hpp"
 #include "./physics/collision.hpp"
 #include "./util/Stopwatch.hpp"
 #include "./util/file.hpp"

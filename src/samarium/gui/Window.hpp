@@ -17,6 +17,7 @@ namespace sm
 {
 class Window
 {
+    protected:
     // --------MEMBER VARS--------
     sf::Image im;
     sf::Texture sftexture;
@@ -49,7 +50,7 @@ class Window
 
         ~Manager() // NOSONAR
         {
-            window.draw(renderer.image);
+            window.draw_image(renderer.image);
             window.display();
         }
     };
@@ -72,7 +73,7 @@ class Window
 
     void get_input();
 
-    void draw(const Image& image);
+    void draw_image(const Image& image);
 
     void display();
 
