@@ -109,6 +109,11 @@ template <concepts::Arithmetic T> class Extents
     }
 
     [[nodiscard]] constexpr auto operator[](u64 index) const { return min + index; }
+
+    template <typename U> [[nodiscard]] constexpr auto as() const noexcept
+    {
+        return Extents<U>{static_cast<U>(min), static_cast<U>(max)};
+    }
 };
 
 

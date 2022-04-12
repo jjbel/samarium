@@ -48,10 +48,8 @@ int main()
     app.transform.pos += Vector2{.x = 400};
     app.transform.scale *= 40;
 
-    while (app.is_open())
+    const auto update = [&]
     {
-        app.get_input();
-
         if (app.mouse.left) { app.transform.pos += app.mouse.pos.now - app.mouse.pos.prev; }
 
         const auto scale = 1.0 + 0.1 * app.mouse.scroll_amount;
@@ -61,7 +59,7 @@ int main()
         iterations        = static_cast<u64>(3 * std::log(app.transform.scale.x) + 9);
 
         app.draw(draw);
+    };
 
-        app.display();
-    }
+    app.run(update);
 }

@@ -33,5 +33,5 @@ struct Particle
     }
 };
 
-constexpr auto update(auto& object, f64 time_delta = 1.0 / 60.0) { object.update(time_delta); }
+// constexpr auto update(auto& object, f64 time_delta = 1.0 / 60.0) { object.update(time_delta); }
 } // namespace sm

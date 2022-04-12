@@ -5,63 +5,147 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
+#include "../src/samarium/graphics/colors.hpp"
 #include "../src/samarium/graphics/gradients.hpp"
 #include "../src/samarium/samarium.hpp"
+#include "samarium/math/Vector2.hpp"
+#include "samarium/math/interp.hpp"
+#include "samarium/physics/Particle.hpp"
+#include "samarium/util/random.hpp"
 
 using namespace sm;
+using namespace sm::literals;
+
+struct Spring
+{
+    Particle& p1;
+    Particle& p2;
+    const f64 rest_length;
+    f64 spring_constant;
+    f64 damping_constant;
+
+    Spring(Particle& particle1,
+           Particle& particle2,
+           f64 spring_constant_  = 100,
+           f64 damping_constant_ = 1900)
+        : p1{particle1}, p2{particle2}, rest_length{math::distance(particle1.pos, particle2.pos)},
+          spring_constant{spring_constant_}, damping_constant{damping_constant_}
+    {
+    }
+
+    [[nodiscard]] auto length() const { return math::distance(p1.pos, p2.pos); }
+
+    auto update()
+    {
+        const auto dx = this->length() - rest_length;
+
+        const auto norm = p2.pos - p1.pos;
+
+        const auto spring = interp::clamp(spring_constant * dx, {-10000, 10000});
+        const auto damping =
+            interp::clamp(Vector2::dot(p2.vel - p1.vel, norm) * damping_constant, {-10000, 10000});
+        print(spring, damping);
+
+        const auto force = norm.with_length(spring + damping);
+        p1.apply_force(force);
+        p2.apply_force(-force);
+    }
+};
 
 int main()
 {
-    auto iterations = 40UL;
+    const auto gravity = -10.0_y;
 
-    const auto get_iter = [](Vector2 pos, f64 threshold, u64 max_iterations) -> std::optional<u64>
+    const auto dims = Dimensions{4,5};
+
+    auto particles = Grid<Dual<Particle>>::generate(
+        dims,
+        [&](Indices indices)
+        {
+            const auto x = interp::map_range<f64>(indices.x, Extents<u64>{0UL, dims.x}.as<f64>(),
+                                                  Extents<f64>{-5, 5});
+
+            const auto y = interp::map_range<f64>(indices.y, Extents<u64>{0UL, dims.y}.as<f64>(),
+                                                  Extents<f64>{-5, 5});
+
+            auto pos = Vector2{x, y};
+            pos.rotate(1);
+
+            return Dual<Particle>{{.pos    = pos,
+                                   .vel    = Vector2{0, -20},
+                                   .radius = .3,
+                                   .mass   = 46,
+                                   .color  = colors::red}};
+        });
+
+    auto springs = [&]
     {
-        auto z                 = std::complex<f64>{};
-        const auto pos_complex = to_complex(pos);
+        std::vector<Spring> temp;
+        temp.reserve(dims.x * dims.y * 4);
 
-        for (auto i : range(max_iterations))
+        for (auto i : range(dims.y))
         {
-            z = z * z + pos_complex;
-            if (std::abs(z) > threshold) { return std::optional<u64>{i}; }
+            for (auto j : range(dims.x))
+            {
+                if (j != 0) { temp.emplace_back(particles[{j, i}].now, particles[{j - 1, i}].now); }
+                if (i != 0) { temp.emplace_back(particles[{j, i}].now, particles[{j, i - 1}].now); }
+                if (i != 0 && j != 0)
+                {
+                    temp.emplace_back(particles[{j, i}].now, particles[{j - 1, i - 1}].now);
+                }
+                if (i != 0 && j != dims.x - 1)
+                {
+                    temp.emplace_back(particles[{j, i}].now, particles[{j + 1, i - 1}].now);
+                }
+            }
         }
 
-        return std::nullopt;
-    };
+        return temp;
+    }();
 
-    const auto colorise =
-        [&](Vector2 pos, auto&& gradient, f64 threshold = 42.0, u64 max_iterations = 40)
-    {
-        if (const auto iter = get_iter(pos, threshold, max_iterations); iter.has_value())
-        {
-            return gradient(interp::map_range_clamp(
-                static_cast<f64>(*iter), {0.0, static_cast<f64>(max_iterations)}, {0.0, 1.0}));
-        }
-        else
-        {
-            return Color{9, 5, 26};
-        }
-    };
-
-    const auto draw = [&](auto pos) { return colorise(pos, gradients::magma, 42.0, iterations); };
+    print(springs.size());
 
     auto app = App{{.dims = dims720}};
-    app.transform.pos += Vector2{.x = 400};
-    app.transform.scale *= 40;
 
-    while (app.is_open())
+    const auto viewport_box = app.viewport_box();
+
+    const auto update = [&](auto delta)
     {
-        app.get_input();
+        app.fill("#16161c"_c);
 
-        if (app.mouse.left) { app.transform.pos += app.mouse.pos.now - app.mouse.pos.prev; }
+        for (auto&& spring : springs) { spring.update(); }
 
-        const auto scale = 1.0 + 0.1 * app.mouse.scroll_amount;
-        app.transform.scale *= Vector2::combine(scale);
-        const auto pos    = app.mouse.pos.now;
-        app.transform.pos = pos + scale * (app.transform.pos - pos);
-        iterations             = static_cast<u64>(3 * std::log(app.transform.scale.x) + 9);
+        for (auto&& particle : particles)
+        {
+            particle->apply_force(particle->mass * gravity);
 
-        app.draw(draw);
+            particle->update(delta);
 
-        app.display();
-    }
+            for (auto&& wall : viewport_box) { phys::collide(particle, wall); }
+        }
+    };
+
+    const auto draw = [&]
+    {
+        for (const auto& spring : springs)
+        {
+            app.draw_line_segment(LineSegment{spring.p1.pos, spring.p2.pos}, colors::white, 0.02);
+        }
+
+        for (auto&& particle : particles)
+        {
+            app.draw(particle.now);
+            particle.prev = particle.now;
+        }
+
+        fmt::print("\n{}: ", app.frame_counter);
+    };
+
+    const auto combined = [&]
+    {
+        update(1.0);
+        draw();
+    };
+
+    app.run(update, draw, 1);
 }

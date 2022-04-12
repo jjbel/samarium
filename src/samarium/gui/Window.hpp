@@ -17,7 +17,7 @@ namespace sm
 {
 class Window
 {
-    protected:
+  protected:
     // --------MEMBER VARS--------
     sf::Image im;
     sf::Texture sftexture;
@@ -37,22 +37,6 @@ class Window
         Dimensions dims{sm::dimsFHD};
         std::string name{"Samarium Window"};
         uint32_t framerate{64};
-    };
-
-    struct Manager
-    {
-        Window& window;
-        const Renderer& renderer;
-
-        Manager(Window& win, const Renderer& rn) : window(win), renderer(rn) { window.get_input(); }
-
-        Manager(const Manager&) = delete;
-
-        ~Manager() // NOSONAR
-        {
-            window.draw_image(renderer.image);
-            window.display();
-        }
     };
 
     // --------MEMBER FUNCTIONS--------
@@ -76,34 +60,6 @@ class Window
     void draw_image(const Image& image);
 
     void display();
-
-    void run(const Renderer& rn, std::invocable auto&& call_every_frame)
-    {
-        while (this->is_open())
-        {
-            const auto wm = Manager(*this, rn);
-            call_every_frame();
-        }
-    }
-
-    template <typename UpdateFunction, typename DrawFunction>
-    void run(const Renderer& rn,
-             UpdateFunction&& update,
-             DrawFunction&& draw,
-             size_t substeps    = 1,
-             size_t frame_limit = 1000)
-    {
-        while (this->is_open() && this->frame_counter < frame_limit)
-        {
-            const auto wm = Manager(*this, rn);
-            for (size_t i = 0; i < substeps; i++)
-            {
-                update(1.0 / static_cast<f64>(target_framerate * substeps));
-            }
-
-            draw();
-        }
-    }
 
     auto current_framerate() const -> f64;
 

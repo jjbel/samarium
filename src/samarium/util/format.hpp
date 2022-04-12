@@ -15,6 +15,7 @@
 #include "../math/Transform.hpp"
 #include "../math/Vector2.hpp"
 #include "../math/shapes.hpp"
+#include "../physics/Particle.hpp"
 
 template <sm::concepts::Number T> class fmt::formatter<sm::Vector2_t<T>>
 {
@@ -41,6 +42,16 @@ template <> class fmt::formatter<sm::Version>
     }
 };
 
+template <> class fmt::formatter<sm::Particle>
+{
+  public:
+    constexpr auto parse(const format_parse_context& ctx) { return ctx.begin(); }
+
+    auto format(const sm::Particle& p, auto& ctx)
+    {
+        return format_to(ctx.out(), "Particle(pos: {}, vel: {}, acc: {})", p.pos, p.acc, p.vel);
+    }
+};
 
 template <> class fmt::formatter<sm::Color>
 {

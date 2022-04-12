@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "Extents.hpp"
 #include "math.hpp"
 
 namespace sm
@@ -157,6 +158,11 @@ template <concepts::Number T> struct Vector2_t
     constexpr void reflect(Vector2_t<T> vec) noexcept
     {
         this->rotate(2 * angle_between(*this, vec));
+    }
+
+    constexpr auto clamp_length(Extents<T> extents) noexcept
+    {
+        this->set_length(extents.clamp(this->length()));
     }
 
     [[nodiscard]] constexpr auto is_zero() const noexcept
