@@ -59,6 +59,20 @@ template <concepts::Number T> struct Vector2_t
         return Polar{this->length(), std::atan(this->y / this->x)};
     }
 
+    constexpr auto normalize() noexcept
+    {
+        const auto length_ = this->length();
+        x /= length_;
+        y /= length_;
+    }
+
+    [[nodiscard]] constexpr auto normalized() const noexcept
+    {
+        auto vec = *this;
+        vec.normalize();
+        return vec;
+    }
+
     constexpr auto set_length(f64 new_length) noexcept
     {
         const auto factor = new_length / this->length();

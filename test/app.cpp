@@ -8,102 +8,129 @@
 #include "../src/samarium/graphics/colors.hpp"
 #include "../src/samarium/graphics/gradients.hpp"
 #include "../src/samarium/samarium.hpp"
+#include "samarium/graphics/Image.hpp"
 #include "samarium/math/Vector2.hpp"
-#include "samarium/math/interp.hpp"
-#include "samarium/physics/Particle.hpp"
-#include "samarium/util/random.hpp"
+#include "samarium/math/geometry.hpp"
+#include "samarium/physics/collision.hpp"
 
 using namespace sm;
 using namespace sm::literals;
+
+auto print_float(f64 value) { fmt::print("{:8} ", value); }
 
 struct Spring
 {
     Particle& p1;
     Particle& p2;
     const f64 rest_length;
-    f64 spring_constant;
-    f64 damping_constant;
+    const f64 stiffness;
+    const f64 damping;
 
     Spring(Particle& particle1,
            Particle& particle2,
-           f64 spring_constant_  = 100,
-           f64 damping_constant_ = 1900)
+           f64 stiffness_ = 100.0,
+           f64 damping_   = 10.0) noexcept
         : p1{particle1}, p2{particle2}, rest_length{math::distance(particle1.pos, particle2.pos)},
-          spring_constant{spring_constant_}, damping_constant{damping_constant_}
+          stiffness{stiffness_}, damping{damping_}
     {
     }
 
-    [[nodiscard]] auto length() const { return math::distance(p1.pos, p2.pos); }
+    [[nodiscard]] auto length() const noexcept { return math::distance(p1.pos, p2.pos); }
 
-    auto update()
+    auto update() noexcept
     {
-        const auto dx = this->length() - rest_length;
+        const auto vec    = p2.pos - p1.pos;
+        const auto spring = (vec.length() - rest_length) * stiffness;
+        auto damp         = Vector2::dot(vec.normalized(), p2.vel - p1.vel) * damping;
 
-        const auto norm = p2.pos - p1.pos;
+        if (std::abs(damp) < 0.01) { damp = 0.0; }
+        else
+            print("Uh-oh");
 
-        const auto spring = interp::clamp(spring_constant * dx, {-10000, 10000});
-        const auto damping =
-            interp::clamp(Vector2::dot(p2.vel - p1.vel, norm) * damping_constant, {-10000, 10000});
-        print(spring, damping);
+        const auto force = vec.with_length(spring + damp);
 
-        const auto force = norm.with_length(spring + damping);
+        fmt::print(R"(
+Vec:    {},
+Length: {:5},
+Spring: {:5},
+Damp:   {:5},
+Force:  {}
+)",
+                   vec, vec.length(), spring, damp, force);
+        // print(p1.vel, p2.vel, p2.vel - p1.vel);
+
         p1.apply_force(force);
         p2.apply_force(-force);
     }
 };
 
+struct Params
+{
+    Vector2 gravity{};
+    f64 spring_stiffness{};
+    f64 spring_damping{};
+    f64 particle_mass{};
+    f64 particle_radius{};
+    Dimensions dims{};
+};
+
 int main()
 {
-    const auto gravity = -10.0_y;
-
-    const auto dims = Dimensions{4,5};
+    const auto params = Params{.gravity          = -30.0_y,
+                               .spring_stiffness = 10.0,
+                               .spring_damping   = 20.0,
+                               .particle_mass    = 1.0,
+                               .particle_radius  = 0.9,
+                               .dims             = {4, 4}};
 
     auto particles = Grid<Dual<Particle>>::generate(
-        dims,
-        [&](Indices indices)
+        params.dims,
+        [&](auto indices)
         {
-            const auto x = interp::map_range<f64>(indices.x, Extents<u64>{0UL, dims.x}.as<f64>(),
-                                                  Extents<f64>{-5, 5});
+            const auto x = interp::map_range<f64>(static_cast<f64>(indices.x),
+                                                  Extents<u64>{0UL, params.dims.x}.as<f64>(),
+                                                  Extents<f64>{-10, 10});
 
-            const auto y = interp::map_range<f64>(indices.y, Extents<u64>{0UL, dims.y}.as<f64>(),
-                                                  Extents<f64>{-5, 5});
+            const auto y = interp::map_range<f64>(static_cast<f64>(indices.y),
+                                                  Extents<u64>{0UL, params.dims.y}.as<f64>(),
+                                                  Extents<f64>{-10, 10});
 
             auto pos = Vector2{x, y};
             pos.rotate(1);
 
             return Dual<Particle>{{.pos    = pos,
-                                   .vel    = Vector2{0, -20},
-                                   .radius = .3,
-                                   .mass   = 46,
+                                   .vel    = Vector2{10, 20},
+                                   .radius = params.particle_radius,
+                                   .mass   = params.particle_mass,
                                    .color  = colors::red}};
         });
 
     auto springs = [&]
     {
         std::vector<Spring> temp;
-        temp.reserve(dims.x * dims.y * 4);
+        temp.reserve(params.dims.x * params.dims.y * 4);
 
-        for (auto i : range(dims.y))
+        for (auto i : range(params.dims.y))
         {
-            for (auto j : range(dims.x))
+            for (auto j : range(params.dims.x))
             {
                 if (j != 0) { temp.emplace_back(particles[{j, i}].now, particles[{j - 1, i}].now); }
                 if (i != 0) { temp.emplace_back(particles[{j, i}].now, particles[{j, i - 1}].now); }
                 if (i != 0 && j != 0)
                 {
-                    temp.emplace_back(particles[{j, i}].now, particles[{j - 1, i - 1}].now);
+                    temp.emplace_back(particles[{j, i}].now, particles[{j - 1, i - 1}].now,
+                                      params.spring_stiffness, params.spring_damping);
                 }
-                if (i != 0 && j != dims.x - 1)
+                if (i != 0 && j != params.dims.x - 1)
                 {
-                    temp.emplace_back(particles[{j, i}].now, particles[{j + 1, i - 1}].now);
+                    temp.emplace_back(particles[{j, i}].now, particles[{j + 1, i - 1}].now,
+                                      params.spring_stiffness, params.spring_damping);
                 }
             }
         }
 
         return temp;
     }();
-
-    print(springs.size());
 
     auto app = App{{.dims = dims720}};
 
@@ -113,13 +140,18 @@ int main()
     {
         app.fill("#16161c"_c);
 
+        fmt::print("\n{}:\n", app.frame_counter);
         for (auto&& spring : springs) { spring.update(); }
 
         for (auto&& particle : particles)
         {
-            particle->apply_force(particle->mass * gravity);
-
+            particle->apply_force(particle->mass * params.gravity);
+            // particle->vel.clamp_length({0.0, 40.0});
             particle->update(delta);
+            for (auto&& particle_ : particles)
+            {
+                if (&particle != &particle_) { phys::collide(particle.now, particle_.now); }
+            }
 
             for (auto&& wall : viewport_box) { phys::collide(particle, wall); }
         }
@@ -129,7 +161,8 @@ int main()
     {
         for (const auto& spring : springs)
         {
-            app.draw_line_segment(LineSegment{spring.p1.pos, spring.p2.pos}, colors::white, 0.02);
+            app.draw_line_segment(LineSegment{spring.p1.pos, spring.p2.pos},
+                                  colors::white.with_multiplied_alpha(0.8), 0.04);
         }
 
         for (auto&& particle : particles)
@@ -137,14 +170,6 @@ int main()
             app.draw(particle.now);
             particle.prev = particle.now;
         }
-
-        fmt::print("\n{}: ", app.frame_counter);
-    };
-
-    const auto combined = [&]
-    {
-        update(1.0);
-        draw();
     };
 
     app.run(update, draw, 1);
