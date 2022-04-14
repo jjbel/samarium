@@ -15,6 +15,9 @@ list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})
 find_package(SFML COMPONENTS system window graphics REQUIRED)
 find_package(fmt REQUIRED)
 
+find_package(OpenGL REQUIRED)
+find_package(GLUT REQUIRED)
+
 option(SKIP_EXTRA_TESTS "Only run the main program and not the tests" OFF)
 if(SKIP_EXTRA_TESTS)
     set(TEST_SOURCES "app.cpp")
@@ -34,6 +37,8 @@ target_include_directories(samarium_tests PRIVATE ${CMAKE_SOURCE_DIR}/src)
 target_link_libraries(samarium_tests PRIVATE samarium::samarium)
 target_link_libraries(samarium_tests PRIVATE fmt::fmt)
 target_link_libraries(samarium_tests PRIVATE sfml-graphics)
+# target_link_libraries(samarium_tests PRIVATE OpenGL::OpenGL)
+target_link_libraries(samarium_tests PRIVATE GLUT::GLUT)
 
 if(WARNINGS)
     target_compile_options(samarium_tests PRIVATE ${WARNINGS})

@@ -23,7 +23,7 @@ class Window
     sf::Texture sftexture;
     sf::Sprite sf_buffer_sprite;
     sf::RenderWindow window;
-    sm::util::Stopwatch watch{};
+    sm::Stopwatch watch{};
     size_t target_framerate{};
 
   public:

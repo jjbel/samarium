@@ -75,7 +75,8 @@ function(set_project_warnings)
         -Wlogical-op # warn about logical operations being used where bitwise were probably wanted
         -Wno-useless-cast # warn if you perform a cast to the same type
         -fdiagnostics-color=always
-        # -fmax-errors=1
+        -fconstexpr-ops-limit=1000000000
+        -fconstexpr-loop-limit=100000000
     )
 
     if(MSVC)

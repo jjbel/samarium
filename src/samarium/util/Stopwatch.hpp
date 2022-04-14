@@ -11,7 +11,7 @@
 
 #include "../core/types.hpp"
 
-namespace sm::util
+namespace sm
 {
 struct Stopwatch
 {
@@ -25,4 +25,4 @@ struct Stopwatch
 
     void print() const;
 };
-} // namespace sm::util
+} // namespace sm

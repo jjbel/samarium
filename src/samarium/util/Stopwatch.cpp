@@ -9,7 +9,7 @@
 
 #include "Stopwatch.hpp"
 
-namespace sm::util
+namespace sm
 {
 void Stopwatch::reset() { start = std::chrono::steady_clock::now(); }
 
@@ -21,4 +21,4 @@ auto Stopwatch::time() const -> Stopwatch::Duration_t
 
 void Stopwatch::print() const { fmt::print("Took {:.3}ms\n", this->time().count() * 1000.0); }
 
-}; // namespace sm::util
+}; // namespace sm
