@@ -15,9 +15,6 @@ list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})
 find_package(SFML COMPONENTS system window graphics REQUIRED)
 find_package(fmt REQUIRED)
 
-find_package(OpenGL REQUIRED)
-find_package(GLUT REQUIRED)
-
 option(SKIP_EXTRA_TESTS "Only run the main program and not the tests" OFF)
 if(SKIP_EXTRA_TESTS)
     set(TEST_SOURCES "app.cpp")
