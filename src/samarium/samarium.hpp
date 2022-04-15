@@ -12,6 +12,7 @@
 #include "./math/interp.hpp"
 #include "./math/complex.hpp"
 #include "./physics/collision.hpp"
+#include "./physics/Spring.hpp"
 #include "./util/Stopwatch.hpp"
 #include "./util/file.hpp"
 #include "./util/format.hpp"
