@@ -59,14 +59,14 @@ void App::get_input()
 
 auto App::viewport_box() const -> std::array<LineSegment, 4>
 {
-    const auto double_dims = this->image.dims.as<f64>();
+    const auto f64_dims = this->image.dims.as<f64>();
 
-    return std::array{this->transform.apply_inverse(LineSegment{{}, {0.0, double_dims.y}}),
-                      this->transform.apply_inverse(LineSegment{{}, {double_dims.x, 0.0}}),
+    return std::array{this->transform.apply_inverse(LineSegment{{}, {0.0, f64_dims.y}}),
+                      this->transform.apply_inverse(LineSegment{{}, {f64_dims.x, 0.0}}),
                       this->transform.apply_inverse(
-                          LineSegment{{double_dims.x, 0.0}, {double_dims.x, double_dims.y}}),
+                          LineSegment{{f64_dims.x, 0.0}, {f64_dims.x, f64_dims.y}}),
                       this->transform.apply_inverse(
-                          LineSegment{{0.0, double_dims.y}, {double_dims.x, double_dims.y}})};
+                          LineSegment{{0.0, f64_dims.y}, {f64_dims.x, f64_dims.y}})};
 }
 
 void App::draw(Circle circle, Color color)

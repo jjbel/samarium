@@ -7,38 +7,71 @@
 
 #pragma once
 
+#include <algorithm>
+#include <tuple>
+
 #include "./graphics/Renderer.hpp"
 #include "./gui/Window.hpp"
-#include <tuple>
 
 namespace sm
 {
-struct App : public Renderer, public Window
+class App
 {
-    explicit App(const Settings& settings) : Renderer(Image{settings.dims}), Window(settings) {}
+    sf::RenderWindow sf_render_window;
+    sf::Texture texture;
+    sf::Sprite sprite{texture};
+    Image image;
+    Stopwatch watch{};
+    u64 target_framerate;
 
-    void display()
+    void sync_texture_to_image();
+
+    void sync_image_to_texture();
+
+  public:
+    using Settings = Window::Settings;
+
+    Transform transform;
+    u64 frame_counter{};
+    Keymap keymap;
+    Mouse mouse{sf_render_window};
+
+    explicit App(const Settings& settings)
+        : sf_render_window(
+              sf::VideoMode(static_cast<u32>(settings.dims.x), static_cast<u32>(settings.dims.y)),
+              settings.name,
+              sf::Style::Titlebar | sf::Style::Close,
+              sf::ContextSettings{0, 0, 8}),
+          image{settings.dims}, target_framerate{settings.framerate},
+          transform{.pos   = image.dims.as<f64>() / 2.,
+                    .scale = Vector2::combine(16) * Vector2{1.0, -1.0}}
     {
-        im.create(static_cast<u32>(image.dims.x), static_cast<u32>(image.dims.y),
-                  reinterpret_cast<const u8*>(image.begin()));
-        sftexture.loadFromImage(im);
-        sf_buffer_sprite.setTexture(sftexture, true);
+        texture.create(static_cast<u32>(settings.dims.x), static_cast<u32>(settings.dims.y));
 
-        window.draw(sf_buffer_sprite);
-        window.display();
-        frame_counter++;
-        watch.reset();
+        sf_render_window.setFramerateLimit(settings.framerate);
+
+        keymap.push_back({Keyboard::Key::LControl, Keyboard::Key::Q}, // exit by default with Ctrl+Q
+                         [&sf_render_window = this->sf_render_window]
+                         { sf_render_window.close(); });
     }
 
-    void run(std::invocable auto&& update)
-    {
-        while (this->is_open())
-        {
-            this->get_input();
-            update();
-            this->display();
-        }
-    }
+    void display();
+
+    auto is_open() const -> bool;
+
+    void get_input();
+
+    auto viewport_box() const -> std::array<LineSegment, 4>;
+
+    void fill(Color color);
+
+    void draw(Circle circle, Color color);
+
+    void draw(const Particle& particle);
+
+    void draw_line_segment(const LineSegment& ls,
+                           Color color   = Color{255, 255, 255},
+                           f64 thickness = 0.1);
 
     void run(std::invocable<f64> auto&& update, std::invocable auto&& draw, u64 substeps = 1UL)
     {
