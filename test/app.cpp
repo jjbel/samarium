@@ -108,9 +108,9 @@ int main()
         {
             particle->apply_force(particle->mass * params.gravity);
             particle->update(delta);
-            for (auto&& particle_ : particles)
+            for (auto&& other_particle : particles)
             {
-                if (&particle != &particle_) { phys::collide(particle.now, particle_.now); }
+                phys::collide(particle.now, other_particle.now);
             }
 
             for (auto&& wall : viewport_box) { phys::collide(particle, wall); }

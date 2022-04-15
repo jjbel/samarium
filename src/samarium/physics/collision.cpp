@@ -29,6 +29,8 @@ void collide(Particle& p1, Particle& p2)
         https://www.khanacademy.org/science/physics/linear-momentum/elastic-and-inelastic-collisions/a/what-are-elastic-and-inelastic-collisions
     */
 
+    if (&p1 == &p2) { return; } // prevent self-intersection
+
     if (const auto point = did_collide(p1, p2))
     {
         const auto shift  = (p1.radius + (math::distance(p1.pos, p2.pos) - p2.radius)) / 2;
