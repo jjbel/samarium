@@ -82,6 +82,7 @@ set(
     ./samarium/graphics/Renderer.cpp
     ./samarium/graphics/Trail.cpp
     ./samarium/physics/Car.cpp
+    ./samarium/physics/collision.cpp
     ./samarium/physics/Spring.cpp
     ./samarium/util/file.cpp
     ./samarium/util/util.cpp
