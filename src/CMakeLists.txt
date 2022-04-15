@@ -52,6 +52,7 @@ set(
     ./samarium/graphics/Trail.hpp
     ./samarium/physics/Particle.hpp
     ./samarium/physics/collision.hpp
+    ./samarium/physics/Spring.hpp
     ./samarium/physics/Car.hpp
     ./samarium/physics/fluid/Fluid.hpp
     ./samarium/util/file.hpp
@@ -81,10 +82,12 @@ set(
     ./samarium/graphics/Renderer.cpp
     ./samarium/graphics/Trail.cpp
     ./samarium/physics/Car.cpp
+    ./samarium/physics/Spring.cpp
     ./samarium/util/file.cpp
     ./samarium/util/util.cpp
     ./samarium/util/ostream.cpp
     ./samarium/util/Stopwatch.cpp
+    ./samarium/App.cpp
 )
 
 add_library(samarium "${SAMARIUM_SOURCES}")
