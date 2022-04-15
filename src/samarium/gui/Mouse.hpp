@@ -26,9 +26,9 @@ struct Mouse
     bool middle;
     bool right;
 
-    explicit Mouse(const sf::Window& window) { this->update(window); }
+    explicit Mouse(const sf::RenderWindow& window) { this->update(window); }
 
-    void update(const sf::Window& window);
+    void update(const sf::RenderWindow& window);
 
     [[nodiscard]] auto apply(Transform transform, Mouse::Button btn = Button::Left) const
         -> Transform;

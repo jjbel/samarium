@@ -11,7 +11,7 @@ namespace sm
 {
 Vector2 Mouse::vel() const { return this->pos.now - this->pos.prev; }
 
-void Mouse::update(const sf::Window& window)
+void Mouse::update(const sf::RenderWindow& window)
 {
     this->pos.prev = this->pos.now;
     this->pos.now  = sfml(sf::Mouse::getPosition(window)).as<f64>();
