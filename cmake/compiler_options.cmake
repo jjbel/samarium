@@ -11,10 +11,10 @@
 
 cmake_minimum_required(VERSION 3.16)
 
-function(set_project_warnings)
-    option(WARNINGS_AS_ERRORS "Treat compiler warnings as errors" OFF)
+function(set_compiler_options)
+    option(OPTIONS_AS_ERRORS "Treat compiler warnings as errors" OFF)
 
-    set(MSVC_WARNINGS
+    set(MSVC_OPTIONS
         /std:c++latest # https://github.com/microsoft/STL/issues/1814#issuecomment-845572895
         /W4 # Baseline reasonable warnings
         /w14242 # 'identifier': conversion from 'type1' to 'type1', possible loss of data
@@ -41,7 +41,7 @@ function(set_project_warnings)
         /permissive- # standards conformance mode for MSVC compiler.
     )
 
-    set(COMMON_WARNINGS
+    set(COMMON_OPTIONS
         -Wall
         -Wextra # reasonable and standard
         -Wshadow # warn the user if a variable declaration shadows one from a parent context
@@ -60,15 +60,15 @@ function(set_project_warnings)
         -march=x86-64
     )
 
-    # if(WARNINGS_AS_ERRORS)
-    #     set(COMMON_WARNINGS ${COMMON_WARNINGS} -Werror)
-    #     set(MSVC_WARNINGS ${MSVC_WARNINGS} /WX)
+    # if(OPTIONS_AS_ERRORS)
+    #     set(COMMON_OPTIONS ${COMMON_OPTIONS} -Werror)
+    #     set(MSVC_OPTIONS ${MSVC_OPTIONS} /WX)
     # endif()
 
-    set(CLANG_WARNINGS ${COMMON_WARNINGS} -fcolor-diagnostics -ferror-limit=1)
+    set(CLANG_OPTIONS ${COMMON_OPTIONS} -fcolor-diagnostics -ferror-limit=1)
 
-    set(GCC_WARNINGS
-        ${COMMON_WARNINGS}
+    set(GCC_OPTIONS
+        ${COMMON_OPTIONS}
         -Wmisleading-indentation # warn if indentation implies blocks where blocks do not exist
         -Wduplicated-cond # warn if if / else chain has duplicated conditions
         -Wduplicated-branches # warn if if / else branches have duplicated code
@@ -78,14 +78,14 @@ function(set_project_warnings)
     )
 
     if(MSVC)
-        set(PROJECT_WARNINGS ${MSVC_WARNINGS})
+        set(PROJECT_OPTIONS ${MSVC_OPTIONS})
     elseif(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
-        set(PROJECT_WARNINGS ${CLANG_WARNINGS})
+        set(PROJECT_OPTIONS ${CLANG_OPTIONS})
     elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-        set(PROJECT_WARNINGS ${GCC_WARNINGS})
+        set(PROJECT_OPTIONS ${GCC_OPTIONS})
     else()
         message(AUTHOR_WARNING "No compiler warnings set for '${CMAKE_CXX_COMPILER_ID}' compiler.")
     endif()
 
-    set(WARNINGS ${PROJECT_WARNINGS} PARENT_SCOPE)
+    set(OPTIONS ${PROJECT_OPTIONS} PARENT_SCOPE)
 endfunction()

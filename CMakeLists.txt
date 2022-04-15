@@ -26,10 +26,10 @@ if(USE_CCACHE)
 endif()
 
 # set compilation warnings and flags
-include(compiler_warnings)
-set_project_warnings()
-# message(STATUS "Compiler options: ${WARNINGS}")
-add_compile_options(${WARNINGS})
+include(compiler_options)
+set_compiler_options()
+# message(STATUS "Compiler options: ${OPTIONS}")
+add_compile_options(${OPTIONS})
 
 add_subdirectory(src)
 
