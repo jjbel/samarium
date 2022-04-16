@@ -12,3 +12,4 @@
 using namespace sm;
 using namespace sm::literals;
 
+int main() { auto app = App{{.dims = dims720}}; }
