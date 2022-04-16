@@ -8,48 +8,40 @@
 #include "../src/samarium/graphics/colors.hpp"
 #include "../src/samarium/graphics/gradients.hpp"
 #include "../src/samarium/samarium.hpp"
-#include "samarium/graphics/Image.hpp"
-#include "samarium/math/Vector2.hpp"
-#include "samarium/math/geometry.hpp"
-#include "samarium/physics/collision.hpp"
-#include "samarium/util/Stopwatch.hpp"
 
 using namespace sm;
 using namespace sm::literals;
 
-auto print_float(f64 value) { fmt::print("{:8} ", value); }
-
+// !!!!! EDIT THIS !!!!!
 struct Params
 {
-    Vector2 gravity{};
-    f64 spring_stiffness{};
-    f64 spring_damping{};
-    f64 particle_mass{};
-    f64 particle_radius{};
-    Vector2 particle_velocity{};
-    Dimensions dims{};
+    Vector2 gravity      = -30.0_y;
+    f64 spring_stiffness = 150.0;
+    f64 spring_damping   = 55.0;
+    f64 particle_mass    = 0.6;
+    f64 particle_radius  = 1.6;
+    Vector2 particle_velocity{10, 20};
+    Dimensions particle_count_xy{5, 5};
+    Vector2 softbody_area{25, 25};
 };
 
 int main()
 {
-    const auto params = Params{.gravity          = -30.0_y,
-                               .spring_stiffness = 80.0,
-                               .spring_damping   = 15.0,
-                               .particle_mass    = 0.6,
-                               .particle_radius  = 0.7,
-                               .dims             = {2, 2}};
+    const auto params = Params{};
 
     auto particles = Grid<Dual<Particle>>::generate(
-        params.dims,
+        params.particle_count_xy,
         [&](auto indices)
         {
-            const auto x = interp::map_range<f64>(static_cast<f64>(indices.x),
-                                                  Extents<u64>{0UL, params.dims.x}.as<f64>(),
-                                                  Extents<f64>{-10, 10});
+            const auto x = interp::map_range<f64>(
+                static_cast<f64>(indices.x),
+                Extents<u64>{0UL, params.particle_count_xy.x}.as<f64>(),
+                Extents<f64>{-params.softbody_area.x / 2.0, params.softbody_area.x / 2.0});
 
-            const auto y = interp::map_range<f64>(static_cast<f64>(indices.y),
-                                                  Extents<u64>{0UL, params.dims.y}.as<f64>(),
-                                                  Extents<f64>{-20, 20});
+            const auto y = interp::map_range<f64>(
+                static_cast<f64>(indices.y),
+                Extents<u64>{0UL, params.particle_count_xy.y}.as<f64>(),
+                Extents<f64>{-params.softbody_area.y / 2.0, params.softbody_area.y / 2.0});
 
             auto pos = Vector2{x, y};
             pos.rotate(1);
@@ -64,11 +56,11 @@ int main()
     auto springs = [&]
     {
         std::vector<Spring> temp;
-        temp.reserve(params.dims.x * params.dims.y * 4);
+        temp.reserve(params.particle_count_xy.x * params.particle_count_xy.y * 4);
 
-        for (auto i : range(params.dims.y))
+        for (auto i : range(params.particle_count_xy.y))
         {
-            for (auto j : range(params.dims.x))
+            for (auto j : range(params.particle_count_xy.x))
             {
                 if (j != 0) { temp.emplace_back(particles[{j, i}].now, particles[{j - 1, i}].now); }
                 if (i != 0) { temp.emplace_back(particles[{j, i}].now, particles[{j, i - 1}].now); }
@@ -77,7 +69,7 @@ int main()
                     temp.emplace_back(particles[{j, i}].now, particles[{j - 1, i - 1}].now,
                                       params.spring_stiffness, params.spring_damping);
                 }
-                if (i != 0 && j != params.dims.x - 1)
+                if (i != 0 && j != params.particle_count_xy.x - 1)
                 {
                     temp.emplace_back(particles[{j, i}].now, particles[{j + 1, i - 1}].now,
                                       params.spring_stiffness, params.spring_damping);
@@ -98,16 +90,22 @@ int main()
     {
         for (auto&& spring : springs) { spring.update(); }
 
-        const auto dot = std::abs(
-            Vector2::dot(viewport_box[3].vector().normalized().rotated_by(std::numbers::pi / 2.0),
-                         particles[2]->vel));
-
-        if (dot < 0.1) print("dot");
-
         for (auto&& particle : particles)
         {
+            const auto mouse_pos = app.transform.apply_inverse(app.mouse.pos.now);
+
             particle->apply_force(particle->mass * params.gravity);
+
+            if (math::within_distance(mouse_pos, particle->pos, particle->radius) && app.mouse.left)
+            {
+                particle->pos += app.mouse.vel() / app.transform.scale;
+                particle->vel = Vector2{};
+                particle->acc = Vector2{};
+                print("Click!", app.mouse.vel());
+            }
+
             particle->update(delta);
+
             for (auto&& other_particle : particles)
             {
                 phys::collide(particle.now, other_particle.now);
@@ -136,5 +134,5 @@ int main()
         watch.reset();
     };
 
-    app.run(update, draw, 5);
+    app.run(update, draw, 16);
 }

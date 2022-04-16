@@ -6,6 +6,8 @@
  */
 
 #include "collision.hpp"
+#include "samarium/math/Vector2.hpp"
+#include "samarium/util/print.hpp"
 
 namespace sm::phys
 {
@@ -70,6 +72,9 @@ void collide(Dual<Particle>& p, const LineSegment& l)
     const auto vec = l.vector();
 
     const auto proj = math::project(p.prev.pos, l);
+
+    const auto normal_vector = p.now.pos - proj;
+
     const auto radius_shift =
         (proj - p.prev.pos)
             .with_length(p.prev.radius); // keep track of the point on the circumference of
@@ -84,7 +89,7 @@ void collide(Dual<Particle>& p, const LineSegment& l)
 
     auto leftover_vel = p.now.pos + radius_shift - point;
     leftover_vel.reflect(vec);
-    p.now.pos = point + leftover_vel - radius_shift;
     p.now.vel.reflect(vec);
+    p.now.pos = point + leftover_vel - radius_shift + normal_vector.with_length(0.05);
 }
 } // namespace sm::phys

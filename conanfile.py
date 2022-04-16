@@ -22,7 +22,7 @@ class SamariumConan(ConanFile):
     default_options = {"shared": False, "fPIC": True}
 
     generators = "cmake_find_package"
-    requires = "fmt/8.1.1", "sfml/2.5.1"
+    requires = "fmt/8.1.1", "sfml/2.5.1" 
     exports_sources = "src/*"
 
     def config_options(self):

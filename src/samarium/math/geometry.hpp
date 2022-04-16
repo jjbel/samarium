@@ -25,6 +25,11 @@ namespace sm::math
     return (p1 - p2).length_sq();
 }
 
+[[nodiscard]] constexpr auto within_distance(Vector2 p1, Vector2 p2, f64 distance) noexcept
+{
+    return distance_sq(p1, p2) <= distance * distance;
+}
+
 [[nodiscard]] constexpr auto lerp_along(Vector2 point, const LineSegment& ls) noexcept
 {
     return Vector2::dot(point - ls.p1, ls.vector()) / ls.length_sq();
