@@ -64,7 +64,7 @@ class App
               sf::ContextSettings{0, 0, /* antialiasing factor */ 8}),
           target_framerate{settings.framerate}, image{settings.dims},
           transform{.pos   = image.dims.as<f64>() / 2.,
-                    .scale = Vector2::combine(16) * Vector2{1.0, -1.0}}
+                    .scale = Vector2::combine(10) * Vector2{1.0, -1.0}}
     {
         texture.create(static_cast<u32>(settings.dims.x), static_cast<u32>(settings.dims.y));
 

@@ -52,7 +52,8 @@
             "description": "Use gcc, Ninja, and skip extra tests",
             "inherits": "gcc",
             "cacheVariables": {
-                "SKIP_EXTRA_TESTS": "ON"
+                "SAMARIUM_BUILD_EXTRA_TESTS": "OFF",
+                "SAMARIUM_BUILD_EXAMPLES": "OFF"
             }
         },
         {

@@ -15,26 +15,47 @@ list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})
 find_package(SFML COMPONENTS system window graphics REQUIRED)
 find_package(fmt REQUIRED)
 
-option(SKIP_EXTRA_TESTS "Only run the main program and not the tests" OFF)
-if(SKIP_EXTRA_TESTS)
-    set(TEST_SOURCES "app.cpp")
-else()
-    set(TEST_SOURCES
+function(create_test TEST_NAME TEST_SOURCES)
+    message(STATUS "Creating test: ${TEST_NAME}, with sources: ${TEST_SOURCES}")
+
+    add_executable(${TEST_NAME} "${TEST_SOURCES}")
+    target_include_directories(${TEST_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/src)
+
+    target_link_libraries(${TEST_NAME} PRIVATE samarium::samarium)
+    target_link_libraries(${TEST_NAME} PRIVATE fmt::fmt)
+    target_link_libraries(${TEST_NAME} PRIVATE sfml-graphics)
+    
+    if(WARNINGS)
+        target_compile_options(samarium_tests PRIVATE ${WARNINGS})
+    endif()
+endfunction()
+
+function(create_test_with_output_dir TEST_NAME TEST_SOURCES TEST_OUTPUT_DIR)
+    create_test(${TEST_NAME} "${TEST_SOURCES}")
+
+    message(STATUS "Setting output directory for ${TEST_NAME} to ${TEST_OUTPUT_DIR}")
+    set_target_properties(
+        ${TEST_NAME}
+        PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY "${TEST_OUTPUT_DIR}"
+    )
+endfunction()
+
+option(SAMARIUM_BUILD_EXTRA_TESTS "Only run the main program and not the tests" ON)
+if(SAMARIUM_BUILD_EXTRA_TESTS)
+    create_test(
+        samarium_tests
         tests/Vector2.cpp
         tests/concepts.cpp
         tests/main.cpp
     )
+else()
+    create_test(samarium_tests test.cpp)
 endif()
 
-message(STATUS "Test sources: ${TEST_SOURCES}")
-add_executable(samarium_tests ${TEST_SOURCES})
-
-target_include_directories(samarium_tests PRIVATE ${CMAKE_SOURCE_DIR}/src)
-
-target_link_libraries(samarium_tests PRIVATE samarium::samarium)
-target_link_libraries(samarium_tests PRIVATE fmt::fmt)
-target_link_libraries(samarium_tests PRIVATE sfml-graphics)
-
-if(WARNINGS)
-    target_compile_options(samarium_tests PRIVATE ${WARNINGS})
+option(SAMARIUM_BUILD_EXAMPLES "Build example programs" ON)
+if(SAMARIUM_BUILD_EXAMPLES)
+    create_test_with_output_dir(softbody ../examples/softbody.cpp "${CMAKE_BINARY_DIR}/examples/")
+    create_test_with_output_dir(mandelbrot ../examples/mandelbrot.cpp "${CMAKE_BINARY_DIR}/examples/")
+    create_test_with_output_dir(springy_pendulum ../examples/springy_pendulum.cpp "${CMAKE_BINARY_DIR}/examples/")
 endif()

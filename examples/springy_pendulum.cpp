@@ -12,12 +12,6 @@
 using namespace sm;
 using namespace sm::literals;
 
-auto tmp(util::Stopwatch& watch)
-{
-    fmt::print(stderr, "{:4.2f}\n", 1.0 / watch.time().count());
-    watch.reset();
-}
-
 int main()
 {
     auto app = App{{.dims = dims720}};
@@ -50,7 +44,7 @@ int main()
 
         std::tie(p1, p2) = std::tuple{dual.now, dual.prev};
 
-        app.draw_line_segment(l, gradients::blue_green, 0.4);
+        app.draw_line_segment(l, "#427bf5"_c, 0.4);
         app.draw_line_segment(LineSegment{anchor, p1.pos}, "#c471ed"_c, .6);
         app.draw(p1);
         p2 = p1;
