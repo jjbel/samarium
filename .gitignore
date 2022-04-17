@@ -10,6 +10,8 @@ build/
 
 .cache/
 
+.ignore/
+
 __pycache__/
 
 *.tga

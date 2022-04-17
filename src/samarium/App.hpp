@@ -10,8 +10,17 @@
 #include <algorithm>
 #include <tuple>
 
-#include "./graphics/Renderer.hpp"
-#include "./gui/Window.hpp"
+#include "SFML/Graphics.hpp"
+
+#include "graphics/Color.hpp"
+#include "graphics/Image.hpp"
+#include "gui/Keyboard.hpp"
+#include "gui/Mouse.hpp"
+#include "math/BoundingBox.hpp"
+#include "math/Extents.hpp"
+#include "math/Transform.hpp"
+#include "physics/Particle.hpp"
+#include "util/Stopwatch.hpp"
 
 namespace sm
 {
@@ -29,7 +38,13 @@ class App
     void sync_image_to_texture();
 
   public:
-    using Settings = Window::Settings;
+    struct Settings
+    {
+        Dimensions dims{sm::dimsFHD};
+        std::string name{"Samarium Window"};
+        uint32_t framerate{64};
+    };
+
 
     Transform transform;
     u64 frame_counter{};

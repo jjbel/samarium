@@ -29,7 +29,6 @@ set(
     ./samarium/core/ThreadPool.hpp
     ./samarium/core/types.hpp
     ./samarium/core/version.hpp
-    ./samarium/gui/Window.hpp
     ./samarium/gui/sfml.hpp
     ./samarium/gui/Mouse.hpp
     ./samarium/gui/Keyboard.hpp
@@ -45,7 +44,6 @@ set(
     ./samarium/math/complex.hpp
     ./samarium/graphics/Color.hpp
     ./samarium/graphics/Image.hpp
-    ./samarium/graphics/Renderer.hpp
     ./samarium/graphics/colors.hpp
     ./samarium/graphics/Gradient.hpp
     ./samarium/graphics/gradients.hpp
@@ -76,10 +74,8 @@ set(
 set(
     SAMARIUM_SOURCES
     ./samarium/core/ThreadPool.cpp
-    ./samarium/gui/Window.cpp
     ./samarium/gui/Mouse.cpp
     ./samarium/gui/Keyboard.cpp
-    ./samarium/graphics/Renderer.cpp
     ./samarium/graphics/Trail.cpp
     ./samarium/physics/Car.cpp
     ./samarium/physics/collision.cpp

@@ -7,5 +7,6 @@
 
 #pragma once
 
-#include "./graphics/Renderer.hpp"
+#include "./graphics/Color.hpp"
+#include "./graphics/Image.hpp"
 #include "./graphics/colors.hpp"
