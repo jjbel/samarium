@@ -9,6 +9,7 @@
 
 #include "../core/DynArray.hpp"
 #include "../math/BoundingBox.hpp"
+#include "../math/Extents.hpp"
 
 #include "Color.hpp"
 
@@ -100,7 +101,8 @@ template <typename T> class Grid
     auto fill(const T& value) { this->data.fill(value); }
 
     template <concepts::ColorFormat Format>
-    auto formatted_data(Format format) const -> DynArray<std::array<u8, Format::length>>
+    [[nodiscard]] auto formatted_data(Format format) const
+        -> DynArray<std::array<u8, Format::length>>
     {
         const auto format_length = Format::length;
         auto fmt_data            = DynArray<std::array<u8, format_length>>(this->size());
@@ -109,6 +111,20 @@ template <typename T> class Grid
                        [format](auto color) { return color.get_formatted(format); });
 
         return fmt_data;
+    }
+
+    [[nodiscard]] auto upscale(u64 upscale_factor) const
+    {
+        auto output = Grid<T>(this->dims * upscale_factor);
+        for (auto y : range(output.dims.y))
+        {
+            for (auto x : range(output.dims.x))
+            {
+                output[{x, y}] = this->operator[](Indices{x, y} / upscale_factor);
+            }
+        }
+
+        return output;
     }
 };
 
