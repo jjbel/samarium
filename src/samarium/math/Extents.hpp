@@ -14,7 +14,7 @@
 
 namespace sm
 {
-template <concepts::Arithmetic T> class Extents
+template <typename T> class Extents
 {
   public:
     T min{};
