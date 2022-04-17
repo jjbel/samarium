@@ -121,9 +121,9 @@ class App
         const auto x_range = box.x_range();
         const auto y_range = box.y_range();
 
-        const auto job = [&](auto a, auto b)
+        const auto job = [&](auto min, auto max)
         {
-            for (u64 y = a; y < b; y++)
+            for (auto y : range(min, max))
             {
                 for (auto x : x_range)
                 {
@@ -138,7 +138,8 @@ class App
             }
         };
 
-        thread_pool.parallelize_loop(y_range.min, y_range.max + 1, job, thread_pool.get_thread_count());
+        thread_pool.parallelize_loop(y_range.min, y_range.max + 1, job,
+                                     thread_pool.get_thread_count());
 
         sync_image_to_window();
     }
@@ -156,6 +157,16 @@ class App
             }
             draw();
 
+            this->display();
+        }
+    }
+
+    void run(std::invocable auto&& func)
+    {
+        while (this->is_open())
+        {
+            this->get_input();
+            func();
             this->display();
         }
     }
