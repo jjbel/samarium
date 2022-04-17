@@ -10,6 +10,8 @@
 #include "../src/samarium/samarium.hpp"
 #include "samarium/graphics/Image.hpp"
 #include "samarium/math/Vector2.hpp"
+#include "samarium/util/Stopwatch.hpp"
+#include "samarium/util/random.hpp"
 
 using namespace sm;
 using namespace sm::literals;
@@ -68,11 +70,19 @@ int main()
     {
         const auto mouse_pos = (app.mouse.pos.now).as<u64>();
         // sim.particles[mouse_pos / NoitaSandSim::upscale_factor].element = active_element;
-        print(mouse_pos);
+        // print(mouse_pos);
     };
 
-    auto draw = [&] {
+    auto watch = Stopwatch{};
 
+    auto draw = [&]
+    {
+        app.draw([](auto coords) { return colors::pink; }, {{-0.2, -0.2}, {0.2, 0.2}});
+
+        app.draw(Circle{.centre{10, 10}, .radius = 3}, colors::red);
+
+        watch.print();
+        watch.reset();
     };
 
     app.run(update, draw);

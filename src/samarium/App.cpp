@@ -5,26 +5,35 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
-#include "App.hpp"
+#include "SFML/Graphics/CircleShape.hpp"
+#include "SFML/Graphics/PrimitiveType.hpp"
+#include "SFML/Graphics/Vertex.hpp"
+#include "SFML/Graphics/VertexArray.hpp"
+
+#include "./util/file.hpp"
 #include "./util/format.hpp"
 #include "./util/print.hpp"
-#include <SFML/Graphics/CircleShape.hpp>
-#include <SFML/Graphics/PrimitiveType.hpp>
-#include <SFML/Graphics/Vertex.hpp>
-#include <SFML/Graphics/VertexArray.hpp>
-#include <array>
+#include "App.hpp"
 
 namespace sm
 {
-void App::sync_texture_to_image()
+void App::sync_window_to_image()
 {
+    this->texture.update(this->sf_render_window);
     const auto sf_image = texture.copyToImage();
     const auto ptr      = sf_image.getPixelsPtr();
-    std::copy(std::execution::par_unseq, ptr, ptr + image.size(),
+
+    std::copy(std::execution::par_unseq, ptr, ptr + image.size() * 4UL,
               reinterpret_cast<u8*>(image.begin()));
 }
 
-void App::sync_image_to_texture() { texture.update(reinterpret_cast<const u8*>(image.begin())); }
+void App::sync_image_to_window()
+{
+    this->texture.update(reinterpret_cast<const u8*>(this->image.begin()));
+    sf::Sprite sprite(texture);
+
+    this->sf_render_window.draw(sprite);
+}
 
 void App::display()
 {
