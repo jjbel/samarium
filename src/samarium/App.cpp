@@ -57,16 +57,17 @@ void App::get_input()
     this->mouse.update(this->sf_render_window);
 }
 
+auto App::bounding_box() const -> BoundingBox<size_t> { return this->image.bounding_box(); }
+
 auto App::viewport_box() const -> std::array<LineSegment, 4>
 {
     const auto f64_dims = this->image.dims.as<f64>();
 
-    return std::array{this->transform.apply_inverse(LineSegment{{}, {0.0, f64_dims.y}}),
-                      this->transform.apply_inverse(LineSegment{{}, {f64_dims.x, 0.0}}),
-                      this->transform.apply_inverse(
-                          LineSegment{{f64_dims.x, 0.0}, {f64_dims.x, f64_dims.y}}),
-                      this->transform.apply_inverse(
-                          LineSegment{{0.0, f64_dims.y}, {f64_dims.x, f64_dims.y}})};
+    return std::array{
+        this->transform.apply_inverse(LineSegment{{}, {0.0, f64_dims.y}}),
+        this->transform.apply_inverse(LineSegment{{}, {f64_dims.x, 0.0}}),
+        this->transform.apply_inverse(LineSegment{{f64_dims.x, 0.0}, {f64_dims.x, f64_dims.y}}),
+        this->transform.apply_inverse(LineSegment{{0.0, f64_dims.y}, {f64_dims.x, f64_dims.y}})};
 }
 
 void App::draw(Circle circle, Color color)

@@ -66,7 +66,7 @@ int main()
 
     auto update = [&](auto /* delta */)
     {
-        const auto mouse_pos = app.mouse.pos.now.as<u64>();
+        const auto mouse_pos = (app.mouse.pos.now).as<u64>();
         // sim.particles[mouse_pos / NoitaSandSim::upscale_factor].element = active_element;
         print(mouse_pos);
     };

@@ -61,6 +61,8 @@ class App
 
     void get_input();
 
+    auto bounding_box() const -> BoundingBox<size_t>;
+
     auto viewport_box() const -> std::array<LineSegment, 4>;
 
     void fill(Color color);
