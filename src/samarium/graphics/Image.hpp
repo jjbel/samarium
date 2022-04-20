@@ -7,6 +7,10 @@
 
 #pragma once
 
+#include <compare>
+#include <functional>
+#include <iterator>
+
 #include "../core/DynArray.hpp"
 #include "../math/BoundingBox.hpp"
 #include "../math/Extents.hpp"
@@ -126,6 +130,55 @@ template <typename T> class Grid
 
         return output;
     }
+
+    struct Iterator2d
+    {
+        // using ref               = std::reference_wrapper<T>;
+        using iterator_category = std::forward_iterator_tag;
+        using difference_type   = std::ptrdiff_t;
+        using value_type        = std::pair<Indices, T*>;
+        using pointer           = value_type*; // or also value_type*
+        using reference         = value_type; // or also value_type&
+
+        Grid<T>& grid;
+        u64 index;
+
+        auto operator*() const -> reference
+        {
+            return value_type{convert_1d_to_2d(grid.dims, index), &grid[index]};
+        }
+        // auto operator->() -> pointer { return &(grid->operator[](m_index)); }
+
+        // Prefix increment
+        auto operator++() -> Iterator2d&
+        {
+            index++;
+            return *this;
+        }
+
+        // Postfix increment
+        auto operator++(int) -> Iterator2d
+        {
+            Iterator2d tmp = *this;
+            ++(*this);
+            return tmp;
+        }
+
+        friend auto operator==(const Iterator2d& a, const Iterator2d& b) -> bool
+        {
+            return a.index == b.index;
+        };
+    };
+
+    struct Iterator2dHolder
+    {
+        Grid<T>& grid;
+        auto begin() { return Iterator2d{this->grid, 0}; }
+        auto end() { return Iterator2d{this->grid, this->grid.size()}; }
+        auto size() const { return this->grid.size(); }
+    };
+
+    auto iterate_2d() { return Iterator2dHolder{*this}; }
 };
 
 using Image       = Grid<Color>;
