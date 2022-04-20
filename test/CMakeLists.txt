@@ -45,9 +45,7 @@ option(SAMARIUM_BUILD_EXTRA_TESTS "Only run the main program and not the tests" 
 if(SAMARIUM_BUILD_EXTRA_TESTS)
     create_test(
         samarium_tests
-        tests/Vector2.cpp
-        tests/concepts.cpp
-        tests/main.cpp
+        "tests/Vector2.cpp;tests/concepts.cpp;tests/main.cpp"
     )
 else()
     create_test(samarium_tests test.cpp)
