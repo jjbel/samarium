@@ -47,7 +47,7 @@ class App
     {
         Dimensions dims{sm::dimsFHD};
         std::string name{"Samarium Window"};
-        uint32_t framerate{60};
+        uint32_t framerate{64};
     };
 
     ThreadPool thread_pool{};
@@ -88,6 +88,8 @@ class App
     auto bounding_box() const -> BoundingBox<size_t>;
 
     auto viewport_box() const -> std::array<LineSegment, 4>;
+
+    auto get_image() const -> Image;
 
     void fill(Color color);
 
