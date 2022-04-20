@@ -179,6 +179,14 @@ template <concepts::Number T> struct Vector2_t
         this->set_length(extents.clamp(this->length()));
     }
 
+    template <concepts::Number U> [[nodiscard]] constexpr auto clamped_to(Vector2_t<U> box) const
+    {
+        return Vector2_t<T>{
+            std::min(std::max(this->x, static_cast<T>(0)), static_cast<T>(box.x)),
+            std::min(std::max(this->y, static_cast<T>(0)), static_cast<T>(box.y)),
+        };
+    }
+
     [[nodiscard]] constexpr auto is_zero() const noexcept
     {
         return math::almost_equal(this->length_sq(), 0.0);
