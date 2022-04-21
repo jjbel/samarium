@@ -7,6 +7,7 @@
 #pragma once
 
 #include <concepts>
+#include <iterator>
 
 #include "types.hpp"
 
@@ -39,4 +40,14 @@ concept Arithmetic = requires(T a, T b)
 
 template <typename T, typename... U>
 concept AnyOf = (std::same_as<T, U> || ...);
+
+template <class T>
+concept Range = requires(T&& t)
+{
+    std::begin(t);
+    std::end(t);
+    std::cbegin(t);
+    std::cend(t);
+    std::size(t);
+};
 } // namespace sm::concepts
