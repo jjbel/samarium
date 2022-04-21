@@ -9,6 +9,7 @@
 
 #include <algorithm>
 #include <array>
+#include <initializer_list>
 
 #include "../math/BoundingBox.hpp"
 #include "../math/interp.hpp"
@@ -92,21 +93,32 @@ static SM_CUSTOM_CONSTINIT auto cache = Cache<1024UL>{};
 
 SM_CUSTOM_CONSTEXPR auto random() { return cache.next(); }
 
-template <typename T> [[nodiscard]] SM_CUSTOM_CONSTEXPR auto rand_range(Extents<T> extents) noexcept
+template <typename T> [[nodiscard]] SM_CUSTOM_CONSTEXPR auto in_range(Extents<T> extents) noexcept
 {
     return static_cast<T>(extents.lerp(random()));
 }
 
-[[nodiscard]] SM_CUSTOM_CONSTEXPR auto rand_vector(const BoundingBox<f64>& bounding_box) noexcept
+[[nodiscard]] SM_CUSTOM_CONSTEXPR auto vector(const BoundingBox<f64>& bounding_box) noexcept
 {
-    return Vector2{rand_range<f64>({bounding_box.min.x, bounding_box.max.x}),
-                   rand_range<f64>({bounding_box.min.y, bounding_box.max.y})};
+    return Vector2{in_range<f64>({bounding_box.min.x, bounding_box.max.x}),
+                   in_range<f64>({bounding_box.min.y, bounding_box.max.y})};
 }
 
-[[nodiscard]] SM_CUSTOM_CONSTEXPR auto rand_vector(Extents<f64> radius_range,
-                                                   Extents<f64> angle_range) noexcept
+[[nodiscard]] SM_CUSTOM_CONSTEXPR auto vector(Extents<f64> radius_range,
+                                              Extents<f64> angle_range) noexcept
 {
-    return Vector2::from_polar({.length = rand_range<f64>({radius_range.min, radius_range.max}),
-                                .angle  = rand_range<f64>({angle_range.min, angle_range.max})});
+    return Vector2::from_polar({.length = in_range<f64>({radius_range.min, radius_range.max}),
+                                .angle  = in_range<f64>({angle_range.min, angle_range.max})});
+}
+
+[[nodiscard]] SM_CUSTOM_CONSTEXPR auto choice(const concepts::Range auto& iterable)
+{
+    return *(iterable.begin() + static_cast<u64>(random() * iterable.size()));
+}
+
+template <typename T>
+[[nodiscard]] SM_CUSTOM_CONSTEXPR auto choice(std::initializer_list<T> init_list)
+{
+    return *(init_list.begin() + static_cast<u64>(random() * init_list.size()));
 }
 } // namespace sm::random
