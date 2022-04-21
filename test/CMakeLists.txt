@@ -15,6 +15,10 @@ list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})
 find_package(SFML COMPONENTS system window graphics REQUIRED)
 find_package(fmt REQUIRED)
 
+if(NOT WIN32)
+    find_package(TBB REQUIRED)
+endif()
+
 function(create_test TEST_NAME TEST_SOURCES)
     message(STATUS "Creating test: ${TEST_NAME}, with sources: ${TEST_SOURCES}")
 
@@ -24,7 +28,12 @@ function(create_test TEST_NAME TEST_SOURCES)
     target_link_libraries(${TEST_NAME} PRIVATE samarium::samarium)
     target_link_libraries(${TEST_NAME} PRIVATE fmt::fmt)
     target_link_libraries(${TEST_NAME} PRIVATE sfml-graphics)
-    
+
+    if(NOT WIN32)
+    message(STATUS "Linking ${TEST_NAME} with TBB")
+        target_link_libraries(${TEST_NAME} PUBLIC TBB::tbb)
+    endif()
+
     if(WARNINGS)
         target_compile_options(samarium_tests PRIVATE ${WARNINGS})
     endif()
