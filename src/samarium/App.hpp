@@ -39,8 +39,8 @@ namespace concepts
 template <typename T, CoordinateSpace cs = CoordinateSpace::World> struct is_drawable
 {
     static constexpr auto value =
-        (cs == CoordinateSpace::Screen) && std::is_invocable_r_v<Color, T, Indices> ||
-        (cs == CoordinateSpace::World) && std::is_invocable_r_v<Color, T, Vector2>;
+        ((cs == CoordinateSpace::Screen) && std::is_invocable_r_v<Color, T, Indices>) ||
+        ((cs == CoordinateSpace::World) && std::is_invocable_r_v<Color, T, Vector2>);
 };
 
 template <typename T, CoordinateSpace cs = CoordinateSpace::World>
@@ -97,6 +97,10 @@ class App
     auto is_open() const -> bool;
 
     void get_input();
+
+    auto dims() const -> Dimensions;
+
+    auto transformed_dims() const -> Vector2;
 
     auto bounding_box() const -> BoundingBox<size_t>;
 

@@ -66,6 +66,13 @@ void App::get_input()
     this->mouse.update(this->sf_render_window);
 }
 
+auto App::dims() const -> Dimensions { return image.dims; }
+
+auto App::transformed_dims() const -> Vector2
+{
+    return this->dims().as<f64>() / transform.scale;
+}
+
 auto App::bounding_box() const -> BoundingBox<size_t> { return this->image.bounding_box(); }
 
 auto App::viewport_box() const -> std::array<LineSegment, 4>
