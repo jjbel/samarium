@@ -52,6 +52,17 @@
             "description": "Use gcc, Ninja, and skip extra tests",
             "inherits": "gcc",
             "cacheVariables": {
+                "USE_UBSAN": "ON",
+                "SAMARIUM_BUILD_EXTRA_TESTS": "OFF",
+                "SAMARIUM_BUILD_EXAMPLES": "OFF"
+            }
+        },
+        {
+            "name": "ubsan",
+            "description": "Use clang, address sanitizer, Ninja, and skip extra tests",
+            "inherits": "clang",
+            "cacheVariables": {
+                "USE_UBSAN": "ON",
                 "SAMARIUM_BUILD_EXTRA_TESTS": "OFF",
                 "SAMARIUM_BUILD_EXAMPLES": "OFF"
             }
