@@ -16,12 +16,12 @@ namespace sm::interp
 {
 [[nodiscard]] constexpr auto smooth_step()
 {
-    return [](auto x) { return x * x * (3. - 2. * x); };
+    return [](auto x) { return x * x * (3.0 - 2.0 * x); };
 }
 
 [[nodiscard]] constexpr auto smoother_step()
 {
-    return [](auto x) { return x * x * x * (x * (x * 6. - 15.) + 10.); };
+    return [](auto x) { return x * x * x * (x * (x * 6.0 - 15.0) + 10.0); };
 }
 
 template <typename T> [[nodiscard]] constexpr auto in_range(T value, Extents<T> range_)
