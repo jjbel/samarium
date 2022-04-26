@@ -10,9 +10,12 @@
 #include <algorithm>
 #include <array>
 #include <initializer_list>
+#include <vector>
 
 #include "../math/BoundingBox.hpp"
 #include "../math/interp.hpp"
+#include "samarium/graphics/Image.hpp"
+#include "samarium/math/Vector2.hpp"
 
 // clang doesn't properly support constinit yet:
 #ifndef __clang__
@@ -89,7 +92,7 @@ template <size_t Size> class Cache
     }
 };
 
-static SM_CUSTOM_CONSTINIT auto cache = Cache<1024UL>{};
+static SM_CUSTOM_CONSTINIT auto cache = Cache<65536UL>{};
 
 SM_CUSTOM_CONSTEXPR auto random() { return cache.next(); }
 
