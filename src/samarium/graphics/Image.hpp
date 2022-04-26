@@ -77,15 +77,59 @@ template <typename T> class Grid
     {
         return this->data[indices.y * this->dims.x + indices.x];
     }
-
     auto operator[](Indices indices) const -> const T&
     {
         return this->data[indices.y * this->dims.x + indices.x];
     }
 
     auto operator[](size_t index) noexcept -> T& { return this->data[index]; }
-
     auto operator[](size_t index) const noexcept -> const T& { return this->data[index]; }
+
+    auto at(Indices indices) -> T&
+    {
+        if (indices.x >= dims.x || indices.y >= dims.y)
+        {
+            throw std::out_of_range(
+                fmt::format("sm::Grid: indices [{}, {}] out of range for dimensions [{}, {}]",
+                            indices.x, indices.y, this->dims.x, this->dims.y));
+        }
+
+        return this->operator[](indices);
+    }
+
+    auto at(Indices indices) const -> const T&
+    {
+        if (indices.x >= dims.x || indices.y >= dims.y)
+        {
+            throw std::out_of_range(
+                fmt::format("sm::Grid: indices [{}, {}] out of range for dimensions [{}, {}]",
+                            indices.x, indices.y, this->dims.x, this->dims.y));
+        }
+
+        return this->operator[](indices);
+    }
+
+    auto at(size_t index) -> T&
+    {
+        if (index >= this->m_size)
+        {
+            throw std::out_of_range(
+                fmt::format("sm::Grid: index {} out of range for size {}", index, this->m_size));
+        }
+
+        return this->data[index];
+    }
+
+    auto at(size_t index) const -> const T&
+    {
+        if (index >= this->m_size)
+        {
+            throw std::out_of_range(
+                fmt::format("sm::Grid: index {} out of range for size {}", index, this->m_size));
+        }
+
+        return this->data[index];
+    }
 
     auto begin() { return this->data.begin(); }
     auto end() { return this->data.end(); }
@@ -138,7 +182,7 @@ template <typename T> class Grid
         using difference_type   = std::ptrdiff_t;
         using value_type        = std::pair<Indices, T*>;
         using pointer           = value_type*; // or also value_type*
-        using reference         = value_type; // or also value_type&
+        using reference         = value_type;  // or also value_type&
 
         Grid<T>& grid;
         u64 index;
