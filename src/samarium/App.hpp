@@ -27,11 +27,24 @@
 namespace sm
 {
 
+enum class CoordinateSpace
+{
+    Screen,
+    World
+};
+
 namespace concepts
 {
-// takes a const Vector2& and returns a Color
-template <typename T>
-concept DrawableLambda = std::is_invocable_r_v<Color, T, const Vector2&>;
+
+template <typename T, CoordinateSpace cs = CoordinateSpace::World> struct is_drawable
+{
+    static constexpr auto value =
+        (cs == CoordinateSpace::Screen) && std::is_invocable_r_v<Color, T, Indices> ||
+        (cs == CoordinateSpace::World) && std::is_invocable_r_v<Color, T, Vector2>;
+};
+
+template <typename T, CoordinateSpace cs = CoordinateSpace::World>
+concept DrawableLambda = is_drawable<T, cs>::value;
 } // namespace concepts
 
 class App
@@ -101,16 +114,25 @@ class App
                            Color color   = Color{255, 255, 255},
                            f64 thickness = 0.1);
 
-    template <concepts::DrawableLambda T> void draw(T&& fn)
+    template <typename T>
+    requires concepts::DrawableLambda<T, CoordinateSpace::World>
+    void draw(T&& fn) { this->draw<CoordinateSpace::World>(std::forward<T>(fn)); }
+
+    template <CoordinateSpace cs, typename T>
+    requires concepts::DrawableLambda<T, cs>
+    void draw(T&& fn)
     {
-        const auto bounding_box = image.bounding_box();
-        this->draw(std::forward<T>(fn), transform.apply_inverse(BoundingBox<u64>{
-                                            .min = bounding_box.min,
-                                            .max = bounding_box.max +
-                                                   Indices{1, 1}}.template as<f64>()));
+        const auto bounding_box    = image.bounding_box();
+        const auto transformed_box = transform.apply_inverse(BoundingBox<u64>{
+            .min = bounding_box.min,
+            .max = bounding_box.max + Indices{1, 1}}.template as<f64>());
+
+        this->draw<cs>(std::forward<T>(fn), transformed_box);
     }
 
-    void draw(concepts::DrawableLambda auto&& fn, const BoundingBox<f64>& bounding_box)
+    template <CoordinateSpace cs, typename T>
+    requires concepts::DrawableLambda<T, cs>
+    void draw(T&& fn, const BoundingBox<f64>& bounding_box)
     {
         sync_window_to_image();
 
@@ -130,10 +152,7 @@ class App
                 for (auto x : x_range)
                 {
                     const auto coords = Indices{x, y};
-                    const auto coords_transformed =
-                        transform.apply_inverse(coords.template as<f64>());
-
-                    const auto col = fn(coords_transformed);
+                    const auto col    = invoke_fn<cs>(fn, coords);
 
                     image[coords].add_alpha_over(col);
                 }
@@ -171,6 +190,19 @@ class App
             func();
             this->display();
         }
+    }
+
+  private:
+    template <CoordinateSpace cs>
+    inline auto invoke_fn(const auto& fn, Indices coords) requires(cs == CoordinateSpace::Screen)
+    {
+        return fn(coords);
+    }
+
+    template <CoordinateSpace cs>
+    inline auto invoke_fn(const auto& fn, Indices coords) requires(cs == CoordinateSpace::World)
+    {
+        return fn(transform.apply_inverse(coords.template as<f64>()));
     }
 };
 } // namespace sm
