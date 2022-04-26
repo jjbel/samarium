@@ -16,6 +16,7 @@
 #endif // __cpp_lib_source_location
 
 #include "fmt/color.h"
+#include "fmt/ranges.h"
 
 namespace sm
 {
