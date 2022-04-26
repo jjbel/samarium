@@ -7,14 +7,12 @@
 
 #pragma once
 
-// #include <algorithm>
-// #include <array>
-// #include <initializer_list>
+#include <algorithm>
+#include <initializer_list>
 #include <vector>
 
 #include "../graphics/Image.hpp"
 #include "../math/BoundingBox.hpp"
-// #include "../math/interp.hpp"
 
 namespace sm
 {
