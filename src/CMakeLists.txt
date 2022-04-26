@@ -82,6 +82,7 @@ set(
     ./samarium/physics/Spring.cpp
     ./samarium/util/file.cpp
     ./samarium/util/util.cpp
+    ./samarium/util/RandomGenerator.cpp
     ./samarium/util/ostream.cpp
     ./samarium/util/Stopwatch.cpp
     ./samarium/App.cpp
