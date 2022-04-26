@@ -5,6 +5,7 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
+#include "samarium/App.hpp"
 #include "samarium/graphics/gradients.hpp"
 #include "samarium/samarium.hpp"
 
@@ -42,7 +43,8 @@ int main()
         }
     };
 
-    const auto draw = [&](auto pos) { return colorise(pos, gradients::magma, 42.0, iterations); };
+    const auto draw = [&](Vector2 pos)
+    { return colorise(pos, gradients::magma, 42.0, iterations); };
 
     auto app = App{{.dims = dims720}};
     app.transform.pos += Vector2{.x = 400};
