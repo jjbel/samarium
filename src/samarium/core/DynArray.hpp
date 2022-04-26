@@ -64,7 +64,7 @@ template <typename T> struct DynArray
     {
         if (index >= this->m_size)
         {
-            throw std::out_of_range(fmt::format("sm::DynArray: index {} out of range for m_size {}",
+            throw std::out_of_range(fmt::format("sm::DynArray: index {} out of range for size {}",
                                                 index, this->m_size));
         }
 
@@ -75,7 +75,7 @@ template <typename T> struct DynArray
     {
         if (index >= this->m_size)
         {
-            throw std::out_of_range(fmt::format("sm::DynArray: index {} out of range for m_size {}",
+            throw std::out_of_range(fmt::format("sm::DynArray: index {} out of range for size {}",
                                                 index, this->m_size));
         }
 
