@@ -16,6 +16,12 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release")
 endif()
 
+option(USE_UBSAN "Generate coverage reports" FALSE)
+if(USE_UBSAN)
+    add_compile_options(-fsanitize=undefined)
+    add_link_options(-fsanitize=undefined)
+endif()
+
 include(conan_install)
 conan_install()
 
