@@ -29,7 +29,7 @@ namespace detail
 
     const auto cell_x         = static_cast<i64>(candidate.x / cell_size);
     const auto cell_y         = static_cast<i64>(candidate.y / cell_size);
-    const auto search_start_x = static_cast<u64>(std::max(0L, cell_x - 2));
+    const auto search_start_x = static_cast<u64>(std::max(0L, cell_x - 2L));
     const auto search_end_x = static_cast<u64>(std::min(cell_x + 2, static_cast<i64>(grid.dims.x)));
     const auto search_start_y = static_cast<u64>(std::max(0L, cell_y - 2));
     const auto search_end_y = static_cast<u64>(std::min(cell_y + 2, static_cast<i64>(grid.dims.y)));
