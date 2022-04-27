@@ -14,32 +14,33 @@ namespace sm
 namespace detail
 {
 [[nodiscard]] auto poisson_is_valid(Vector2 candidate,
-                                    Vector2 sampleRegionSize,
-                                    f64 cellSize,
+                                    Vector2 sample_region,
+                                    f64 cell_size,
                                     f64 radius,
                                     const std::vector<Vector2>& points,
                                     const Grid<i32>& grid)
 {
-    if (!(candidate.x >= 0.0 && candidate.x < sampleRegionSize.x && candidate.y >= 0.0 &&
-          candidate.y < sampleRegionSize.y))
+    // TODO use BoundingBox
+    if (!(candidate.x >= 0.0 && candidate.x < sample_region.x && candidate.y >= 0.0 &&
+          candidate.y < sample_region.y))
     {
         return false;
     }
 
-    const auto cellX        = static_cast<i64>(candidate.x / cellSize);
-    const auto cellY        = static_cast<i64>(candidate.y / cellSize);
-    const auto searchStartX = static_cast<u64>(std::max(0L, cellX - 2));
-    const auto searchEndX   = static_cast<u64>(std::min(cellX + 2, static_cast<i64>(grid.dims.x)));
-    const auto searchStartY = static_cast<u64>(std::max(0L, cellY - 2));
-    const auto searchEndY   = static_cast<u64>(std::min(cellY + 2, static_cast<i64>(grid.dims.y)));
+    const auto cell_x         = static_cast<i64>(candidate.x / cell_size);
+    const auto cell_y         = static_cast<i64>(candidate.y / cell_size);
+    const auto search_start_x = static_cast<u64>(std::max(0L, cell_x - 2));
+    const auto search_end_x = static_cast<u64>(std::min(cell_x + 2, static_cast<i64>(grid.dims.x)));
+    const auto search_start_y = static_cast<u64>(std::max(0L, cell_y - 2));
+    const auto search_end_y = static_cast<u64>(std::min(cell_y + 2, static_cast<i64>(grid.dims.y)));
 
-    for (auto x : range(searchStartX, searchEndX))
+    for (auto x : range(search_start_x, search_end_x))
     {
-        for (auto y : range(searchStartY, searchEndY))
+        for (auto y : range(search_start_y, search_end_y))
         {
-            const auto pointIndex = grid[Indices{x, y}] - 1;
-            if (pointIndex != -1 &&
-                math::within_distance(candidate, points[static_cast<u64>(pointIndex)], radius))
+            const auto point_index = grid[Indices{x, y}] - 1;
+            if (point_index != -1 &&
+                math::within_distance(candidate, points[static_cast<u64>(point_index)], radius))
             {
                 return false;
             }
@@ -53,14 +54,14 @@ void RandomGenerator::resize(u64 new_size)
 {
     if (new_size < cache.size()) { return; }
     cache.resize(new_size);
-    std::generate(cache.begin(), cache.end(), [this] { return this->next_scaled(); });
+    std::ranges::generate(cache, [this] { return this->next_scaled(); });
 }
 
 void RandomGenerator::reseed(u64 new_seed)
 {
     inc           = new_seed;
     current_index = 0UL;
-    std::generate(cache.begin(), cache.end(), [this] { return this->next_scaled(); });
+    std::ranges::generate(cache, [this] { return this->next_scaled(); });
 }
 
 [[nodiscard]] auto RandomGenerator::next() noexcept -> u64
@@ -81,7 +82,7 @@ void RandomGenerator::reseed(u64 new_seed)
 
 [[nodiscard]] auto RandomGenerator::random() -> f64
 {
-    if (current_index < cache.size()) return cache[current_index++];
+    if (current_index < cache.size()) { return cache[current_index++]; }
 
     return this->next_scaled();
 }
@@ -103,43 +104,43 @@ void RandomGenerator::reseed(u64 new_seed)
                                                         Vector2 sample_region_size,
                                                         u64 sample_count) -> std::vector<Vector2>
 {
-    const f64 cellSize = radius / std::numbers::sqrt2;
+    const f64 cell_size = radius / std::numbers::sqrt2;
 
-    auto grid = Grid<i32>{{static_cast<u64>(std::ceil(sample_region_size.x / cellSize)),
-                           static_cast<u64>(std::ceil(sample_region_size.y / cellSize))}};
+    auto grid = Grid<i32>{{static_cast<u64>(std::ceil(sample_region_size.x / cell_size)),
+                           static_cast<u64>(std::ceil(sample_region_size.y / cell_size))}};
 
-    auto points      = std::vector<Vector2>();
-    auto spawnPoints = std::vector<Vector2>();
+    auto points       = std::vector<Vector2>();
+    auto spawn_points = std::vector<Vector2>();
 
-    spawnPoints.push_back(sample_region_size / 2.0);
+    spawn_points.push_back(sample_region_size / 2.0);
 
-    while (!spawnPoints.empty())
+    while (!spawn_points.empty())
     {
-        const auto spawnIndex  = this->range<u64>({0UL, spawnPoints.size() - 1});
-        auto spawnCentre       = spawnPoints[spawnIndex];
-        auto candidateAccepted = false;
+        const auto spawn_index  = this->range<u64>({0UL, spawn_points.size() - 1UL});
+        auto spawn_centre       = spawn_points[spawn_index];
+        auto candidate_accepted = false;
 
         for (auto i : sm::range(sample_count))
         {
             std::ignore          = i;
-            const auto candidate = spawnCentre + this->polar_vector({radius, 2 * radius});
+            const auto candidate = spawn_centre + this->polar_vector({radius, 2 * radius});
 
-            if (detail::poisson_is_valid(candidate, sample_region_size, cellSize, radius, points,
+            if (detail::poisson_is_valid(candidate, sample_region_size, cell_size, radius, points,
                                          grid))
             {
                 points.push_back(candidate);
-                spawnPoints.push_back(candidate);
-                grid[{static_cast<u64>(candidate.x / cellSize),
-                      static_cast<u64>(candidate.y / cellSize)}] = static_cast<i32>(points.size());
+                spawn_points.push_back(candidate);
+                grid[{static_cast<u64>(candidate.x / cell_size),
+                      static_cast<u64>(candidate.y / cell_size)}] = static_cast<i32>(points.size());
 
-                candidateAccepted = true;
+                candidate_accepted = true;
                 break;
             }
         }
 
-        if (!candidateAccepted)
+        if (!candidate_accepted)
         {
-            spawnPoints.erase(spawnPoints.begin() + static_cast<i64>(spawnIndex));
+            spawn_points.erase(spawn_points.begin() + static_cast<i64>(spawn_index));
         }
     }
 

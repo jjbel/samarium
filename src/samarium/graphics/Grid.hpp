@@ -15,6 +15,8 @@
 #include "../math/BoundingBox.hpp"
 #include "../math/Extents.hpp"
 
+#include "Color.hpp"
+
 namespace sm
 {
 constexpr inline auto dims4K  = Dimensions{3840UL, 2160UL};
@@ -175,7 +177,6 @@ template <typename T> class Grid
 
     struct Iterator2d
     {
-        // using ref               = std::reference_wrapper<T>;
         using iterator_category = std::forward_iterator_tag;
         using difference_type   = std::ptrdiff_t;
         using value_type        = std::pair<Indices, T*>;

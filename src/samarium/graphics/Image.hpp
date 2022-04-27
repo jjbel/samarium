@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include "Color.hpp"
 #include "Grid.hpp"
 
 namespace sm
