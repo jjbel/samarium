@@ -7,6 +7,10 @@
 
 #pragma once
 
-#include "./graphics/Color.hpp"
-#include "./graphics/Image.hpp"
-#include "./graphics/colors.hpp"
+#include "graphics/Color.hpp"
+#include "graphics/Gradient.hpp"
+#include "graphics/Grid.hpp"
+#include "graphics/Image.hpp"
+#include "graphics/Trail.hpp"
+#include "graphics/colors.hpp"
+#include "graphics/gradients.hpp"

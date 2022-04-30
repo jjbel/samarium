@@ -7,4 +7,7 @@
 
 #pragma once
 
-#include "./physics/collision.hpp"
+// #include "physics/Car.hpp"
+#include "physics/Particle.hpp"
+#include "physics/Spring.hpp"
+#include "physics/collision.hpp"
