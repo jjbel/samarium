@@ -7,6 +7,7 @@
 
 #include "samarium/graphics/colors.hpp"
 #include "samarium/graphics/gradients.hpp"
+#include "samarium/physics/Particle.hpp"
 #include "samarium/samarium.hpp"
 
 using namespace sm;
@@ -46,12 +47,18 @@ int main()
             auto pos = Vector2{x, y};
             pos.rotate(1);
 
-            return Dual<Particle>{Particle{pos,
+            const auto particle = Particle{pos,
                                            params.particle_velocity,
                                            {},
                                            params.particle_radius,
                                            params.particle_mass,
-                                           colors::red}};
+                                           colors::red};
+
+            auto dual = Dual<Particle>();
+            dual.now  = particle;
+            dual.prev = particle;
+
+            return dual;
         });
 
     auto springs = [&]
