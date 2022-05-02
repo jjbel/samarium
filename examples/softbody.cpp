@@ -46,11 +46,12 @@ int main()
             auto pos = Vector2{x, y};
             pos.rotate(1);
 
-            return Dual<Particle>{.now{.pos    = pos,
-                                       .vel    = params.particle_velocity,
-                                       .radius = params.particle_radius,
-                                       .mass   = params.particle_mass,
-                                       .color  = colors::red}};
+            return Dual<Particle>{Particle{pos,
+                                           params.particle_velocity,
+                                           {},
+                                           params.particle_radius,
+                                           params.particle_mass,
+                                           colors::red}};
         });
 
     auto springs = [&]
