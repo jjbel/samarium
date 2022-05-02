@@ -8,8 +8,8 @@
 #include "samarium/graphics/Image.hpp"
 #include "samarium/graphics/colors.hpp"
 #include "samarium/math/Vector2.hpp"
-#include "samarium/math/geometry.hpp"
 #include "samarium/math/interp.hpp"
+#include "samarium/math/vector_math.hpp"
 #include "samarium/samarium.hpp"
 #include "samarium/util/random.hpp"
 

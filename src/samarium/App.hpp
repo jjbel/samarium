@@ -20,7 +20,7 @@
 #include "math/BoundingBox.hpp"
 #include "math/Extents.hpp"
 #include "math/Transform.hpp"
-#include "math/geometry.hpp"
+#include "math/vector_math.hpp"
 #include "physics/Particle.hpp"
 #include "util/Stopwatch.hpp"
 

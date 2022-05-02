@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "../math/geometry.hpp"
+#include "../math/vector_math.hpp"
 #include "Particle.hpp"
 
 namespace sm

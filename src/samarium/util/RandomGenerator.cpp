@@ -6,8 +6,8 @@
  */
 
 #include "RandomGenerator.hpp"
-#include "../math/geometry.hpp"
 #include "../math/interp.hpp"
+#include "../math/vector_math.hpp"
 
 namespace sm
 {

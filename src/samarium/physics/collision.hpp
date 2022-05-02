@@ -9,7 +9,7 @@
 
 #include "../math/Dual.hpp"
 #include "../math/Vector2.hpp"
-#include "../math/geometry.hpp"
+#include "../math/vector_math.hpp"
 
 #include "Particle.hpp"
 

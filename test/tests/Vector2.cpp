@@ -17,9 +17,9 @@
 #include "../../src/samarium/core/types.hpp"       // for f64
 #include "../../src/samarium/math/BoundingBox.hpp" // for BoundingBox
 #include "../../src/samarium/math/Vector2.hpp"     // for Vector2_t, operator==
-#include "../../src/samarium/math/geometry.hpp"    // for clamped_intersection
 #include "../../src/samarium/math/math.hpp"        // for almost_equal, to_rad...
 #include "../../src/samarium/math/shapes.hpp"      // for Circle
+#include "../../src/samarium/math/vector_math.hpp" // for clamped_intersection
 
 using namespace boost::ut;
 

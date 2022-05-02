@@ -21,7 +21,7 @@
         <lineToCover lineNumber="216" covered="true" />
         <lineToCover lineNumber="217" covered="true" />
     </file>
-    <file path="src/samarium/math/geometry.hpp">
+    <file path="src/samarium/math/vector_math.hpp">
         <lineToCover lineNumber="71" covered="true" />
         <lineToCover lineNumber="73" covered="true" />
         <lineToCover lineNumber="76" covered="true" />

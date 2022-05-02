@@ -38,7 +38,7 @@ set(
     ./samarium/math/shapes.hpp
     ./samarium/math/Transform.hpp
     ./samarium/math/Vector2.hpp
-    ./samarium/math/geometry.hpp
+    ./samarium/math/vector_math.hpp
     ./samarium/math/Dual.hpp
     ./samarium/math/BoundingBox.hpp
     ./samarium/math/complex.hpp
