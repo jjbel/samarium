@@ -5,6 +5,8 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
+#pragma once
+
 #include <functional>
 #include <vector>
 

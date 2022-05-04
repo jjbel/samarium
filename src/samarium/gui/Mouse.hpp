@@ -5,6 +5,8 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
+#pragma once
+
 #include "../math/Dual.hpp"
 #include "../math/Transform.hpp"
 
