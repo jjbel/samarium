@@ -16,5 +16,5 @@ int main()
     auto app  = App{{.dims = dims720}};
     auto mesh = Mesh{};
 
-    auto v = std::views::transform(mesh.vertices, [](const auto& v) { return v.x; });
+    // auto v = std::views::transform(mesh.vertices, [](const auto& v) { return v.x; });
 }
