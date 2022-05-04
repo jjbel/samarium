@@ -6,29 +6,15 @@
  */
 
 #include "samarium/samarium.hpp"
+#include <ranges>
 
 using namespace sm;
 using namespace sm::literals;
-
-namespace sm
-{
-struct Mesh
-{
-    using Vertex = Vector2;
-
-    struct Edge
-    {
-        u64 v1{};
-        u64 v2{};
-    };
-
-    std::vector<Vertex> vertices{};
-    std::vector<Edge> edges{};
-};
-} // namespace sm
 
 int main()
 {
     auto app  = App{{.dims = dims720}};
     auto mesh = Mesh{};
+
+    auto v = std::views::transform(mesh.vertices, [](const auto& v) { return v.x; });
 }
