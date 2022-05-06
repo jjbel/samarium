@@ -61,8 +61,11 @@ jobs:
         cmake --preset=default
         cmake --build build --target docs
 
-    - name: Copy docs to root directory
-      run:  cp -R ./build/docs/* api
+    - name: Copy docs to api directory
+      run:  |
+        rm ./*.md
+        mkdir -p api
+        cp -R ./build/docs/* .
 
     - name: Add generated docs to Git repo in the gh-pages branch
       run:  |
@@ -78,6 +81,6 @@ jobs:
       run:  |
         REPO_OWNER=$(echo $GITHUB_REPOSITORY | cut -d '/' -f 1)
         REPO_NAME=$(echo $GITHUB_REPOSITORY | cut -d '/' -f 2)
-        echo "Formatted API docs:  https://$REPO_OWNER.github.io/$REPO_NAME/"
+        echo "Formatted API docs:  https://$REPO_OWNER.github.io/$REPO_NAME/api/"
         echo ""
         echo "GitHub pages branch: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/tree/gh-pages" 
