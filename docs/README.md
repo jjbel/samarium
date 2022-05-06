@@ -14,7 +14,7 @@ or to build ony the docs and not the library
 cmake --preset=default
 cmake --build build --target docs
 ```
-
+****
 Documentation is built as html in `build/docs`
 
 To view, open [`build/docs/index.html`](build/docs/index.html) in a browser
