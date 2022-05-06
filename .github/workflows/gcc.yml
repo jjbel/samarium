@@ -89,7 +89,7 @@ jobs:
         run: cmake --preset=gcc
 
       - name: CMake Build
-        run: build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} cmake --build --preset=gcc
+        run: build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} cmake --build --preset=default
 
       - name: CTest
         run: ctest --preset=default

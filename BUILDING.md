@@ -20,7 +20,7 @@ Samarium uses [CMake Presets](https://cmake.org/cmake/help/latest/manual/cmake-p
 
 ```sh
 cmake --preset=dev
-cmake --build --preset=dev
+cmake --build --preset=default
 ```
 
 <!-- ## Install

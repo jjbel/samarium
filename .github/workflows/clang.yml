@@ -53,7 +53,7 @@ jobs:
         run: cmake --preset=clang
 
       - name: CMake Build
-        run: cmake --build --preset=clang
+        run: cmake --build --preset=default
 
       - name: CTest
         run: ctest --preset=default

@@ -75,6 +75,14 @@
             "cacheVariables": {
                 "USE_IWYU": "TRUE"
             }
+        },
+        {
+            "name": "docs",
+            "description": "Build Documentation",
+            "inherits": "default",
+            "cacheVariables": {
+                "SAMARIUM_BUILD_DOCS": "TRUE"
+            }
         }
     ],
     "buildPresets": [
@@ -83,21 +91,6 @@
             "configurePreset": "default",
             "configuration": "Release",
             "jobs": 6
-        },
-        {
-            "name": "gcc",
-            "inherits": "default",
-            "configurePreset": "gcc"
-        },
-        {
-            "name": "clang",
-            "inherits": "default",
-            "configurePreset": "clang"
-        },
-        {
-            "name": "dev",
-            "inherits": "default",
-            "configurePreset": "dev"
         },
         {
             "name": "coverage",
