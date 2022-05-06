@@ -28,18 +28,48 @@ jobs:
     - name: Create clean gh-pages branch
       run:  git checkout -b gh-pages
 
-    - name: Generate autodocs for libyui base lib
-      run:  make -C libyui -f Makefile.repo doc
+    - name: Install Clang
+      uses: egor-tensin/setup-clang@v1
 
-    - name: Move generated autodocs to target directory
-      run:  mv libyui/build/doc/html api-doc
+    - name: Install Ninja
+      uses: seanmiddleditch/gha-setup-ninja@master
 
-    - name: Add generated autodocs to Git repo in the gh-pages branch
+    - name: Install CMake
+      uses: jwlawson/actions-setup-cmake@v1.12
+      with:
+        cmake-version: "3.22.x"
+
+    - name: Install Conan
+      id: conan
+      uses: turtlebrowser/get-conan@main
+
+    - name: Install TBB
+      run: sudo apt-get update && sudo apt-get install libtbb-dev
+
+    - name: Check Tool Versions
+      run: |
+        conan    --version
+        cmake    --version
+        clang++  --version
+
+    - name: Configure Conan
+      run: |
+        conan profile new default --detect
+
+    - name: Generate docs
       run:  |
-        git config --global user.email "libyui-github-bot@suse.com"
+        cmake --preset=default
+        cmake --build build --target docs
+
+    - name: Copy docs to root directory
+      run:  cp -R ./build/docs/* .
+
+    - name: Add generated docs to Git repo in the gh-pages branch
+      run:  |
+        git config --global user.email "jaibellare@gmail.com"
         git config --global user.name  "$GITHUB_WORKFLOW GitHub action"
-        git add api-doc
-        git commit -am "Generated API doc"
+        git add .
+        git commit -am "Generated docs"
 
     - name: Publish autodocs as GitHub pages
       run:  git push -f origin gh-pages:gh-pages
@@ -48,6 +78,6 @@ jobs:
       run:  |
         REPO_OWNER=$(echo $GITHUB_REPOSITORY | cut -d '/' -f 1)
         REPO_NAME=$(echo $GITHUB_REPOSITORY | cut -d '/' -f 2)
-        echo "Formatted API docs:  https://$REPO_OWNER.github.io/$REPO_NAME/api-doc"
+        echo "Formatted API docs:  https://$REPO_OWNER.github.io/$REPO_NAME/"
         echo ""
         echo "GitHub pages branch: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/tree/gh-pages" 
