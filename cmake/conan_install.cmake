@@ -1,7 +1,6 @@
-# SPDX-License-Identifier: MIT
-# Copyright (c) 2022 Jai Bellare
-# See <https://opensource.org/licenses/MIT/> or LICENSE.md
-# Project homepage: <https://github.com/strangeQuark1041/samarium>
+# SPDX-License-Identifier: MIT Copyright (c) 2022 Jai Bellare See
+# <https://opensource.org/licenses/MIT/> or LICENSE.md Project homepage:
+# <https://github.com/strangeQuark1041/samarium>
 
 function(conan_install)
     if(NOT EXISTS ${CMAKE_BINARY_DIR}/conan.lock)
@@ -11,10 +10,14 @@ function(conan_install)
 
         message(STATUS "Installing Conan dependenices... (this may take a few minutes)")
         conan_cmake_install(
-            PATH_OR_REFERENCE ${CMAKE_SOURCE_DIR}
-            BUILD missing
-            REMOTE conancenter
-            SETTINGS ${settings}
+            PATH_OR_REFERENCE
+            ${CMAKE_SOURCE_DIR}
+            BUILD
+            missing
+            REMOTE
+            conancenter
+            SETTINGS
+            ${settings}
             OUTPUT_QUIET
         )
     else()

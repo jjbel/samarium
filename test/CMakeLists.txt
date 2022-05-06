@@ -1,7 +1,6 @@
-# SPDX-License-Identifier: MIT
-# Copyright (c) 2022 Jai Bellare
-# See <https://opensource.org/licenses/MIT/> or LICENSE.md
-# Project homepage: <https://github.com/strangeQuark1041/samarium>
+# SPDX-License-Identifier: MIT Copyright (c) 2022 Jai Bellare See
+# <https://opensource.org/licenses/MIT/> or LICENSE.md Project homepage:
+# <https://github.com/strangeQuark1041/samarium>
 
 cmake_minimum_required(VERSION 3.16)
 project(samarium_tests LANGUAGES CXX)
@@ -12,7 +11,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
 list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})
 
-find_package(SFML COMPONENTS system window graphics REQUIRED)
+find_package(
+    SFML
+    COMPONENTS system window graphics
+    REQUIRED
+)
 find_package(fmt REQUIRED)
 
 if(NOT WIN32)
@@ -30,7 +33,7 @@ function(create_test TEST_NAME TEST_SOURCES)
     target_link_libraries(${TEST_NAME} PRIVATE sfml-graphics)
 
     if(NOT WIN32)
-    message(STATUS "Linking ${TEST_NAME} with TBB")
+        message(STATUS "Linking ${TEST_NAME} with TBB")
         target_link_libraries(${TEST_NAME} PUBLIC TBB::tbb)
     endif()
 
@@ -44,26 +47,30 @@ function(create_test_with_output_dir TEST_NAME TEST_SOURCES TEST_OUTPUT_DIR)
 
     message(STATUS "Setting output directory for ${TEST_NAME} to ${TEST_OUTPUT_DIR}")
     set_target_properties(
-        ${TEST_NAME}
-        PROPERTIES
-        RUNTIME_OUTPUT_DIRECTORY "${TEST_OUTPUT_DIR}"
+        ${TEST_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${TEST_OUTPUT_DIR}"
     )
 endfunction()
 
 option(SAMARIUM_BUILD_EXTRA_TESTS "Only run the main program and not the tests" ON)
 if(SAMARIUM_BUILD_EXTRA_TESTS)
-    create_test(
-        samarium_tests
-        "tests/Vector2.cpp;tests/concepts.cpp;tests/main.cpp"
-    )
+    create_test(samarium_tests "tests/Vector2.cpp;tests/concepts.cpp;tests/main.cpp")
 else()
     create_test(samarium_tests test.cpp)
 endif()
 
 option(SAMARIUM_BUILD_EXAMPLES "Build example programs" ON)
 if(SAMARIUM_BUILD_EXAMPLES)
-    create_test_with_output_dir(mandelbrot ../examples/mandelbrot.cpp "${CMAKE_BINARY_DIR}/examples/")
-    create_test_with_output_dir(poisson_disk_sampling ../examples/poisson_disk_sampling.cpp "${CMAKE_BINARY_DIR}/examples/")
-    create_test_with_output_dir(softbody ../examples/softbody.cpp "${CMAKE_BINARY_DIR}/examples/")
-    create_test_with_output_dir(springy_pendulum ../examples/springy_pendulum.cpp "${CMAKE_BINARY_DIR}/examples/")
+    create_test_with_output_dir(
+        mandelbrot ../examples/mandelbrot.cpp "${CMAKE_BINARY_DIR}/examples/"
+    )
+    create_test_with_output_dir(
+        poisson_disk_sampling ../examples/poisson_disk_sampling.cpp
+        "${CMAKE_BINARY_DIR}/examples/"
+    )
+    create_test_with_output_dir(
+        softbody ../examples/softbody.cpp "${CMAKE_BINARY_DIR}/examples/"
+    )
+    create_test_with_output_dir(
+        springy_pendulum ../examples/springy_pendulum.cpp "${CMAKE_BINARY_DIR}/examples/"
+    )
 endif()

@@ -1,7 +1,6 @@
-# SPDX-License-Identifier: MIT
-# Copyright (c) 2022 Jai Bellare
-# See <https://opensource.org/licenses/MIT/> or LICENSE.md
-# Project homepage: <https://github.com/strangeQuark1041/samarium>
+# SPDX-License-Identifier: MIT Copyright (c) 2022 Jai Bellare See
+# <https://opensource.org/licenses/MIT/> or LICENSE.md Project homepage:
+# <https://github.com/strangeQuark1041/samarium>
 
 cmake_minimum_required(VERSION 3.16)
 
@@ -19,11 +18,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
 list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})
 
-find_package(SFML 2.5 COMPONENTS system window graphics REQUIRED)
+find_package(
+    SFML 2.5
+    COMPONENTS system window graphics
+    REQUIRED
+)
 find_package(fmt REQUIRED)
 
-set(
-    SAMARIUM_HEADERS
+set(SAMARIUM_HEADERS
     ./samarium/core/concepts.hpp
     ./samarium/core/DynArray.hpp
     ./samarium/core/ThreadPool.hpp
@@ -71,8 +73,7 @@ set(
     ./samarium/samarium.hpp
 )
 
-set(
-    SAMARIUM_SOURCES
+set(SAMARIUM_SOURCES
     ./samarium/core/ThreadPool.cpp
     ./samarium/gui/Mouse.cpp
     ./samarium/gui/Keyboard.cpp
@@ -93,16 +94,16 @@ add_library(samarium "${SAMARIUM_SOURCES}")
 add_library(samarium::samarium ALIAS samarium)
 
 set_target_properties(
-    samarium PROPERTIES
-    CXX_VISIBILITY_PRESET hidden
-    VISIBILITY_INLINES_HIDDEN YES
-    VERSION "${PROJECT_VERSION}"
-    SOVERSION "${PROJECT_VERSION_MAJOR}"
-    EXPORT_NAME samarium
-    OUTPUT_NAME samarium
-    CXX_STANDARD 20
-    CXX_STANDARD_REQUIRED YES
-    CXX_EXTENSIONS NO
+    samarium
+    PROPERTIES CXX_VISIBILITY_PRESET hidden
+               VISIBILITY_INLINES_HIDDEN YES
+               VERSION "${PROJECT_VERSION}"
+               SOVERSION "${PROJECT_VERSION_MAJOR}"
+               EXPORT_NAME samarium
+               OUTPUT_NAME samarium
+               CXX_STANDARD 20
+               CXX_STANDARD_REQUIRED YES
+               CXX_EXTENSIONS NO
 )
 
 target_include_directories(samarium PUBLIC "${CMAKE_CURRENT_LIST_DIR}")
