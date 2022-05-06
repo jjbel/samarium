@@ -16,6 +16,11 @@ on:
     branches:
       - main
 
+env:
+  # Path to the CMake build directory.
+  build: "${{ github.workspace }}/build"
+  CONAN_SYSREQUIRES_MODE: "enabled"
+
 jobs:
   docs:
     runs-on: ubuntu-latest
