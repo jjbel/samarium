@@ -44,6 +44,8 @@ enable_testing()
 add_subdirectory(test)
 add_test(NAME SamariumTests COMMAND samarium_tests)
 
+include(docs)
+
 option(GENERATE_COVERAGE "Generate coverage reports" FALSE)
 include(coverage)
 generate_coverage(samarium_tests)

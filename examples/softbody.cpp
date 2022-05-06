@@ -55,7 +55,6 @@ int main()
                                            colors::red};
 
             auto dual = Dual<Particle>();
-            dual.now  = particle;
             dual.prev = particle;
 
             return dual;

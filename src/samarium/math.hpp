@@ -8,4 +8,7 @@
 #pragma once
 
 #include "./math/Transform.hpp"
+#include "./math/Vector2.hpp"
+#include "./math/complex.hpp"
+#include "./math/math.hpp"
 #include "./math/vector_math.hpp"
