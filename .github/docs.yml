@@ -62,7 +62,7 @@ jobs:
         cmake --build build --target docs
 
     - name: Copy docs to root directory
-      run:  cp -R ./build/docs/* .
+      run:  cp -R ./build/docs/* api
 
     - name: Add generated docs to Git repo in the gh-pages branch
       run:  |
