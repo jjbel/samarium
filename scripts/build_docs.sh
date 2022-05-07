@@ -4,7 +4,7 @@ set -e
 
 git checkout gh-pages
 
-rm ./*.md
+rm ./.md
 
 cmake --preset=default
 cmake --build build --target docs
