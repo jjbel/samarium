@@ -9,14 +9,8 @@
  * @mainpage Samarium Documentation
  * @section section_intro Introduction
  * This is the documentation for the [Samarium library](https://github.com/strangeQuark1041/samarium)
- * @section install_sec Installation
- *
- * @subsection install_dependencies Installing Dependencies
- * Do somethings ...
- * @subsection install_library Installing Library
- * Do somethings ...
- * @subsection install_example Installing Examples
- * Do somethings ...
+ * @section section_install Installation
+ * For installation and more see [the repo's README](https://github.com/strangeQuark1041/samarium#quickstart)
  */
 
 #pragma once
