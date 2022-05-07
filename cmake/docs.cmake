@@ -4,6 +4,8 @@
 
 # https://vicrucann.github.io/tutorials/quick-cmake-doxygen/
 
+# https://gist.github.com/strangeQuark1041/acba76d25b213327a568a9f3c9152550
+
 option(SAMARIUM_BUILD_DOCS "Build documentation" OFF)
 
 if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease" AND SAMARIUM_BUILD_DOCS)

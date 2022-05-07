@@ -69,7 +69,7 @@ cmake --build ./build
 
 ## Documentation
 
-Documentation is located at [Github Pages](https://strangequark1041.github.io/samarium_docs/)
+Documentation is located at [Github Pages](https://strangequark1041.github.io/samarium/)
 
 For development, see [BUILDING.md](BUILDING.md)
 
