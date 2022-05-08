@@ -1,20 +1,23 @@
 # Building with CMake
 
-Instructions for developers
-For users, see [README.md](README.md)
+## For users
 
-# About
+See [README.md](README.md)
+
+## For Devs
+
+### About
 
 Samarium uses CMake for building. Building using other methods is not supported
 Samarium uses Conan for dependency management, but can use native Find*.cmake. However the latter requires manual installation of libraries.
 
-## Dependencies
+### Dependencies
 
 No manual dependency management is required as it is handled through [Conan](https://conan.io).
 
 For a list of dependencies, please refer to [conanfile.txt](conanfile.txt).
 
-## Build
+### Build
 
 Samarium uses [CMake Presets](https://cmake.org/cmake/help/latest/manual/cmake-presets.7.html) to make building easy
 

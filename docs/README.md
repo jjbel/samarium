@@ -1,5 +1,11 @@
 # Docs
 
+## For Users
+
+View the docs at https://strangequark1041.github.io/samarium/
+
+## For  Devs
+
 Samarium documentation is build using [Doxygen](https://doxygen.nl), which is required to be installed
 
 Build documentation by enabling the cmake flag `"SAMARIUM_BUILD_DOCS"`
