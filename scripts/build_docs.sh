@@ -16,3 +16,5 @@ cp -R ./build/docs/* .
 git add .
 git status
 git commit -m "build docs"
+
+git checkout main
