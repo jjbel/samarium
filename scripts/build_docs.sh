@@ -14,7 +14,7 @@ cd ..
 cp -R ./build/docs/* .
 
 git add .
-git status
-git commit -m "build docs" || 1
+git commit -m "build docs" >/dev/null || 1
+echo "Built docs"
 
 git checkout main
