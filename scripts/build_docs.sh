@@ -6,8 +6,10 @@ git checkout gh-pages
 
 rm --force ./README.md
 
-cmake --preset=default
-cmake --build build --target docs
+mkdir -p build
+cd docs
+doxygen
+cd ..
 
 cp -R ./build/docs/* .
 
