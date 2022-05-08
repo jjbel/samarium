@@ -8,33 +8,11 @@ project(samarium_dev LANGUAGES CXX)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
 include(modern_project_structure)
-ensure_entry_point()
-
-if(NOT CMAKE_BUILD_TYPE)
-    message(STATUS "Setting build type to Release")
-    set(CMAKE_BUILD_TYPE "Release")
-endif()
-
-option(USE_UBSAN "Generate coverage reports" FALSE)
-if(USE_UBSAN)
-    add_compile_options(-fsanitize=undefined)
-    add_link_options(-fsanitize=undefined)
-endif()
-
+include(ubsan)
 include(conan_install)
-conan_install()
-
 include(ccache)
-option(USE_CCACHE "Use Ccache" TRUE)
-if(USE_CCACHE)
-    use_ccache()
-endif()
-
-# set compilation warnings and flags
 include(compiler_options)
-set_compiler_options()
-# message(STATUS "Compiler options: ${OPTIONS}")
-add_compile_options(${OPTIONS})
+include(docs)
 
 add_subdirectory(src)
 
@@ -43,14 +21,10 @@ enable_testing()
 add_subdirectory(test)
 add_test(NAME SamariumTests COMMAND samarium_tests)
 
-include(docs)
-
 option(GENERATE_COVERAGE "Generate coverage reports" FALSE)
 include(coverage)
 generate_coverage(samarium_tests)
 
 option(USE_IWYU "Use include what you use" FALSE)
-if(USE_IWYU)
-    find_program(iwyu_path NAMES include-what-you-use iwyu REQUIRED)
-    set_property(TARGET samarium_tests PROPERTY CXX_INCLUDE_WHAT_YOU_USE ${iwyu_path})
-endif()
+include(include_what_you_use)
+iwyu(samarium_tests)

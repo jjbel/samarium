@@ -6,11 +6,12 @@
 
 cmake_minimum_required(VERSION 3.16)
 
-function(use_ccache)
+option(USE_CCACHE "Use Ccache" TRUE)
+if(USE_CCACHE)
     find_program(CCACHE_PROGRAM ccache)
     if(CCACHE_PROGRAM)
         message(STATUS "ccache found: ${CCACHE_PROGRAM}")
         set(CMAKE_C_COMPILER_LAUNCHER "ccache")
         set(CMAKE_CXX_COMPILER_LAUNCHER "ccache")
     endif()
-endfunction()
+endif()

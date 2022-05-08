@@ -109,3 +109,6 @@ function(set_compiler_options)
         PARENT_SCOPE
     )
 endfunction()
+
+set_compiler_options()
+add_compile_options(${OPTIONS})

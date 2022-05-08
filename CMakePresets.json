@@ -54,8 +54,7 @@
             "cacheVariables": {
                 "USE_UBSAN": "ON",
                 "SAMARIUM_BUILD_EXTRA_TESTS": "OFF",
-                "SAMARIUM_BUILD_EXAMPLES": "OFF",
-                "SAMARIUM_BUILD_DOCS": "ON"
+                "SAMARIUM_BUILD_EXAMPLES": "OFF"
             }
         },
         {
