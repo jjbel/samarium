@@ -13,7 +13,7 @@ cd ..
 
 cp -R ./build/docs/* .
 
-git add . || 1
+git add .
 git status
 git commit -m "build docs" || 1
 
