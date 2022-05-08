@@ -23,55 +23,8 @@ find_package(
     COMPONENTS system window graphics
     REQUIRED
 )
-find_package(fmt REQUIRED)
 
-set(SAMARIUM_HEADERS
-    ./samarium/core/concepts.hpp
-    ./samarium/core/DynArray.hpp
-    ./samarium/core/ThreadPool.hpp
-    ./samarium/core/types.hpp
-    ./samarium/core/version.hpp
-    ./samarium/gui/sfml.hpp
-    ./samarium/gui/Mouse.hpp
-    ./samarium/gui/Keyboard.hpp
-    ./samarium/math/Extents.hpp
-    ./samarium/math/interp.hpp
-    ./samarium/math/math.hpp
-    ./samarium/math/shapes.hpp
-    ./samarium/math/Transform.hpp
-    ./samarium/math/Vector2.hpp
-    ./samarium/math/vector_math.hpp
-    ./samarium/math/Dual.hpp
-    ./samarium/math/BoundingBox.hpp
-    ./samarium/math/complex.hpp
-    ./samarium/graphics/Color.hpp
-    ./samarium/graphics/Image.hpp
-    ./samarium/graphics/colors.hpp
-    ./samarium/graphics/Gradient.hpp
-    ./samarium/graphics/gradients.hpp
-    ./samarium/graphics/Trail.hpp
-    ./samarium/physics/Particle.hpp
-    ./samarium/physics/collision.hpp
-    ./samarium/physics/Spring.hpp
-    ./samarium/physics/Car.hpp
-    ./samarium/physics/fluid/Fluid.hpp
-    ./samarium/util/file.hpp
-    ./samarium/util/print.hpp
-    ./samarium/util/random.hpp
-    ./samarium/util/util.hpp
-    ./samarium/util/terminal_dims.hpp
-    ./samarium/util/date.hpp
-    ./samarium/util/ostream.hpp
-    ./samarium/util/Stopwatch.hpp
-    ./samarium/util/format.hpp
-    ./samarium/core.hpp
-    ./samarium/graphics.hpp
-    ./samarium/gui.hpp
-    ./samarium/math.hpp
-    ./samarium/physics.hpp
-    ./samarium/util.hpp
-    ./samarium/samarium.hpp
-)
+find_package(fmt REQUIRED)
 
 set(SAMARIUM_SOURCES
     ./samarium/core/ThreadPool.cpp

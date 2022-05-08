@@ -26,6 +26,4 @@ namespace sm::util
     if ('A' <= ch && ch <= 'F') { return static_cast<u8>(ch - 'A' + 10); }
     throw std::invalid_argument("hex character must be 0-9, a-f, or A-F");
 }
-
-auto get_date_filename(const std::string& extension) -> std::string;
 } // namespace sm::util

@@ -9,7 +9,6 @@
 
 #include "util/RandomGenerator.hpp"
 #include "util/Stopwatch.hpp"
-// #include "util/date.hpp"
 #include "util/file.hpp"
 #include "util/format.hpp"
 // #include "util/ostream.hpp"
