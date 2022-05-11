@@ -1,0 +1,8 @@
+{
+    "root_dir": "test",
+    "commands": {
+        "pre": ["echo 'hello'"],
+        "structure": ["echo 'cmake --preset=dev'"],
+        "all": ["echo 'cmake --build --preset=default'"]
+    }
+}
