@@ -47,7 +47,7 @@ if __name__ == '__main__':
     options = {
         'root_dir': os.getcwd(),
         'commands': {},
-        'delay_seconds': 0.01,
+        'delay_seconds': 0.005,
         'exit_on_error': False,
         'clear_screen': True,
         "use_gitignore": True
