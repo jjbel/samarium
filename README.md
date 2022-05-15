@@ -19,6 +19,7 @@ Samarium is a 2d physics simulation library written in modern C++20.
 - [Prerequistes](#prerequistes)
 - [Installation](#installation)
 - [Example](#example)
+- [Tools](#tools)
 - [Documentation](#documentation)
 - [License](#license)
 - [References](#references)
@@ -62,6 +63,16 @@ cmake -B ./build
 cmake --build ./build
 ./build/bin/example
 ```
+
+## Tools
+
+For the optimal developing experience, use [VSCode](https://code.visualstudio.com) using the following extensions and tools
+
+1. [C++ Extension Pack](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools-extension-pack)
+2. [Clang Format](https://clang.llvm.org/docs/ClangFormat.html)
+3. [CMake Format](https://github.com/cheshirekow/cmake_format) and the corresponding [extension](https://marketplace.visualstudio.com/items?itemName=cheshirekow.cmake-format)
+4. [SonarLint](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarlint-vscode)
+5. [C++ Advanced Lint](https://marketplace.visualstudio.com/items?itemName=jbenden.c-cpp-flylint)
 
 ## Documentation
 
