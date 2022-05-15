@@ -31,9 +31,9 @@ struct Mesh
 
     auto edges_view()
     {
-        const auto get_line_segment = [this](const auto& edge) {
-            return LineSegment{vertices[edge.v1], vertices[edge.v2]};
-        };
+        // const auto get_line_segment = [this](const auto& edge) {
+        //     return LineSegment{vertices[edge.v1], vertices[edge.v2]};
+        // };
         // return std::views::transform(edges, get_line_segment);
     }
 };

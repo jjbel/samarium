@@ -17,7 +17,9 @@
 #include "../math/shapes.hpp"
 #include "../physics/Particle.hpp"
 
-template <sm::concepts::Number T> class fmt::formatter<sm::Vector2_t<T>>
+namespace fmt
+{
+template <sm::concepts::Number T> class formatter<sm::Vector2_t<T>>
 {
   public:
     constexpr auto parse(const format_parse_context& ctx) { return ctx.begin(); }
@@ -31,7 +33,7 @@ template <sm::concepts::Number T> class fmt::formatter<sm::Vector2_t<T>>
     }
 };
 
-template <> class fmt::formatter<sm::Version>
+template <> class formatter<sm::Version>
 {
   public:
     constexpr auto parse(const format_parse_context& ctx) { return ctx.begin(); }
@@ -42,7 +44,7 @@ template <> class fmt::formatter<sm::Version>
     }
 };
 
-template <> class fmt::formatter<sm::Particle>
+template <> class formatter<sm::Particle>
 {
   public:
     constexpr auto parse(const format_parse_context& ctx) { return ctx.begin(); }
@@ -53,7 +55,7 @@ template <> class fmt::formatter<sm::Particle>
     }
 };
 
-template <> class fmt::formatter<sm::Color>
+template <> class formatter<sm::Color>
 {
   public:
     constexpr auto parse(const format_parse_context& ctx) const { return ctx.begin(); }
@@ -67,7 +69,7 @@ template <> class fmt::formatter<sm::Color>
 };
 
 
-template <sm::concepts::Number T> class fmt::formatter<sm::BoundingBox<T>>
+template <sm::concepts::Number T> class formatter<sm::BoundingBox<T>>
 {
   public:
     constexpr auto parse(const format_parse_context& ctx) { return ctx.begin(); }
@@ -82,7 +84,7 @@ BoundingBox(min = {},
     }
 };
 
-template <> class fmt::formatter<sm::LineSegment>
+template <> class formatter<sm::LineSegment>
 {
   public:
     constexpr auto parse(const format_parse_context& ctx) const { return ctx.begin(); }
@@ -93,7 +95,7 @@ template <> class fmt::formatter<sm::LineSegment>
     }
 };
 
-template <> class fmt::formatter<sm::Transform>
+template <> class formatter<sm::Transform>
 {
   public:
     constexpr auto parse(const format_parse_context& ctx) const { return ctx.begin(); }
@@ -103,3 +105,4 @@ template <> class fmt::formatter<sm::Transform>
         return format_to(ctx.out(), "Transform[pos: {}, scale: {}]", p.pos, p.scale);
     }
 };
+} // namespace fmt
