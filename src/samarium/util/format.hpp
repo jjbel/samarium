@@ -26,10 +26,11 @@ template <sm::concepts::Number T> class formatter<sm::Vector2_t<T>>
 
     constexpr auto format(sm::Vector2_t<T> p, auto& ctx)
     {
-        return format_to(ctx.out(),
-                         (sm::concepts::FloatingPoint<T> ? "\033[1mVec\033[0m({: 6.3f}, {: 6.3f})"
-                                                         : "Vec({:>3}, {:>3})"),
-                         p.x, p.y);
+        return fmt::format_to(ctx.out(),
+                              (sm::concepts::FloatingPoint<T>
+                                   ? "\033[1mVec\033[0m({: 6.3f}, {: 6.3f})"
+                                   : "Vec({:>3}, {:>3})"),
+                              p.x, p.y);
     }
 };
 
@@ -40,7 +41,7 @@ template <> class formatter<sm::Version>
 
     auto format(const sm::Version& p, auto& ctx)
     {
-        return format_to(ctx.out(), "samarium version {}.{}.{}", p.major, p.minor, p.patch);
+        return fmt::format_to(ctx.out(), "samarium version {}.{}.{}", p.major, p.minor, p.patch);
     }
 };
 
@@ -51,7 +52,8 @@ template <> class formatter<sm::Particle>
 
     auto format(const sm::Particle& p, auto& ctx)
     {
-        return format_to(ctx.out(), "Particle(pos: {}, vel: {}, acc: {})", p.pos, p.acc, p.vel);
+        return fmt::format_to(ctx.out(), "Particle(pos: {}, vel: {}, acc: {})", p.pos, p.acc,
+                              p.vel);
     }
 };
 
@@ -62,9 +64,9 @@ template <> class formatter<sm::Color>
 
     auto format(const sm::Color& p, auto& ctx)
     {
-        return format_to(ctx.out(),
-                         "\x1b[38;2;{0};{1};{2}mCol\x1b[0m[{0:>3}, {1:>3}, {2:>3}, {3:>3}]", p.r,
-                         p.g, p.b, p.a);
+        return fmt::format_to(ctx.out(),
+                              "\x1b[38;2;{0};{1};{2}mCol\x1b[0m[{0:>3}, {1:>3}, {2:>3}, {3:>3}]",
+                              p.r, p.g, p.b, p.a);
     }
 };
 
@@ -76,11 +78,11 @@ template <sm::concepts::Number T> class formatter<sm::BoundingBox<T>>
 
     auto format(const sm::BoundingBox<T>& p, auto& ctx)
     {
-        return format_to(ctx.out(),
-                         R"(
+        return fmt::format_to(ctx.out(),
+                              R"(
 BoundingBox(min = {},
             max = {}))",
-                         p.min, p.max);
+                              p.min, p.max);
     }
 };
 
@@ -91,7 +93,7 @@ template <> class formatter<sm::LineSegment>
 
     auto format(const sm::LineSegment& p, auto& ctx)
     {
-        return format_to(ctx.out(), "LineSegment({}, {})", p.p1, p.p2);
+        return fmt::format_to(ctx.out(), "LineSegment({}, {})", p.p1, p.p2);
     }
 };
 
@@ -102,7 +104,7 @@ template <> class formatter<sm::Transform>
 
     auto format(const sm::Transform& p, auto& ctx)
     {
-        return format_to(ctx.out(), "Transform[pos: {}, scale: {}]", p.pos, p.scale);
+        return fmt::format_to(ctx.out(), "Transform[pos: {}, scale: {}]", p.pos, p.scale);
     }
 };
 } // namespace fmt
