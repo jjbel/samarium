@@ -3,7 +3,6 @@
 # <https://github.com/strangeQuark1041/samarium>
 
 cmake_minimum_required(VERSION 3.16)
-
 project(
     samarium
     VERSION 1.0.0
@@ -27,23 +26,22 @@ find_package(
 find_package(fmt REQUIRED)
 
 set(SAMARIUM_SOURCES
-    ./samarium/core/ThreadPool.cpp
-    ./samarium/gui/Mouse.cpp
-    ./samarium/gui/Keyboard.cpp
-    ./samarium/graphics/Trail.cpp
-    ./samarium/physics/Car.cpp
-    ./samarium/physics/collision.cpp
-    ./samarium/physics/Spring.cpp
-    ./samarium/util/file.cpp
-    ./samarium/util/util.cpp
-    ./samarium/util/RandomGenerator.cpp
-    ./samarium/util/ostream.cpp
-    ./samarium/util/Stopwatch.cpp
-    ./samarium/App.cpp
+    samarium/App.cpp
+    samarium/core/ThreadPool.cpp
+    samarium/graphics/Trail.cpp
+    samarium/gui/Keyboard.cpp
+    samarium/gui/Mouse.cpp
+    samarium/physics/Car.cpp
+    samarium/physics/Spring.cpp
+    samarium/physics/collision.cpp
+    samarium/util/RandomGenerator.cpp
+    samarium/util/Stopwatch.cpp
+    samarium/util/file.cpp
+    samarium/util/ostream.cpp
+    samarium/util/util.cpp
 )
 
-add_library(samarium "${SAMARIUM_SOURCES}")
-
+add_library(samarium ${SAMARIUM_SOURCES})
 add_library(samarium::samarium ALIAS samarium)
 
 set_target_properties(
