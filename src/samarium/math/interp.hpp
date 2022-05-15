@@ -7,10 +7,10 @@
 
 #pragma once
 
-#include "../core/types.hpp"
 #include "../graphics/Color.hpp"
+#include "../math/math.hpp"
 
-#include "./Extents.hpp"
+#include "Extents.hpp"
 
 namespace sm::interp
 {
