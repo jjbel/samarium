@@ -4,12 +4,10 @@ set -e
 
 git checkout gh-pages
 
-rm --force ./README.md
-
 mkdir -p build
-cd docs
-doxygen
-cd ..
+doxygen ./docs/Doxyfile
+
+rm --force ./README.md
 
 cp -R ./build/docs/* .
 
