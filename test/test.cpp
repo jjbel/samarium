@@ -127,7 +127,7 @@ i32 main()
     auto path         = levels[0];
     auto current_iter = 0UL;
 
-    auto app = App{{.dims = Dimensions::combine(static_cast<u64>(width))}};
+    auto app = App{{.dims = Dimensions::combine(width)}};
 
     const auto draw = [&]
     {

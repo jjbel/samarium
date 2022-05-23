@@ -3,7 +3,7 @@
 import sys
 import os
 import subprocess
-from time import sleep
+from time import sleep, time
 import json
 import pathlib
 
@@ -71,7 +71,11 @@ if __name__ == '__main__':
     if 'pre' in options['commands']:
         for command in options['commands']['pre']:
             run(command)
+
+    for command in options['commands']['all']:
+        run(command)
     files, times = get(options['root_dir'], options["use_gitignore"])
+
     try:
         while True:
             sleep(options['delay_seconds'])
@@ -81,6 +85,7 @@ if __name__ == '__main__':
                 continue
             if options['clear_screen']:
                 clear_screen()
+
             if 'structure' in options['commands'] and new_files != files:
                 for command in options['commands']['structure']:
                     run(command)
