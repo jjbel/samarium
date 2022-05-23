@@ -18,6 +18,25 @@ namespace sm::interp
 /**
  * @brief               Sigmoid-like smoothing
  * @param  value        Input value in the range [0, 1]
+ * From https://easings.net/#easeOutElastic
+ */
+[[nodiscard]] constexpr auto ease_out_elastic(f64 value)
+{
+    if (value == 0.0) { return 0.0; }
+    else if (value == 1.0)
+    {
+        return 1.0;
+    }
+    else
+    {
+        return std::pow(2.0, -10.0 * value) * std::sin((value * 10 - 0.75) * math::two_thirds_pi) +
+               1;
+    }
+}
+
+/**
+ * @brief               Sigmoid-like smoothing
+ * @param  value        Input value in the range [0, 1]
  */
 [[nodiscard]] constexpr auto smooth_step(f64 value) { return value * value * (3.0 - 2.0 * value); }
 
