@@ -47,7 +47,8 @@ template <typename T> class Extents
 
     [[nodiscard]] constexpr auto lerp(f64 factor) const noexcept requires concepts::Number<T>
     {
-        return static_cast<f64>(min) * (1.0 - factor) + static_cast<f64>(max) * factor; // prevent conversion warnings
+        return static_cast<f64>(min) * (1.0 - factor) +
+               static_cast<f64>(max) * factor; // prevent conversion warnings
     }
 
     [[nodiscard]] constexpr auto lerp(f64 factor) const noexcept requires(!concepts::Number<T>)
@@ -125,4 +126,8 @@ template <typename T> class Extents
 [[nodiscard]] constexpr auto range(u64 max) { return Extents<u64>{0UL, max}; }
 
 [[nodiscard]] constexpr auto range(u64 min, u64 max) { return Extents<u64>{min, max}; }
+
+[[nodiscard]] constexpr auto irange(i32 max) { return Extents<i32>{0, max}; }
+
+[[nodiscard]] constexpr auto irange(i32 min, i32 max) { return Extents<i32>{min, max}; }
 } // namespace sm
