@@ -6,10 +6,17 @@
  */
 
 #include "samarium/samarium.hpp"
-// #include <ranges>
+
 
 using namespace sm;
 using namespace sm::literals;
+
+// !!!!!!!!!!! EDIT THIS: !!!!!!!!!!!
+
+static constexpr auto window_width = 1000UL;
+static constexpr auto order        = 6UL;
+static constexpr auto duration     = 70UL;
+
 
 using IntegerPair = Vector2_t<i32>;
 using Path        = std::vector<Vector2>;
@@ -21,7 +28,7 @@ auto point_at(i32 index, i32 level)
     i32 thingy = index & 3;
     auto v     = points[static_cast<u64>(thingy)];
 
-    for (auto j : range(1, level))
+    for (auto j : range(1UL, static_cast<u64>(level)))
     {
         index >>= 2;
         thingy = index & 3;
@@ -50,13 +57,6 @@ auto point_at(i32 index, i32 level)
 }
 
 auto point_count(u64 level) { return static_cast<u64>(std::pow(2.0, 2.0 * level)); }
-
-auto points(u64 level)
-{
-    auto vec = std::vector<IntegerPair>(point_count(level));
-    for (auto i : range(vec.size())) { vec[i] = point_at(i, level); }
-    return vec;
-}
 
 auto points_f64(u64 level)
 {
@@ -115,44 +115,34 @@ auto rescaled_levels_till(u64 order)
     return levels;
 }
 
-static constexpr auto width    = 1000UL;
-static constexpr auto order    = 6UL;
-static constexpr auto N        = math::power<order>(2UL);
-static constexpr auto total    = N * N;
-static constexpr auto duration = 70UL;
-
 i32 main()
 {
     const auto levels = rescaled_levels_till(order);
     auto path         = levels[0];
     auto current_iter = 0UL;
 
-    auto app = App{{.dims = Dimensions::combine(width)}};
+    auto app = App{{.dims = Dimensions::combine(window_width)}};
 
     const auto draw = [&]
     {
-        app.fill({});
+        app.fill("#0b0c17"_c);
 
         if (app.frame_counter != 0 && app.frame_counter % duration == 0)
         {
             current_iter = (current_iter + 1UL) % order;
-            path         = levels[current_iter];
         }
-        else
+
+        const auto lerp_factor =
+            static_cast<f64>(app.frame_counter % duration) / static_cast<f64>(duration);
+
+        for (auto i : range(path.size()))
         {
-            const auto lerp_factor =
-                static_cast<f64>(app.frame_counter % duration) / static_cast<f64>(duration);
-
-            for (auto i : range(path.size()))
-            {
-                path[i] = interp::lerp(interp::smooth(lerp_factor, 3),
-                                       Extents<Vector2>{levels[current_iter][i],
-                                                        levels[(current_iter + 1UL) % order][i]});
-            }
+            path[i] = interp::lerp(
+                interp::smooth(lerp_factor, 3),
+                Extents<Vector2>{levels[current_iter][i], levels[(current_iter + 1UL) % order][i]});
         }
 
-        const auto mapper = [&](Vector2 vec) { return (vec) * static_cast<f64>(width); };
-        print(0.5 / std::pow(2.0, current_iter));
+        const auto mapper = [&](Vector2 vec) { return (vec) * static_cast<f64>(window_width); };
 
         for (auto i : range(path.size() - 1))
         {
