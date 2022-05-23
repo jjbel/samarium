@@ -14,7 +14,8 @@
 
 namespace sm::math
 {
-constexpr inline auto epsilon = 1.e-4;
+constexpr inline auto epsilon       = 1.e-4;
+constexpr inline auto two_thirds_pi = 2.0 * std::numbers::pi / 3;
 
 /**
  * @brief               Check if 2 floating point values are equal
@@ -75,8 +76,10 @@ template <typename T> [[nodiscard]] constexpr auto max(T value0, T value1) noexc
 template <u32 n> [[nodiscard]] constexpr auto power(auto x) noexcept
 {
     if constexpr (n == 0) { return 1; }
-
-    return x * power<n - 1>(x);
+    else // for whatever reason else is needed after return
+    {
+        return x * power<n - 1>(x);
+    }
 }
 
 /**
