@@ -73,4 +73,7 @@ if(SAMARIUM_BUILD_EXAMPLES)
     create_test_with_output_dir(
         springy_pendulum ../examples/springy_pendulum.cpp "${CMAKE_BINARY_DIR}/examples/"
     )
+    create_test_with_output_dir(
+        springy_pendulum ../examples/hilbert_curve.cpp "${CMAKE_BINARY_DIR}/examples/"
+    )
 endif()
