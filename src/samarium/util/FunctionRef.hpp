@@ -1,6 +1,6 @@
-/// Credit: https://github.com/TartanLlama/FunctionRef
+/// Credit: https://github.com/TartanLlama/function_ref
 //
-// FunctionRef - A low-overhead non-owning function
+// function_ref - A low-overhead non-owning function
 // Written in 2017 by Simon Brand (@TartanLlama)
 //
 // To the extent possible under law, the author(s) have dedicated all
