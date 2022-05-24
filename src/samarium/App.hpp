@@ -170,19 +170,22 @@ class App
         store_pixels();
     }
 
+
     void run(FunctionRef<void(f64)> update, FunctionRef<void()> draw, u64 substeps = 1UL);
 
     void run(FunctionRef<void()> func);
 
   private:
     template <CoordinateSpace cs>
-    inline auto invoke_fn(const auto& fn, Indices coords) requires(cs == CoordinateSpace::Screen)
+    inline auto invoke_fn(const auto& fn, Indices coords) const
+        requires(cs == CoordinateSpace::Screen)
     {
         return fn(coords);
     }
 
     template <CoordinateSpace cs>
-    inline auto invoke_fn(const auto& fn, Indices coords) requires(cs == CoordinateSpace::World)
+    inline auto invoke_fn(const auto& fn, Indices coords) const
+        requires(cs == CoordinateSpace::World)
     {
         return fn(transform.apply_inverse(coords.template as<f64>()));
     }
