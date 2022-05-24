@@ -13,7 +13,6 @@
 #include "SFML/Graphics.hpp"
 
 #include "core/ThreadPool.hpp"
-#include "graphics/Color.hpp"
 #include "graphics/Image.hpp"
 #include "gui/Keyboard.hpp"
 #include "gui/Mouse.hpp"
@@ -27,27 +26,6 @@
 
 namespace sm
 {
-
-enum class CoordinateSpace
-{
-    Screen,
-    World
-};
-
-namespace concepts
-{
-
-template <typename T, CoordinateSpace cs = CoordinateSpace::World> struct is_drawable
-{
-    static constexpr auto value =
-        ((cs == CoordinateSpace::Screen) && std::is_invocable_r_v<Color, T, Indices>) ||
-        ((cs == CoordinateSpace::World) && std::is_invocable_r_v<Color, T, Vector2>);
-};
-
-template <typename T, CoordinateSpace cs = CoordinateSpace::World>
-concept DrawableLambda = is_drawable<T, cs>::value;
-} // namespace concepts
-
 class App
 {
     sf::RenderWindow sf_render_window;
@@ -119,75 +97,13 @@ class App
                            Color color   = Color{255, 255, 255},
                            f64 thickness = 0.1);
 
-    template <typename T>
-    requires concepts::DrawableLambda<T, CoordinateSpace::World>
-    void draw(T&& fn) { this->draw<CoordinateSpace::World>(std::forward<T>(fn)); }
 
-    template <CoordinateSpace cs, typename T>
-    requires concepts::DrawableLambda<T, cs>
-    void draw(T&& fn)
-    {
-        const auto bounding_box    = image.bounding_box();
-        const auto transformed_box = transform.apply_inverse(BoundingBox<u64>{
-            .min = bounding_box.min,
-            .max = bounding_box.max + Indices{1, 1}}.template as<f64>());
-
-        this->draw<cs>(std::forward<T>(fn), transformed_box);
-    }
-
-    template <CoordinateSpace cs, typename T>
-    requires concepts::DrawableLambda<T, cs>
-    void draw(T&& fn, const BoundingBox<f64>& bounding_box)
-    {
-        load_pixels();
-
-        const auto box = this->transform.apply(bounding_box)
-                             .clamped_to(image.bounding_box().template as<f64>())
-                             .template as<u64>();
-
-        if (math::area(box) == 0UL) { return; }
-
-        const auto x_range = box.x_range();
-        const auto y_range = box.y_range();
-
-        const auto job = [&](auto min, auto max)
-        {
-            for (auto y : range(min, max))
-            {
-                for (auto x : x_range)
-                {
-                    const auto coords = Indices{x, y};
-                    const auto col    = invoke_fn<cs>(fn, coords);
-
-                    image[coords].add_alpha_over(col);
-                }
-            }
-        };
-
-        thread_pool.parallelize_loop(y_range.min, y_range.max + 1, job,
-                                     thread_pool.get_thread_count());
-
-        store_pixels();
-    }
-
+    void draw_world_space(FunctionRef<Color(Vector2)> callable);
+    void draw_world_space(FunctionRef<Color(Vector2)> callable,
+                          const BoundingBox<f64>& bounding_box);
 
     void run(FunctionRef<void(f64)> update, FunctionRef<void()> draw, u64 substeps = 1UL);
 
     void run(FunctionRef<void()> func);
-
-  private:
-    template <CoordinateSpace cs>
-    inline auto invoke_fn(const auto& fn, Indices coords) const
-        requires(cs == CoordinateSpace::Screen)
-    {
-        return fn(coords);
-    }
-
-    template <CoordinateSpace cs>
-    inline auto invoke_fn(const auto& fn, Indices coords) const
-        requires(cs == CoordinateSpace::World)
-    {
-        return fn(transform.apply_inverse(coords.template as<f64>()));
-    }
 };
 } // namespace sm

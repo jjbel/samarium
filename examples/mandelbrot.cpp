@@ -60,7 +60,7 @@ int main()
         app.transform.pos = pos + scale * (app.transform.pos - pos);
         iterations        = static_cast<u64>(3 * std::log(app.transform.scale.x) + 9);
 
-        app.draw(draw);
+        app.draw_world_space(draw);
     };
 
     app.run(update);

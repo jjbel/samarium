@@ -10,9 +10,9 @@
 #include "SFML/Graphics/Vertex.hpp"
 #include "SFML/Graphics/VertexArray.hpp"
 
-#include "./util/file.hpp"
-#include "./util/format.hpp"
-#include "./util/print.hpp"
+#include "util/file.hpp"
+#include "util/format.hpp"
+#include "util/print.hpp"
 #include "App.hpp"
 
 namespace sm
@@ -119,6 +119,49 @@ void App::draw_line_segment(const LineSegment& ls, Color color, f64 thickness)
     vertices[3].color = sfml_color;
 
     sf_render_window.draw(vertices.data(), vertices.size(), sf::Quads);
+}
+
+void App::draw_world_space(FunctionRef<Color(Vector2)> callable)
+{
+    const auto bounding_box    = image.bounding_box();
+    const auto transformed_box = transform.apply_inverse(BoundingBox<u64>{
+        .min = bounding_box.min,
+        .max = bounding_box.max + Indices{1, 1}}.template as<f64>());
+
+    this->draw_world_space(callable, transformed_box);
+}
+
+void App::draw_world_space(FunctionRef<Color(Vector2)> callable,
+                           const BoundingBox<f64>& bounding_box)
+{
+    load_pixels();
+
+    const auto box = this->transform.apply(bounding_box)
+                         .clamped_to(image.bounding_box().template as<f64>())
+                         .template as<u64>();
+
+    if (math::area(box) == 0UL) { return; }
+
+    const auto x_range = box.x_range();
+    const auto y_range = box.y_range();
+
+    const auto job = [&](auto min, auto max)
+    {
+        for (auto y : range(min, max))
+        {
+            for (auto x : x_range)
+            {
+                const auto coords = Indices{x, y};
+                const auto col    = callable(transform.apply_inverse(coords.template as<f64>()));
+
+                image[coords].add_alpha_over(col);
+            }
+        }
+    };
+
+    thread_pool.parallelize_loop(y_range.min, y_range.max + 1, job, thread_pool.get_thread_count());
+
+    store_pixels();
 }
 
 
