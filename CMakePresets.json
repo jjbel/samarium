@@ -54,7 +54,15 @@
             "cacheVariables": {
                 "USE_UBSAN": "ON",
                 "SAMARIUM_BUILD_EXTRA_TESTS": "OFF",
-                "SAMARIUM_BUILD_EXAMPLES": "OFF"
+                "SAMARIUM_BUILD_EXAMPLES": "ON"
+            }
+        },
+        {
+            "name": "debug",
+            "description": "Debug version of dev",
+            "inherits": "dev",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
             }
         },
         {
