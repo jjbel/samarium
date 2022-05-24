@@ -28,42 +28,46 @@ struct Params
 
 int main()
 {
+    print("Hello1");
+
     const auto params = Params{};
 
-    auto particles = Grid<Dual<Particle>>::generate(
-        params.particle_count_xy,
-        [&](auto indices)
-        {
-            const auto x = interp::map_range<f64>(
-                static_cast<f64>(indices.x),
-                Extents<u64>{0UL, params.particle_count_xy.x}.as<f64>(),
-                Extents<f64>{-params.softbody_area.x / 2.0, params.softbody_area.x / 2.0});
+    const auto get_dual_from_indices = [&](auto indices)
+    {
+        const auto x = interp::map_range<f64>(
+            static_cast<f64>(indices.x), Extents<u64>{0UL, params.particle_count_xy.x}.as<f64>(),
+            Extents<f64>{-params.softbody_area.x / 2.0, params.softbody_area.x / 2.0});
 
-            const auto y = interp::map_range<f64>(
-                static_cast<f64>(indices.y),
-                Extents<u64>{0UL, params.particle_count_xy.y}.as<f64>(),
-                Extents<f64>{-params.softbody_area.y / 2.0, params.softbody_area.y / 2.0});
+        const auto y = interp::map_range<f64>(
+            static_cast<f64>(indices.y), Extents<u64>{0UL, params.particle_count_xy.y}.as<f64>(),
+            Extents<f64>{-params.softbody_area.y / 2.0, params.softbody_area.y / 2.0});
 
-            auto pos = Vector2{x, y};
-            pos.rotate(1);
+        auto pos = Vector2{x, y};
+        print(indices, pos);
+        pos.rotate(1);
 
-            const auto particle = Particle{pos,
-                                           params.particle_velocity,
-                                           {},
-                                           params.particle_radius,
-                                           params.particle_mass,
-                                           colors::red};
+        const auto particle = Particle{
+            pos,        params.particle_velocity, {}, params.particle_radius, params.particle_mass,
+            colors::red};
 
-            auto dual = Dual<Particle>();
-            dual.prev = particle;
+        auto dual = Dual<Particle>();
+        dual.prev = particle;
 
-            return dual;
-        });
+        return dual;
+    };
+
+    print("Hello4");
+    
+    auto particles =
+        Grid<Dual<Particle>>::generate(params.particle_count_xy, get_dual_from_indices);
+
+    print("Hello2");
+
 
     auto springs = [&]
     {
         std::vector<Spring> temp;
-        temp.reserve(params.particle_count_xy.x * params.particle_count_xy.y * 4);
+        temp.reserve(params.particle_count_xy.x * params.particle_count_xy.y * 4UL);
 
         for (auto i : range(params.particle_count_xy.y))
         {
@@ -86,6 +90,7 @@ int main()
 
         return temp;
     }();
+    print("Hello3");
 
     auto app = App{{.dims = dims720}};
 
@@ -137,9 +142,12 @@ int main()
             particle.prev = particle.now;
         }
 
-        fmt::print("Framerate: {}\n", std::round(1.0 / watch.time().count()));
+        // fmt::print("Framerate: {}\n", std::round(1.0 / watch.time().count()));
         watch.reset();
     };
+
+    print("Hello");
+
 
     app.run(update, draw, 16);
 }

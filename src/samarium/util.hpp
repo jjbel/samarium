@@ -11,6 +11,7 @@
 #include "util/Stopwatch.hpp"
 #include "util/file.hpp"
 #include "util/format.hpp"
+#include "util/FunctionRef.hpp"
 // #include "util/ostream.hpp"
 // #include "util/perlin_noise.hpp"
 #include "util/print.hpp"
