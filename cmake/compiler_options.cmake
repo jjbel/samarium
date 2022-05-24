@@ -77,7 +77,7 @@ function(set_compiler_options)
     # if(OPTIONS_AS_ERRORS) set(COMMON_OPTIONS ${COMMON_OPTIONS} -Werror) set(MSVC_OPTIONS
     # ${MSVC_OPTIONS} /WX) endif()
 
-    set(CLANG_OPTIONS ${COMMON_OPTIONS} -fcolor-diagnostics -ferror-limit=1)
+    set(CLANG_OPTIONS ${COMMON_OPTIONS} -fcolor-diagnostics -ferror-limit=10)
 
     set(GCC_OPTIONS
         ${COMMON_OPTIONS}
