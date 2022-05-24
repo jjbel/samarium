@@ -22,14 +22,12 @@ struct Params
     f64 particle_mass    = 0.6;
     f64 particle_radius  = 1.6;
     Vector2 particle_velocity{10, 20};
-    Dimensions particle_count_xy{5, 5};
+    Dimensions particle_count_xy{3, 3};
     Vector2 softbody_area{25, 25};
 };
 
 int main()
 {
-    print("Hello1");
-
     const auto params = Params{};
 
     const auto get_dual_from_indices = [&](auto indices)
@@ -43,7 +41,6 @@ int main()
             Extents<f64>{-params.softbody_area.y / 2.0, params.softbody_area.y / 2.0});
 
         auto pos = Vector2{x, y};
-        print(indices, pos);
         pos.rotate(1);
 
         const auto particle = Particle{
@@ -52,16 +49,14 @@ int main()
 
         auto dual = Dual<Particle>();
         dual.prev = particle;
+        dual.now  = particle;
 
         return dual;
     };
 
-    print("Hello4");
-    
+
     auto particles =
         Grid<Dual<Particle>>::generate(params.particle_count_xy, get_dual_from_indices);
-
-    print("Hello2");
 
 
     auto springs = [&]
@@ -90,7 +85,6 @@ int main()
 
         return temp;
     }();
-    print("Hello3");
 
     auto app = App{{.dims = dims720}};
 
@@ -113,7 +107,7 @@ int main()
                 particle->pos += app.mouse.vel() / app.transform.scale;
                 particle->vel = Vector2{};
                 particle->acc = Vector2{};
-                print("Click!", app.mouse.vel());
+                // print("Click!", app.mouse.vel());
             }
 
             particle->update(delta);
@@ -136,7 +130,7 @@ int main()
                                   colors::white.with_multiplied_alpha(0.8), 0.04);
         }
 
-        for (auto&& particle : particles)
+        for (auto& particle : particles)
         {
             app.draw(particle.now);
             particle.prev = particle.now;
@@ -145,9 +139,6 @@ int main()
         // fmt::print("Framerate: {}\n", std::round(1.0 / watch.time().count()));
         watch.reset();
     };
-
-    print("Hello");
-
 
     app.run(update, draw, 16);
 }

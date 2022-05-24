@@ -19,6 +19,7 @@ template <typename T> struct Dual
     constexpr auto& operator*() { return now; }
 
     constexpr auto operator->() { return &now; }
+    constexpr auto operator->() const { return &now; }
 
     template <typename... Args> constexpr auto update(Args&&... args)
     {
