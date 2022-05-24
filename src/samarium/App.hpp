@@ -22,6 +22,7 @@
 #include "math/Transform.hpp"
 #include "math/vector_math.hpp"
 #include "physics/Particle.hpp"
+#include "util/FunctionRef.hpp"
 #include "util/Stopwatch.hpp"
 
 namespace sm
@@ -88,9 +89,9 @@ class App
                          { sf_render_window.close(); });
     }
 
-    void sync_window_to_image();
+    void load_pixels();
 
-    void sync_image_to_window();
+    void store_pixels();
 
     void display();
 
@@ -138,7 +139,7 @@ class App
     requires concepts::DrawableLambda<T, cs>
     void draw(T&& fn, const BoundingBox<f64>& bounding_box)
     {
-        sync_window_to_image();
+        load_pixels();
 
         const auto box = this->transform.apply(bounding_box)
                              .clamped_to(image.bounding_box().template as<f64>())
@@ -166,35 +167,12 @@ class App
         thread_pool.parallelize_loop(y_range.min, y_range.max + 1, job,
                                      thread_pool.get_thread_count());
 
-        sync_image_to_window();
+        store_pixels();
     }
 
-    void run(std::invocable<f64> auto&& update, std::invocable auto&& draw, u64 substeps = 1UL)
-    {
-        while (this->is_open())
-        {
-            this->get_input();
+    void run(FunctionRef<void(f64)> update, FunctionRef<void()> draw, u64 substeps = 1UL);
 
-            for (auto i : range(substeps))
-            {
-                std::ignore = i;
-                update(1.0 / static_cast<f64>(substeps) / static_cast<f64>(this->target_framerate));
-            }
-            draw();
-
-            this->display();
-        }
-    }
-
-    void run(std::invocable auto&& func)
-    {
-        while (this->is_open())
-        {
-            this->get_input();
-            func();
-            this->display();
-        }
-    }
+    void run(FunctionRef<void()> func);
 
   private:
     template <CoordinateSpace cs>

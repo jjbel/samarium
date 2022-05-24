@@ -17,7 +17,7 @@
 
 namespace sm
 {
-void App::sync_window_to_image()
+void App::load_pixels()
 {
     this->texture.update(this->sf_render_window);
     const auto sf_image = texture.copyToImage();
@@ -27,7 +27,7 @@ void App::sync_window_to_image()
               reinterpret_cast<u8*>(&image[0]));
 }
 
-void App::sync_image_to_window()
+void App::store_pixels()
 {
     this->texture.update(reinterpret_cast<const u8*>(&image[0]));
     sf::Sprite sprite(texture);
@@ -119,5 +119,33 @@ void App::draw_line_segment(const LineSegment& ls, Color color, f64 thickness)
     vertices[3].color = sfml_color;
 
     sf_render_window.draw(vertices.data(), vertices.size(), sf::Quads);
+}
+
+
+void App::run(FunctionRef<void(f64)> update, FunctionRef<void()> draw, u64 substeps)
+{
+    while (this->is_open())
+    {
+        this->get_input();
+
+        for (auto i : range(substeps))
+        {
+            std::ignore = i;
+            update(1.0 / static_cast<f64>(substeps) / static_cast<f64>(this->target_framerate));
+        }
+        draw();
+
+        this->display();
+    }
+}
+
+void App::run(FunctionRef<void()> func)
+{
+    while (this->is_open())
+    {
+        this->get_input();
+        func();
+        this->display();
+    }
 }
 } // namespace sm
