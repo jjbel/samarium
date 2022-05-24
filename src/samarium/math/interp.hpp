@@ -8,7 +8,7 @@
 #pragma once
 
 #include "../graphics/Color.hpp"
-#include "../math/math.hpp"
+#include "../math/Vector2.hpp"
 
 #include "Extents.hpp"
 
@@ -125,6 +125,36 @@ template <typename T> [[nodiscard]] constexpr auto clamped_lerp(f64 factor, Exte
                      lerp(factor, Extents<f64>{static_cast<f64>(from.b), static_cast<f64>(to.b)})),
                  static_cast<u8>(
                      lerp(factor, Extents<f64>{static_cast<f64>(from.a), static_cast<f64>(to.a)}))};
+}
+
+/**
+ * @brief               Lerp between 2 vectors by rotating around a center
+ * @param  from
+ * @param  to
+ * @param  center
+ * @param  factor
+ */
+[[nodiscard]] constexpr auto lerp_rotate(Vector2 from, Vector2 to, Vector2 center, f64 factor)
+{
+    const auto radius = lerp<f64>(factor, {(from - center).length(), (to - center).length()});
+    const auto angle  = lerp<f64>(factor, {from.angle(), to.angle()});
+    return center + Vector2::from_polar({radius, angle});
+}
+
+/**
+ * @brief               Clamped Lerp between 2 vectors by rotating around a center
+ * @param  from
+ * @param  to
+ * @param  center
+ * @param  factor
+ */
+[[nodiscard]] constexpr auto
+clamped_lerp_rotate(Vector2 from, Vector2 to, Vector2 center, f64 factor)
+{
+    factor            = clamp(factor, {0.0, 1.0});
+    const auto radius = lerp<f64>(factor, {(from - center).length(), (to - center).length()});
+    const auto angle  = lerp<f64>(factor, {from.angle(), to.angle()});
+    return center + Vector2::from_polar({radius, angle});
 }
 
 /**
