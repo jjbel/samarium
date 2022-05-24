@@ -16,7 +16,7 @@ using namespace sm::literals;
 
 static constexpr auto window_width = 1000UL;
 static constexpr auto order        = 6UL;
-static constexpr auto duration     = 70UL;
+static constexpr auto duration     = 100UL;
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -28,9 +28,9 @@ auto point_at(i32 index, i32 level)
     static constexpr auto points = std::to_array<IntegerPair>({{0, 0}, {0, 1}, {1, 1}, {1, 0}});
 
     i32 thingy = index & 3;
-    auto v     = points[static_cast<u64>(thingy)];
+    auto v     = points[u64(thingy)];
 
-    for (auto j : range(1UL, static_cast<u64>(level)))
+    for (auto j : range(1UL, u64(level)))
     {
         index >>= 2;
         thingy = index & 3;
@@ -58,18 +58,16 @@ auto point_at(i32 index, i32 level)
     return v;
 }
 
-auto point_count(u64 level)
-{
-    return static_cast<u64>(std::pow(2.0, 2.0 * static_cast<f64>(level)));
-}
+auto point_count(u64 level) { return u64(std::pow(2.0, 2.0 * static_cast<f64>(level))); }
 
 auto points_f64(u64 level)
 {
     auto vec = Path(point_count(level));
     for (auto i : range(vec.size()))
     {
-        vec[i] = point_at(i32(i), i32(level)).as<f64>() / std::pow(2.0, static_cast<f64>(level)) +
-                 Vector2::combine(0.5 / std::pow(2.0, level)); // rescale to [{0, 0}, {1, 1}]
+        const auto point = point_at(i32(i), i32(level)).as<f64>();
+        vec[i]           = (point + Vector2::combine(0.5)) /
+                 std::pow(2.0, static_cast<f64>(level)); // rescale to [{0, 0}, {1, 1}]
     }
     return vec;
 }
@@ -143,7 +141,7 @@ int main()
         for (auto i : range(path.size()))
         {
             path[i] = interp::lerp(
-                interp::smooth(lerp_factor, 3),
+                interp::ease(lerp_factor, 3),
                 Extents<Vector2>{levels[current_iter][i], levels[(current_iter + 1UL) % order][i]});
         }
 
@@ -153,6 +151,8 @@ int main()
         {
             app.draw_line_segment({mapper(path[i]), mapper(path[i + 1])}, colors::aliceblue, 1);
         }
+
+        print(current_iter);
     };
 
     app.transform = {{0, 0}, {1, 1}};

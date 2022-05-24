@@ -141,7 +141,7 @@ int main()
         for (auto i : range(path.size()))
         {
             path[i] = interp::lerp(
-                interp::smooth(lerp_factor, 3),
+                interp::ease(lerp_factor),
                 Extents<Vector2>{levels[current_iter][i], levels[(current_iter + 1UL) % order][i]});
         }
 

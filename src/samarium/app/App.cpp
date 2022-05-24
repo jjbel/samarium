@@ -103,9 +103,9 @@ void App::draw(const Particle& particle) { this->draw(particle.as_circle(), part
 
 void App::draw_line_segment(const LineSegment& ls, Color color, f64 thickness)
 {
-    const auto sfml_color       = sfml(color);
-    const auto thickness_vector = Vector2::from_polar(
-        {.length = thickness, .angle = ls.vector().angle() + std::numbers::pi / 2.0});
+    const auto sfml_color = sfml(color);
+    const auto thickness_vector =
+        Vector2::from_polar({.length = thickness, .angle = ls.vector().angle() + math::pi / 2.0});
 
     auto vertices = std::array<sf::Vertex, 4>{};
 

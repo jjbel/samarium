@@ -50,7 +50,7 @@ struct RandomGenerator
     [[nodiscard]] auto vector(const BoundingBox<f64>& bounding_box) noexcept -> Vector2;
 
     [[nodiscard]] auto polar_vector(Extents<f64> radius_range,
-                                    Extents<f64> angle_range = {0.0, 2 * std::numbers::pi}) noexcept
+                                    Extents<f64> angle_range = {0.0, 2 * math::pi}) noexcept
         -> Vector2;
 
     [[nodiscard]] auto choice(const concepts::Range auto& iterable)

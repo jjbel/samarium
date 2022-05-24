@@ -15,7 +15,8 @@
 namespace sm::math
 {
 constexpr inline auto epsilon       = 1.e-4;
-constexpr inline auto two_thirds_pi = 2.0 * std::numbers::pi / 3;
+constexpr inline auto pi            = std::numbers::pi;
+constexpr inline auto two_thirds_pi = 2.0 * pi / 3;
 
 /**
  * @brief               Check if 2 floating point values are equal
@@ -90,7 +91,7 @@ template <u32 n> [[nodiscard]] constexpr auto power(auto x) noexcept
  */
 [[nodiscard]] constexpr auto to_degrees(concepts::FloatingPoint auto angle) noexcept
 {
-    return angle * 180.0 / std::numbers::pi;
+    return angle * 180.0 / math::pi;
 }
 
 /**
@@ -101,7 +102,7 @@ template <u32 n> [[nodiscard]] constexpr auto power(auto x) noexcept
  */
 [[nodiscard]] constexpr auto to_radians(concepts::FloatingPoint auto angle) noexcept
 {
-    return angle / 180.0 * std::numbers::pi;
+    return angle / 180.0 * math::pi;
 }
 
 /**

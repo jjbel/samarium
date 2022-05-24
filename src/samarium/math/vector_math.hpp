@@ -123,7 +123,7 @@ template <typename T> [[nodiscard]] constexpr auto area(BoundingBox<T> bounding_
 
 [[nodiscard]] constexpr auto area(Circle circle)
 {
-    return std::numbers::pi * circle.radius * circle.radius;
+    return math::pi * circle.radius * circle.radius;
 }
 
 template <typename T> [[nodiscard]] constexpr auto abs_area(BoundingBox<T> bounding_box) noexcept
