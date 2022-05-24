@@ -24,12 +24,12 @@ void App::sync_window_to_image()
     const auto ptr      = sf_image.getPixelsPtr();
 
     std::copy(std::execution::par_unseq, ptr, ptr + image.size() * 4UL,
-              reinterpret_cast<u8*>(image.begin()));
+              reinterpret_cast<u8*>(&image[0]));
 }
 
 void App::sync_image_to_window()
 {
-    this->texture.update(reinterpret_cast<const u8*>(this->image.begin()));
+    this->texture.update(reinterpret_cast<const u8*>(&image[0]));
     sf::Sprite sprite(texture);
 
     this->sf_render_window.draw(sprite);
@@ -37,7 +37,6 @@ void App::sync_image_to_window()
 
 void App::display()
 {
-    // sync_image_to_texture();
     sf_render_window.display();
     frame_counter++;
     watch.reset();
@@ -68,10 +67,7 @@ void App::get_input()
 
 auto App::dims() const -> Dimensions { return image.dims; }
 
-auto App::transformed_dims() const -> Vector2
-{
-    return this->dims().as<f64>() / transform.scale;
-}
+auto App::transformed_dims() const -> Vector2 { return this->dims().as<f64>() / transform.scale; }
 
 auto App::bounding_box() const -> BoundingBox<size_t> { return this->image.bounding_box(); }
 

@@ -48,7 +48,7 @@ template <typename T> class Grid
     using size_type       = std::size_t;
 
     // Public members
-    DynArray<T> data;
+    std::vector<T> data;
     const Dimensions dims;
 
     // Constructors
@@ -62,12 +62,15 @@ template <typename T> class Grid
     requires std::invocable<Fn, Indices>
     static auto generate(Dimensions dims, Fn&& fn)
     {
-        Grid<T> grid(dims);
-        const auto beg = grid.begin();
-        std::for_each(beg, grid.end(),
-                      [fn = std::forward<Fn>(fn), beg, dims](auto& element)
-                      { element = fn(convert_1d_to_2d(dims, static_cast<u64>(&element - beg))); });
-
+        auto grid = Grid<T>(dims);
+        for (auto y : range(dims.y))
+        {
+            for (auto x : range(dims.x))
+            {
+                const auto pos = Indices{x, y};
+                grid[pos]      = fn(pos);
+            }
+        }
         return grid;
     }
 
