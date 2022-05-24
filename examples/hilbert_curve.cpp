@@ -5,6 +5,7 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
+#include "samarium/graphics/colors.hpp"
 #include "samarium/samarium.hpp"
 
 
