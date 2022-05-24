@@ -17,6 +17,7 @@ static constexpr auto window_width = 1000UL;
 static constexpr auto order        = 6UL;
 static constexpr auto duration     = 70UL;
 
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 using IntegerPair = Vector2_t<i32>;
 using Path        = std::vector<Vector2>;
@@ -56,15 +57,18 @@ auto point_at(i32 index, i32 level)
     return v;
 }
 
-auto point_count(u64 level) { return static_cast<u64>(std::pow(2.0, 2.0 * level)); }
+auto point_count(u64 level)
+{
+    return static_cast<u64>(std::pow(2.0, 2.0 * static_cast<f64>(level)));
+}
 
 auto points_f64(u64 level)
 {
     auto vec = Path(point_count(level));
     for (auto i : range(vec.size()))
     {
-        vec[i] = point_at(i, level).as<f64>() / std::pow(2.0, static_cast<f64>(level)) +
-                 Vector2::combine(0.5 / std::pow(2.0, level));
+        vec[i] = point_at(i32(i), i32(level)).as<f64>() / std::pow(2.0, static_cast<f64>(level)) +
+                 Vector2::combine(0.5 / std::pow(2.0, level)); // rescale to [{0, 0}, {1, 1}]
     }
     return vec;
 }
@@ -95,19 +99,19 @@ auto rescale(const Path& input, u64 factor)
     return output;
 }
 
-auto levels_till(u64 order)
+auto levels_till(u64 level)
 {
-    auto levels = std::vector<Path>(order);
-    for (auto i : range(order)) { levels[i] = points_f64(i + 1); }
+    auto levels = std::vector<Path>(level);
+    for (auto i : range(level)) { levels[i] = points_f64(i + 1); }
     return levels;
 }
 
-auto rescaled_levels_till(u64 order)
+auto rescaled_levels_till(u64 level)
 {
-    auto levels         = std::vector<Path>(order);
-    const auto max_size = point_count(order);
+    auto levels         = std::vector<Path>(level);
+    const auto max_size = point_count(level);
 
-    for (auto i : range(order))
+    for (auto i : range(level))
     {
         const auto points = points_f64(i + 1);
         levels[i]         = rescale(points, max_size / points.size());
@@ -115,7 +119,7 @@ auto rescaled_levels_till(u64 order)
     return levels;
 }
 
-i32 main()
+int main()
 {
     const auto levels = rescaled_levels_till(order);
     auto path         = levels[0];
