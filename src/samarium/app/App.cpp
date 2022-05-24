@@ -10,9 +10,10 @@
 #include "SFML/Graphics/Vertex.hpp"
 #include "SFML/Graphics/VertexArray.hpp"
 
-#include "util/file.hpp"
-#include "util/format.hpp"
-#include "util/print.hpp"
+#include "../util/file.hpp"
+#include "../util/format.hpp"
+#include "../util/print.hpp"
+
 #include "App.hpp"
 
 namespace sm

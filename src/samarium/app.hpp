@@ -7,6 +7,4 @@
 
 #pragma once
 
-#include "gui/Keyboard.hpp"
-#include "gui/Mouse.hpp"
-#include "gui/sfml.hpp"
+#include "app/App.hpp"

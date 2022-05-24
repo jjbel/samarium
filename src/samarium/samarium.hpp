@@ -8,18 +8,20 @@
 /**
  * @mainpage Samarium Documentation
  * @section section_intro Introduction
- * This is the documentation for the [Samarium library](https://github.com/strangeQuark1041/samarium)
+ * This is the documentation for the [Samarium
+ * library](https://github.com/strangeQuark1041/samarium)
  * @section section_install Installation
- * For installation and more see [the repo's README](https://github.com/strangeQuark1041/samarium#quickstart)
+ * For installation and more see [the repo's
+ * README](https://github.com/strangeQuark1041/samarium#quickstart)
  */
 
 #pragma once
 
-#include "./App.hpp"
-#include "./core.hpp"
-#include "./geometry.hpp"
-#include "./graphics.hpp"
-#include "./gui.hpp"
-#include "./math.hpp"
-#include "./physics.hpp"
-#include "./util.hpp"
+#include "app.hpp"
+#include "core.hpp"
+#include "geometry.hpp"
+#include "graphics.hpp"
+#include "gui.hpp"
+#include "math.hpp"
+#include "physics.hpp"
+#include "util.hpp"

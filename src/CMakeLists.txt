@@ -26,7 +26,7 @@ find_package(
 find_package(fmt REQUIRED)
 
 set(SAMARIUM_SOURCES
-    samarium/App.cpp
+    samarium/app/App.cpp
     samarium/core/ThreadPool.cpp
     samarium/graphics/Trail.cpp
     samarium/gui/Keyboard.cpp

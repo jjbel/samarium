@@ -12,17 +12,17 @@
 
 #include "SFML/Graphics.hpp"
 
-#include "core/ThreadPool.hpp"
-#include "graphics/Image.hpp"
-#include "gui/Keyboard.hpp"
-#include "gui/Mouse.hpp"
-#include "math/BoundingBox.hpp"
-#include "math/Extents.hpp"
-#include "math/Transform.hpp"
-#include "math/vector_math.hpp"
-#include "physics/Particle.hpp"
-#include "util/FunctionRef.hpp"
-#include "util/Stopwatch.hpp"
+#include "../core/ThreadPool.hpp"
+#include "../graphics/Image.hpp"
+#include "../gui/Keyboard.hpp"
+#include "../gui/Mouse.hpp"
+#include "../math/BoundingBox.hpp"
+#include "../math/Extents.hpp"
+#include "../math/Transform.hpp"
+#include "../math/vector_math.hpp"
+#include "../physics/Particle.hpp"
+#include "../util/FunctionRef.hpp"
+#include "../util/Stopwatch.hpp"
 
 namespace sm
 {

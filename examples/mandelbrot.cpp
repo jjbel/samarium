@@ -5,7 +5,7 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
-#include "samarium/App.hpp"
+#include "samarium/app/App.hpp"
 #include "samarium/graphics/gradients.hpp"
 #include "samarium/samarium.hpp"
 
