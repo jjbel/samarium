@@ -16,7 +16,9 @@ namespace sm::math
 {
 constexpr inline auto epsilon       = 1.e-4;
 constexpr inline auto pi            = std::numbers::pi;
-constexpr inline auto two_thirds_pi = 2.0 * pi / 3;
+constexpr inline auto two_thirds_pi = 2.0 * pi / 3.0;
+constexpr inline auto two_pi        = 2.0 * pi;
+constexpr inline auto e             = std::numbers::e;
 
 /**
  * @brief               Check if 2 floating point values are equal
