@@ -23,7 +23,20 @@ class Trail
 
     explicit Trail(size_t length = 50) : max_length{length} { trail.reserve(length); }
 
-    [[nodiscard]] auto size() const -> size_t;
+    auto begin() noexcept { return trail.begin(); }
+    auto end() noexcept { return trail.end(); }
+
+    auto begin() const noexcept { return trail.cbegin(); }
+    auto end() const noexcept { return trail.cend(); }
+
+    auto cbegin() const noexcept { return trail.cbegin(); }
+    auto cend() const noexcept { return trail.cend(); }
+
+    auto size() const noexcept { return trail.size(); }
+    auto empty() const noexcept { return trail.empty(); }
+
+    auto operator[](u64 index) noexcept { return trail[index]; }
+    auto operator[](u64 index) const noexcept { return trail[index]; }
 
     void push_back(Vector2 pos);
 

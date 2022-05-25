@@ -21,8 +21,6 @@ void Trail::push_back(Vector2 pos)
     }
 }
 
-size_t Trail::size() const { return this->trail.size(); }
-
 std::span<const Vector2> Trail::span() const
 {
     return std::span(this->trail.begin(), this->trail.size());
