@@ -92,7 +92,6 @@ template <typename T> struct DynArray
     auto cend() const noexcept { return static_cast<const_iterator>(&this->data[this->m_size]); }
 
     auto size() const noexcept { return this->m_size; }
-    auto max_size() const noexcept { return this->m_size; } // for stl compatibility
     auto empty() const noexcept { return this->m_size == 0; }
 
     auto as_span() noexcept { return std::span{this->begin(), this->m_size}; }
