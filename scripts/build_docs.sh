@@ -12,7 +12,7 @@ rm --force ./README.md
 cp -R ./build/docs/* .
 
 git add .
-git commit -m "build docs" >/dev/null || 1
+git commit -m "build docs" >/dev/null
 echo "Built docs"
 
 git checkout main
