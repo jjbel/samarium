@@ -422,7 +422,7 @@ template <typename T> [[nodiscard]] constexpr auto lerp_inverse(f64 value, Exten
  * @param  to
  */
 template <typename T, typename Output = T>
-[[nodiscard]] constexpr auto map_range(T value, Extents<T> from, Extents<T> to)
+[[nodiscard]] constexpr auto map_range(T value, Extents<T> from, Extents<Output> to)
 {
     return static_cast<Output>(to.min + (value - from.min) * to.size() / from.size());
 }
@@ -436,7 +436,7 @@ template <typename T, typename Output = T>
  * @param  to
  */
 template <typename T, typename Output = T>
-[[nodiscard]] constexpr auto map_range_clamp(T value, Extents<T> from, Extents<T> to)
+[[nodiscard]] constexpr auto map_range_clamp(T value, Extents<T> from, Extents<Output> to)
 {
     return static_cast<Output>(to.min + (from.clamp(value) - from.min) * to.size() / from.size());
 }
@@ -449,7 +449,7 @@ template <typename T, typename Output = T>
  * @param  to
  */
 template <typename T, typename Output = T>
-[[nodiscard]] constexpr auto make_mapper(Extents<T> from, Extents<T> to)
+[[nodiscard]] constexpr auto make_mapper(Extents<T> from, Extents<Output> to)
 {
     return [from_min = from.min, from_range = from.size(), to_range = to.size(),
             to_min = to.min](T value)
@@ -465,7 +465,7 @@ template <typename T, typename Output = T>
  * @param  to
  */
 template <typename T, typename Output = T>
-[[nodiscard]] constexpr auto make_clamped_mapper(Extents<T> from, Extents<T> to)
+[[nodiscard]] constexpr auto make_clamped_mapper(Extents<T> from, Extents<Output> to)
 {
     return [from, from_min = from.min, from_max = from.max, from_range = from.max - from.min,
             to_range = to.size(), to_min = to.min](T value) {
