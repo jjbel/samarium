@@ -8,6 +8,7 @@
 #pragma once
 
 #include <algorithm>
+#include <span>
 #include <tuple>
 
 #include "SFML/Graphics.hpp"
@@ -26,6 +27,18 @@
 
 namespace sm
 {
+enum class VertexMode
+{
+    Points,
+    Lines,
+    LineStrip,
+    Triangles,
+    TriangleStrip,
+    TriangleFan,
+    Quads
+};
+
+
 class App
 {
     sf::RenderWindow sf_render_window;
@@ -101,6 +114,12 @@ class App
     void draw_world_space(FunctionRef<Color(Vector2)> callable);
     void draw_world_space(FunctionRef<Color(Vector2)> callable,
                           const BoundingBox<f64>& bounding_box);
+
+    void draw_polyline(std::span<const Vector2> vertices,
+                       Color color   = Color{255, 255, 255},
+                       f64 thickness = 1.0);
+
+    void draw_vertices(std::span<const Vector2> vertices, VertexMode mode = VertexMode::LineStrip);
 
     void run(FunctionRef<void(f64)> update, FunctionRef<void()> draw, u64 substeps = 1UL);
 

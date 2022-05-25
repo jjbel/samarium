@@ -165,6 +165,21 @@ void App::draw_world_space(FunctionRef<Color(Vector2)> callable,
     store_pixels();
 }
 
+void App::draw_polyline(std::span<const Vector2> vertices, Color color, f64 thickness)
+{
+    for (auto i : range(vertices.size() - 1UL))
+    {
+        draw_line_segment(LineSegment{vertices[i], vertices[i + 1UL]}, color, thickness);
+    }
+}
+
+void App::draw_vertices(std::span<const Vector2> vertices, VertexMode mode)
+{
+    auto converted = sf::VertexArray(static_cast<sf::PrimitiveType>(mode), vertices.size());
+    for (auto i : range(vertices.size())) { converted[i].position = sfml(vertices[i].as<f32>()); }
+    sf_render_window.draw(converted);
+}
+
 
 void App::run(FunctionRef<void(f64)> update, FunctionRef<void()> draw, u64 substeps)
 {
