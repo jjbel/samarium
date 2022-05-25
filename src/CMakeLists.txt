@@ -33,6 +33,8 @@ set(SAMARIUM_SOURCES
     samarium/gui/Mouse.cpp
     samarium/physics/Car.cpp
     samarium/physics/Spring.cpp
+    samarium/physics/Particle.cpp
+    samarium/physics/ParticleSystem.cpp
     samarium/physics/collision.cpp
     samarium/util/RandomGenerator.cpp
     samarium/util/Stopwatch.cpp
