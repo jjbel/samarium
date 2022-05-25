@@ -14,6 +14,7 @@
 #include "../math/BoundingBox.hpp"
 #include "../math/Transform.hpp"
 #include "../math/Vector2.hpp"
+#include "../math/complex.hpp"
 #include "../math/shapes.hpp"
 #include "../physics/Particle.hpp"
 
@@ -105,6 +106,17 @@ template <> class formatter<sm::Transform>
     auto format(const sm::Transform& p, auto& ctx)
     {
         return fmt::format_to(ctx.out(), "Transform[pos: {}, scale: {}]", p.pos, p.scale);
+    }
+};
+
+template <> class formatter<std::complex<sm::f64>>
+{
+  public:
+    constexpr auto parse(const format_parse_context& ctx) const { return ctx.begin(); }
+
+    auto format(const std::complex<sm::f64>& p, auto& ctx)
+    {
+        return fmt::format_to(ctx.out(), "complex({:.4}, {:.4})", p.real(), p.imag());
     }
 };
 } // namespace fmt
