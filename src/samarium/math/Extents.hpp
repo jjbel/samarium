@@ -14,9 +14,8 @@
 
 namespace sm
 {
-template <typename T> class Extents
+template <typename T> struct Extents
 {
-  public:
     T min{};
     T max{};
 
@@ -82,6 +81,7 @@ template <typename T> class Extents
         using reference         = T;  // or also value_type&
 
         T index;
+
         constexpr auto operator<=>(const Iterator&) const noexcept = default;
 
         constexpr auto operator*() const noexcept -> reference { return index; }
