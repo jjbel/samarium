@@ -22,4 +22,9 @@ template <typename T> [[nodiscard]] constexpr auto from_complex(std::complex<T> 
 {
     return Vector2_t<T>{.x = complex.real(), .y = complex.imag()};
 }
+
+namespace math
+{
+static const auto two_pi_i = 2.0 * pi * std::complex<f64>{0.0, 1.0};
+} // namespace math
 } // namespace sm

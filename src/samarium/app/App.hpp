@@ -15,6 +15,7 @@
 
 #include "../core/ThreadPool.hpp"
 #include "../graphics/Image.hpp"
+#include "../graphics/Trail.hpp"
 #include "../gui/Keyboard.hpp"
 #include "../gui/Mouse.hpp"
 #include "../math/BoundingBox.hpp"
@@ -118,6 +119,8 @@ class App
     void draw_polyline(std::span<const Vector2> vertices,
                        Color color   = Color{255, 255, 255},
                        f64 thickness = 1.0);
+
+    void draw(Trail trail, Color color = Color{255, 255, 255}, f64 thickness = 1.0);
 
     void draw_vertices(std::span<const Vector2> vertices, VertexMode mode = VertexMode::LineStrip);
 
