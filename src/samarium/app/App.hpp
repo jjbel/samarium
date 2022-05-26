@@ -120,6 +120,10 @@ class App
                        Color color   = Color{255, 255, 255},
                        f64 thickness = 1.0);
 
+    void draw_polygon(std::span<const Vector2> vertices,
+                       Color color   = Color{255, 255, 255},
+                       f64 thickness = 1.0);
+
     void draw(Trail trail, Color color = Color{255, 255, 255}, f64 thickness = 1.0);
 
     void draw_vertices(std::span<const Vector2> vertices, VertexMode mode = VertexMode::LineStrip);

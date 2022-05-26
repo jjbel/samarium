@@ -173,6 +173,15 @@ void App::draw_polyline(std::span<const Vector2> vertices, Color color, f64 thic
     }
 }
 
+void App::draw_polygon(std::span<const Vector2> vertices, Color color, f64 thickness)
+{
+    for (auto i : range(vertices.size() - 1UL))
+    {
+        draw_line_segment(LineSegment{vertices[i], vertices[i + 1UL]}, color, thickness);
+    }
+    draw_line_segment(LineSegment{vertices.back(), vertices.front()}, color, thickness);
+}
+
 void App::draw_vertices(std::span<const Vector2> vertices, VertexMode mode)
 {
     auto converted = sf::VertexArray(static_cast<sf::PrimitiveType>(mode), vertices.size());
