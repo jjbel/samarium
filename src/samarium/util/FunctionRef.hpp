@@ -51,7 +51,6 @@
 /// \exclude
 #define TL_FUNCTION_REF_11_CONSTEXPR
 #else
-/// \exclude
 #define TL_FUNCTION_REF_11_CONSTEXPR constexpr
 #endif
 
@@ -138,6 +137,7 @@ using is_invocable_r = is_invocable_r_impl<std::true_type, R, F, Args...>;
 /// }
 ///
 /// foo([](int i) { return i*2; });
+/// ```
 template <class F> class FunctionRef;
 
 /// Specialization for function types.
@@ -150,8 +150,6 @@ template <class R, class... Args> class FunctionRef<R(Args...)>
     constexpr FunctionRef(const FunctionRef<R(Args...)>& rhs) noexcept = default;
 
     /// Constructs a `FunctionRef` referring to `f`.
-    ///
-    /// \synopsis template <typename F> constexpr FunctionRef(F &&f) noexcept
     template <typename F,
               detail::fnref::enable_if_t<
                   !std::is_same<detail::fnref::decay_t<F>, FunctionRef>::value &&
@@ -171,8 +169,6 @@ template <class R, class... Args> class FunctionRef<R(Args...)>
     operator=(const FunctionRef<R(Args...)>& rhs) noexcept = default;
 
     /// Makes `*this` refer to `f`.
-    ///
-    /// \synopsis template <typename F> constexpr FunctionRef &operator=(F &&f) noexcept;
     template <typename F,
               detail::fnref::enable_if_t<detail::fnref::is_invocable_r<R, F&&, Args...>::value>* =
                   nullptr>

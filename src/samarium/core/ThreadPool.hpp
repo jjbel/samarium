@@ -1,7 +1,7 @@
 #pragma once
 
 /**
- * @file thread_pool.hpp
+ * @file ThreadPool.hpp
  * @author Barak Shoshany (baraksh@gmail.com) (http://baraksh.com)
  * @version 2.0.0
  * @date 2021-08-14
