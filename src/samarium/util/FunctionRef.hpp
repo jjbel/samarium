@@ -14,6 +14,11 @@
 
 #pragma once
 
+
+/**
+ * @cond 
+ */
+
 #define TL_FUNCTION_REF_VERSION_MAJOR 1
 #define TL_FUNCTION_REF_VERSION_MINOR 0
 #define TL_FUNCTION_REF_VERSION_PATCH 0
@@ -139,6 +144,10 @@ using is_invocable_r = is_invocable_r_impl<std::true_type, R, F, Args...>;
 /// foo([](int i) { return i*2; });
 /// ```
 template <class F> class FunctionRef;
+
+/**
+ * @endcond 
+ */
 
 /// Specialization for function types.
 template <class R, class... Args> class FunctionRef<R(Args...)>

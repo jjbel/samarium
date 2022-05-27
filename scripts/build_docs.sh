@@ -5,7 +5,7 @@ set -e
 git checkout gh-pages
 
 mkdir -p build
-doxygen ./docs/Doxyfile
+doxygen ./docs/src/Doxyfile
 
 rm --force ./README.md
 

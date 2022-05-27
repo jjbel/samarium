@@ -1,13 +1,13 @@
 # Doxyfile 1.9.3
 
-PROJECT_NAME           = "Samarium"
+PROJECT_NAME           = Samarium
 PROJECT_NUMBER         = 1.0.0
 PROJECT_BRIEF          = 2-D physics simulation engine written in modern C++
-OUTPUT_DIRECTORY       = ./build/docs
+OUTPUT_DIRECTORY       = build/docs
 FULL_PATH_NAMES        = YES
 GENERATE_LATEX         = NO
 HTML_OUTPUT            = ./
-STRIP_FROM_PATH        = ./src/samarium/
+STRIP_FROM_PATH        = src/samarium
 BUILTIN_STL_SUPPORT    = YES
 INLINE_SIMPLE_STRUCTS  = YES
 LOOKUP_CACHE_SIZE      = 9
@@ -22,22 +22,26 @@ SHOW_USED_FILES        = YES
 QUIET                  = YES
 WARNINGS               = YES
 WARN_IF_UNDOCUMENTED   = NO
-INPUT                  = ./src/samarium
+INPUT                  = docs src/samarium
 FILE_PATTERNS          = *.cpp \
-                         *.hpp
+                         *.hpp \
+						 *.md
 
 RECURSIVE              = YES
-EXCLUDE                =
-USE_MDFILE_AS_MAINPAGE = ./README.md
+EXCLUDE                = src/README.md src/samarium/README.md src/samarium/util/format.hpp
+USE_MDFILE_AS_MAINPAGE = docs/README.md
 SOURCE_BROWSER         = YES
 ALPHABETICAL_INDEX     = YES
-HTML_HEADER            = ./docs/header.html
+HTML_HEADER            = docs/src/header.html
 GENERATE_TREEVIEW      = YES
 
-HTML_EXTRA_STYLESHEET  = ./docs/doxygen-awesome.css
-HTML_EXTRA_FILES       = ./docs/doxygen-awesome-darkmode-toggle.js \
-                         ./docs/doxygen-awesome-fragment-copy-button.js \
-                         ./docs/doxygen-awesome-paragraph-link.js
+HTML_EXTRA_STYLESHEET  = docs/src/doxygen-awesome/style.css \
+						 docs/src/doxygen-awesome/sidebar-only.css \
+						 docs/src/custom.css
+
+HTML_EXTRA_FILES       = docs/src/doxygen-awesome/darkmode-toggle.js \
+                         docs/src/doxygen-awesome/fragment-copy-button.js \
+                         docs/src/doxygen-awesome/paragraph-link.js
 
 HTML_DYNAMIC_MENUS     = YES
 HTML_DYNAMIC_SECTIONS  = NO

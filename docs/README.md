@@ -1,26 +1,24 @@
-# Docs
+> For installation and more, see [the README on Github](https://github.com/strangeQuark1041/samarium#prerequistes)
 
-## For Users
+# Components
 
-View the docs at https://strangequark1041.github.io/samarium/
+## Core
 
-## For  Devs
+### types
 
-Samarium documentation is build using [Doxygen](https://doxygen.nl), which is required to be installed
+For uniformity with using primitives, typedefs are used, for e.g. `i32` for `int` and `f64` for `double`
 
-Build documentation by enabling the cmake flag `"SAMARIUM_BUILD_DOCS"`
+### concepts
 
-```sh
--DSAMARIUM_BUILD_DOCS=ON
-```
+[C++20's concepts](https://en.cppreference.com/w/cpp/language/constraints) are used to both constrain templates, and overload functions based on types
 
-or to build ony the docs and not the library
+Docs: <https://strangequark1041.github.io/samarium/concepts_8hpp.html>
 
-```sh
-cmake --preset=default
-cmake --build build --target docs
-```
-****
-Documentation is built as html in `build/docs`
+### ThreadPool
 
-To view, open [`build/docs/index.html`](build/docs/index.html) in a browser
+A dedicated thread pool object should be in lieu of `std::thread`' s which are expensive to create.
+ThreadPool also has the convenient `parallelize_loop` function, which can massively speed up raw for loops
+
+Main page: <https://github.com/bshoshany/thread-pool>
+
+Docs: <https://strangequark1041.github.io/samarium/classsm_1_1ThreadPool.html>
