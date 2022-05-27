@@ -6,7 +6,6 @@
  */
 
 #include <algorithm>
-#include <execution>
 #include <ranges>
 
 #include "../math/Extents.hpp"

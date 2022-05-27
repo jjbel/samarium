@@ -5,12 +5,11 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
-#include <array>     // for to_array, array
-#include <chrono>    // for filesystem
-#include <execution> // for transform
-#include <fstream>   // for ofstream, basic_ostream::write
-#include <new>       // for bad_alloc
-#include <string>    // for string
+#include <array>   // for to_array, array
+#include <chrono>  // for filesystem
+#include <fstream> // for ofstream, basic_ostream::write
+#include <new>     // for bad_alloc
+#include <string>  // for string
 
 #include "../core/DynArray.hpp"  // for DynArray
 #include "../core/types.hpp"     // for u8

@@ -7,7 +7,6 @@
 #pragma once
 
 #include <algorithm>
-#include <execution>
 #include <iterator>
 #include <span>
 #include <stdexcept>
