@@ -24,8 +24,7 @@ void App::load_pixels()
     const auto sf_image = texture.copyToImage();
     const auto ptr      = sf_image.getPixelsPtr();
 
-    std::copy(std::execution::par_unseq, ptr, ptr + image.size() * 4UL,
-              reinterpret_cast<u8*>(&image[0]));
+    std::copy(ptr, ptr + image.size() * 4UL, reinterpret_cast<u8*>(&image[0]));
 }
 
 void App::store_pixels()

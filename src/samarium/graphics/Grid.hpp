@@ -158,7 +158,7 @@ template <typename T> class Grid
         const auto format_length = Format::length;
         auto fmt_data            = DynArray<std::array<u8, format_length>>(this->size());
 
-        std::transform(std::execution::par_unseq, this->begin(), this->end(), fmt_data.begin(),
+        std::transform(this->begin(), this->end(), fmt_data.begin(),
                        [format](auto color) { return color.get_formatted(format); });
 
         return fmt_data;

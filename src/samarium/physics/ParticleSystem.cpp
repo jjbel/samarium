@@ -18,14 +18,14 @@ namespace sm
 {
 void ParticleSystem::update(f64 time_delta) noexcept
 {
-    std::for_each(std::execution::par_unseq, particles.begin(), particles.end(),
+    std::for_each(particles.begin(), particles.end(),
                   [time_delta](Particle& particle) { particle.update(time_delta); });
 }
 
 
 void ParticleSystem::apply_force(Vector2 force) noexcept
 {
-    std::for_each(std::execution::par_unseq, particles.begin(), particles.end(),
+    std::for_each(particles.begin(), particles.end(),
                   [force](Particle& particle) { particle.apply_force(force); });
 }
 

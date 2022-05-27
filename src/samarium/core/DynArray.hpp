@@ -32,12 +32,12 @@ template <typename T> struct DynArray
 
     explicit DynArray(size_t size_, T init_value) : data(new T[size_]), m_size(size_)
     {
-        std::fill(std::execution::par_unseq, &this->data[0], &this->data[size_], init_value);
+        std::fill(&this->data[0], &this->data[size_], init_value);
     }
 
     DynArray(const DynArray& arr) : data(new T[arr.m_size]), m_size(arr.m_size)
     {
-        std::copy(std::execution::par_unseq, arr.begin(), arr.end(), this->data);
+        std::copy(arr.begin(), arr.end(), this->data);
     }
 
     DynArray(DynArray&& arr) noexcept : m_size(arr.m_size) { std::swap(data, arr.data); }
@@ -45,7 +45,7 @@ template <typename T> struct DynArray
     // Operator overloads
     auto operator=(const DynArray& arr) -> DynArray&
     {
-        std::copy(std::execution::par_unseq, arr.begin(), arr.end(), this->data);
+        std::copy(arr.begin(), arr.end(), this->data);
         return *this;
     }
 
@@ -96,10 +96,7 @@ template <typename T> struct DynArray
 
     auto as_span() noexcept { return std::span{this->begin(), this->m_size}; }
 
-    auto fill(const T& value)
-    {
-        std::fill(std::execution::par_unseq, this->begin(), this->end(), value);
-    }
+    auto fill(const T& value) { std::fill(this->begin(), this->end(), value); }
 
     ~DynArray() { delete[] data; }
 
