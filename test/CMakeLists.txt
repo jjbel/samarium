@@ -79,4 +79,7 @@ if(SAMARIUM_BUILD_EXAMPLES)
     create_test_with_output_dir(
         fourier_series ../examples/fourier_series.cpp "${CMAKE_BINARY_DIR}/examples/"
     )
+    create_test_with_output_dir(
+        prime_spiral ../examples/prime_spiral.cpp "${CMAKE_BINARY_DIR}/examples/"
+    )
 endif()

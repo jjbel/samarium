@@ -6,7 +6,7 @@
  */
 
 static constexpr auto time_scale        = 0.1;   // slow down time
-static constexpr auto count             = 40UL;  // hiw many terms of Fourier series
+static constexpr auto count             = 40UL;  // how many terms of Fourier series
 static constexpr auto integration_steps = 100UL; // how many steps to use while integrating
 
 #include "samarium/graphics/colors.hpp"
