@@ -7,7 +7,7 @@ if(NOT EXISTS ${CMAKE_BINARY_DIR}/conan.lock)
 
     conan_cmake_autodetect(settings)
 
-    message(STATUS "Installing Conan dependenices... (this may take a few minutes)")
+    message(STATUS "Installing Conan dependencies... (this may take a few minutes)")
     conan_cmake_install(
         PATH_OR_REFERENCE
         ${CMAKE_SOURCE_DIR}
