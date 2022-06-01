@@ -18,16 +18,12 @@ class SamariumConan(ConanFile):
     topics = ("c++20", "physics", "2d", "simulation")
 
     settings = "os", "compiler", "build_type", "arch"
-    options = {"shared": [True, False], "fPIC": [True, False]}
-    default_options = {"shared": False, "fPIC": True}
+    options = {"shared": [True, False]}
+    default_options = {"shared": False}
 
     generators = "cmake_find_package"
     requires = "fmt/8.1.1", "sfml/2.5.1" 
     exports_sources = "src/*"
-
-    def config_options(self):
-        if self.settings.os == "Windows":
-            del self.options.fPIC
 
     def configure(self):
         self.options['sfml'].graphics = True
