@@ -67,8 +67,4 @@ struct RandomGenerator
                                            Vector2 sample_region_size,
                                            u64 sample_count = 30UL) -> std::vector<Vector2>;
 };
-
-using Image       = Grid<Color>;
-using ScalarField = Grid<f64>;
-using VectorField = Grid<Vector2>;
 } // namespace sm
