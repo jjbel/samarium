@@ -28,7 +28,7 @@ struct Fluid
 int main()
 {
     auto app = App{{.dims = {1000, 1000}}};
-    auto fluid = Fluid{};
+    // auto fluid = Fluid{};
 
     const auto draw = [&] { app.fill("#06060c"_c); };
     app.run(draw);
