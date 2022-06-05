@@ -31,7 +31,6 @@ set(SAMARIUM_SOURCES
     samarium/graphics/Trail.cpp
     samarium/gui/Keyboard.cpp
     samarium/gui/Mouse.cpp
-    samarium/physics/Car.cpp
     samarium/physics/Spring.cpp
     samarium/physics/Particle.cpp
     samarium/physics/ParticleSystem.cpp
