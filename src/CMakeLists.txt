@@ -20,6 +20,7 @@ list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})
 option(SAMARIUM_USE_CONAN "Use Conan to find dependencies" TRUE)
 if(SAMARIUM_USE_CONAN)
     include(conanbuildinfo)
+    conan_set_find_paths()
 endif()
 
 find_package(
