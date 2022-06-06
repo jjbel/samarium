@@ -17,6 +17,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
 list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})
 
+option(SAMARIUM_USE_CONAN "Use Conan to find dependencies" TRUE)
+if(SAMARIUM_USE_CONAN)
+    include(conanbuildinfo)
+endif()
+
 find_package(
     SFML 2.5
     COMPONENTS system window graphics
