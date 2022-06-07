@@ -17,20 +17,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
 list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})
 
-option(SAMARIUM_USE_CONAN "Use Conan to find dependencies" TRUE)
-if(SAMARIUM_USE_CONAN)
-    include(conanbuildinfo)
-    conan_set_find_paths()
-endif()
-
-find_package(
-    SFML 2.5
-    COMPONENTS system window graphics
-    REQUIRED
-)
-
-find_package(fmt REQUIRED)
-
 set(SAMARIUM_SOURCES
     samarium/app/App.cpp
     samarium/core/ThreadPool.cpp
@@ -70,8 +56,24 @@ if(WARNINGS)
     target_compile_options(samarium PUBLIC ${WARNINGS})
 endif()
 
-target_link_libraries(samarium PRIVATE fmt::fmt)
-target_link_libraries(samarium PRIVATE sfml-graphics)
+option(SAMARIUM_USE_CONAN "Use Conan to find dependencies" TRUE)
+if(SAMARIUM_USE_CONAN)
+    message(STATUS "Using Conan for deps")
+    include(conanbuildinfo)
+    conan_basic_setup(TARGETS)
+    target_link_libraries(samarium PRIVATE CONAN_PKG::fmt)
+    target_link_libraries(samarium PRIVATE CONAN_PKG::sfml)
+else()
+    find_package(
+        SFML 2.5
+        COMPONENTS system window graphics
+        REQUIRED
+    )
+
+    find_package(fmt REQUIRED)
+    target_link_libraries(samarium PRIVATE fmt::fmt)
+    target_link_libraries(samarium PRIVATE sfml-graphics)
+endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND NOT WIN32)
     find_package(TBB REQUIRED)
