@@ -30,12 +30,6 @@ class SamariumConan(ConanFile):
         if self.settings.os == "Windows":
             del self.options.fPIC
 
-    def configure(self):
-        self.options['sfml'].graphics = True
-        self.options['sfml'].window = True
-        self.options['sfml'].audio = False
-        self.options['sfml'].network = False
-
     def build(self):
         cmake = CMake(self)  # get reference to cmake executable
         cmake.configure(source_folder="src")  # run cmake
