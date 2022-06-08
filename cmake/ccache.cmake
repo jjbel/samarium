@@ -4,7 +4,7 @@
 
 # https://www.reddit.com/r/cpp/comments/t2yoay/comment/hyrgm63/
 
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.15)
 
 option(USE_CCACHE "Use Ccache" TRUE)
 if(USE_CCACHE)

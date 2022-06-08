@@ -2,7 +2,7 @@
 # <https://opensource.org/licenses/MIT/> or LICENSE.md Project homepage:
 # <https://github.com/strangeQuark1041/samarium>
 
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.15)
 project(samarium_dev LANGUAGES CXX)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")

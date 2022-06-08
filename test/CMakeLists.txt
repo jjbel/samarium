@@ -2,7 +2,7 @@
 # <https://opensource.org/licenses/MIT/> or LICENSE.md Project homepage:
 # <https://github.com/strangeQuark1041/samarium>
 
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.15)
 project(samarium_tests LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)

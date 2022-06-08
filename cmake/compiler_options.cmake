@@ -9,7 +9,7 @@
 #
 # https://github.com/lefticus/cppbestpractices/blob/master/02-Use_the_Tools_Available.md
 
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.15)
 
 function(set_compiler_options)
     option(OPTIONS_AS_ERRORS "Treat compiler warnings as errors" OFF)

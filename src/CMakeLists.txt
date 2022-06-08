@@ -2,7 +2,7 @@
 # <https://opensource.org/licenses/MIT/> or LICENSE.md Project homepage:
 # <https://github.com/strangeQuark1041/samarium>
 
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.15)
 project(
     samarium
     VERSION 1.0.0
@@ -75,11 +75,8 @@ else()
     target_link_libraries(samarium PRIVATE sfml-graphics)
 endif()
 
-# if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND NOT WIN32)
-#     find_package(TBB REQUIRED)
-#     message(STATUS "Using TBB")
-#     target_link_libraries(samarium PUBLIC TBB::tbb)
-# endif()
+# if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND NOT WIN32) find_package(TBB REQUIRED)
+# message(STATUS "Using TBB") target_link_libraries(samarium PUBLIC TBB::tbb) endif()
 
 install(
     TARGETS samarium

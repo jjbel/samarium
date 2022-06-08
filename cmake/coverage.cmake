@@ -2,7 +2,7 @@
 # <https://opensource.org/licenses/MIT/> or LICENSE.md Project homepage:
 # <https://github.com/strangeQuark1041/samarium>
 
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.15)
 
 function(generate_coverage target)
     if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND GENERATE_COVERAGE)
