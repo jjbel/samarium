@@ -50,4 +50,22 @@ concept Range = requires(T&& t)
     std::cend(t);
     std::size(t);
 };
+
+template <class Container, class Value>
+concept Iterable = requires(Container&& t)
+{
+    {
+        *std::begin(t)
+        } -> std::convertible_to<Value>;
+    {
+        *std::end(t)
+        } -> std::convertible_to<Value>;
+    {
+        *std::cbegin(t)
+        } -> std::convertible_to<Value>;
+    {
+        *std::cend(t)
+        } -> std::convertible_to<Value>;
+    std::size(t);
+};
 } // namespace sm::concepts
