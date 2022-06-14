@@ -39,7 +39,12 @@ enum class VertexMode
     Quads
 };
 
-
+/**
+ * @brief               App encapsulates an event loop, rendering and user input
+ * @code
+ * class App {};
+ * @endcode
+ */
 class App
 {
     sf::RenderWindow sf_render_window;
