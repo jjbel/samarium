@@ -22,3 +22,17 @@ ThreadPool also has the convenient `parallelize_loop` function, which can massiv
 Main page: <https://github.com/bshoshany/thread-pool>
 
 Docs: <https://strangequark1041.github.io/samarium/classsm_1_1ThreadPool.html>
+
+## Math
+
+### math
+
+Scalar functions and core constants
+
+Docs: <https://strangequark1041.github.io/samarium/namespacesm_1_1math.html>
+
+### Vector2
+
+One of the most frequently-used structs, representing a Euclidean 2D vector
+
+Docs: <https://strangequark1041.github.io/samarium/structsm_1_1Vector2__t.html>

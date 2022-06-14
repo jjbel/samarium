@@ -5,12 +5,12 @@ html {
     --font-family-monospace: 'Fira Mono', monospace;
 
     --page-font-size: 16.5px;
-    --navigation-font-size: 16px;
+    --navigation-font-size: 20px;
     --code-font-size: 17px;
     --title-font-size: 22px;
 }
 
 html.dark-mode {
     --page-background-color: #111213;
-    --side-nav-background: #0c0812;
+    --side-nav-background: #0c0c0d;
 }

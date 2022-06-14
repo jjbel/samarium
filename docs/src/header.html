@@ -15,43 +15,33 @@
         <link href="$relpath^tabs.css" rel="stylesheet" type="text/css" />
         <!--BEGIN DISABLE_INDEX-->
         <!--BEGIN FULL_SIDEBAR-->
-        <script type="text/javascript">
+        <script>
             var page_layout = 1;
         </script>
         <!--END FULL_SIDEBAR-->
         <!--END DISABLE_INDEX-->
-        <script type="text/javascript" src="$relpath^jquery.js"></script>
-        <script type="text/javascript" src="$relpath^dynsections.js"></script>
+        <script src="$relpath^jquery.js"></script>
+        <script src="$relpath^dynsections.js"></script>
         $treeview $search $mathjax
         <link href="$relpath^$stylesheet" rel="stylesheet" type="text/css" />
         $extrastylesheet
+
+        <script src="darkmode-toggle.js"></script>
+        <script>
+            DoxygenAwesomeDarkModeToggle.enableDarkMode(true);
+            DoxygenAwesomeDarkModeToggle.init();
+        </script>
+
+        <script src="fragment-copy-button.js"></script>
+        <script>
+            DoxygenAwesomeFragmentCopyButton.init();
+        </script>
+
+        <script src="paragraph-link.js"></script>
+        <script>
+            DoxygenAwesomeParagraphLink.init();
+        </script>
     </head>
-
-    <script
-        type="text/javascript"
-        src="$relpath^doxygen-awesome-darkmode-toggle.js"
-    ></script>
-    <script type="text/javascript">
-        DoxygenAwesomeDarkModeToggle.enableDarkMode(true);
-        DoxygenAwesomeDarkModeToggle.init();
-    </script>
-
-    <script
-        type="text/javascript"
-        src="$relpath^doxygen-awesome-fragment-copy-button.js"
-    ></script>
-    <script type="text/javascript">
-        DoxygenAwesomeFragmentCopyButton.init();
-    </script>
-
-    <script
-        type="text/javascript"
-        src="$relpath^doxygen-awesome-paragraph-link.js"
-    ></script>
-    <script type="text/javascript">
-        DoxygenAwesomeParagraphLink.init();
-    </script>
-
     <body>
         <!--BEGIN DISABLE_INDEX-->
         <!--BEGIN FULL_SIDEBAR-->

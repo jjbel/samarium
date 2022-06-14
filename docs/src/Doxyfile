@@ -35,13 +35,14 @@ ALPHABETICAL_INDEX     = YES
 HTML_HEADER            = docs/src/header.html
 GENERATE_TREEVIEW      = YES
 
-HTML_EXTRA_STYLESHEET  = docs/src/doxygen-awesome/style.css \
-						 docs/src/doxygen-awesome/sidebar-only.css \
-						 docs/src/custom.css
+HTML_EXTRA_STYLESHEET  += docs/src/doxygen-awesome/style.css
+HTML_EXTRA_STYLESHEET  += docs/src/doxygen-awesome/sidebar-only.css
+HTML_EXTRA_STYLESHEET  += docs/src/doxygen-awesome/sidebar-only-darkmode-toggle.css
+HTML_EXTRA_STYLESHEET  += docs/src/custom.css
 
-HTML_EXTRA_FILES       = docs/src/doxygen-awesome/darkmode-toggle.js \
-                         docs/src/doxygen-awesome/fragment-copy-button.js \
-                         docs/src/doxygen-awesome/paragraph-link.js
+HTML_EXTRA_FILES       += docs/src/doxygen-awesome/darkmode-toggle.js
+HTML_EXTRA_FILES       += docs/src/doxygen-awesome/fragment-copy-button.js
+HTML_EXTRA_FILES       += docs/src/doxygen-awesome/paragraph-link.js
 
 HTML_DYNAMIC_MENUS     = YES
 HTML_DYNAMIC_SECTIONS  = NO
