@@ -10,8 +10,10 @@
 #include <compare>
 #include <functional>
 #include <iterator>
+#include <ranges>
 
-#include "../core/DynArray.hpp"
+#include "fmt/format.h"
+
 #include "../math/BoundingBox.hpp"
 #include "../math/Extents.hpp"
 
@@ -151,17 +153,15 @@ template <typename T> class Grid
 
     auto fill(const T& value) { this->data.fill(value); }
 
-    template <concepts::ColorFormat Format>
-    [[nodiscard]] auto formatted_data(Format format) const
-        -> DynArray<std::array<u8, Format::length>>
+    template <concepts::ColorFormat Format> [[nodiscard]] auto formatted_data(Format format) const
     {
         const auto format_length = Format::length;
-        auto fmt_data            = DynArray<std::array<u8, format_length>>(this->size());
+        auto output              = std::vector<std::array<u8, format_length>>(this->size());
+        const auto converter     = [format](auto color) { return color.get_formatted(format); };
 
-        std::transform(this->begin(), this->end(), fmt_data.begin(),
-                       [format](auto color) { return color.get_formatted(format); });
+        std::ranges::copy(std::views::transform(this->data, converter), output.begin());
 
-        return fmt_data;
+        return output;
     }
 
     [[nodiscard]] auto upscale(u64 upscale_factor) const

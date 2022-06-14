@@ -99,7 +99,7 @@ class App
 
     auto viewport_box() const -> std::array<LineSegment, 4>;
 
-    auto get_image() const -> Image;
+    auto get_image() -> Image;
 
     void fill(Color color);
 

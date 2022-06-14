@@ -11,7 +11,6 @@
 #include <new>     // for bad_alloc
 #include <string>  // for string
 
-#include "../core/DynArray.hpp"  // for DynArray
 #include "../core/types.hpp"     // for u8
 #include "../graphics/Color.hpp" // for BGR_t, bgr
 #include "../graphics/Image.hpp" // for Image
@@ -30,7 +29,7 @@ void export_tga(const Image& image, const std::string& file_path)
 
     const auto data = image.formatted_data(sm::bgr);
 
-    std::ofstream{file_path}
+    std::ofstream(file_path)
         .write(reinterpret_cast<const char*>(&tga_header[0]), 18)
         .write(reinterpret_cast<const char*>(&data[0]),
                static_cast<std::streamsize>(data.size() * data[0].size()));

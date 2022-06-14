@@ -82,7 +82,11 @@ auto App::viewport_box() const -> std::array<LineSegment, 4>
         this->transform.apply_inverse(LineSegment{{0.0, f64_dims.y}, {f64_dims.x, f64_dims.y}})};
 }
 
-auto App::get_image() const -> Image { return this->image; }
+auto App::get_image() -> Image
+{
+    this->load_pixels();
+    return this->image;
+}
 
 void App::draw(Circle circle, Color color)
 {
