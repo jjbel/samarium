@@ -145,17 +145,14 @@ int main()
                 Extents<Vector2>{levels[current_iter][i], levels[(current_iter + 1UL) % order][i]});
         }
 
-        const auto mapper = [&](Vector2 vec) { return (vec) * static_cast<f64>(window_width); };
+        const auto mapper = [&](Vector2 vec) { return vec * static_cast<f64>(window_width); };
 
         for (auto i : range(path.size() - 1))
         {
             app.draw_line_segment({mapper(path[i]), mapper(path[i + 1])}, colors::aliceblue, 1);
         }
-
-        print(current_iter);
     };
 
-    app.transform = {{0, 0}, {1, 1}};
-
+    app.transform = {.pos{0, 0}, .scale{1, 1}};
     app.run(draw);
 }
