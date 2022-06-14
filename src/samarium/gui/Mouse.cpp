@@ -9,12 +9,12 @@
 
 namespace sm
 {
-Vector2 Mouse::vel() const { return this->pos.now - this->pos.prev; }
+Vector2 Mouse::vel() const { return this->current_pos - this->old_pos; }
 
 void Mouse::update(const sf::RenderWindow& window)
 {
-    this->pos.prev = this->pos.now;
-    this->pos.now  = sfml(sf::Mouse::getPosition(window)).as<f64>();
+    this->old_pos = this->current_pos;
+    this->current_pos  = sfml(sf::Mouse::getPosition(window)).as<f64>();
     this->left     = sf::Mouse::isButtonPressed(sf::Mouse::Left);
     this->middle   = sf::Mouse::isButtonPressed(sf::Mouse::Middle);
     this->right    = sf::Mouse::isButtonPressed(sf::Mouse::Right);

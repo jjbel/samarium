@@ -52,11 +52,11 @@ int main()
 
     const auto update = [&]
     {
-        if (app.mouse.left) { app.transform.pos += app.mouse.pos.now - app.mouse.pos.prev; }
+        if (app.mouse.left) { app.transform.pos += app.mouse.current_pos - app.mouse.old_pos; }
 
         const auto scale = 1.0 + 0.1 * app.mouse.scroll_amount;
         app.transform.scale *= Vector2::combine(scale);
-        const auto pos    = app.mouse.pos.now;
+        const auto pos    = app.mouse.current_pos;
         app.transform.pos = pos + scale * (app.transform.pos - pos);
         iterations        = static_cast<u64>(3 * std::log(app.transform.scale.x) + 9);
 

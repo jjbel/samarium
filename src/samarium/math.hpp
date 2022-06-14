@@ -7,9 +7,10 @@
 
 #pragma once
 
-#include "./math/Transform.hpp"
-#include "./math/Vector2.hpp"
-#include "./math/complex.hpp"
-#include "./math/math.hpp"
-#include "./math/sample.hpp"
-#include "./math/vector_math.hpp"
+#include "math/Dual.hpp"
+#include "math/Transform.hpp"
+#include "math/Vector2.hpp"
+#include "math/complex.hpp"
+#include "math/math.hpp"
+#include "math/sample.hpp"
+#include "math/vector_math.hpp"

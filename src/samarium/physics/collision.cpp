@@ -55,41 +55,28 @@ void collide(Particle& p1, Particle& p2)
     }
 }
 
-[[nodiscard]] auto did_collide(const Particle& now, const Particle& prev, const LineSegment& l)
-    -> std::optional<Vector2>
-{
-    const auto proj = math::project(prev.pos, l);
-    const auto radius_shift =
-        (proj - prev.pos)
-            .with_length(prev.radius); // keep track of the point on the circumference of
-                                       // prev closest to l, which will cross l first
-
-    return math::clamped_intersection({prev.pos + radius_shift, now.pos + radius_shift}, l);
-}
-
-void collide(Dual<Particle>& p, const LineSegment& l)
+void collide(Particle& current, const Particle& old, const LineSegment& l)
 {
     const auto vec = l.vector();
 
-    const auto proj = math::project(p.prev.pos, l);
+    const auto proj = math::project(old.pos, l);
 
-    const auto normal_vector = p.now.pos - proj;
+    const auto normal_vector = current.pos - proj;
 
     const auto radius_shift =
-        (proj - p.prev.pos)
-            .with_length(p.prev.radius); // keep track of the point on the circumference of
-                                         // prev closest to l, which will cross l first
+        (proj - old.pos).with_length(old.radius); // keep track of the point on the circumference of
+                                                  // prev closest to l, which will cross l first
 
     const auto possible_collision =
-        math::clamped_intersection({p.prev.pos + radius_shift, p.now.pos + radius_shift}, l);
+        math::clamped_intersection({old.pos + radius_shift, current.pos + radius_shift}, l);
 
     if (!possible_collision) { return; }
 
     const auto point = *possible_collision;
 
-    auto leftover_vel = p.now.pos + radius_shift - point;
+    auto leftover_vel = current.pos + radius_shift - point;
     leftover_vel.reflect(vec);
-    p.now.vel.reflect(vec);
-    p.now.pos = point + leftover_vel - radius_shift + normal_vector.with_length(0.05);
+    current.vel.reflect(vec);
+    current.pos = point + leftover_vel - radius_shift + normal_vector.with_length(0.05);
 }
 } // namespace sm::phys

@@ -37,12 +37,10 @@ int main()
         const auto force  = spring.with_length(spring_constant * (rest_length - spring.length()));
         p1.apply_force(force);
         p1.update();
-        auto dual = Dual<Particle>{p1, p2};
-        phys::collide(dual, l);
 
-        for (auto&& i : viewport_box) { phys::collide(dual, i); }
+        phys::collide(p1, p2, l);
 
-        std::tie(p1, p2) = std::tuple{dual.now, dual.prev};
+        for (auto&& i : viewport_box) { phys::collide(p1, p2, i); }
 
         app.draw_line_segment(l, "#427bf5"_c, 0.4);
         app.draw_line_segment(LineSegment{anchor, p1.pos}, "#c471ed"_c, .6);

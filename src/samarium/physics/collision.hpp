@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include "../math/Dual.hpp"
 #include "../math/Vector2.hpp"
 #include "../math/vector_math.hpp"
 
@@ -19,8 +18,5 @@ namespace sm::phys
 
 void collide(Particle& p1, Particle& p2);
 
-[[nodiscard]] auto did_collide(const Particle& now, const Particle& prev, const LineSegment& l)
-    -> std::optional<Vector2>;
-
-void collide(Dual<Particle>& p, const LineSegment& l);
+void collide(Particle& current, const Particle& old, const LineSegment& l);
 } // namespace sm::phys

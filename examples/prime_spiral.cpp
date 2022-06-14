@@ -46,12 +46,13 @@ int main()
         app.fill("#06060c"_c);
         if (app.mouse.left)
         {
-            app.transform.pos += app.mouse.pos.now - app.mouse.pos.prev;
+            app.transform.pos += app.mouse.current_pos - app.mouse.old_pos;
         } // translate
 
         const auto factor = 1.0 + 0.1 * app.mouse.scroll_amount;
         app.transform.scale *= Vector2::combine(factor);
-        app.transform.pos = app.mouse.pos.now + factor * (app.transform.pos - app.mouse.pos.now);
+        app.transform.pos =
+            app.mouse.current_pos + factor * (app.transform.pos - app.mouse.current_pos);
 
         for (auto i : numbers)
         {

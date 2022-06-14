@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include "../math/Dual.hpp"
 #include "../math/Transform.hpp"
 
 #include "sfml.hpp"
@@ -22,7 +21,8 @@ struct Mouse
         Right
     };
 
-    Dual<Vector2> pos;
+    Vector2 current_pos;
+    Vector2 old_pos;
     f64 scroll_amount{};
     bool left;
     bool middle;

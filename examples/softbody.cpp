@@ -98,7 +98,7 @@ int main()
 
         for (auto&& particle : particles)
         {
-            const auto mouse_pos = app.transform.apply_inverse(app.mouse.pos.now);
+            const auto mouse_pos = app.transform.apply_inverse(app.mouse.current_pos);
 
             particle->apply_force(particle->mass * params.gravity);
 
@@ -117,7 +117,7 @@ int main()
                 phys::collide(particle.now, other_particle.now);
             }
 
-            for (auto&& wall : viewport_box) { phys::collide(particle, wall); }
+            for (auto&& wall : viewport_box) { phys::collide(particle.now, particle.prev, wall); }
         }
     };
 
