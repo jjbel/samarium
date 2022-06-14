@@ -120,9 +120,16 @@ class App
                        Color color   = Color{255, 255, 255},
                        f64 thickness = 1.0);
 
+    /**
+     * @brief               Draw a polygon from points
+     *
+     * @param  vertices     Input points
+     * @param  color
+     * @param  thickness
+     */
     void draw_polygon(std::span<const Vector2> vertices,
-                       Color color   = Color{255, 255, 255},
-                       f64 thickness = 1.0);
+                      Color color   = Color{255, 255, 255},
+                      f64 thickness = 1.0);
 
     void draw(Trail trail, Color color = Color{255, 255, 255}, f64 thickness = 1.0);
 
