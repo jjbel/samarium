@@ -473,6 +473,25 @@ template <typename T, typename Output = T>
     };
 }
 
+
+/**
+ * @brief             Interpolate between points
+ *
+ * @param  points     Input points
+ * @return Vector2
+ */
+template <typename T> auto lerp_points(const T& points) requires concepts::Iterable<T, Vector2>
+{
+    return [&](f64 lerp_factor)
+    {
+        const auto length = static_cast<f64>(points.size());
+        const auto a      = points.at(static_cast<u64>(lerp_factor * length));
+        const auto b      = points.at(static_cast<u64>(lerp_factor * length + 1.0));
+        const auto shifted_factor =
+            (lerp_factor * length - std::floor(lerp_factor * length)) / length;
+        return lerp(shifted_factor, Extents{a, b});
+    };
+}
 } // namespace sm::interp
 
 namespace sm::concepts
