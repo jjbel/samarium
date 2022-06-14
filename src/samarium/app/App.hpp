@@ -41,9 +41,6 @@ enum class VertexMode
 
 /**
  * @brief               App encapsulates an event loop, rendering and user input
- * @code
- * class App {};
- * @endcode
  */
 class App
 {
@@ -51,7 +48,6 @@ class App
     sf::Texture texture;
     Stopwatch watch{};
     u64 target_framerate;
-    Image image;
 
   public:
     struct Settings
@@ -61,6 +57,7 @@ class App
         uint32_t framerate{64};
     };
 
+    Image image;
     ThreadPool thread_pool{};
     Transform transform;
     u64 frame_counter{};
@@ -86,26 +83,66 @@ class App
                          { sf_render_window.close(); });
     }
 
+    /**
+     * @brief               Load the current GPU pixels to the image to draw on manually
+     */
     void load_pixels();
 
+    /**
+     * @brief               Store the current pixels of the image in the GPU
+     */
     void store_pixels();
 
+    /**
+     * @brief               Display the current contents of the screen, update `watch` and `frame_counter`
+     */
     void display();
 
+    /**
+     * @brief               Is the window currently open
+     * 
+     * @return true         
+     * @return false        
+     */
     auto is_open() const -> bool;
 
+    /**
+     * @brief               Load the current `keymap` and `mouse` events
+     */
     void get_input();
 
+    /**
+     * @brief               Dimensions of the viewport in screenspace coordinates
+     */
     auto dims() const -> Dimensions;
 
+    /**
+     * @brief               The `Dimensions` of the viewport with `transform` applied
+     */
     auto transformed_dims() const -> Vector2;
 
+    /**
+     * @brief               The `BoundingBox` formed by the viewport
+     * 
+     * @return BoundingBox<size_t> 
+     */
     auto bounding_box() const -> BoundingBox<size_t>;
 
+    /**
+     * @brief               The 4 `LineSegment`'s forming the viewportm, in worldspace coordinates
+     */
     auto viewport_box() const -> std::array<LineSegment, 4>;
 
+    /**
+     * @brief               Get a copy of the pixels currently on the GPU
+     */
     auto get_image() -> Image;
 
+    /**
+     * @brief               Fill the entire screen with `color`
+     * 
+     * @param  color
+     */
     void fill(Color color);
 
     void draw(Circle circle, Color color);
@@ -136,12 +173,31 @@ class App
                       Color color   = Color{255, 255, 255},
                       f64 thickness = 1.0);
 
+    /**
+     * @brief               Draw a Trail
+     * 
+     * @param  trail        
+     * @param  color        
+     * @param  thickness    
+     */
     void draw(Trail trail, Color color = Color{255, 255, 255}, f64 thickness = 1.0);
 
     void draw_vertices(std::span<const Vector2> vertices, VertexMode mode = VertexMode::LineStrip);
 
-    void run(FunctionRef<void(f64)> update, FunctionRef<void()> draw, u64 substeps = 1UL);
-
+    /**
+     * @brief               Start the event loop and call func every iteration
+     * 
+     * @param  func         Draw/Update function
+     */
     void run(FunctionRef<void()> func);
+
+    /**
+     * @brief               Start the event loop, call `update` substeps times, `draw` once
+     * 
+     * @param  update       Called `substeps` times
+     * @param  draw         
+     * @param  substeps     
+     */
+    void run(FunctionRef<void(f64)> update, FunctionRef<void()> draw, u64 substeps = 1UL);
 };
 } // namespace sm
