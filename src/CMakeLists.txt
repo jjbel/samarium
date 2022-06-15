@@ -58,7 +58,7 @@ endif()
 
 option(SAMARIUM_USE_CONAN "Use Conan to find dependencies" TRUE)
 if(SAMARIUM_USE_CONAN)
-    message(STATUS "Using Conan for deps")
+    message(STATUS "src/CMakeLists.txt: Using Conan for deps")
     include(conanbuildinfo)
     conan_basic_setup(TARGETS)
     target_link_libraries(samarium PRIVATE CONAN_PKG::fmt)
@@ -72,7 +72,7 @@ else()
 
     find_package(fmt REQUIRED)
     target_link_libraries(samarium PRIVATE fmt::fmt)
-    target_link_libraries(samarium PRIVATE sfml-graphics)
+    target_link_libraries(samarium PRIVATE sfml-system sfml-window sfml-graphics)
 endif()
 
 # if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND NOT WIN32) find_package(TBB REQUIRED)
