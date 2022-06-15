@@ -9,6 +9,7 @@
 
 #include <compare>
 #include <functional>
+#include <algorithm>
 #include <iterator>
 #include <ranges>
 
