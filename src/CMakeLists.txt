@@ -32,6 +32,7 @@ set(SAMARIUM_SOURCES
     samarium/util/file.cpp
     samarium/util/ostream.cpp
     samarium/util/util.cpp
+    samarium/util/PerlinNoise.cpp
 )
 
 add_library(samarium ${SAMARIUM_SOURCES})
