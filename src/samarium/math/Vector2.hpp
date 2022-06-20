@@ -182,8 +182,8 @@ template <concepts::Number T> struct Vector2_t
     template <concepts::Number U> [[nodiscard]] constexpr auto clamped_to(Vector2_t<U> box) const
     {
         return Vector2_t<T>{
-            std::min(std::max(this->x, static_cast<T>(0)), static_cast<T>(box.x)),
-            std::min(std::max(this->y, static_cast<T>(0)), static_cast<T>(box.y)),
+            math::min(math::max(this->x, static_cast<T>(0)), static_cast<T>(box.x)),
+            math::min(math::max(this->y, static_cast<T>(0)), static_cast<T>(box.y)),
         };
     }
 
