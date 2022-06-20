@@ -45,6 +45,7 @@ jobs:
           echo "conan: $(conan    --version)\n"
           echo "cmake: $(cmake    --version)\n"
           echo "clang: $(clang++  --version)\n"
+          echo "gcc:   $(g++  --version)\n"
           echo "clang: $(which clang++)\n"
           echo "gcc:   $(which g++)\n"
           echo "libc++:$(ldconfig -p | grep libc++)\n"
