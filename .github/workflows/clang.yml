@@ -15,7 +15,7 @@ env:
 
 jobs:
   clang:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
