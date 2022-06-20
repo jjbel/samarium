@@ -41,6 +41,7 @@ jobs:
 
       - name: Check Tool Versions
         run: |
+          printf "#include <ciso646>\nint main () {}" | clang -E -stdlib=libc++ -x c++ -dM - | grep _LIBCPP_VERSION
           echo "conan: $(conan    --version)\n"
           echo "cmake: $(cmake    --version)\n"
           echo "clang: $(clang++  --version)\n"
