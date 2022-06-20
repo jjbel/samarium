@@ -15,10 +15,9 @@ find_package(
     SFML
     COMPONENTS system window graphics
     REQUIRED
+    QUIET
 )
-find_package(fmt REQUIRED)
-
-# if(NOT WIN32) find_package(TBB REQUIRED) endif()
+find_package(fmt REQUIRED QUIET)
 
 function(create_test TEST_NAME TEST_SOURCES)
     message(STATUS "Creating test: ${TEST_NAME}, with sources: ${TEST_SOURCES}")

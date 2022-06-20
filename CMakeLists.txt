@@ -9,10 +9,10 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 include(modern_project_structure)
 include(ubsan)
-include(conan_install)
 include(ccache)
 include(compiler_options)
 include(docs)
+include(conan_install)
 
 add_subdirectory(src)
 
