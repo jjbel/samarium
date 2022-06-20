@@ -21,12 +21,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install GCC
-        uses: egor-tensin/setup-gcc@v1
-        with:
-          version: 11
-          platform: x64
-
       - name: Install Clang
         uses: egor-tensin/setup-clang@v1
 
@@ -48,14 +42,14 @@ jobs:
       - name: Check Tool Versions
         run: |
           printf "#include <ciso646>\nint main () {}" | clang -E -stdlib=libc++ -x c++ -dM - | grep _LIBCPP_VERSION
-          echo "conan: $(conan    --version)\n"
-          echo "cmake: $(cmake    --version)\n"
-          echo "clang: $(clang++  --version)\n"
-          echo "gcc:   $(g++  --version)\n"
-          echo "clang: $(which clang++)\n"
-          echo "gcc:   $(which g++)\n"
-          echo "libc++:$(ldconfig -p | grep libc++)\n"
-          echo "libstdc++:$(ldconfig -p | grep libstdc++)\n"
+          printf "conan: $(conan    --version)\n"
+          printf "cmake: $(cmake    --version)\n"
+          printf "clang: $(clang++  --version)\n"
+          printf "gcc:   $(g++  --version)\n"
+          printf "clang: $(which clang++)\n"
+          printf "gcc:   $(which g++)\n"
+          printf "libc++:$(ldconfig -p | grep libc++)\n"
+          printf "libstdc++:$(ldconfig -p | grep libstdc++)\n"
 
       - name: Configure Conan
         run: |

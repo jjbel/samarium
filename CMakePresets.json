@@ -27,7 +27,8 @@
             "inherits": "ninja",
             "cacheVariables": {
                 "CMAKE_CXX_COMPILER": "g++",
-                "CONAN_COMPILER": "gcc"
+                "CONAN_COMPILER": "gcc",
+                "CONAN_LIBCXX": "libc++"
             }
         },
         {
