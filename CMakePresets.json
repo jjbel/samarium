@@ -28,7 +28,7 @@
             "cacheVariables": {
                 "CMAKE_CXX_COMPILER": "g++",
                 "CONAN_COMPILER": "gcc",
-                "CONAN_LIBCXX": "libc++"
+                "CONAN_LIBCXX": "libstdc++11"
             }
         },
         {
@@ -36,7 +36,8 @@
             "inherits": "ninja",
             "cacheVariables": {
                 "CMAKE_CXX_COMPILER": "clang++",
-                "CONAN_COMPILER": "clang"
+                "CONAN_COMPILER": "clang",
+                "CONAN_LIBCXX": "libstdc++"
             }
         },
         {
