@@ -8,12 +8,10 @@
 #pragma once
 
 #include "SFML/Graphics.hpp"
-#include "SFML/Graphics/Color.hpp"
 #include "SFML/Window.hpp"
 
 #include "../graphics/Color.hpp"
 #include "../math/Vector2.hpp"
-#include <SFML/System/Vector2.hpp>
 
 namespace sm
 {
