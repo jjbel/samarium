@@ -76,9 +76,6 @@ else()
     target_link_libraries(samarium PRIVATE sfml-system sfml-window sfml-graphics)
 endif()
 
-# if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND NOT WIN32) find_package(TBB REQUIRED)
-# message(STATUS "Using TBB") target_link_libraries(samarium PUBLIC TBB::tbb) endif()
-
 install(
     TARGETS samarium
     RUNTIME DESTINATION bin
@@ -87,7 +84,7 @@ install(
 )
 
 install(
-    DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/src/samarium" # source directory
+    DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/samarium" # source directory
     DESTINATION "include" # target directory
     FILES_MATCHING # install only matched files
     PATTERN "*.hpp" # select header files
