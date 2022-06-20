@@ -41,9 +41,13 @@ jobs:
 
       - name: Check Tool Versions
         run: |
-          conan    --version
-          cmake    --version
-          clang++  --version
+          echo "conan: $(conan    --version)\n"
+          echo "cmake: $(cmake    --version)\n"
+          echo "clang: $(clang++  --version)\n"
+          echo "clang: $(which clang++)\n"
+          echo "gcc:   $(which g++)\n"
+          echo "libc++:$(ldconfig -p | grep libc++)\n"
+          echo "libstdc++:$(ldconfig -p | grep libstdc++)\n"
 
       - name: Configure Conan
         run: |
