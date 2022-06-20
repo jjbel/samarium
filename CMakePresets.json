@@ -26,14 +26,16 @@
             "name": "gcc",
             "inherits": "ninja",
             "cacheVariables": {
-                "CMAKE_CXX_COMPILER": "g++"
+                "CMAKE_CXX_COMPILER": "g++",
+                "CONAN_COMPILER": "gcc"
             }
         },
         {
             "name": "clang",
             "inherits": "ninja",
             "cacheVariables": {
-                "CMAKE_CXX_COMPILER": "clang++"
+                "CMAKE_CXX_COMPILER": "clang++",
+                "CONAN_COMPILER": "clang"
             }
         },
         {
