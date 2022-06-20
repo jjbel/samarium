@@ -5,10 +5,11 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
-#include <algorithm>
 #include <cmath>
-#include <numeric>
 #include <random>
+
+#include "range/v3/algorithm/shuffle.hpp"
+#include "range/v3/numeric/iota.hpp"
 
 #include "PerlinNoise.hpp"
 
@@ -40,13 +41,13 @@ PerlinNoise::PerlinNoise(u32 seed)
     p.resize(256);
 
     // Fill p with values from 0 to 255
-    std::iota(p.begin(), p.end(), 0);
+    ranges::iota(p, 0);
 
     // Initialize a random engine with seed
-    std::default_random_engine engine(seed);
+    auto engine = std::default_random_engine(seed);
 
     // Suffle  using the above random engine
-    std::ranges::shuffle(p, engine);
+    ranges::shuffle(p, engine);
 
     // Duplicate the permutation vector
     p.insert(p.end(), p.begin(), p.end());

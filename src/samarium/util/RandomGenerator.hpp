@@ -7,11 +7,12 @@
 
 #pragma once
 
-#include <algorithm>
 #include <initializer_list>
 #include <vector>
 
-#include "../graphics/Image.hpp"
+#include "range/v3/algorithm/generate.hpp"
+
+#include "../graphics/Grid.hpp"
 #include "../math/BoundingBox.hpp"
 
 namespace sm
@@ -29,7 +30,7 @@ struct RandomGenerator
     explicit RandomGenerator(u64 cache_size = 1024UL, u64 new_state = 69, u64 new_inc = 69) noexcept
         : cache(cache_size), state{new_state * magic_number + (new_inc | 1)}, inc{new_inc}
     {
-        std::ranges::generate(cache, [this] { return this->next_scaled(); });
+        ranges::generate(cache, [this] { return this->next_scaled(); });
     }
 
     void resize(u64 new_size);
@@ -53,7 +54,7 @@ struct RandomGenerator
                                     Extents<f64> angle_range = {0.0, 2 * math::pi}) noexcept
         -> Vector2;
 
-    [[nodiscard]] auto choice(const concepts::Range auto& iterable)
+    [[nodiscard]] auto choice(const ranges::range auto& iterable)
     {
         return *(iterable.begin() + static_cast<u64>(this->random() * iterable.size()));
     }
@@ -66,5 +67,7 @@ struct RandomGenerator
     [[nodiscard]] auto poisson_disc_points(f64 radius,
                                            Vector2 sample_region_size,
                                            u64 sample_count = 30UL) -> std::vector<Vector2>;
+
+    [[nodiscard]] auto boolean(f64 threshold = 0.5) -> bool;
 };
 } // namespace sm

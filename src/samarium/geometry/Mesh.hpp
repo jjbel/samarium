@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include <algorithm>
-#include <ranges>
 #include <vector>
+
+#include "range/v3/view/transform.hpp"
 
 #include "../math/shapes.hpp"
 #include "../math/vector_math.hpp"
@@ -31,10 +31,10 @@ struct Mesh
 
     auto edges_view()
     {
-        // const auto get_line_segment = [this](const auto& edge) {
-        //     return LineSegment{vertices[edge.v1], vertices[edge.v2]};
-        // };
-        // return std::views::transform(edges, get_line_segment);
+        const auto get_line_segment = [this](const auto& edge) {
+            return LineSegment{vertices[edge.v1], vertices[edge.v2]};
+        };
+        return ranges::views::transform(edges, get_line_segment);
     }
 };
 } // namespace sm

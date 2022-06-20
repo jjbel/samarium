@@ -60,10 +60,14 @@ endif()
 option(SAMARIUM_USE_CONAN "Use Conan to find dependencies" TRUE)
 if(SAMARIUM_USE_CONAN)
     message(STATUS "src/CMakeLists.txt: Using Conan for deps")
+
     include(conanbuildinfo)
     conan_basic_setup(TARGETS)
+
     target_link_libraries(samarium PRIVATE CONAN_PKG::fmt)
     target_link_libraries(samarium PRIVATE CONAN_PKG::sfml)
+    target_link_libraries(samarium PRIVATE CONAN_PKG::range-v3)
+
 else()
     find_package(
         SFML 2.5

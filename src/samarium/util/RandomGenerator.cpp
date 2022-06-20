@@ -56,14 +56,14 @@ void RandomGenerator::resize(u64 new_size)
 {
     if (new_size < cache.size()) { return; }
     cache.resize(new_size);
-    std::ranges::generate(cache, [this] { return this->next_scaled(); });
+    ranges::generate(cache, [this] { return this->next_scaled(); });
 }
 
 void RandomGenerator::reseed(u64 new_seed)
 {
     inc           = new_seed;
     current_index = 0UL;
-    std::ranges::generate(cache, [this] { return this->next_scaled(); });
+    ranges::generate(cache, [this] { return this->next_scaled(); });
 }
 
 [[nodiscard]] auto RandomGenerator::next() noexcept -> u64
@@ -147,5 +147,10 @@ void RandomGenerator::reseed(u64 new_seed)
     }
 
     return points;
+}
+
+[[nodiscard]] auto RandomGenerator::boolean(f64 threshold) -> bool
+{
+    return this->random() < threshold;
 }
 } // namespace sm

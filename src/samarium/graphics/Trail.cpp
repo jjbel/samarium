@@ -5,7 +5,7 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
-#include <algorithm>
+#include "range/v3/algorithm/rotate.hpp"
 
 #include "Trail.hpp"
 
@@ -16,13 +16,10 @@ void Trail::push_back(Vector2 pos)
     if (this->max_length > this->trail.size()) { this->trail.push_back(pos); }
     else
     {
-        std::rotate(this->trail.begin(), this->trail.begin() + 1, this->trail.end());
+        ranges::rotate(this->trail, this->trail.begin() + 1);
         this->trail.back() = std::move(pos);
     }
 }
 
-std::span<const Vector2> Trail::span() const
-{
-    return std::span(this->trail.begin(), this->trail.size());
-}
+std::span<const Vector2> Trail::span() const { return std::span(this->trail); }
 } // namespace sm

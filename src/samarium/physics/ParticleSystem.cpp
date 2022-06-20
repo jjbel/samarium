@@ -5,8 +5,7 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
-#include <algorithm>
-#include <ranges>
+#include "range/v3/algorithm/for_each.hpp"
 
 #include "../math/Extents.hpp"
 
@@ -17,29 +16,28 @@ namespace sm
 {
 void ParticleSystem::update(f64 time_delta) noexcept
 {
-    std::for_each(particles.begin(), particles.end(),
-                  [time_delta](Particle& particle) { particle.update(time_delta); });
+    ranges::for_each(particles, [time_delta](Particle& particle) { particle.update(time_delta); });
 }
 
 
 void ParticleSystem::apply_force(Vector2 force) noexcept
 {
-    std::for_each(particles.begin(), particles.end(),
-                  [force](Particle& particle) { particle.apply_force(force); });
+    ranges::for_each(particles, [force](Particle& particle) { particle.apply_force(force); });
 }
 
 void ParticleSystem::apply_forces(std::span<Vector2> forces) noexcept
 {
-    for (auto i : range(forces.size())) { particles[i].apply_force(forces[i]); }
+    for (auto i : range(particles.size())) { particles[i].apply_force(forces[i]); }
 }
 
 void ParticleSystem::for_each(FunctionRef<void(Particle&)> function)
 {
-    std::ranges::for_each(particles, function);
+    ranges::for_each(particles, function);
 }
 
 void ParticleSystem::self_collision() noexcept
 {
+    // TODO: use ranges::views::cartesian_product
     for (auto i = particles.begin(); i != particles.end(); ++i)
     {
         for (auto j = particles.begin(); j != particles.end(); ++j)

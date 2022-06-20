@@ -18,6 +18,7 @@ find_package(
     QUIET
 )
 find_package(fmt REQUIRED QUIET)
+find_package(range-v3 REQUIRED QUIET)
 
 function(create_test TEST_NAME TEST_SOURCES)
     message(STATUS "Creating test: ${TEST_NAME}, with sources: ${TEST_SOURCES}")
@@ -27,6 +28,7 @@ function(create_test TEST_NAME TEST_SOURCES)
 
     target_link_libraries(${TEST_NAME} PRIVATE samarium::samarium)
     target_link_libraries(${TEST_NAME} PRIVATE fmt::fmt)
+    target_link_libraries(${TEST_NAME} PRIVATE range-v3::range-v3)
     target_link_libraries(${TEST_NAME} PRIVATE sfml-graphics)
 
     # if(NOT WIN32) message(STATUS "Linking ${TEST_NAME} with TBB")

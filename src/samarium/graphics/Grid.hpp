@@ -9,11 +9,11 @@
 
 #include <compare>
 #include <functional>
-#include <algorithm>
 #include <iterator>
-#include <ranges>
 
 #include "fmt/format.h"
+#include "range/v3/algorithm/copy.hpp"
+#include "range/v3/view/transform.hpp"
 
 #include "../math/BoundingBox.hpp"
 #include "../math/Extents.hpp"
@@ -160,8 +160,8 @@ template <typename T> class Grid
         auto output              = std::vector<std::array<u8, format_length>>(this->size());
         const auto converter     = [format](auto color) { return color.get_formatted(format); };
 
-        // std::ranges::copy(std::views::transform(this->data, converter), output.begin());
-        std::transform(this->data.cbegin(), this->data.cend(), output.begin(), converter);
+        ranges::copy(ranges::views::transform(this->data, converter), output.begin());
+        // std::transform(this->data.cbegin(), this->data.cend(), output.begin(), converter);
 
         return output;
     }
