@@ -15,7 +15,7 @@ env:
 
 jobs:
   test:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
 
     env:
       SONAR_SCANNER_VERSION: 4.6.2.2472
