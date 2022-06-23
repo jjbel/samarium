@@ -46,9 +46,8 @@ namespace detail
 }
 } // namespace detail
 
-class Color
+struct Color
 {
-  public:
     u8 r{};
     u8 g{};
     u8 b{};
