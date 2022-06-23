@@ -154,6 +154,13 @@ struct Color
         -> bool = default;
 };
 
+struct ShapeColor
+{
+    Color fill_color{};
+    Color border_color{};
+    f64 border_width{};
+};
+
 namespace literals
 {
 consteval auto operator""_c(const char* str, size_t /* size */) { return Color::from_hex(str); }

@@ -93,15 +93,16 @@ class App
     void store_pixels();
 
     /**
-     * @brief               Display the current contents of the screen, update `watch` and `frame_counter`
+     * @brief               Display the current contents of the screen, update `watch` and
+     * `frame_counter`
      */
     void display();
 
     /**
      * @brief               Is the window currently open
-     * 
-     * @return true         
-     * @return false        
+     *
+     * @return true
+     * @return false
      */
     auto is_open() const -> bool;
 
@@ -122,8 +123,8 @@ class App
 
     /**
      * @brief               The `BoundingBox` formed by the viewport
-     * 
-     * @return BoundingBox<size_t> 
+     *
+     * @return BoundingBox<size_t>
      */
     auto bounding_box() const -> BoundingBox<size_t>;
 
@@ -139,14 +140,14 @@ class App
 
     /**
      * @brief               Fill the entire screen with `color`
-     * 
+     *
      * @param  color
      */
     void fill(Color color);
 
-    void draw(Circle circle, Color color);
+    void draw(Circle circle, ShapeColor color);
 
-    void draw(const Particle& particle);
+    void draw(const Particle& particle, ShapeColor color);
 
     void draw_line_segment(const LineSegment& ls,
                            Color color   = Color{255, 255, 255},
@@ -174,10 +175,10 @@ class App
 
     /**
      * @brief               Draw a Trail
-     * 
-     * @param  trail        
-     * @param  color        
-     * @param  thickness    
+     *
+     * @param  trail
+     * @param  color
+     * @param  thickness
      */
     void draw(Trail trail, Color color = Color{255, 255, 255}, f64 thickness = 1.0);
 
@@ -185,17 +186,17 @@ class App
 
     /**
      * @brief               Start the event loop and call func every iteration
-     * 
+     *
      * @param  func         Draw/Update function
      */
     void run(FunctionRef<void()> func);
 
     /**
      * @brief               Start the event loop, call `update` substeps times, `draw` once
-     * 
+     *
      * @param  update       Called `substeps` times
-     * @param  draw         
-     * @param  substeps     
+     * @param  draw
+     * @param  substeps
      */
     void run(FunctionRef<void(f64)> update, FunctionRef<void()> draw, u64 substeps = 1UL);
 };

@@ -44,8 +44,7 @@ int main()
         pos.rotate(1);
 
         const auto particle = Particle{
-            pos,        params.particle_velocity, {}, params.particle_radius, params.particle_mass,
-            colors::red};
+            pos, params.particle_velocity, {}, params.particle_radius, params.particle_mass};
 
         auto dual = Dual<Particle>();
         dual.prev = particle;
@@ -132,7 +131,7 @@ int main()
 
         for (auto& particle : particles)
         {
-            app.draw(particle.now);
+            app.draw(particle.now, {.fill_color = colors::red});
             particle.prev = particle.now;
         }
 

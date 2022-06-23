@@ -37,7 +37,8 @@ int main()
             app.fill("#15151f"_c);
             for (auto point : points)
             {
-                app.draw(Circle{.centre = mapper(point), .radius = radius}, "#ff1438"_c);
+                app.draw(Circle{.centre = mapper(point), .radius = radius},
+                         {.fill_color = "#ff1438"_c});
             }
         });
 }

@@ -19,7 +19,6 @@ struct Particle
     Vector2 acc{};
     f64 radius{1};
     f64 mass{1};
-    Color color{};
 
     [[nodiscard]] Circle as_circle() const noexcept;
 

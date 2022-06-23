@@ -88,21 +88,26 @@ auto App::get_image() -> Image
     return this->image;
 }
 
-void App::draw(Circle circle, Color color)
+void App::draw(Circle circle, ShapeColor color)
 {
-    const auto radius   = circle.radius * transform.scale.x;
-    const auto radius32 = static_cast<f32>(radius);
-    const auto pos      = transform.apply(circle.centre).as<f32>();
+    const auto border_width = static_cast<f32>(color.border_width * transform.scale.x);
+    const auto radius       = static_cast<f32>(circle.radius * transform.scale.x);
+    const auto pos          = transform.apply(circle.centre).as<f32>();
 
-    auto shape = sf::CircleShape{static_cast<f32>(radius)};
-    shape.setFillColor(sfml(color));
-    shape.setOrigin(radius32, radius32);
+    auto shape = sf::CircleShape{radius};
+    shape.setFillColor(sfml(color.fill_color));
+    shape.setOutlineColor(sfml(color.border_color));
+    shape.setOutlineThickness(border_width);
+    shape.setOrigin(radius, radius);
     shape.setPosition(pos.x, pos.y);
 
     sf_render_window.draw(shape);
 }
 
-void App::draw(const Particle& particle) { this->draw(particle.as_circle(), particle.color); }
+void App::draw(const Particle& particle, ShapeColor color)
+{
+    this->draw(particle.as_circle(), color);
+}
 
 void App::draw_line_segment(const LineSegment& ls, Color color, f64 thickness)
 {

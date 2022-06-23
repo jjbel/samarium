@@ -58,7 +58,7 @@ int main()
         {
             app.draw(Circle{.centre = Vector2::from_polar({f64(i), f64(i)}),
                             .radius = 4.0 / std::sqrt(app.transform.scale.x)},
-                     colors::aquamarine);
+                     {.fill_color = colors::aquamarine});
         }
     };
     app.run(draw);

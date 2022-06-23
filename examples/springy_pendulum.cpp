@@ -22,7 +22,7 @@ int main()
     const auto rest_length     = 14.0;
     const auto spring_constant = 100.0;
 
-    auto p1 = Particle{.pos = {}, .vel = {50, 0}, .radius = 3, .mass = 40, .color = colors::red};
+    auto p1 = Particle{.pos = {}, .vel = {50, 0}, .radius = 3, .mass = 40};
     auto p2 = p1;
 
     const auto l = LineSegment{{-30, -30}, {30, -9}};
@@ -44,7 +44,7 @@ int main()
 
         app.draw_line_segment(l, "#427bf5"_c, 0.4);
         app.draw_line_segment(LineSegment{anchor, p1.pos}, "#c471ed"_c, .6);
-        app.draw(p1);
+        app.draw(p1, {.fill_color = colors::red});
         p2 = p1;
     };
 
