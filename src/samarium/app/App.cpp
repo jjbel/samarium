@@ -5,14 +5,29 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
-#include "SFML/Graphics/CircleShape.hpp"
-#include "SFML/Graphics/PrimitiveType.hpp"
-#include "SFML/Graphics/Vertex.hpp"
-#include "SFML/Graphics/VertexArray.hpp"
+#include <tuple> // for ignore
 
-#include "../util/file.hpp"
-#include "../util/format.hpp"
-#include "../util/print.hpp"
+#include "SFML/Graphics/CircleShape.hpp"   // for CircleShape
+#include "SFML/Graphics/Color.hpp"         // for Color
+#include "SFML/Graphics/Image.hpp"         // for Image
+#include "SFML/Graphics/PrimitiveType.hpp" // for PrimitiveType, Quads
+#include "SFML/Graphics/RenderWindow.hpp"  // for RenderWindow
+#include "SFML/Graphics/Sprite.hpp"        // for Sprite
+#include "SFML/Graphics/Texture.hpp"       // for Texture
+#include "SFML/Graphics/Vertex.hpp"        // for Vertex
+#include "SFML/Graphics/VertexArray.hpp"   // for VertexArray
+#include "SFML/System/Vector2.hpp"         // for Vector2f
+#include "SFML/Window/Event.hpp"           // for Event, Event::(anonymous)
+#include "SFML/Window/Mouse.hpp"           // for Mouse, Mouse::VerticalWheel
+#include "range/v3/algorithm/copy.hpp"     // for copy_fn, copy
+
+#include "samarium/gui/sfml.hpp"         // for sfml
+#include "samarium/math/Extents.hpp"     // for Extents, Extents<>::Iterator
+#include "samarium/math/math.hpp"        // for pi
+#include "samarium/math/shapes.hpp"      // for LineSegment, Circle
+#include "samarium/math/vector_math.hpp" // for area
+#include "samarium/physics/Particle.hpp" // for Particle
+#include "samarium/util/FunctionRef.hpp" // for FunctionRef
 
 #include "App.hpp"
 
@@ -24,7 +39,7 @@ void App::load_pixels()
     const auto sf_image = texture.copyToImage();
     const auto ptr      = sf_image.getPixelsPtr();
 
-    std::copy(ptr, ptr + image.size() * 4UL, reinterpret_cast<u8*>(&image[0]));
+    ranges::copy(ptr, ptr + image.size() * 4UL, reinterpret_cast<u8*>(&image[0]));
 }
 
 void App::store_pixels()
@@ -69,7 +84,7 @@ auto App::dims() const -> Dimensions { return image.dims; }
 
 auto App::transformed_dims() const -> Vector2 { return this->dims().as<f64>() / transform.scale; }
 
-auto App::bounding_box() const -> BoundingBox<size_t> { return this->image.bounding_box(); }
+auto App::bounding_box() const -> BoundingBox<u64> { return this->image.bounding_box(); }
 
 auto App::viewport_box() const -> std::array<LineSegment, 4>
 {

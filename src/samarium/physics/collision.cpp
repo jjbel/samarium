@@ -5,9 +5,12 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
+#include "samarium/math/Vector2.hpp"     // for Vector2
+#include "samarium/math/shapes.hpp"      // for LineSegment
+#include "samarium/math/vector_math.hpp" // for distance, clamped_intersection
+#include "samarium/physics/Particle.hpp" // for Particle
+
 #include "collision.hpp"
-#include "samarium/math/Vector2.hpp"
-#include "samarium/util/print.hpp"
 
 namespace sm::phys
 {

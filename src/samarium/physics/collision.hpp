@@ -7,10 +7,18 @@
 
 #pragma once
 
-#include "../math/Vector2.hpp"
-#include "../math/vector_math.hpp"
+#include <optional> // for optional
 
-#include "Particle.hpp"
+#include "../math/Vector2.hpp" // for Vector2
+
+namespace sm
+{
+struct LineSegment;
+}
+namespace sm
+{
+struct Particle;
+}
 
 namespace sm::phys
 {

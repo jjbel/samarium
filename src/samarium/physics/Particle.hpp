@@ -7,8 +7,9 @@
 
 #pragma once
 
-#include "../graphics/Color.hpp"
-#include "../math/shapes.hpp"
+#include "samarium/core/types.hpp"   // for f64
+#include "samarium/math/Vector2.hpp" // for Vector2
+#include "samarium/math/shapes.hpp"  // for Circle
 
 namespace sm
 {

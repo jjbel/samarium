@@ -5,6 +5,8 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
+#include "samarium/math/Extents.hpp" // for range
+
 #include "Keyboard.hpp"
 
 namespace sm
@@ -17,7 +19,7 @@ void Keymap::clear()
 
 void Keymap::run() const
 {
-    for (size_t i = 0; i < map.size(); i++)
+    for (auto i : range(map.size()))
     {
         for (auto key : map[i])
         {

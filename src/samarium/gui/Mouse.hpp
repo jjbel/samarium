@@ -7,9 +7,13 @@
 
 #pragma once
 
-#include "../math/Transform.hpp"
-
-#include "sfml.hpp"
+#include "samarium/core/types.hpp"     // for f64
+#include "samarium/math/Transform.hpp" // for Transform
+#include "samarium/math/Vector2.hpp"   // for Vector2
+namespace sf
+{
+class RenderWindow;
+}
 
 namespace sm
 {

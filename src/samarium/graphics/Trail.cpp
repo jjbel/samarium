@@ -5,7 +5,9 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
-#include "range/v3/algorithm/rotate.hpp"
+#include <utility> // for move
+
+#include "range/v3/algorithm/rotate.hpp" // for rotate
 
 #include "Trail.hpp"
 

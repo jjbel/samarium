@@ -24,7 +24,3 @@ add_test(NAME SamariumTests COMMAND samarium_tests)
 option(GENERATE_COVERAGE "Generate coverage reports" FALSE)
 include(coverage)
 generate_coverage(samarium_tests)
-
-option(USE_IWYU "Use include what you use" FALSE)
-include(include_what_you_use)
-iwyu(samarium_tests)

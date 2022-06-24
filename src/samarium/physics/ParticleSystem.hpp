@@ -7,12 +7,17 @@
 
 #pragma once
 
-#include <span>
-#include <vector>
+#include <span>   // for span
+#include <vector> // for vector
 
-#include "../util/FunctionRef.hpp"
+#include "samarium/core/types.hpp"   // for u64, f64
+#include "samarium/math/Vector2.hpp" // for Vector2
 
-#include "Particle.hpp"
+#include "Particle.hpp" // for Particle
+namespace sm
+{
+template <class F> class FunctionRef;
+}
 
 namespace sm
 {

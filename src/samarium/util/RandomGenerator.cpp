@@ -5,9 +5,18 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
+#include <cmath>   // for ceil
+#include <limits>  // for numeric_limits
+#include <numbers> // for sqrt2
+#include <tuple>   // for _Swallow_assign, ignore
+
+#include "range/v3/algorithm/generate.hpp" // for generate, generate_fn
+
+#include "samarium/graphics/Grid.hpp"    // for Grid
+#include "samarium/math/BoundingBox.hpp" // for BoundingBox
+#include "samarium/math/vector_math.hpp" // for within_distance
+
 #include "RandomGenerator.hpp"
-#include "../math/interp.hpp"
-#include "../math/vector_math.hpp"
 
 namespace sm
 {

@@ -7,13 +7,16 @@
 
 #pragma once
 
-#include <initializer_list>
-#include <vector>
+#include <initializer_list> // for initializer_list
+#include <vector>           // for vector
 
-#include "range/v3/algorithm/generate.hpp"
+#include "range/v3/algorithm/generate.hpp" // for generate, generate_fn
 
-#include "../graphics/Grid.hpp"
-#include "../math/BoundingBox.hpp"
+#include "samarium/core/types.hpp"       // for f64, u64
+#include "samarium/math/BoundingBox.hpp" // for BoundingBox
+#include "samarium/math/Extents.hpp"     // for Extents
+#include "samarium/math/Vector2.hpp"     // for Vector2
+#include "samarium/math/math.hpp"        // for pi
 
 namespace sm
 {

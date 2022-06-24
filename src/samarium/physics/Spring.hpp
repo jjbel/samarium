@@ -7,8 +7,10 @@
 
 #pragma once
 
-#include "../math/vector_math.hpp"
-#include "Particle.hpp"
+#include "samarium/core/types.hpp"       // for f64
+#include "samarium/math/vector_math.hpp" // for distance
+
+#include "Particle.hpp" // for Particle
 
 namespace sm
 {

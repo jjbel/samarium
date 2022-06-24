@@ -7,10 +7,11 @@
 
 #pragma once
 
-#include <functional>
-#include <vector>
+#include <functional> // for function
+#include <utility>    // for pair
+#include <vector>     // for vector
 
-#include "SFML/Window/Keyboard.hpp"
+#include "SFML/Window/Keyboard.hpp" // for Keyboard, Keyboard::Key
 
 namespace sm
 {

@@ -5,12 +5,14 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
-#include "range/v3/algorithm/for_each.hpp"
+#include "range/v3/algorithm/for_each.hpp" // for for_each, for_each_fn
 
-#include "../math/Extents.hpp"
+#include "collision.hpp"                 // for collide
+#include "samarium/math/Extents.hpp"     // for Extents, Extents<>::Iter...
+#include "samarium/physics/Particle.hpp" // for Particle
+#include "samarium/util/FunctionRef.hpp" // for FunctionRef
 
 #include "ParticleSystem.hpp"
-#include "collision.hpp"
 
 namespace sm
 {

@@ -7,26 +7,37 @@
 
 #pragma once
 
-#include <span>
-#include <tuple>
+#include <array>  // for array
+#include <span>   // for span
+#include <string> // for allocator, string
 
-#include "SFML/Graphics.hpp"
+#include "SFML/Graphics/RenderWindow.hpp"  // for RenderWindow
+#include "SFML/Graphics/Texture.hpp"       // for Texture
+#include "SFML/System/String.hpp"          // for String
+#include "SFML/Window/ContextSettings.hpp" // for ContextSettings
+#include "SFML/Window/VideoMode.hpp"       // for VideoMode
+#include "SFML/Window/WindowStyle.hpp"     // for Close, Titlebar
 
-#include "../core/ThreadPool.hpp"
-#include "../graphics/Image.hpp"
-#include "../graphics/Trail.hpp"
-#include "../gui/Keyboard.hpp"
-#include "../gui/Mouse.hpp"
-#include "../math/BoundingBox.hpp"
-#include "../math/Extents.hpp"
-#include "../math/Transform.hpp"
-#include "../math/vector_math.hpp"
-#include "../physics/Particle.hpp"
-#include "../util/FunctionRef.hpp"
-#include "../util/Stopwatch.hpp"
+#include "samarium/core/ThreadPool.hpp"  // for ThreadPool
+#include "samarium/core/types.hpp"       // for f64, u32, u64
+#include "samarium/graphics/Color.hpp"   // for Color, ShapeColor
+#include "samarium/graphics/Grid.hpp"    // for dimsFHD
+#include "samarium/graphics/Image.hpp"   // for Image
+#include "samarium/gui/Keyboard.hpp"     // for Keyboard, Keyboard::Key
+#include "samarium/gui/Mouse.hpp"        // for Mouse
+#include "samarium/math/BoundingBox.hpp" // for BoundingBox
+#include "samarium/math/Transform.hpp"   // for Transform
+#include "samarium/math/Vector2.hpp"     // for Vector2, Dimensions
+#include "samarium/util/Stopwatch.hpp"   // for Stopwatch
 
 namespace sm
 {
+class Trail;
+struct Particle;
+struct LineSegment;
+template <class F> class FunctionRef;
+struct Circle;
+
 enum class VertexMode
 {
     Points,
@@ -53,7 +64,7 @@ class App
     {
         Dimensions dims{sm::dimsFHD};
         std::string name{"Samarium Window"};
-        uint32_t framerate{64};
+        u32 framerate{64};
     };
 
     Image image;
@@ -124,9 +135,9 @@ class App
     /**
      * @brief               The `BoundingBox` formed by the viewport
      *
-     * @return BoundingBox<size_t>
+     * @return BoundingBox<u64>
      */
-    auto bounding_box() const -> BoundingBox<size_t>;
+    auto bounding_box() const -> BoundingBox<u64>;
 
     /**
      * @brief               The 4 `LineSegment`'s forming the viewportm, in worldspace coordinates

@@ -5,6 +5,8 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
+#include "samarium/math/shapes.hpp" // for Circle
+
 #include "Particle.hpp"
 
 namespace sm

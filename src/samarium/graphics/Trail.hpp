@@ -7,10 +7,11 @@
 
 #pragma once
 
-#include <span>
-#include <vector>
+#include <span>   // for span
+#include <vector> // for vector
 
-#include "../math/Vector2.hpp"
+#include "samarium/core/types.hpp"   // for u64
+#include "samarium/math/Vector2.hpp" // for Vector2
 
 namespace sm
 {
@@ -19,9 +20,9 @@ class Trail
     std::vector<Vector2> trail;
 
   public:
-    const size_t max_length;
+    const u64 max_length;
 
-    explicit Trail(size_t length = 50) : max_length{length} { trail.reserve(length); }
+    explicit Trail(u64 length = 50) : max_length{length} { trail.reserve(length); }
 
     auto begin() noexcept { return trail.begin(); }
     auto end() noexcept { return trail.end(); }
