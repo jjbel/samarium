@@ -16,13 +16,15 @@
 #endif // __cpp_lib_source_location
 
 #include "fmt/color.h"
+#include "fmt/format.h"
 #include "fmt/ranges.h"
+
+#include "samarium/util/format.hpp"
 
 namespace sm
 {
 template <typename... Args> void print(Args&&... args)
 {
-    // recursive call using pack expansion syntax
     (fmt::print("{} ", std::forward<Args>(args)), ...);
     fmt::print("\n");
 }
@@ -37,7 +39,6 @@ void error(const auto&... args)
 }
 
 #ifdef __cpp_lib_source_location
-
 inline void log(const std::string_view message)
 {
     const std::source_location location = std::source_location::current();
@@ -46,7 +47,5 @@ inline void log(const std::string_view message)
                location.line(), location.function_name());
     print(message);
 }
-
 #endif // __cpp_lib_source_location
-
 } // namespace sm
