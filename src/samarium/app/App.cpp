@@ -54,7 +54,7 @@ void App::display()
 {
     sf_render_window.display();
     frame_counter++;
-    watch.reset();
+    clock.reset();
 }
 
 void App::fill(Color color) { sf_render_window.clear(sfml(color)); }
@@ -103,13 +103,13 @@ auto App::get_image() -> Image
     return this->image;
 }
 
-void App::draw(Circle circle, ShapeColor color)
+void App::draw(Circle circle, ShapeColor color, u64 vertex_count)
 {
     const auto border_width = static_cast<f32>(color.border_width * transform.scale.x);
     const auto radius       = static_cast<f32>(circle.radius * transform.scale.x);
     const auto pos          = transform.apply(circle.centre).as<f32>();
 
-    auto shape = sf::CircleShape{radius};
+    auto shape = sf::CircleShape{radius, vertex_count};
     shape.setFillColor(sfml(color.fill_color));
     shape.setOutlineColor(sfml(color.border_color));
     shape.setOutlineThickness(border_width);

@@ -56,7 +56,6 @@ class App
 {
     sf::RenderWindow sf_render_window;
     sf::Texture texture;
-    Stopwatch watch{};
     u64 target_framerate;
 
   public:
@@ -67,6 +66,7 @@ class App
         u32 framerate{64};
     };
 
+    Stopwatch clock{};
     Image image;
     ThreadPool thread_pool{};
     Transform transform;
@@ -156,7 +156,7 @@ class App
      */
     void fill(Color color);
 
-    void draw(Circle circle, ShapeColor color);
+    void draw(Circle circle, ShapeColor color, u64 vertex_count = 64);
 
     void draw(const Particle& particle, ShapeColor color);
 
