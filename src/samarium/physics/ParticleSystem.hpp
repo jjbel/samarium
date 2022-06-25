@@ -10,24 +10,41 @@
 #include <span>   // for span
 #include <vector> // for vector
 
+#include "range/v3/view/enumerate.hpp" // for enumerate, enumerate_fn
+
 #include "samarium/core/types.hpp"   // for u64, f64
 #include "samarium/math/Vector2.hpp" // for Vector2
 
 #include "Particle.hpp" // for Particle
-namespace sm
-{
-template <class F> class FunctionRef;
-}
 
 namespace sm
 {
+template <class F> class FunctionRef;
+
 struct ParticleSystem
 {
     std::vector<Particle> particles;
 
+    /**
+     * @brief               Create `size` particles
+     *
+     * @param  size
+     * @param  default_particle
+     */
     ParticleSystem(u64 size = 100UL, const Particle& default_particle = {})
         : particles(size, default_particle)
     {
+    }
+
+    static auto generate(u64 size, FunctionRef<Particle(u64)> function) -> ParticleSystem
+    {
+        auto output = ParticleSystem(size);
+        for (auto [i, particle] : ranges::views::enumerate(output.particles))
+        {
+            particle = function(i);
+        }
+        return output;
+        // https://stackoverflow.com/questions/70704890/rangesviewsenumerate-capturing-by-reference-or-by-value-how-can-we-tell#:~:text=is%20actually%20a%20reference
     }
 
     void update(f64 time_delta = 1.0) noexcept;
