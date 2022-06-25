@@ -17,23 +17,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
 list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})
 
-set(SAMARIUM_SOURCES
-    samarium/app/App.cpp
-    samarium/core/ThreadPool.cpp
-    samarium/graphics/Trail.cpp
-    samarium/gui/Keyboard.cpp
-    samarium/gui/Mouse.cpp
-    samarium/physics/Spring.cpp
-    samarium/physics/Particle.cpp
-    samarium/physics/ParticleSystem.cpp
-    samarium/physics/collision.cpp
-    samarium/util/RandomGenerator.cpp
-    samarium/util/Stopwatch.cpp
-    samarium/util/file.cpp
-    samarium/util/ostream.cpp
-    samarium/util/util.cpp
-    samarium/util/PerlinNoise.cpp
-)
+add_subdirectory(samarium)
 
 add_library(samarium ${SAMARIUM_SOURCES})
 add_library(samarium::samarium ALIAS samarium)
