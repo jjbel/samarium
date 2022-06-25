@@ -54,9 +54,9 @@
         {
             "name": "dev",
             "description": "Use gcc, Ninja, and skip extra tests",
-            "inherits": "clang",
+            "inherits": "gcc",
             "cacheVariables": {
-                "USE_UBSAN": "ON",
+                "USE_UBSAN": "OFF",
                 "SAMARIUM_BUILD_EXTRA_TESTS": "OFF",
                 "SAMARIUM_BUILD_EXAMPLES": "OFF"
             }
