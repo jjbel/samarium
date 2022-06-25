@@ -21,7 +21,6 @@ void ParticleSystem::update(f64 time_delta) noexcept
     ranges::for_each(particles, [time_delta](Particle& particle) { particle.update(time_delta); });
 }
 
-
 void ParticleSystem::apply_force(Vector2 force) noexcept
 {
     ranges::for_each(particles, [force](Particle& particle) { particle.apply_force(force); });
