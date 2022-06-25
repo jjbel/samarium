@@ -19,6 +19,7 @@ auto Stopwatch::time() const -> Stopwatch::Duration_t
     return std::chrono::duration_cast<Duration_t>(finish - start);
 }
 
-void Stopwatch::print() const { fmt::print("{:.3}ms\n", this->time().count() * 1000.0); }
+[[nodiscard]] auto Stopwatch::seconds() const -> f64 { return this->time().count(); }
 
+void Stopwatch::print() const { fmt::print("{:.3}ms\n", this->time().count() * 1000.0); }
 }; // namespace sm

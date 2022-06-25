@@ -23,6 +23,8 @@ struct Stopwatch
 
     [[nodiscard]] auto time() const -> Duration_t;
 
+    [[nodiscard]] auto seconds() const -> f64;
+
     void print() const;
 };
 } // namespace sm
