@@ -25,7 +25,7 @@ namespace sm::phys
 {
 [[nodiscard]] auto did_collide(const Particle& p1, const Particle& p2) -> std::optional<Vector2>;
 
-void collide(Particle& p1, Particle& p2);
+void collide(Particle& p1, Particle& p2, f64 damping = 1.0);
 
 void collide(Particle& current, const LineSegment& l, f64 dt);
 } // namespace sm::phys

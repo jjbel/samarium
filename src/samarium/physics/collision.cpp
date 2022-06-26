@@ -26,7 +26,7 @@ namespace sm::phys
     }
 }
 
-void collide(Particle& p1, Particle& p2)
+void collide(Particle& p1, Particle& p2, f64 damping)
 {
     /*
         https://courses.lumenlearning.com/boundless-physics/chapter/collisions/#:~:text=particles%20are%20involved%20in%20an-,elastic%20collision,-%2C%20the%20velocity%20of%20the%20first
@@ -52,6 +52,19 @@ void collide(Particle& p1, Particle& p2)
 
         const auto vel1 = line * (p2.mass * factor * dot / length_sq);
         const auto vel2 = line * (-p1.mass * factor * dot / length_sq);
+        // const auto dv              = p2.vel - p1.vel;
+        // const auto factor_mass     = 1.0 / (p1.mass + p2.mass);
+        // const auto factor_momentum = p1.mass * p1.vel + p2.mass * p2.vel;
+        // const auto factor_damping  = damping * dv;
+        // const auto vel1            = factor_mass * (factor_momentum + p2.mass * factor_damping);
+        // const auto vel2            = factor_mass * (factor_momentum + p1.mass *
+        // (-factor_damping));
+        // const auto vel1 =
+        //     (p1.mass * p1.vel + p2.mass * p2.vel + p2.mass * damping * (p2.vel - p1.vel)) /
+        //     (p1.mass + p2.mass);
+        // const auto vel2 =
+        //     (p1.mass * p1.vel + p2.mass * p2.vel + p1.mass * damping * (p1.vel - p2.vel)) /
+        //     (p1.mass + p2.mass);
 
         p1.vel -= vel1;
         p2.vel -= vel2;
