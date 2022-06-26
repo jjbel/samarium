@@ -56,7 +56,7 @@ struct ParticleSystem
 
     void for_each(FunctionRef<void(Particle&)> function);
 
-    void self_collision() noexcept;
+    void self_collision(f64 damping = 1.0) noexcept;
 
     auto operator[](u64 index) noexcept { return particles[index]; }
     auto operator[](u64 index) const noexcept { return particles[index]; }
