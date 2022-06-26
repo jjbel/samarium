@@ -98,6 +98,8 @@ void RandomGenerator::reseed(u64 new_seed)
     return this->next_scaled();
 }
 
+[[nodiscard]] auto RandomGenerator::operator()() -> f64 { return this->random(); }
+
 [[nodiscard]] auto RandomGenerator::vector(const BoundingBox<f64>& bounding_box) noexcept -> Vector2
 {
     return Vector2{this->range<f64>({bounding_box.min.x, bounding_box.max.x}),
@@ -161,5 +163,20 @@ void RandomGenerator::reseed(u64 new_seed)
 [[nodiscard]] auto RandomGenerator::boolean(f64 threshold) -> bool
 {
     return this->random() < threshold;
+}
+
+[[nodiscard]] auto RandomGenerator::gaussian(f64 mean, f64 deviation) -> f64
+{
+    // from https://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform#Implementation
+    constexpr auto epsilon = std::numeric_limits<f64>::epsilon();
+    // create two random numbers, make sure u1 is greater than epsilon
+    auto u1 = 0.0;
+    do {
+        u1 = this->random();
+    } while (u1 <= epsilon);
+    const auto u2 = this->random();
+
+    const auto mag = deviation * sqrt(-2.0 * std::log(u1));
+    return mag * std::cos(math::two_pi * u2) + mean;
 }
 } // namespace sm

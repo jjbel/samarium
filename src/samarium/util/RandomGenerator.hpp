@@ -45,6 +45,7 @@ struct RandomGenerator
     [[nodiscard]] auto next_scaled() noexcept -> f64;
 
     [[nodiscard]] auto random() -> f64;
+    [[nodiscard]] auto operator()() -> f64;
 
     template <typename T> [[nodiscard]] auto range(Extents<T> extents) noexcept
     {
@@ -72,5 +73,7 @@ struct RandomGenerator
                                            u64 sample_count = 30UL) -> std::vector<Vector2>;
 
     [[nodiscard]] auto boolean(f64 threshold = 0.5) -> bool;
+
+    [[nodiscard]] auto gaussian(f64 mean, f64 deviation = 1.0) -> f64;
 };
 } // namespace sm
