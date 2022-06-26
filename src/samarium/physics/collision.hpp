@@ -27,5 +27,5 @@ namespace sm::phys
 
 void collide(Particle& p1, Particle& p2, f64 damping = 1.0);
 
-void collide(Particle& current, const LineSegment& l, f64 dt);
+void collide(Particle& current, const LineSegment& l, f64 dt, f64 damping = 1.0, f64 friction = 1.0);
 } // namespace sm::phys

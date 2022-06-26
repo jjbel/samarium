@@ -19,14 +19,14 @@ int main()
         500,
         [&](u64 /* index */)
         {
-            const auto mass = rand.range<f64>({0.5, 4.0});
+            const auto mass = rand.range<f64>({0.5, 2.0});
             return Particle{.pos    = rand.vector(BoundingBox<f64>::square(70)),
-                            .vel    = rand.polar_vector({0, 20}),
+                            .vel    = rand.polar_vector({0, 40}) / mass,
                             .radius = 0.7 * mass,
                             .mass   = mass};
         });
 
-    auto app                = App{{.dims = dims720}};
+    auto app                = App{{.dims = dimsFHD}};
     const auto viewport_box = app.viewport_box();
     auto clock              = Stopwatch{};
 
@@ -34,12 +34,15 @@ int main()
 
     const auto update = [&](f64 dt)
     {
-        particles.self_collision();
+        particles.self_collision(0.98);
 
         particles.for_each(
             [viewport_box, dt](Particle& particle)
             {
-                for (const auto& wall : viewport_box) { phys::collide(particle, wall, dt); }
+                for (const auto& wall : viewport_box)
+                {
+                    phys::collide(particle, wall, dt, 0.98, 0.98);
+                }
             });
 
         particles.update(app.thread_pool, dt);
@@ -54,9 +57,9 @@ int main()
 
         for (const auto& p : particles)
         {
-            app.draw(p, {.fill_color   = colors::transparent,
-                         .border_color = "#fc2403"_c,
-                         .border_width = 0.08});
+            app.draw(p, {.fill_color   = colors::orangered,
+                         .border_color = Color{255, 255, 255, 128},
+                         .border_width = 0.0});
         }
         print("fps:", std::round(1.0 / clock.seconds()));
         clock.reset();

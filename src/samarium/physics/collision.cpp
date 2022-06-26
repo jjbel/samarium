@@ -66,12 +66,12 @@ void collide(Particle& p1, Particle& p2, f64 damping)
         //     (p1.mass * p1.vel + p2.mass * p2.vel + p1.mass * damping * (p1.vel - p2.vel)) /
         //     (p1.mass + p2.mass);
 
-        p1.vel -= vel1;
-        p2.vel -= vel2;
+        p1.vel -= vel1 * damping;
+        p2.vel -= vel2 * damping;
     }
 }
 
-void collide(Particle& current, const LineSegment& l, f64 dt)
+void collide(Particle& current, const LineSegment& l, f64 dt, f64 damping, f64 friction)
 {
     const auto old_pos       = current.pos - current.vel * dt;
     const auto vec           = l.vector();
@@ -88,11 +88,16 @@ void collide(Particle& current, const LineSegment& l, f64 dt)
 
     if (!possible_collision) { return; }
 
-    const auto point = *possible_collision;
+    const auto point = possible_collision.value();
 
     auto leftover_vel = current.pos + radius_shift - point;
     leftover_vel.reflect(vec);
     current.vel.reflect(vec);
     current.pos = point + leftover_vel - radius_shift + normal_vector.with_length(0.05);
+
+    current.vel.rotate(-vec.angle());
+    current.vel.x *= friction;
+    current.vel.y *= damping;
+    current.vel.rotate(vec.angle());
 }
 } // namespace sm::phys
