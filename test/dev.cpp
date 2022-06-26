@@ -8,8 +8,6 @@
 #include "samarium/graphics/colors.hpp"
 #include "samarium/samarium.hpp"
 
-#include "range/v3/view/cartesian_product.hpp"
-
 using namespace sm;
 using namespace sm::literals;
 
@@ -18,19 +16,21 @@ int main()
     auto rand = RandomGenerator{};
 
     auto particles = ParticleSystem::generate(
-        2048,
+        500,
         [&](u64 /* index */)
         {
-            return Particle{.pos    = rand.vector({.min = {-16, -16}, .max = {16, 16}}),
-                            .vel    = rand.polar_vector({5, 10}),
-                            .radius = 0.4};
+            const auto mass = rand.range<f64>({0.5, 4.0});
+            return Particle{.pos    = rand.vector(BoundingBox<f64>::square(70)),
+                            .vel    = rand.polar_vector({0, 20}),
+                            .radius = 0.7 * mass,
+                            .mass   = mass};
         });
 
     auto app                = App{{.dims = dims720}};
     const auto viewport_box = app.viewport_box();
     auto clock              = Stopwatch{};
 
-    auto trail = Trail{200};
+    auto trail = Trail{2000000};
 
     const auto update = [&](f64 dt)
     {
@@ -54,11 +54,13 @@ int main()
 
         for (const auto& p : particles)
         {
-            app.draw(p, {.fill_color = "#fc2403"_c.with_multiplied_alpha(0.8)});
+            app.draw(p, {.fill_color   = colors::transparent,
+                         .border_color = "#fc2403"_c,
+                         .border_width = 0.08});
         }
-        print("fps:", std::round(2.0 / clock.seconds()));
+        print("fps:", std::round(1.0 / clock.seconds()));
         clock.reset();
     };
 
-    app.run(update, draw, 1);
+    app.run(update, draw, 16);
 }
