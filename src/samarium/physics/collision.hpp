@@ -9,7 +9,8 @@
 
 #include <optional> // for optional
 
-#include "../math/Vector2.hpp" // for Vector2
+#include "samarium/core/types.hpp"   // for f64
+#include "samarium/math/Vector2.hpp" // for Vector2
 
 namespace sm
 {
@@ -26,5 +27,5 @@ namespace sm::phys
 
 void collide(Particle& p1, Particle& p2);
 
-void collide(Particle& current, const Particle& old, const LineSegment& l);
+void collide(Particle& current, const LineSegment& l, f64 dt);
 } // namespace sm::phys

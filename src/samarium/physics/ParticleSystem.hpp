@@ -20,6 +20,7 @@
 namespace sm
 {
 template <class F> class FunctionRef;
+class ThreadPool;
 
 struct ParticleSystem
 {
@@ -44,10 +45,11 @@ struct ParticleSystem
             particle = function(i);
         }
         return output;
-        // https://stackoverflow.com/questions/70704890/rangesviewsenumerate-capturing-by-reference-or-by-value-how-can-we-tell#:~:text=is%20actually%20a%20reference
+        // https://stackoverflow.com/a/70808634/17100530
     }
 
     void update(f64 time_delta = 1.0) noexcept;
+    void update(ThreadPool& thread_pool, f64 time_delta = 1.0) noexcept;
 
     void apply_force(Vector2 force) noexcept;
     void apply_forces(std::span<Vector2> forces) noexcept;

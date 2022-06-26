@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <type_traits> // For is_signed_v
+
 #include "Extents.hpp"
 #include "math.hpp"
 
@@ -190,6 +192,11 @@ template <concepts::Number T> struct Vector2_t
     [[nodiscard]] constexpr auto is_zero() const noexcept
     {
         return math::almost_equal(this->length_sq(), 0.0);
+    }
+
+    [[nodiscard]] constexpr auto negated() const noexcept requires std::is_signed_v<T>
+    {
+        return Vector2_t<T>{-x, -y};
     }
 };
 

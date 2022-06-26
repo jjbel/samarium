@@ -116,7 +116,7 @@ int main()
                 phys::collide(particle.now, other_particle.now);
             }
 
-            for (auto&& wall : viewport_box) { phys::collide(particle.now, particle.prev, wall); }
+            for (auto&& wall : viewport_box) { phys::collide(particle.now, wall, delta); }
         }
     };
 

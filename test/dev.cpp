@@ -34,11 +34,7 @@ int main()
 
     const auto update = [&](f64 dt)
     {
-        for (auto&& [a, b] :
-             ranges::views::cartesian_product(particles.particles, particles.particles))
-        {
-            if (std::addressof(a) != std::addressof(b)) { phys::collide(a, b); }
-        }
+        particles.self_collision();
 
         particles.for_each(
             [viewport_box, dt](Particle& particle)

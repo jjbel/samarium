@@ -38,9 +38,9 @@ int main()
         p1.apply_force(force);
         p1.update();
 
-        phys::collide(p1, p2, l);
+        phys::collide(p1, l, 1.0 / 64);
 
-        for (auto&& i : viewport_box) { phys::collide(p1, p2, i); }
+        for (auto&& i : viewport_box) { phys::collide(p1, i, 1.0 / 64.0); }
 
         app.draw_line_segment(l, "#427bf5"_c, 0.4);
         app.draw_line_segment(LineSegment{anchor, p1.pos}, "#c471ed"_c, .6);

@@ -38,40 +38,40 @@ void collide(Particle& p1, Particle& p2)
 
     if (const auto point = did_collide(p1, p2))
     {
+        // position changes
         const auto shift  = (p1.radius + (math::distance(p1.pos, p2.pos) - p2.radius)) / 2;
         const auto centre = p1.pos + (p2.pos - p1.pos).with_length(shift);
         p1.pos            = centre + (p1.pos - centre).with_length(p1.radius);
         p2.pos            = centre + (p2.pos - centre).with_length(p2.radius);
 
-        const auto sum    = p1.mass + p2.mass;
-        const auto diff   = p1.mass - p2.mass;
-        const auto coeff1 = diff / sum;
-        const auto coeff2 = 2 / sum;
+        // velocity changes
+        const auto line      = p1.pos - p2.pos;
+        const auto length_sq = line.length_sq();
+        const auto factor    = 2.0 / (p1.mass + p2.mass);
+        const auto dot       = Vector2::dot(p1.vel - p2.vel, line);
 
-        const auto vel1 = Vector2{(coeff1 * p1.vel.x) + (coeff2 * p2.mass * p2.vel.x),
-                                  (coeff1 * p1.vel.y) + (coeff2 * p2.mass * p2.vel.y)};
-        const auto vel2 = Vector2{(coeff2 * p1.mass * p1.vel.x) + (-coeff1 * p2.vel.x),
-                                  (coeff2 * p1.mass * p1.vel.y) + (-coeff1 * p2.vel.y)};
+        const auto vel1 = line * (p2.mass * factor * dot / length_sq);
+        const auto vel2 = line * (-p1.mass * factor * dot / length_sq);
 
-        p1.vel = vel1;
-        p2.vel = vel2;
+        p1.vel -= vel1;
+        p2.vel -= vel2;
     }
 }
 
-void collide(Particle& current, const Particle& old, const LineSegment& l)
+void collide(Particle& current, const LineSegment& l, f64 dt)
 {
-    const auto vec = l.vector();
-
-    const auto proj = math::project(old.pos, l);
-
+    const auto old_pos       = current.pos - current.vel * dt;
+    const auto vec           = l.vector();
+    const auto proj          = math::project(old_pos, l);
     const auto normal_vector = current.pos - proj;
 
     const auto radius_shift =
-        (proj - old.pos).with_length(old.radius); // keep track of the point on the circumference of
-                                                  // prev closest to l, which will cross l first
+        (proj - old_pos)
+            .with_length(current.radius); // keep track of the point on the circumference of
+                                          // prev closest to l, which will cross l first
 
     const auto possible_collision =
-        math::clamped_intersection({old.pos + radius_shift, current.pos + radius_shift}, l);
+        math::clamped_intersection({old_pos + radius_shift, current.pos + radius_shift}, l);
 
     if (!possible_collision) { return; }
 
