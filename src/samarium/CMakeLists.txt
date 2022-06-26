@@ -6,7 +6,7 @@ cmake_minimum_required(VERSION 3.15)
 
 set(SAMARIUM_SOURCES
     samarium/app/App.cpp
-    samarium/core/ThreadPool.cpp
+    samarium/util/ThreadPool.cpp
     samarium/graphics/Trail.cpp
     samarium/gui/Keyboard.cpp
     samarium/gui/Mouse.cpp

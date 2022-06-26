@@ -21,6 +21,7 @@
 #include "SFML/Window/Mouse.hpp"           // for Mouse, Mouse::VerticalWheel
 #include "range/v3/algorithm/copy.hpp"     // for copy_fn, copy
 
+#include "samarium/graphics/Trail.hpp"   // for Trail
 #include "samarium/gui/sfml.hpp"         // for sfml
 #include "samarium/math/Extents.hpp"     // for Extents, Extents<>::Iterator
 #include "samarium/math/math.hpp"        // for pi
@@ -212,6 +213,10 @@ void App::draw_vertices(std::span<const Vector2> vertices, VertexMode mode)
     sf_render_window.draw(converted);
 }
 
+void App::draw(const Trail& trail, Color color, f64 thickness)
+{
+    this->draw_polyline(trail.span(), color, thickness);
+}
 
 void App::run(FunctionRef<void(f64)> update, FunctionRef<void()> draw, u64 substeps)
 {

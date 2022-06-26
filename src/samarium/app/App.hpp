@@ -18,7 +18,6 @@
 #include "SFML/Window/VideoMode.hpp"       // for VideoMode
 #include "SFML/Window/WindowStyle.hpp"     // for Close, Titlebar
 
-#include "samarium/core/ThreadPool.hpp"  // for ThreadPool
 #include "samarium/core/types.hpp"       // for f64, u32, u64
 #include "samarium/graphics/Color.hpp"   // for Color, ShapeColor
 #include "samarium/graphics/Grid.hpp"    // for dimsFHD
@@ -29,6 +28,7 @@
 #include "samarium/math/Transform.hpp"   // for Transform
 #include "samarium/math/Vector2.hpp"     // for Vector2, Dimensions
 #include "samarium/util/Stopwatch.hpp"   // for Stopwatch
+#include "samarium/util/ThreadPool.hpp"  // for ThreadPool
 
 namespace sm
 {
@@ -191,7 +191,7 @@ class App
      * @param  color
      * @param  thickness
      */
-    void draw(Trail trail, Color color = Color{255, 255, 255}, f64 thickness = 1.0);
+    void draw(const Trail& trail, Color color = Color{255, 255, 255}, f64 thickness = 0.1);
 
     void draw_vertices(std::span<const Vector2> vertices, VertexMode mode = VertexMode::LineStrip);
 
