@@ -23,6 +23,12 @@ template <concepts::Number T = f64> struct BoundingBox
         return BoundingBox<U>{min.template as<U>(), max.template as<U>()};
     }
 
+    [[nodiscard]] static constexpr auto square(T width) noexcept requires std::is_signed_v<T>
+    {
+        width = std::abs(width / 2.0); // recenter, make +ve
+        return BoundingBox{.min{-width, -width}, .max{width, width}};
+    }
+
     [[nodiscard]] static constexpr auto find_min_max(Vector2_t<T> p1, Vector2_t<T> p2)
     {
         return BoundingBox<T>{{math::min(p1.x, p2.x), math::min(p1.y, p2.y)},
