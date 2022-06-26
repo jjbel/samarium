@@ -228,6 +228,7 @@ void App::run(FunctionRef<void(f64)> update, FunctionRef<void()> draw, u64 subst
         {
             std::ignore = i;
             update(1.0 / static_cast<f64>(substeps) / static_cast<f64>(this->target_framerate));
+            // update(clock.seconds() / static_cast<f64>(substeps));
         }
         draw();
 
