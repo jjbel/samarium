@@ -22,7 +22,6 @@ Samarium is a 2d physics simulation library written in modern C++20.
 - [Tools](#tools)
 - [Documentation](#documentation)
 - [License](#license)
-- [References](#references)
 
 ## Quickstart
 
@@ -82,11 +81,13 @@ For development, see [BUILDING.md](BUILDING.md)
 
 ## License
 
-Samarium is distributed under the permissive [MIT License](LICENSE.md).
+Samarium is distributed under the [MIT License](LICENSE.md).
 
-## References
+Libraries used:
 
-These sources were of invaluable help during development:
-
-1. C++ Standard: <https://en.cppreference.com/>
-2. Custom iterators: <https://internalpointers.com/post/writing-custom-iterators-modern-cpp>
+1. [fmtlib](https://github.com/fmtlib/fmt)
+2. [SFML](https://www.sfml-dev.org/)
+3. [range-v3](https://github.com/ericniebler/range-v3)
+4. [BS::thread_pool](https://github.com/bshoshany/thread-pool)
+5. [PCG RNG](https://www.pcg-random.org/)
+6. [tl::function_ref](https://github.com/TartanLlama/function_ref)
