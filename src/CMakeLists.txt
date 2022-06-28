@@ -33,6 +33,7 @@ set_target_properties(
                CXX_STANDARD 20
                CXX_STANDARD_REQUIRED YES
                CXX_EXTENSIONS NO
+               WINDOWS_EXPORT_ALL_SYMBOLS YES
 )
 
 target_include_directories(samarium PUBLIC "${CMAKE_CURRENT_LIST_DIR}")
