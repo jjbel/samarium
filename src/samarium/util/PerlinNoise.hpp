@@ -84,11 +84,7 @@ class PerlinNoise
 
 
     /**
-     * @brief               Get a noise value at (x, y, z)
-     *
-     * @param  x
-     * @param  y
-     * @param  z
+     * @brief               Get a noise value at position with params
      */
     auto detail(Vector2 position, NoiseParams params = {}) const -> f64;
 };
