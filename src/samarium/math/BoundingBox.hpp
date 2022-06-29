@@ -65,7 +65,7 @@ template <concepts::Number T = f64> struct BoundingBox
 
     [[nodiscard]] constexpr auto clamped_to(BoundingBox<T> bounds) const
     {
-        using ext        = Extents<f64>;
+        using ext        = Extents<T>;
         const auto ext_x = ext{bounds.min.x, bounds.max.x};
         const auto ext_y = ext{bounds.min.y, bounds.max.y};
         return BoundingBox<T>{{ext_x.clamp(min.x), ext_y.clamp(min.y)},
