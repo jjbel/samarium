@@ -93,60 +93,34 @@ class App
                          { sf_render_window.close(); });
     }
 
-    /**
-     * @brief               Load the current GPU pixels to the image to draw on manually
-     */
+    /// Load the current GPU pixels to the image to draw on manually
     void load_pixels();
 
-    /**
-     * @brief               Store the current pixels of the image in the GPU
-     */
+    /// Store the current pixels of the image in the GPU
     void store_pixels();
 
-    /**
-     * @brief               Display the current contents of the screen, update `watch` and
-     * `frame_counter`
-     */
+    /// Display the current contents of the screen, update `clock` and
     void display();
 
-    /**
-     * @brief               Is the window currently open
-     *
-     * @return true
-     * @return false
-     */
+    /// Is the window currently open
     auto is_open() const -> bool;
 
-    /**
-     * @brief               Load the current `keymap` and `mouse` events
-     */
+    /// Load the current `keymap` and `mouse` events
     void get_input();
 
-    /**
-     * @brief               Dimensions of the viewport in screenspace coordinates
-     */
+    /// Dimensions of the viewport in screenspace coordinates
     auto dims() const -> Dimensions;
 
-    /**
-     * @brief               The `Dimensions` of the viewport with `transform` applied
-     */
+    /// The `Dimensions` of the viewport with `transform` applied
     auto transformed_dims() const -> Vector2;
 
-    /**
-     * @brief               The `BoundingBox` formed by the viewport
-     *
-     * @return BoundingBox<u64>
-     */
+    /// The `BoundingBox` formed by the viewport
     auto bounding_box() const -> BoundingBox<u64>;
 
-    /**
-     * @brief               The 4 `LineSegment`'s forming the viewportm, in worldspace coordinates
-     */
+    /// The 4 `LineSegment`'s forming the viewportm, in worldspace coordinates
     auto viewport_box() const -> std::array<LineSegment, 4>;
 
-    /**
-     * @brief               Get a copy of the pixels currently on the GPU
-     */
+    /// Get a copy of the pixels currently on the GPU
     auto get_image() -> Image;
 
     /**
