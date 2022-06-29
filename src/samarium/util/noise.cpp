@@ -14,6 +14,8 @@
 
 namespace sm::noise
 {
+// from https://gist.github.com/nowl/828013
+
 auto interp_smooth(f64 a, f64 b, f64 s)
 {
     return interp::lerp<f64>(s * s * (3.0 - 2.0 * s), {a, b});

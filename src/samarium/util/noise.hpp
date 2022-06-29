@@ -10,6 +10,7 @@
 #include <array>
 
 #include "samarium/core/types.hpp"
+#include "samarium/math/Vector2.hpp"
 
 namespace sm::noise
 {
