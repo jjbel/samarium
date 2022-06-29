@@ -6,9 +6,9 @@
  */
 
 #include "samarium/graphics/colors.hpp"
-#include "samarium/graphics/gradients.hpp"
-#include "samarium/physics/Particle.hpp"
 #include "samarium/samarium.hpp"
+
+#include "range/v3/view/concat.hpp"
 
 using namespace sm;
 using namespace sm::literals;
@@ -16,13 +16,16 @@ using namespace sm::literals;
 // !!!!! EDIT THIS !!!!!
 struct Params
 {
-    Vector2 gravity      = -30.0_y;
-    f64 spring_stiffness = 150.0;
-    f64 spring_damping   = 55.0;
-    f64 particle_mass    = 0.6;
-    f64 particle_radius  = 1.6;
+    f64 time_scale                 = 1.4;
+    Vector2 gravity                = -30.0_y;
+    f64 coefficient_of_friction    = 0.95;
+    f64 coefficient_of_restitution = 0.95; // bounciness
+    f64 spring_stiffness           = 150.0;
+    f64 spring_damping             = 55.0;
+    f64 particle_mass              = 0.6;
+    f64 particle_radius            = 1.6;
     Vector2 particle_velocity{10, 20};
-    Dimensions particle_count_xy{3, 3};
+    Dimensions particle_count_xy{4, 4};
     Vector2 softbody_area{25, 25};
 };
 
@@ -85,14 +88,19 @@ int main()
         return temp;
     }();
 
-    auto app = App{{.dims = dims720}};
-
+    auto app = App{{.dims{1600, 800}}};
+    app.transform.scale *= 1.4;
     const auto viewport_box = app.viewport_box();
+
+    const auto walls     = std::to_array({LineSegment{{-19, 20}, {19, 14}}});
+    const auto colliders = ranges::views::concat(viewport_box, walls);
 
     auto watch = Stopwatch{};
 
     const auto update = [&](auto delta)
     {
+        delta *= params.time_scale;
+
         for (auto&& spring : springs) { spring.update(); }
 
         for (auto&& particle : particles)
@@ -106,7 +114,6 @@ int main()
                 particle->pos += app.mouse.vel() / app.transform.scale;
                 particle->vel = Vector2{};
                 particle->acc = Vector2{};
-                // print("Click!", app.mouse.vel());
             }
 
             particle->update(delta);
@@ -116,17 +123,24 @@ int main()
                 phys::collide(particle.now, other_particle.now);
             }
 
-            for (auto&& wall : viewport_box) { phys::collide(particle.now, wall, delta); }
+            for (auto&& wall : colliders)
+            {
+                phys::collide(particle.now, wall, delta, params.coefficient_of_restitution,
+                              params.coefficient_of_friction);
+            }
         }
     };
 
     const auto draw = [&]
     {
         app.fill("#16161c"_c);
+
+        for (const auto& ls : colliders) { app.draw_line_segment(ls, colors::white, 0.1); }
+
         for (const auto& spring : springs)
         {
             app.draw_line_segment(LineSegment{spring.p1.pos, spring.p2.pos},
-                                  colors::white.with_multiplied_alpha(0.8), 0.04);
+                                  colors::white.with_multiplied_alpha(0.5), 0.1);
         }
 
         for (auto& particle : particles)
@@ -135,9 +149,9 @@ int main()
             particle.prev = particle.now;
         }
 
-        // fmt::print("Framerate: {}\n", std::round(1.0 / watch.time().count()));
+        print("Framerate:", std::round(1.0 / watch.seconds()));
         watch.reset();
     };
 
-    app.run(update, draw, 16);
+    app.run(update, draw, 32);
 }
