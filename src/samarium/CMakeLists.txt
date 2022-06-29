@@ -19,6 +19,6 @@ set(SAMARIUM_SOURCES
     samarium/util/file.cpp
     samarium/util/ostream.cpp
     samarium/util/util.cpp
-    samarium/util/PerlinNoise.cpp
+    samarium/util/noise.cpp
     PARENT_SCOPE
 )
