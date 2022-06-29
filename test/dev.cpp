@@ -8,62 +8,38 @@
 #include "samarium/graphics/colors.hpp"
 #include "samarium/samarium.hpp"
 
+#include "range/v3/view/enumerate.hpp"
+
 using namespace sm;
 using namespace sm::literals;
 
 int main()
 {
-    auto rand = RandomGenerator{};
+    auto app         = App{{.dims{1600, 800}}};
+    const auto count = 200;
 
-    auto particles = ParticleSystem::generate(
-        500,
-        [&](u64 /* index */)
-        {
-            const auto mass = rand.range<f64>({0.5, 2.0});
-            return Particle{.pos    = rand.vector(BoundingBox<f64>::square(70)),
-                            .vel    = rand.polar_vector({0, 40}) / mass,
-                            .radius = 0.7 * mass,
-                            .mass   = mass};
-        });
+    auto plot = std::vector<Vector2>(count);
 
-    auto app                = App{{.dims = dimsFHD}};
-    const auto viewport_box = app.viewport_box();
-    auto clock              = Stopwatch{};
+    auto watch = Stopwatch{};
 
-    auto trail = Trail{2000000};
-
-    const auto update = [&](f64 dt)
-    {
-        particles.self_collision(0.98);
-
-        particles.for_each(
-            [viewport_box, dt](Particle& particle)
-            {
-                for (const auto& wall : viewport_box)
-                {
-                    phys::collide(particle, wall, dt, 0.98, 0.98);
-                }
-            });
-
-        particles.update(app.thread_pool, dt);
-    };
+    auto rand  = RandomGenerator{};
+    auto noise = util::PerlinNoise{};
 
     const auto draw = [&]
     {
-        trail.push_back(particles[0].pos);
+        //    for(auto [i, value] : ranges::view)
 
-        app.fill("#0d1117"_c);
-        app.draw(trail, "#2887ed"_c);
-
-        for (const auto& p : particles)
-        {
-            app.draw(p, {.fill_color   = colors::orangered,
-                         .border_color = Color{255, 255, 255, 128},
-                         .border_width = 0.0});
-        }
-        print("fps:", std::round(1.0 / clock.seconds()));
-        clock.reset();
+        app.fill("#16161c"_c);
+        app.draw_world_space(
+            [&](Vector2 pos)
+            {
+                const auto thing =
+                    noise.detail(pos,
+                                 {.scale = 1.0, .detail = 3, .seed = app.frame_counter / 100.0}) *
+                    255;
+                return Color::from_grayscale(static_cast<u8>(thing));
+            });
     };
-
-    app.run(update, draw, 16);
+    // app.run(draw);
+    for (auto i : range(20)) { print(rand()); }
 }

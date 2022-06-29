@@ -8,6 +8,9 @@
 #include <cmath>
 #include <random>
 
+#include "samarium/math/Extents.hpp"
+#include "samarium/util/print.hpp"
+
 #include "range/v3/algorithm/shuffle.hpp"
 #include "range/v3/numeric/iota.hpp"
 
@@ -79,15 +82,36 @@ auto PerlinNoise::noise(f64 x, f64 y, f64 z) const -> f64
     const auto BB = p[u64(B + 1)] + Z;
 
     // Add blended results from 8 corners of cube
-    const auto res = lerp(
+    const auto result = lerp(
         w,
         lerp(v, lerp(u, grad(p[u64(AA)], x, y, z), grad(p[u64(BA)], x - 1, y, z)),
              lerp(u, grad(p[u64(AB)], x, y - 1, z), grad(p[u64(BB)], x - 1, y - 1, z))),
         lerp(v, lerp(u, grad(p[u64(AA + 1)], x, y, z - 1), grad(p[u64(BA + 1)], x - 1, y, z - 1)),
              lerp(u, grad(p[u64(AB + 1)], x, y - 1, z - 1),
                   grad(p[u64(BB + 1)], x - 1, y - 1, z - 1))));
-    return (res + 1.0) / 2.0;
+    return result;
 }
 
-auto PerlinNoise::operator()(f64 x, f64 y, f64 z) const -> f64 { return this->noise(x, y, z); }
+auto PerlinNoise::operator()(f64 x, f64 y, f64 z) const -> f64 { return noise(x, y, z); }
+
+auto PerlinNoise::detail(Vector2 position, NoiseParams params) const -> f64
+{
+    position *= params.scale;
+    auto result = 0.0;
+    auto factor = 0.0;
+
+    auto scale = 1.0;
+
+    for (auto i : range(params.detail))
+    {
+        result += scale * this->operator()(position.x, position.y);
+        position /= scale;
+        factor += scale;
+        scale *= 0.5;
+    }
+
+    // print(result, factor, result / factor);
+
+    return (result + factor) / (2 * factor);
+}
 } // namespace sm::util

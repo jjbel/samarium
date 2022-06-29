@@ -9,11 +9,19 @@
 
 #include <vector>
 
-#include "../math/interp.hpp"
 #include "random.hpp"
+#include "samarium/math/interp.hpp"
 
 namespace sm::util
 {
+
+struct NoiseParams
+{
+    f64 scale{1.0};
+    u64 detail{4};
+    f64 seed{0.0};
+};
+
 /**
  * @brief               A perlin noise generator
  *
@@ -73,5 +81,15 @@ class PerlinNoise
      * @param  z
      */
     auto operator()(f64 x, f64 y, f64 z = 0.0) const -> f64;
+
+
+    /**
+     * @brief               Get a noise value at (x, y, z)
+     *
+     * @param  x
+     * @param  y
+     * @param  z
+     */
+    auto detail(Vector2 position, NoiseParams params = {}) const -> f64;
 };
 } // namespace sm::util
