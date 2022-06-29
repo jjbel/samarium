@@ -8,6 +8,7 @@
 #pragma once
 
 #include <initializer_list> // for initializer_list
+#include <random>           // for random_device
 #include <vector>           // for vector
 
 #include "range/v3/algorithm/generate.hpp" // for generate, generate_fn
@@ -20,6 +21,12 @@
 
 namespace sm
 {
+enum class RandomMode
+{
+    Stable,
+    NonDeterministic
+};
+
 // PCG-based random number generator, see https://www.pcg-random.org/
 struct RandomGenerator
 {
@@ -30,9 +37,18 @@ struct RandomGenerator
     u64 inc;
     u64 current_index{};
 
-    explicit RandomGenerator(u64 cache_size = 1024UL, u64 new_state = 69, u64 new_inc = 69) noexcept
-        : cache(cache_size), state{new_state * magic_number + (new_inc | 1)}, inc{new_inc}
+    explicit RandomGenerator(u64 cache_size  = 1024UL,
+                             RandomMode mode = RandomMode::Stable,
+                             u64 new_inc     = 69) noexcept
+        : cache(cache_size), inc{new_inc}
     {
+        auto new_state = 69UL;
+        if (mode == RandomMode::NonDeterministic)
+        {
+            new_state = static_cast<u64>(std::random_device{}()); // true randomness
+        }
+        state = new_state * magic_number + (new_inc | 1);
+
         ranges::generate(cache, [this] { return this->next_scaled(); });
     }
 
