@@ -29,6 +29,7 @@
 #include "samarium/math/vector_math.hpp" // for area
 #include "samarium/physics/Particle.hpp" // for Particle
 #include "samarium/util/FunctionRef.hpp" // for FunctionRef
+#include "samarium/util/print.hpp" // for FunctionRef
 
 #include "App.hpp"
 
@@ -167,7 +168,7 @@ void App::draw_world_space(FunctionRef<Color(Vector2)> callable,
 
     if (math::area(box) == 0UL) { return; }
 
-    const auto x_range = box.x_range();
+    const auto x_range = box.x_range(); // inclusive range
     const auto y_range = box.y_range();
 
     const auto job = [&](auto min, auto max)
@@ -186,6 +187,41 @@ void App::draw_world_space(FunctionRef<Color(Vector2)> callable,
 
     thread_pool.parallelize_loop(y_range.min, y_range.max + 1, job, thread_pool.get_thread_count());
 
+    store_pixels();
+}
+
+void App::draw_screen_space(FunctionRef<Color(Indices)> callable)
+{
+    const auto bounding_box = image.bounding_box();
+    this->draw_screen_space(callable, bounding_box);
+}
+
+void App::draw_screen_space(FunctionRef<Color(Indices)> callable,
+                            const BoundingBox<u64>& bounding_box)
+{
+    load_pixels();
+
+    const auto box = bounding_box.clamped_to(image.bounding_box());
+
+    if (math::area(box) == 0UL) { return; }
+
+    const auto x_range = box.x_range();
+    const auto y_range = box.y_range();
+
+    const auto job = [&](auto min, auto max)
+    {
+        for (auto y : range(min, max))
+        {
+            for (auto x : x_range)
+            {
+                const auto coords = Indices{x, y};
+                const auto col    = callable(coords);
+
+                image[coords].add_alpha_over(col);
+            }
+        }
+    };
+    thread_pool.parallelize_loop(y_range.min, y_range.max + 1, job, thread_pool.get_thread_count());
     store_pixels();
 }
 

@@ -88,7 +88,7 @@ class App
 
         sf_render_window.setFramerateLimit(settings.framerate);
 
-        keymap.push_back({Keyboard::Key::LControl, Keyboard::Key::Q}, // exit by default with Ctrl+Q
+        keymap.push_back({Keyboard::Key::Escape}, // exit by default with Escape
                          [&sf_render_window = this->sf_render_window]
                          { sf_render_window.close(); });
     }
@@ -142,6 +142,10 @@ class App
     void draw_world_space(FunctionRef<Color(Vector2)> callable);
     void draw_world_space(FunctionRef<Color(Vector2)> callable,
                           const BoundingBox<f64>& bounding_box);
+
+    void draw_screen_space(FunctionRef<Color(Indices)> callable);
+    void draw_screen_space(FunctionRef<Color(Indices)> callable,
+                           const BoundingBox<u64>& bounding_box);
 
     void draw_polyline(std::span<const Vector2> vertices,
                        Color color   = Color{255, 255, 255},
