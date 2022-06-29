@@ -2,7 +2,7 @@
 
 set -e
 
-git checkout gh-pages
+git switch --create gh-pages
 
 mkdir -p build
 doxygen ./docs/src/Doxyfile
