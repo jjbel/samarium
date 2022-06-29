@@ -89,7 +89,7 @@ auto PerlinNoise::noise(f64 x, f64 y, f64 z) const -> f64
         lerp(v, lerp(u, grad(p[u64(AA + 1)], x, y, z - 1), grad(p[u64(BA + 1)], x - 1, y, z - 1)),
              lerp(u, grad(p[u64(AB + 1)], x, y - 1, z - 1),
                   grad(p[u64(BB + 1)], x - 1, y - 1, z - 1))));
-    return result;
+    return (result + 1.0) / 2.0;
 }
 
 auto PerlinNoise::operator()(f64 x, f64 y, f64 z) const -> f64 { return noise(x, y, z); }

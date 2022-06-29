@@ -424,7 +424,9 @@ template <typename T> [[nodiscard]] constexpr auto lerp_inverse(f64 value, Exten
 template <typename T, typename Output = T>
 [[nodiscard]] constexpr auto map_range(T value, Extents<T> from, Extents<Output> to)
 {
-    return static_cast<Output>(to.min + (value - from.min) * to.size() / from.size());
+    return static_cast<Output>(to.min + static_cast<Output>(value - from.min) *
+                                            static_cast<Output>(to.size()) /
+                                            static_cast<Output>(from.size()));
 }
 
 /**

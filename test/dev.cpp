@@ -15,8 +15,9 @@ using namespace sm::literals;
 
 int main()
 {
-    auto app         = App{{.dims{1600, 800}}};
+    auto app = App{{.dims{1600, 800}}};
     const auto count = 200;
+    const auto size  = Vector2{70.0, 30.0};
 
     auto plot = std::vector<Vector2>(count);
 
@@ -25,21 +26,16 @@ int main()
     auto rand  = RandomGenerator{};
     auto noise = util::PerlinNoise{};
 
+    for (auto [i, value] : ranges::views::enumerate(plot))
+    {
+        value.x = interp::map_range<u64, f64>(i, {0, count}, {-size.x, size.x});
+        value.y = interp::map_range<f64, f64>(noise(value.x / 4, 0.0), {0.0, 1.0}, {0.0, size.y});
+    }
+
     const auto draw = [&]
     {
-        //    for(auto [i, value] : ranges::view)
-
         app.fill("#16161c"_c);
-        app.draw_world_space(
-            [&](Vector2 pos)
-            {
-                const auto thing =
-                    noise.detail(pos,
-                                 {.scale = 1.0, .detail = 3, .seed = app.frame_counter / 100.0}) *
-                    255;
-                return Color::from_grayscale(static_cast<u8>(thing));
-            });
+        app.draw_polyline(plot, "#4542ff"_c, 0.1);
     };
-    // app.run(draw);
-    for (auto i : range(20)) { print(rand()); }
+    app.run(draw);
 }
