@@ -41,7 +41,8 @@ int main()
             [&](Vector2 pos)
             {
                 auto noise =
-                    noise::perlin_2d(pos.as<f64>(), {.scale = 1.0, .detail = 8, .roughness = 0.9}) *
+                    noise::perlin_2d(pos.as<f64>(),
+                                     {.scale = 1.0, .detail = 8, .seed = 1, .roughness = 0.6}) *
                     255.0;
                 return Color::from_grayscale(static_cast<u8>(noise));
             });

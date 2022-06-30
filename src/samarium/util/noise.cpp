@@ -65,7 +65,7 @@ auto single_iter_noise2d(Vector2 pos)
 
 auto perlin_1d(f64 pos, Params params) -> f64
 {
-    pos            = (pos + 100.0) * params.scale / 10.0;
+    pos            = (pos + 100.0 + 200.0 * params.seed) * params.scale / 10.0;
     auto amplitude = 1.0;
     auto result    = 0.0;
     auto div       = 0.0;
@@ -82,7 +82,7 @@ auto perlin_1d(f64 pos, Params params) -> f64
 
 auto perlin_2d(Vector2 pos, Params params) -> f64
 {
-    pos            = (pos + Vector2{100, 100}) * params.scale / 10.0;
+    pos = (pos + Vector2{100, 100} + Vector2{200, 200} * params.seed) * params.scale / 10.0;
     auto amplitude = 1.0;
     auto result    = 0.0;
     auto div       = 0.0;
