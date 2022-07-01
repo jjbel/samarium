@@ -13,7 +13,10 @@
 
 #include "fmt/format.h"
 #include "range/v3/algorithm/copy.hpp"
+#include "range/v3/view/enumerate.hpp"
+#include "range/v3/view/iota.hpp"
 #include "range/v3/view/transform.hpp"
+#include "range/v3/view/zip.hpp"
 
 #include "../math/BoundingBox.hpp"
 #include "../math/Extents.hpp"
@@ -36,6 +39,12 @@ constexpr auto convert_1d_to_2d(Dimensions dims, size_t index)
 constexpr auto convert_2d_to_1d(Dimensions dims, Indices coordinates)
 {
     return coordinates.y * dims.x + coordinates.x;
+}
+
+inline auto iota_view_2d(Dimensions dims)
+{
+    return ranges::views::iota(0UL, dims.x * dims.y) |
+           ranges::views::transform([dims](u64 index) { return convert_1d_to_2d(dims, index); });
 }
 
 template <typename T> class Grid
@@ -93,48 +102,74 @@ template <typename T> class Grid
 
     auto at(Indices indices) -> T&
     {
-        if (indices.x >= dims.x || indices.y >= dims.y)
+        if (indices.x >= dims.x || indices.y >= dims.y) [[unlikely]]
         {
             throw std::out_of_range(
-                fmt::format("sm::Grid: indices [{}, {}] out of range for dimensions [{}, {}]",
+                fmt::format("sm::Grid: indices ({}, {}) out of range for dimensions ({}, {})",
                             indices.x, indices.y, this->dims.x, this->dims.y));
         }
-
-        return this->operator[](indices);
+        else [[likely]]
+        {
+            return this->operator[](indices);
+        }
     }
 
     auto at(Indices indices) const -> const T&
     {
-        if (indices.x >= dims.x || indices.y >= dims.y)
+        if (indices.x >= dims.x || indices.y >= dims.y) [[unlikely]]
         {
             throw std::out_of_range(
-                fmt::format("sm::Grid: indices [{}, {}] out of range for dimensions [{}, {}]",
+                fmt::format("sm::Grid: indices ({}, {}) out of range for dimensions ({}, {})",
                             indices.x, indices.y, this->dims.x, this->dims.y));
         }
-
-        return this->operator[](indices);
+        else [[likely]]
+        {
+            return this->operator[](indices);
+        }
     }
 
     auto at(size_t index) -> T&
     {
-        if (index >= this->m_size)
+        if (index >= this->size()) [[unlikely]]
         {
             throw std::out_of_range(
-                fmt::format("sm::Grid: index {} out of range for size {}", index, this->m_size));
+                fmt::format("sm::Grid: index {} out of range for size {}", index, this->size()));
         }
-
-        return this->data[index];
+        else [[likely]]
+        {
+            return this->data[index];
+        }
     }
 
     auto at(size_t index) const -> const T&
     {
-        if (index >= this->m_size)
+        if (index >= this->size()) [[unlikely]]
         {
             throw std::out_of_range(
-                fmt::format("sm::Grid: index {} out of range for size {}", index, this->m_size));
+                fmt::format("sm::Grid: index {} out of range for size {}", index, this->size()));
         }
+        else [[likely]]
+        {
+            return this->data[index];
+        }
+    }
 
-        return this->data[index];
+    auto at_or(Indices indices, T default_value) const -> T
+    {
+        if (indices.x >= dims.x || indices.y >= dims.y) [[unlikely]] { return default_value; }
+        else [[likely]]
+        {
+            return this->operator[](indices);
+        }
+    }
+
+    auto at_or(size_t index, T default_value) const -> T
+    {
+        if (index >= this->size()) [[unlikely]] { return default_value; }
+        else [[likely]]
+        {
+            return this->data[index];
+        }
     }
 
     auto begin() { return this->data.begin(); }
@@ -180,53 +215,8 @@ template <typename T> class Grid
         return output;
     }
 
-    struct Iterator2d
-    {
-        using iterator_category = std::forward_iterator_tag;
-        using difference_type   = std::ptrdiff_t;
-        using value_type        = std::pair<Indices, T*>;
-        using pointer           = value_type*; // or also value_type*
-        using reference         = value_type;  // or also value_type&
+    auto enumerate_1d() { return ranges::views::enumerate(*this); }
 
-        Grid<T>& grid;
-        u64 index;
-
-        auto operator*() const -> reference
-        {
-            return value_type{convert_1d_to_2d(grid.dims, index), &grid[index]};
-        }
-        // auto operator->() -> pointer { return &(grid->operator[](m_index)); }
-
-        // Prefix increment
-        auto operator++() -> Iterator2d&
-        {
-            index++;
-            return *this;
-        }
-
-        // Postfix increment
-        auto operator++(int) -> Iterator2d
-        {
-            Iterator2d tmp = *this;
-            ++(*this);
-            return tmp;
-        }
-
-        friend auto operator==(const Iterator2d& a, const Iterator2d& b) -> bool
-        {
-            return a.index == b.index;
-        };
-    };
-
-    struct Iterator2dHolder
-    {
-        Grid<T>& grid;
-        auto begin() { return Iterator2d{this->grid, 0}; }
-        auto end() { return Iterator2d{this->grid, this->grid.size()}; }
-        auto size() const { return this->grid.size(); }
-    };
-
-    auto iterate_2d() { return Iterator2dHolder{*this}; }
+    auto enumerate_2d() { return ranges::views::zip(iota_view_2d(dims), *this); }
 };
-
 } // namespace sm
