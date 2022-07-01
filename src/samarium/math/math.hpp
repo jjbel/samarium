@@ -159,17 +159,44 @@ template <typename T> [[nodiscard]] constexpr auto sign(T x) noexcept -> i32
 
 /**
  * @brief               Modulus of 2 floating-point values
+ * (see https://stackoverflow.com/a/67098028)
  *
  * @tparam T
  * @param  x            First value
  * @param  y            Second value
- * @return T
  */
 template <concepts::FloatingPoint T> constexpr auto mod(T x, T y) noexcept
 {
-    return x - trunc(x / y) * y;
+    return x - std::trunc(x / y) * y;
 }
-// https://stackoverflow.com/a/67098028
+
+/**
+ * @brief               Wrap x to range [0, max)
+ * (see https://stackoverflow.com/a/29871193/17100530)
+ *
+ * @tparam T
+ * @param  x            Value
+ * @param  max          Upper limit of range
+ */
+template <concepts::FloatingPoint T> constexpr auto wrap_max(T x, T max)
+{
+    /* integer math: `(max + x % max) % max` */
+    return std::fmod(max + std::fmod(x, max), max);
+}
+
+/**
+ * @brief               Wrap x to range [min, max)
+ * (see https://stackoverflow.com/a/29871193/17100530)
+ *
+ * @tparam T
+ * @param  x            Value
+ * @param  min          Lower limit of range
+ * @param  max          Upper limit of range
+ */
+template <concepts::FloatingPoint T> constexpr auto wrap_min_max(T x, T min, T max)
+{
+    return min + wrap_max(x - min, max - min);
+}
 } // namespace sm::math
 
 namespace sm::literals
