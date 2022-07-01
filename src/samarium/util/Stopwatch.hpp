@@ -25,6 +25,8 @@ struct Stopwatch
 
     [[nodiscard]] auto seconds() const -> f64;
 
+    [[nodiscard]] auto current_fps() -> f64;
+
     void print() const;
 };
 } // namespace sm

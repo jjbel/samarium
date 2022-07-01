@@ -21,5 +21,12 @@ auto Stopwatch::time() const -> Stopwatch::Duration_t
 
 [[nodiscard]] auto Stopwatch::seconds() const -> f64 { return this->time().count(); }
 
+[[nodiscard]] auto Stopwatch::current_fps() -> f64
+{
+    const auto sec = seconds();
+    reset();
+    return 1.0 / sec;
+}
+
 void Stopwatch::print() const { fmt::print("{:.3}ms\n", this->time().count() * 1000.0); }
 }; // namespace sm
