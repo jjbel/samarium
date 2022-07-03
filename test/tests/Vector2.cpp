@@ -5,138 +5,119 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
-#include <cmath>            // for sqrt
-#include <exception>        // for exception
-#include <initializer_list> // for initializer_list
-#include <optional>         // for optional
-#include <type_traits>      // for is_same_v
-#include <vector>           // for vector
+#include "samarium/math/Vector2.hpp"
+#include "samarium/math/vector_math.hpp"
 
-#include "ut.hpp" // for testing
+#include "catch2/catch_test_macros.hpp"
 
-#include "../../src/samarium/core/types.hpp"       // for f64
-#include "../../src/samarium/math/BoundingBox.hpp" // for BoundingBox
-#include "../../src/samarium/math/Vector2.hpp"     // for Vector2_t, operator==
-#include "../../src/samarium/math/math.hpp"        // for almost_equal, to_rad...
-#include "../../src/samarium/math/shapes.hpp"      // for Circle
-#include "../../src/samarium/math/vector_math.hpp" // for clamped_intersection
+using namespace sm;
+using namespace sm::literals;
 
-using namespace boost::ut;
-
-boost::ut::suite _Vector2 = []
+TEST_CASE("Vector2 Literals")
 {
-    "math.Vector2.literals"_test = []
+    const auto a_x = 1.0_x;
+    const auto b_x = Vector2{1.0, 0};
+    REQUIRE(a_x == b_x);
+
+    const auto a_y = 1.0_y;
+    const auto b_y = Vector2{0, 1.0};
+    REQUIRE(a_y == b_y);
+}
+
+TEST_CASE("Vector2")
+{
+    static_assert(std::is_same_v<Vector2::value_type, f64>);
+
+    SECTION("x vector")
     {
-        using namespace sm::literals;
+        const auto a = Vector2{1.0, 0.0};
+        REQUIRE(math::almost_equal(a.length(), 1.0));
+        REQUIRE(math::almost_equal(a.length_sq(), 1.0));
+        REQUIRE(math::almost_equal(a.angle(), 0.0));
+        REQUIRE(math::almost_equal(a.slope(), 0.0));
+    }
 
-        const auto a_x = 1.0_x;
-        const auto b_x = sm::Vector2{1.0, 0};
-        expect(a_x == b_x);
-
-        const auto a_y = 1.0_y;
-        const auto b_y = sm::Vector2{0, 1.0};
-        expect(a_y == b_y);
-    };
-
-    "math.Vector2"_test = []
+    SECTION("xy vector")
     {
-        static_assert(std::is_same_v<sm::Vector2::value_type, sm::f64>);
+        const auto b = Vector2{1.0, 1.0};
+        REQUIRE(math::almost_equal(b.length(), std::sqrt(2.0)));
+        REQUIRE(math::almost_equal(b.length_sq(), 2.0));
+        REQUIRE(math::almost_equal(b.angle(), math::to_radians(45.0)));
+        REQUIRE(math::almost_equal(b.slope(), 1.0));
+    }
 
-        should("x vector") = []
-        {
-            const auto a = sm::Vector2{1.0, 0.0};
-            expect(sm::math::almost_equal(a.length(), 1.0));
-            expect(sm::math::almost_equal(a.length_sq(), 1.0));
-            expect(sm::math::almost_equal(a.angle(), 0.0));
-            expect(sm::math::almost_equal(a.slope(), 0.0));
-        };
-
-        should("xy vector") = []
-        {
-            const auto b = sm::Vector2{1.0, 1.0};
-            expect(sm::math::almost_equal(b.length(), std::sqrt(2.0)));
-            expect(sm::math::almost_equal(b.length_sq(), 2.0));
-            expect(sm::math::almost_equal(b.angle(), sm::math::to_radians(45.0)));
-            expect(sm::math::almost_equal(b.slope(), 1.0));
-        };
-
-        should("y vector") = []
-        {
-            const auto c = sm::Vector2{0.0, 1.0};
-            expect(sm::math::almost_equal(c.length(), 1.0));
-            expect(sm::math::almost_equal(c.length_sq(), 1.0));
-            expect(sm::math::almost_equal(c.angle(), sm::math::to_radians(90.0)));
-        };
-
-        should("origin vector") = []
-        {
-            const auto d = sm::Vector2{0.0, 0.0};
-            expect(sm::math::almost_equal(d.length(), 0.0));
-            expect(sm::math::almost_equal(d.length_sq(), 0.0));
-        };
-    };
-
-    "math.Vector2.geometry"_test = []
+    SECTION("y vector")
     {
-        should("intersection") = []
-        {
-            should("free") = []
-            {
-                const auto a =
-                    sm::math::intersection({{-1.0, 0.0}, {1.0, 0.0}}, {{0.0, 1.0}, {0.0, -1.0}});
-                expect(a.has_value());
-                expect(*a == sm::Vector2{});
+        const auto c = Vector2{0.0, 1.0};
+        REQUIRE(math::almost_equal(c.length(), 1.0));
+        REQUIRE(math::almost_equal(c.length_sq(), 1.0));
+        REQUIRE(math::almost_equal(c.angle(), math::to_radians(90.0)));
+    }
 
-                const auto b =
-                    sm::math::intersection({{-1.0, -1.0}, {1.0, 1.0}}, {{1.0, -1.0}, {-1.0, 1.0}});
-                expect(b.has_value());
-                expect(*b == sm::Vector2{});
-
-                const auto c = sm::math::intersection({{}, {0.0, 1.0}}, {{1.0, 0.0}, {1.0, 1.0}});
-                expect(!c.has_value());
-            };
-
-            should("clamped") = []
-            {
-                const auto a = sm::math::clamped_intersection({{-1.0, 0.0}, {1.0, 0.0}},
-                                                              {{0.0, 1.0}, {0.0, -1.0}});
-                expect(a.has_value());
-                expect(*a == sm::Vector2{});
-
-                const auto b = sm::math::clamped_intersection({{-1.0, -1.0}, {1.0, 1.0}},
-                                                              {{1.0, -1.0}, {-1.0, 1.0}});
-                expect(b.has_value());
-                expect(*b == sm::Vector2{});
-
-                const auto c = sm::math::clamped_intersection({{-1.0, -1.0}, {-0.5, -0.5}},
-                                                              {{1.0, -1.0}, {0.5, -0.5}});
-                expect(!c.has_value());
-
-                const auto d = sm::math::clamped_intersection({{-1.0, 0.0}, {-0.5, 0.0}},
-                                                              {{0.0, 1.0}, {0.0, 0.5}});
-                expect(!d.has_value());
-
-                const auto e =
-                    sm::math::clamped_intersection({{}, {0.0, 1.0}}, {{1.0, 0.0}, {1.0, 1.0}});
-                expect(!e.has_value());
-            };
-        };
-
-        should("area") = []
-        {
-            should("Circle") = []
-            {
-                expect(sm::math::area(sm::Circle{}) == 0.0_d);
-                expect(sm::math::almost_equal(sm::math::area(sm::Circle{.radius = 12.0}),
-                                              452.3893421169302));
-            };
-
-            should("BoundingBox") = []
-            {
-                expect(sm::math::area(sm::BoundingBox<double>{}) == 0.0_d);
-                expect(sm::math::area(sm::BoundingBox<double>{{-10.0, -11.0}, {12.0, 13.0}}) ==
-                       528.0_d);
-            };
-        };
-    };
+    SECTION("origin vector")
+    {
+        const auto d = Vector2{0.0, 0.0};
+        REQUIRE(math::almost_equal(d.length(), 0.0));
+        REQUIRE(math::almost_equal(d.length_sq(), 0.0));
+    }
 };
+
+TEST_CASE("geometry")
+{
+    SECTION("intersection")
+    {
+        SECTION("free")
+        {
+            const auto a = math::intersection({{-1.0, 0.0}, {1.0, 0.0}}, {{0.0, 1.0}, {0.0, -1.0}});
+            REQUIRE(a.has_value());
+            REQUIRE(*a == Vector2{});
+
+            const auto b =
+                math::intersection({{-1.0, -1.0}, {1.0, 1.0}}, {{1.0, -1.0}, {-1.0, 1.0}});
+            REQUIRE(b.has_value());
+            REQUIRE(*b == Vector2{});
+
+            const auto c = math::intersection({{}, {0.0, 1.0}}, {{1.0, 0.0}, {1.0, 1.0}});
+            REQUIRE(!c.has_value());
+        }
+
+        SECTION("clamped")
+        {
+            const auto a =
+                math::clamped_intersection({{-1.0, 0.0}, {1.0, 0.0}}, {{0.0, 1.0}, {0.0, -1.0}});
+            REQUIRE(a.has_value());
+            REQUIRE(*a == Vector2{});
+
+            const auto b =
+                math::clamped_intersection({{-1.0, -1.0}, {1.0, 1.0}}, {{1.0, -1.0}, {-1.0, 1.0}});
+            REQUIRE(b.has_value());
+            REQUIRE(*b == Vector2{});
+
+            const auto c = math::clamped_intersection({{-1.0, -1.0}, {-0.5, -0.5}},
+                                                      {{1.0, -1.0}, {0.5, -0.5}});
+            REQUIRE(!c.has_value());
+
+            const auto d =
+                math::clamped_intersection({{-1.0, 0.0}, {-0.5, 0.0}}, {{0.0, 1.0}, {0.0, 0.5}});
+            REQUIRE(!d.has_value());
+
+            const auto e = math::clamped_intersection({{}, {0.0, 1.0}}, {{1.0, 0.0}, {1.0, 1.0}});
+            REQUIRE(!e.has_value());
+        }
+    }
+
+    SECTION("area")
+    {
+        SECTION("Circle")
+        {
+            REQUIRE(math::area(Circle{}) == 0.0);
+            REQUIRE(math::almost_equal(math::area(Circle{.radius = 12.0}), 452.3893421169302));
+        }
+
+        SECTION("BoundingBox")
+        {
+            REQUIRE(math::area(BoundingBox<double>{}) == 0.0);
+            REQUIRE(math::area(BoundingBox<double>{{-10.0, -11.0}, {12.0, 13.0}}) == 528.0);
+        }
+    }
+}

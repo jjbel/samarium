@@ -13,14 +13,10 @@ include(ccache)
 include(compiler_options)
 include(docs)
 include(conan_install)
+include(find_deps)
+include(CTest)
+include(Catch)
 
 add_subdirectory(src)
-
-include(CTest)
-enable_testing()
 add_subdirectory(test)
-add_test(NAME SamariumTests COMMAND samarium_tests)
-
-option(GENERATE_COVERAGE "Generate coverage reports" FALSE)
-include(coverage)
-generate_coverage(samarium_tests)
+add_subdirectory(examples)

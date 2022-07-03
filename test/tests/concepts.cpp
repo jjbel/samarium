@@ -5,39 +5,53 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
-#include <exception> // for exception
-#include <vector>    // for vector
+#include "samarium/core/concepts.hpp"
 
-#include "ut.hpp"
+#include "catch2/catch_test_macros.hpp"
 
-#include "../../src/samarium/core/concepts.hpp" // for i16, i32, i64, i8, u16, u32, u64, u8
-
-boost::ut::suite concepts = []
+TEST_CASE("concepts")
 {
-    using namespace boost::ut;
-    "core.concepts"_test = []
+    SECTION("Integral: Unsigned")
     {
-        expect(sm::concepts::Integral<sm::u8>);
-        expect(sm::concepts::Integral<sm::u16>);
-        expect(sm::concepts::Integral<sm::u32>);
-        expect(sm::concepts::Integral<sm::u64>);
+        REQUIRE(sm::concepts::Integral<sm::u8>);
+        REQUIRE(sm::concepts::Integral<sm::u16>);
+        REQUIRE(sm::concepts::Integral<sm::u32>);
+        REQUIRE(sm::concepts::Integral<sm::u64>);
+    }
 
-        expect(sm::concepts::Integral<sm::i8>);
-        expect(sm::concepts::Integral<sm::i16>);
-        expect(sm::concepts::Integral<sm::i32>);
-        expect(sm::concepts::Integral<sm::i64>);
+    SECTION("Integral: Signed")
+    {
+        REQUIRE(sm::concepts::Integral<sm::i8>);
+        REQUIRE(sm::concepts::Integral<sm::i16>);
+        REQUIRE(sm::concepts::Integral<sm::i32>);
+        REQUIRE(sm::concepts::Integral<sm::i64>);
+    }
 
-        expect(sm::concepts::Number<sm::u8>);
-        expect(sm::concepts::Number<sm::u16>);
-        expect(sm::concepts::Number<sm::u32>);
-        expect(sm::concepts::Number<sm::u64>);
+    SECTION("FloatingPoint")
+    {
+        REQUIRE(sm::concepts::FloatingPoint<sm::f32>);
+        REQUIRE(sm::concepts::FloatingPoint<sm::f64>);
+    }
 
-        expect(sm::concepts::Number<sm::i8>);
-        expect(sm::concepts::Number<sm::i16>);
-        expect(sm::concepts::Number<sm::i32>);
-        expect(sm::concepts::Number<sm::i64>);
+    SECTION("Number: Unsigned")
+    {
+        REQUIRE(sm::concepts::Number<sm::u8>);
+        REQUIRE(sm::concepts::Number<sm::u16>);
+        REQUIRE(sm::concepts::Number<sm::u32>);
+        REQUIRE(sm::concepts::Number<sm::u64>);
+    }
 
-        expect(sm::concepts::Number<sm::f32>);
-        expect(sm::concepts::Number<sm::f64>);
-    };
-};
+    SECTION("Number: Signed")
+    {
+        REQUIRE(sm::concepts::Number<sm::i8>);
+        REQUIRE(sm::concepts::Number<sm::i16>);
+        REQUIRE(sm::concepts::Number<sm::i32>);
+        REQUIRE(sm::concepts::Number<sm::i64>);
+    }
+
+    SECTION("Number: Floating Point")
+    {
+        REQUIRE(sm::concepts::Number<sm::f32>);
+        REQUIRE(sm::concepts::Number<sm::f64>);
+    }
+}

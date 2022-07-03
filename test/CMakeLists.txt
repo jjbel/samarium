@@ -3,7 +3,6 @@
 # <https://github.com/strangeQuark1041/samarium>
 
 cmake_minimum_required(VERSION 3.15)
-project(samarium_tests LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -11,72 +10,30 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
 list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})
 
-find_package(
-    SFML
-    COMPONENTS system window graphics
-    REQUIRED
-    QUIET
+execute_process(
+    COMMAND ${CONAN_EXE} install catch2/3.0.1@ -if ${CMAKE_BINARY_DIR} -b missing -g
+            cmake_find_package
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    OUTPUT_QUIET
 )
-find_package(fmt REQUIRED QUIET)
-find_package(range-v3 REQUIRED QUIET)
 
-function(create_test TEST_NAME TEST_SOURCES)
-    message(STATUS "Creating test: ${TEST_NAME}, with sources: ${TEST_SOURCES}")
+find_package(Catch2 3 REQUIRED)
 
-    add_executable(${TEST_NAME} "${TEST_SOURCES}")
-    target_include_directories(${TEST_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/src)
+add_executable(samarium_tests)
 
-    target_link_libraries(${TEST_NAME} PRIVATE samarium::samarium)
-    target_link_libraries(${TEST_NAME} PRIVATE fmt::fmt)
-    target_link_libraries(${TEST_NAME} PRIVATE range-v3::range-v3)
-    target_link_libraries(${TEST_NAME} PRIVATE sfml-graphics)
-
-    # if(NOT WIN32) message(STATUS "Linking ${TEST_NAME} with TBB")
-    # target_link_libraries(${TEST_NAME} PUBLIC TBB::tbb) endif()
-
-    if(WARNINGS)
-        target_compile_options(samarium_tests PRIVATE ${WARNINGS})
-    endif()
-endfunction()
-
-function(create_test_with_output_dir TEST_NAME TEST_SOURCES TEST_OUTPUT_DIR)
-    create_test(${TEST_NAME} "${TEST_SOURCES}")
-
-    message(STATUS "Setting output directory for ${TEST_NAME} to ${TEST_OUTPUT_DIR}")
-    set_target_properties(
-        ${TEST_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${TEST_OUTPUT_DIR}"
-    )
-endfunction()
-
-option(SAMARIUM_BUILD_EXTRA_TESTS "Only run the main program and not the tests" ON)
+option(SAMARIUM_BUILD_EXTRA_TESTS "Build extra tests" ON)
 if(SAMARIUM_BUILD_EXTRA_TESTS)
-    create_test(samarium_tests "tests/Vector2.cpp;tests/concepts.cpp;tests/main.cpp")
+    add_subdirectory(tests)
+    target_sources(samarium_tests PUBLIC ${SAMARIUM_TESTS_SOURCES})
+    target_link_libraries(samarium_tests PUBLIC Catch2::Catch2WithMain)
+
+    
+    catch_discover_tests(samarium_tests)
 else()
-    create_test(samarium_tests dev.cpp)
+    target_sources(samarium_tests PUBLIC dev.cpp)
 endif()
 
-option(SAMARIUM_BUILD_EXAMPLES "Build example programs" ON)
-if(SAMARIUM_BUILD_EXAMPLES)
-    create_test_with_output_dir(
-        mandelbrot ../examples/mandelbrot.cpp "${CMAKE_BINARY_DIR}/examples/"
-    )
-    create_test_with_output_dir(
-        poisson_disk_sampling ../examples/poisson_disk_sampling.cpp
-        "${CMAKE_BINARY_DIR}/examples/"
-    )
-    create_test_with_output_dir(
-        softbody ../examples/softbody.cpp "${CMAKE_BINARY_DIR}/examples/"
-    )
-    create_test_with_output_dir(
-        springy_pendulum ../examples/springy_pendulum.cpp "${CMAKE_BINARY_DIR}/examples/"
-    )
-    create_test_with_output_dir(
-        hilbert_curve ../examples/hilbert_curve.cpp "${CMAKE_BINARY_DIR}/examples/"
-    )
-    create_test_with_output_dir(
-        fourier_series ../examples/fourier_series.cpp "${CMAKE_BINARY_DIR}/examples/"
-    )
-    create_test_with_output_dir(
-        prime_spiral ../examples/prime_spiral.cpp "${CMAKE_BINARY_DIR}/examples/"
-    )
-endif()
+target_link_libraries(samarium_tests PUBLIC samarium::samarium)
+
+include(find_deps)
+link_deps(samarium_tests)
