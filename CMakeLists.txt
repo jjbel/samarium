@@ -20,3 +20,7 @@ include(Catch)
 add_subdirectory(src)
 add_subdirectory(test)
 add_subdirectory(examples)
+
+option(GENERATE_COVERAGE "Generate coverage reports" FALSE)
+include(coverage)
+generate_coverage(samarium_tests)

@@ -43,12 +43,14 @@
         {
             "name": "coverage",
             "displayName": "Build for Coverage Analysis",
-            "description": "use GCC's coverage feature",
+            "description": "Use GCC's coverage feature",
+            "inherits": "gcc",
             "generator": "Unix Makefiles",
             "binaryDir": "${sourceDir}/build/",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
-                "GENERATE_COVERAGE": "ON"
+                "GENERATE_COVERAGE": "ON",
+                "SAMARIUM_BUILD_EXTRA_TESTS": "ON"
             }
         },
         {
@@ -108,7 +110,6 @@
             "name": "coverage",
             "configurePreset": "coverage",
             "configuration": "Debug",
-            "targets": "coverage",
             "cleanFirst": true
         },
         {
