@@ -57,8 +57,8 @@
             "inherits": "clang",
             "cacheVariables": {
                 "USE_UBSAN": "OFF",
-                "SAMARIUM_BUILD_EXTRA_TESTS": "OFF",
-                "SAMARIUM_BUILD_EXAMPLES": "OFF"
+                "SAMARIUM_BUILD_EXTRA_TESTS": "ON",
+                "SAMARIUM_BUILD_EXAMPLES": "ON"
             }
         },
         {
@@ -123,12 +123,7 @@
             "name": "default",
             "configurePreset": "default",
             "configuration": "Release",
-            "output": { "outputOnFailure": true, "verbosity": "extra" },
-            "execution": { "noTestsAction": "error", "stopOnFailure": true }
-        },
-        {
-            "name": "dev",
-            "inherits": "default"
+            "output": { "outputOnFailure": true, "verbosity": "default" }
         },
         {
             "name": "coverage",
