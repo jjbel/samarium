@@ -17,6 +17,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
 list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})
 
+find_package(
+    SFML 2.5
+    COMPONENTS system window graphics
+    REQUIRED
+)
+find_package(fmt 7 REQUIRED)
+find_package(range-v3 0.11.0 REQUIRED)
+
 add_subdirectory(samarium)
 
 add_library(samarium ${SAMARIUM_SOURCES})
@@ -42,28 +50,9 @@ if(WARNINGS)
     target_compile_options(samarium PUBLIC ${WARNINGS})
 endif()
 
-option(SAMARIUM_USE_CONAN "Use Conan to find dependencies" TRUE)
-if(SAMARIUM_USE_CONAN)
-    message(STATUS "src/CMakeLists.txt: Using Conan for deps")
-
-    include(conanbuildinfo)
-    conan_basic_setup(TARGETS)
-
-    target_link_libraries(samarium PRIVATE CONAN_PKG::fmt)
-    target_link_libraries(samarium PRIVATE CONAN_PKG::sfml)
-    target_link_libraries(samarium PRIVATE CONAN_PKG::range-v3)
-
-else()
-    find_package(
-        SFML 2.5
-        COMPONENTS system window graphics
-        REQUIRED
-    )
-
-    find_package(fmt REQUIRED)
-    target_link_libraries(samarium PRIVATE fmt::fmt)
-    target_link_libraries(samarium PRIVATE sfml-system sfml-window sfml-graphics)
-endif()
+target_link_libraries(samarium PUBLIC fmt::fmt)
+target_link_libraries(samarium PUBLIC range-v3::range-v3)
+target_link_libraries(samarium PUBLIC sfml-graphics)
 
 install(
     TARGETS samarium
