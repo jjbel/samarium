@@ -12,6 +12,7 @@
 #include "range/v3/view/iota.hpp"
 #include "range/v3/view/transform.hpp"
 #include "range/v3/view/zip.hpp"
+
 using namespace sm;
 using namespace sm::literals;
 
