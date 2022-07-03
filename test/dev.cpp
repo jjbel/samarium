@@ -20,9 +20,8 @@ int main()
     auto app   = App{{.dims{1800, 900}}};
     auto watch = Stopwatch{};
 
-    const auto scale     = .4;
-    const auto cell_size = 1.0;
-    const auto dims      = Dimensions::combine(50);
+    const auto scale = .4;
+    const auto dims  = Dimensions::combine(50);
 
     auto ps     = ParticleSystem{1000};
     auto forces = VectorField{dims};
@@ -30,7 +29,7 @@ int main()
 
     for (auto& particle : ps)
     {
-        particle.pos = rand.vector({.min = Vector2{0.0, 0.0}, .max = dims.as<f64>() * cell_size});
+        particle.pos    = rand.vector({.min = Vector2{0.0, 0.0}, .max = dims.as<f64>()});
         particle.radius = 0.18;
     }
 
@@ -48,9 +47,8 @@ int main()
     {
         for (auto [i, particle] : ranges::views::enumerate(ps))
         {
-            const auto pos   = (particle.pos / cell_size).as<u64>();
+            const auto pos   = particle.pos.as<u64>();
             const auto force = forces.at_or(pos, Vector2{0.0, 0.0});
-            // particle.vel *= 0.9;
 
             particle.apply_force(force);
         }
@@ -59,8 +57,8 @@ int main()
         ps.for_each(
             [=](Particle& particle)
             {
-                particle.pos.x = math::wrap_max(particle.pos.x, dims.x * cell_size);
-                particle.pos.y = math::wrap_max(particle.pos.y, dims.y * cell_size);
+                particle.pos.x = math::wrap_max(particle.pos.x, static_cast<f64>(dims.x));
+                particle.pos.y = math::wrap_max(particle.pos.y, static_cast<f64>(dims.y));
                 particle.vel.clamp_length({0.0, 3.0});
             });
     };
@@ -78,8 +76,6 @@ int main()
                 app.transform.apply_inverse(particle.pos * app.dims().as<f64>() / dims.as<f64>());
             app.draw(Circle{pos, particle.radius}, {.fill_color = color});
         }
-
-        // print(std::round(watch.current_fps()));
     };
 
     app.run(update, draw);
