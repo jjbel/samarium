@@ -65,8 +65,8 @@
         },
         {
             "name": "debug",
-            "description": "Debug version of dev",
-            "inherits": "dev",
+            "description": "Debug version of default",
+            "inherits": "default",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug"
             }
