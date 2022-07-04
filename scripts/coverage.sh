@@ -1,5 +1,7 @@
 #!/bin/bash
 
-cmake --preset=coverage
-cmake --build --preset=coverage
+set -e
+
+cmake --preset=coverage >/dev/null
+cmake --build --preset=coverage >/dev/null
 ctest --preset=default

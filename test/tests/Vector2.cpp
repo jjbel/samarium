@@ -7,6 +7,7 @@
 
 #include "samarium/math/Vector2.hpp"
 #include "samarium/math/vector_math.hpp"
+#include "samarium/samarium.hpp"
 
 #include "catch2/catch_test_macros.hpp"
 
