@@ -4,6 +4,10 @@
 
 Create a complex [Fourier Series](https://en.wikipedia.org/wiki/Fourier_series) to draw a `target_shape` which returns the shape when queried from 0 to 1
 
+## Flow Field Noise
+
+Move particles around by placing them on a grid of forces (a Flow Field)
+
 ## Hilbert Curve
 
 Interpolate between different order [Hilbert Curves](https://en.wikipedia.org/wiki/Hilbert_curve)
