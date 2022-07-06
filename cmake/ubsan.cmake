@@ -4,7 +4,6 @@
 
 cmake_minimum_required(VERSION 3.15)
 
-option(USE_UBSAN "Use Undefined Behaviour Sanitizer" FALSE)
 if(USE_UBSAN)
     add_compile_options(-fsanitize=undefined)
     add_link_options(-fsanitize=undefined)

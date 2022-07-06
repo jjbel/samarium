@@ -45,8 +45,8 @@
             "binaryDir": "${sourceDir}/build/",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
-                "GENERATE_COVERAGE": "ON",
-                "SAMARIUM_BUILD_EXTRA_TESTS": "ON"
+                "BUILD_COVERAGE": true,
+                "BUILD_UNIT_TESTS": true
             }
         },
         {
@@ -54,9 +54,8 @@
             "description": "Use gcc, Ninja, and skip extra tests",
             "inherits": "clang",
             "cacheVariables": {
-                "USE_UBSAN": "OFF",
-                "SAMARIUM_BUILD_EXTRA_TESTS": "OFF",
-                "SAMARIUM_BUILD_EXAMPLES": "OFF"
+                "BUILD_UNIT_TESTS": "OFF",
+                "BUILD_EXAMPLES": "OFF"
             }
         },
         {
@@ -73,8 +72,8 @@
             "inherits": "clang",
             "cacheVariables": {
                 "USE_UBSAN": "ON",
-                "SAMARIUM_BUILD_EXTRA_TESTS": "OFF",
-                "SAMARIUM_BUILD_EXAMPLES": "OFF"
+                "BUILD_UNIT_TESTS": "OFF",
+                "BUILD_EXAMPLES": "OFF"
             }
         },
         {
@@ -91,7 +90,7 @@
             "description": "Build Documentation",
             "inherits": "default",
             "cacheVariables": {
-                "SAMARIUM_BUILD_DOCS": "TRUE"
+                "BUILD_DOCS": "TRUE"
             }
         }
     ],

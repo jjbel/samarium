@@ -12,7 +12,7 @@
 cmake_minimum_required(VERSION 3.15)
 
 function(set_compiler_options)
-    option(OPTIONS_AS_ERRORS "Treat compiler warnings as errors" OFF)
+    # option(OPTIONS_AS_ERRORS "Treat compiler warnings as errors" OFF)
 
     set(MSVC_OPTIONS
         /std:c++latest # https://github.com/microsoft/STL/issues/1814#issuecomment-845572895
@@ -71,7 +71,6 @@ function(set_compiler_options)
                    # printf)
         -Wimplicit-fallthrough # warn on statements that fallthrough without an explicit
                                # annotation\
-        -march=x86-64
     )
 
     # if(OPTIONS_AS_ERRORS) set(COMMON_OPTIONS ${COMMON_OPTIONS} -Werror) set(MSVC_OPTIONS

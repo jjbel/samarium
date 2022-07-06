@@ -1,6 +1,6 @@
 # Examples
 
-To build the examples with the library, enable `"SAMARIUM_BUILD_EXAMPLES"`
+To build the examples with the library, enable `"BUILD_EXAMPLES"`
 
 The built executables can be found in `build/examples`
 

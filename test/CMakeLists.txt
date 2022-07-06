@@ -12,8 +12,7 @@ list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})
 
 add_executable(samarium_tests)
 
-option(SAMARIUM_BUILD_EXTRA_TESTS "Build extra tests" ON)
-if(SAMARIUM_BUILD_EXTRA_TESTS)
+if(BUILD_UNIT_TESTS)
     find_package(Catch2 3 REQUIRED)
     add_subdirectory(tests)
     target_sources(samarium_tests PUBLIC ${SAMARIUM_TESTS_SOURCES})

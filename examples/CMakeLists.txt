@@ -7,8 +7,7 @@ cmake_minimum_required(VERSION 3.15)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-option(SAMARIUM_BUILD_EXAMPLES "Build examples" ON)
-if(SAMARIUM_BUILD_EXAMPLES)
+if(BUILD_EXAMPLES)
     include(find_deps)
 
     file(GLOB files "*.cpp")

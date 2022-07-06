@@ -20,9 +20,9 @@ function(link_deps target)
     target_link_libraries(${target} PUBLIC range-v3::range-v3)
     target_link_libraries(${target} PUBLIC sfml-graphics)
 
-    if(WARNINGS)
+    if(USE_WARNINGS)
         target_compile_options(${target} PUBLIC ${WARNINGS})
     endif()
 
-    message(STATUS "Linking deps for ${target}.")
+    message(STATUS "Linking deps for ${target}")
 endfunction()

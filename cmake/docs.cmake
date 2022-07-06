@@ -6,9 +6,7 @@
 
 # https://gist.github.com/strangeQuark1041/acba76d25b213327a568a9f3c9152550
 
-option(SAMARIUM_BUILD_DOCS "Build documentation" OFF)
-
-if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease" AND SAMARIUM_BUILD_DOCS)
+if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease" AND BUILD_DOCS)
     # check if Doxygen is installed
     find_program(DOXYGEN_EXECUTABLE NAMES doxygen REQUIRED)
 

@@ -46,7 +46,7 @@ set_target_properties(
 
 target_include_directories(samarium PUBLIC "${CMAKE_CURRENT_LIST_DIR}")
 
-if(WARNINGS)
+if(USE_WARNINGS)
     target_compile_options(samarium PUBLIC ${WARNINGS})
 endif()
 

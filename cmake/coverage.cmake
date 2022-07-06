@@ -5,7 +5,7 @@
 cmake_minimum_required(VERSION 3.15)
 
 function(generate_coverage target)
-    if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND GENERATE_COVERAGE)
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND BUILD_COVERAGE)
         find_program(GCOVR_PATH gcov REQUIRED)
         find_program(GCOVR_PATH gcovr REQUIRED)
 
