@@ -29,7 +29,6 @@
 #include "samarium/math/vector_math.hpp" // for area
 #include "samarium/physics/Particle.hpp" // for Particle
 #include "samarium/util/FunctionRef.hpp" // for FunctionRef
-#include "samarium/util/print.hpp" // for FunctionRef
 
 #include "App.hpp"
 
@@ -249,9 +248,25 @@ void App::draw_vertices(std::span<const Vector2> vertices, VertexMode mode)
     sf_render_window.draw(converted);
 }
 
-void App::draw(const Trail& trail, Color color, f64 thickness)
+void App::draw(const Trail& trail, Color color, f64 thickness, f64 fade_factor)
 {
-    this->draw_polyline(trail.span(), color, thickness);
+    const auto vertices = trail.span();
+    for (auto i : range(vertices.size() - 1UL))
+    {
+        const auto factor = 1.0 - static_cast<f64>(i) / static_cast<f64>(vertices.size() - 1UL);
+        const auto faded_color = color.with_multiplied_alpha(-fade_factor * factor + 1.0);
+        draw_line_segment(LineSegment{vertices[i], vertices[i + 1UL]}, faded_color, thickness);
+    }
+}
+
+void App::run(FunctionRef<void()> func)
+{
+    while (this->is_open())
+    {
+        this->get_input();
+        func();
+        this->display();
+    }
 }
 
 void App::run(FunctionRef<void(f64)> update, FunctionRef<void()> draw, u64 substeps)
@@ -272,12 +287,22 @@ void App::run(FunctionRef<void(f64)> update, FunctionRef<void()> draw, u64 subst
     }
 }
 
-void App::run(FunctionRef<void()> func)
+void App::run(FunctionRef<void()> handle_input,
+              FunctionRef<void(f64)> update,
+              FunctionRef<void()> draw,
+              u64 substeps)
 {
     while (this->is_open())
     {
         this->get_input();
-        func();
+        handle_input();
+        for (auto i : range(substeps))
+        {
+            std::ignore = i;
+            update(1.0 / static_cast<f64>(substeps) / static_cast<f64>(this->target_framerate));
+        }
+        draw();
+
         this->display();
     }
 }

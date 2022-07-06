@@ -169,7 +169,7 @@ class App
      * @param  color
      * @param  thickness
      */
-    void draw(const Trail& trail, Color color = Color{255, 255, 255}, f64 thickness = 0.1);
+    void draw(const Trail& trail, Color color = Color{255, 255, 255}, f64 thickness = 0.1, f64 fade_factor = 0.0);
 
     void draw_vertices(std::span<const Vector2> vertices, VertexMode mode = VertexMode::LineStrip);
 
@@ -188,5 +188,18 @@ class App
      * @param  substeps
      */
     void run(FunctionRef<void(f64)> update, FunctionRef<void()> draw, u64 substeps = 1UL);
+
+    /**
+     * @brief               Start the event loop, call `update` substeps times, `draw` once
+     *
+     * @param  handle_input Called first
+     * @param  update       Called `substeps` times
+     * @param  draw
+     * @param  substeps
+     */
+    void run(FunctionRef<void()> handle_input,
+             FunctionRef<void(f64)> update,
+             FunctionRef<void()> draw,
+             u64 substeps = 1UL);
 };
 } // namespace sm
