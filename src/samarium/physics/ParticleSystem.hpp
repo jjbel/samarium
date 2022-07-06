@@ -12,14 +12,14 @@
 
 #include "range/v3/view/enumerate.hpp" // for enumerate, enumerate_fn
 
-#include "samarium/core/types.hpp"   // for u64, f64
-#include "samarium/math/Vector2.hpp" // for Vector2
+#include "samarium/core/types.hpp"       // for u64, f64
+#include "samarium/math/Vector2.hpp"     // for Vector2
+#include "samarium/util/FunctionRef.hpp" // for Vector2
 
 #include "Particle.hpp" // for Particle
 
 namespace sm
 {
-template <class F> class FunctionRef;
 class ThreadPool;
 
 struct ParticleSystem

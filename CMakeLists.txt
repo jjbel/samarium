@@ -20,6 +20,7 @@ include(Catch)
 add_subdirectory(src)
 add_subdirectory(test)
 add_subdirectory(examples)
+add_subdirectory(benchmarks)
 
 option(GENERATE_COVERAGE "Generate coverage reports" FALSE)
 include(coverage)

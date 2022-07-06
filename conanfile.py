@@ -18,12 +18,18 @@ class SamariumConan(ConanFile):
     topics = ("cpp20", "physics", "2d", "simulation")
 
     settings = "os", "compiler", "build_type", "arch"
-    options = {"shared": [True, False], "fPIC": [True, False]}
-    default_options = {"shared": False, "fPIC": True}
+    options = {"shared": [True, False], "fPIC": [
+        True, False], "build_tests": [True, False]}
+    default_options = {"shared": False, "fPIC": True, "build_tests": False}
 
     generators = "cmake", "cmake_find_package"
     requires = "fmt/8.1.1", "sfml/2.5.1", "range-v3/0.12.0"
     exports_sources = "src/*"
+
+    def requirements(self):
+        if self.options.build_tests:
+            self.requires('catch2/3.0.1')
+            self.requires('benchmark/1.6.1')
 
     def config_options(self):
         if self.settings.os == "Windows":
