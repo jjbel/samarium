@@ -15,7 +15,7 @@ struct Version
 {
     u8 major{1};
     u8 minor{0};
-    u8 patch{0};
+    u8 patch{1};
 };
 
 [[maybe_unused]] static constexpr auto version = Version{};

@@ -1,7 +1,7 @@
 # Doxyfile 1.9.3
 
 PROJECT_NAME           = Samarium
-PROJECT_NUMBER         = 1.0.0
+PROJECT_NUMBER         = 1.0.1
 PROJECT_BRIEF          = 2-D physics simulation engine written in modern C++
 OUTPUT_DIRECTORY       = build/docs
 FULL_PATH_NAMES        = YES
