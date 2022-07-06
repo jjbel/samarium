@@ -165,9 +165,10 @@ class App
     /**
      * @brief               Draw a Trail
      *
-     * @param  trail
-     * @param  color
-     * @param  thickness
+     * @param  trail        Trail object
+     * @param  color        Trail Color
+     * @param  thickness    Width of trail
+     * @param  fade_factor  Lerp color from alpha = 1.0 to fade_factor
      */
     void draw(const Trail& trail, Color color = Color{255, 255, 255}, f64 thickness = 0.1, f64 fade_factor = 0.0);
 
