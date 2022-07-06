@@ -20,8 +20,8 @@ static void BM_ParticleSystem(benchmark::State& state)
 
     for (auto _ : state)
     {
-        // ps.self_collision();
-        // ps.update();
+        ps.self_collision();
+        ps.update();
     }
 }
 
