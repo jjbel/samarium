@@ -34,6 +34,10 @@ Inspired by <https://youtu.be/EK32jo7i5LQ>
 
 Hightlights: `Vector2::from_polar`, panning, zooming
 
+## Second Order Dynamics
+
+Use the `SecondOrderDynamics` struct to make a point follow the cursor.
+
 ## Softbody
 
 Full-fledged softbody simulation using damped springs
