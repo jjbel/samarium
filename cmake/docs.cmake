@@ -8,7 +8,7 @@
 
 if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease" AND BUILD_DOCS)
     # check if Doxygen is installed
-    find_program(DOXYGEN_EXECUTABLE NAMES doxygen REQUIRED)
+    find_program(DOXYGEN_EXECUTABLE NAMES doxygen)
 
     if(DOXYGEN_EXECUTABLE)
         message("Doxygen build started")
@@ -22,8 +22,7 @@ if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease" AND BUILD_DOCS)
                 "Generating API documentation with Doxygen. Open build/docs/index.html"
             VERBATIM
         )
-
-    else(DOXYGEN_EXECUTABLE)
+    else()
         message(FATAL_ERROR "Doxygen need to be installed to generate documentation")
     endif()
 endif()

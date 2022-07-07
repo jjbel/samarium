@@ -73,8 +73,16 @@ function(set_compiler_options)
                                # annotation\
     )
 
-    # if(OPTIONS_AS_ERRORS) set(COMMON_OPTIONS ${COMMON_OPTIONS} -Werror) set(MSVC_OPTIONS
-    # ${MSVC_OPTIONS} /WX) endif()
+    if(OPTIONS_AS_ERRORS)
+        set(COMMON_OPTIONS ${COMMON_OPTIONS} -Werror)
+        set(MSVC_OPTIONS ${MSVC_OPTIONS} /WX)
+    endif()
+
+    if(USE_UBSAN)
+        set(MSVC_OPTIONS ${MSVC_OPTIONS} /fsanitize=address)
+        set(COMMON_OPTIONS ${COMMON_OPTIONS} -fsanitize=undefined)
+        # https://docs.microsoft.com/en-us/cpp/sanitizers/asan?view=msvc-170
+    endif()
 
     set(CLANG_OPTIONS ${COMMON_OPTIONS} -fcolor-diagnostics -ferror-limit=10)
 
@@ -111,3 +119,7 @@ endfunction()
 
 set_compiler_options()
 add_compile_options(${OPTIONS})
+
+if(USE_UBSAN AND NOT MSVC)
+    add_link_options(-fsanitize=undefined)
+endif()
