@@ -14,7 +14,7 @@ option(BUILD_DOCS "Build documentation" ON)
 option(USE_WARNINGS "Set useful compiler flags and warnings" ON)
 option(OPTIONS_AS_ERRORS "Treat compiler warnings as errors" OFF)
 option(USE_CCACHE "Use CCache to speed up compilation" ON)
-option(USE_UBSAN "Use Undefined Behaviour Sanitizer" ON)
+option(USE_UBSAN "Use Undefined Behaviour Sanitizer" OFF)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 

@@ -23,6 +23,6 @@ if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease" AND BUILD_DOCS)
             VERBATIM
         )
     else()
-        message(FATAL_ERROR "Doxygen need to be installed to generate documentation")
+        message(WARNING "Doxygen need to be installed to generate documentation")
     endif()
 endif()
