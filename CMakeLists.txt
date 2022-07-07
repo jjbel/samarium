@@ -14,7 +14,7 @@ option(BUILD_UNIT_TESTS "Build unit tests" ON)
 option(BUILD_EXAMPLES "Build examples" ON)
 option(BUILD_BENCHMARKS "Build benchmarks" OFF)
 option(BUILD_COVERAGE "Generate coverage reports" OFF)
-option(BUILD_DOCS "Build documentation" OFF)
+option(BUILD_DOCS "Build documentation" ON)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 

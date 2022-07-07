@@ -16,8 +16,8 @@ if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease" AND BUILD_DOCS)
         # note the option ALL which allows to build the docs together with the application
         add_custom_target(
             docs ALL
-            COMMAND ${DOXYGEN_EXECUTABLE}
-            WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/docs"
+            COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_SOURCE_DIR}/docs/src/Doxyfile
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
             COMMENT
                 "Generating API documentation with Doxygen. Open build/docs/index.html"
             VERBATIM
