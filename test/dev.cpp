@@ -16,25 +16,20 @@ int main()
     auto app   = App{{.dims{1800, 900}}};
     auto watch = Stopwatch{};
 
-    auto radius  = 3.0;
-    auto dynamic = SecondOrderDynamics<Vector2>{{}, 4.5, 0.5};
-    auto trail   = Trail{200};
-
-    const auto update = [&](f64 dt)
-    {
-        const auto mouse_pos = app.transform.apply_inverse(app.mouse.current_pos);
-
-        dynamic.update(dt, mouse_pos);
-        print(mouse_pos, dynamic.value);
-        trail.push_back(dynamic.value);
-    };
-
     const auto draw = [&]
     {
         app.fill("#0D0D13"_c);
-        app.draw(trail, "#BBD4FF"_c, 0.3, 1.0);
-        app.draw(Circle{dynamic.value, radius}, {.fill_color = colors::red});
+
+        if (app.mouse.left) { app.transform.pos += app.mouse.current_pos - app.mouse.old_pos; }
+
+        const auto scale = 1.0 + 0.1 * app.mouse.scroll_amount;
+        app.transform.scale *= Vector2::combine(scale);
+        const auto pos    = app.mouse.current_pos;
+        app.transform.pos = pos + scale * (app.transform.pos - pos);
+
+        app.draw(App::GridLines{.levels = 1});
+        app.draw(App::GridDots{});
     };
 
-    app.run(update, draw, 2);
+    app.run(draw);
 }
