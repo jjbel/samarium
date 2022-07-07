@@ -197,6 +197,42 @@ template <concepts::FloatingPoint T> constexpr auto wrap_min_max(T x, T min, T m
 {
     return min + wrap_max(x - min, max - min);
 }
+
+/**
+ * @brief               Round value to nearest multiple of target
+ *
+ * @tparam T
+ * @param  value
+ * @param  target
+ */
+template <typename T> constexpr auto round_to_nearest(T value, T target)
+{
+    return target * std::round(value / target);
+}
+
+/**
+ * @brief               Ceil value to nearest multiple of target
+ *
+ * @tparam T
+ * @param  value
+ * @param  target
+ */
+template <typename T> constexpr auto ceil_to_nearest(T value, T target)
+{
+    return target * std::ceil(value / target);
+}
+
+/**
+ * @brief               Floor value to nearest multiple of target
+ *
+ * @tparam T
+ * @param  value
+ * @param  target
+ */
+template <typename T> constexpr auto floor_to_nearest(T value, T target)
+{
+    return target * std::floor(value / target);
+}
 } // namespace sm::math
 
 namespace sm::literals
