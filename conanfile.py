@@ -30,6 +30,7 @@ class SamariumConan(ConanFile):
         if self.options.build_tests:
             self.requires('catch2/3.0.1')
             self.requires('benchmark/1.6.1')
+            self.requires('eigen/3.4.0')
 
     def config_options(self):
         if self.settings.os == "Windows":
