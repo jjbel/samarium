@@ -111,11 +111,14 @@ class App
     /// Dimensions of the viewport in screenspace coordinates
     auto dims() const -> Dimensions;
 
-    /// The `Dimensions` of the viewport with `transform` applied
+    /// The `Dimensions` of the viewport in worldspace coordinates
     auto transformed_dims() const -> Vector2;
 
-    /// The `BoundingBox` formed by the viewport
+    /// The `BoundingBox` formed by the viewport in screenspace coordinates
     auto bounding_box() const -> BoundingBox<u64>;
+
+    /// The `BoundingBox` formed by the viewport in worldspace coordinates
+    auto transformed_bounding_box() const -> BoundingBox<f64>;
 
     /// The 4 `LineSegment`'s forming the viewportm, in worldspace coordinates
     auto viewport_box() const -> std::array<LineSegment, 4>;
@@ -151,6 +154,26 @@ class App
                        Color color   = Color{255, 255, 255},
                        f64 thickness = 1.0);
 
+    struct GridLines
+    {
+        f64 scale          = 5.0;
+        Color line_color   = {240, 240, 240, 50};
+        f64 line_thickness = 0.02;
+        Color axis_color   = {240, 240, 240, 80};
+        f64 axis_thickness = 0.1;
+        u64 levels         = 2UL;
+    };
+
+    struct GridDots
+    {
+        f64 scale     = 5.0;
+        Color color   = {240, 240, 240, 50};
+        f64 thickness = 0.1;
+    };
+
+    void draw(const GridLines& settings);
+    void draw(const GridDots& settings);
+
     /**
      * @brief               Draw a polygon from points
      *
@@ -170,7 +193,10 @@ class App
      * @param  thickness    Width of trail
      * @param  fade_factor  Lerp color from alpha = 1.0 to fade_factor
      */
-    void draw(const Trail& trail, Color color = Color{255, 255, 255}, f64 thickness = 0.1, f64 fade_factor = 0.0);
+    void draw(const Trail& trail,
+              Color color     = Color{255, 255, 255},
+              f64 thickness   = 0.1,
+              f64 fade_factor = 0.0);
 
     void draw_vertices(std::span<const Vector2> vertices, VertexMode mode = VertexMode::LineStrip);
 

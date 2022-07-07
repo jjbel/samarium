@@ -87,6 +87,16 @@ auto App::transformed_dims() const -> Vector2 { return this->dims().as<f64>() / 
 
 auto App::bounding_box() const -> BoundingBox<u64> { return this->image.bounding_box(); }
 
+auto App::transformed_bounding_box() const -> BoundingBox<f64>
+{
+    const auto box = this->image.bounding_box();
+    return this->transform.apply_inverse(BoundingBox<f64>{
+        box.min.as<f64>(),
+        box.max.as<f64>() +
+            Vector2{1.0,
+                    1.0}}); // add 1 to compensate for inclusive-exclusive from Image::bounding_box
+}
+
 auto App::viewport_box() const -> std::array<LineSegment, 4>
 {
     const auto f64_dims = this->image.dims.as<f64>();
@@ -256,6 +266,63 @@ void App::draw(const Trail& trail, Color color, f64 thickness, f64 fade_factor)
         const auto factor = 1.0 - static_cast<f64>(i) / static_cast<f64>(vertices.size() - 1UL);
         const auto faded_color = color.with_multiplied_alpha(-fade_factor * factor + 1.0);
         draw_line_segment(LineSegment{vertices[i], vertices[i + 1UL]}, faded_color, thickness);
+    }
+}
+
+void App::draw(const App::GridLines& settings)
+{
+    const auto box            = this->transformed_bounding_box();
+    const auto axis_thickness = settings.axis_thickness /*  / this->transform.scale.y */;
+    const auto line_thickness = settings.line_thickness /*  / this->transform.scale.y */;
+
+    this->draw_line_segment({{0.0, box.min.y}, {0.0, box.max.y}}, settings.axis_color,
+                            axis_thickness);
+
+    this->draw_line_segment({{box.min.x, 0.0}, {box.max.x, 0.0}}, settings.axis_color,
+                            axis_thickness);
+
+    if (settings.levels <= 1) { return; }
+
+    for (auto i = settings.scale; i <= box.max.x; i += settings.scale)
+    {
+        this->draw_line_segment({{i, box.min.y}, {i, box.max.y}}, settings.line_color,
+                                line_thickness);
+    }
+    for (auto i = -settings.scale; i >= box.min.x; i -= settings.scale)
+    {
+        this->draw_line_segment({{i, box.min.y}, {i, box.max.y}}, settings.line_color,
+                                line_thickness);
+    }
+
+    for (auto i = settings.scale; i <= box.max.y; i += settings.scale)
+    {
+        this->draw_line_segment({{box.min.x, i}, {box.max.x, i}}, settings.line_color,
+                                line_thickness);
+    }
+    for (auto i = -settings.scale; i >= box.min.y; i -= settings.scale)
+    {
+        this->draw_line_segment({{box.min.x, i}, {box.max.x, i}}, settings.line_color,
+                                line_thickness);
+    }
+}
+
+void App::draw(const App::GridDots& settings)
+{
+    const auto box    = this->transformed_bounding_box();
+    const auto radius = settings.thickness /*  / this->transform.scale.x */;
+
+    const auto from_y = math::ceil_to_nearest(box.min.y, settings.scale);
+    const auto to_y   = math::floor_to_nearest(box.max.y, settings.scale);
+
+    const auto from_x = math::ceil_to_nearest(box.min.x, settings.scale);
+    const auto to_x   = math::floor_to_nearest(box.max.x, settings.scale);
+
+    for (auto y = from_y; y <= to_y; y += settings.scale)
+    {
+        for (auto x = from_x; x <= to_x; x += settings.scale)
+        {
+            this->draw(Circle{{x, y}, radius}, {.fill_color = settings.color}, 4);
+        }
     }
 }
 
