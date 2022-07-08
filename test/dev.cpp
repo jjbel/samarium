@@ -128,7 +128,7 @@ int main()
 
     const auto draw = [&]
     {
-        app.fill("#0a0d0f"_c);
+        app.fill("#101317"_c);
 
         if (app.frame_counter != 0 && app.frame_counter % duration == 0)
         {
@@ -149,10 +149,10 @@ int main()
 
         for (auto i : range(path.size() - 1))
         {
-            app.draw_line_segment({mapper(path[i]), mapper(path[i + 1])}, colors::aliceblue, 1);
+            app.draw_line_segment({mapper(path[i]), mapper(path[i + 1])}, colors::aliceblue, 2.0);
         }
 
-        if (app.frame_counter < 360)
+        if (app.frame_counter < 360 and app.frame_counter > 5/*  && app.frame_counter % 2 == 0 */)
         {
             file::export_tga(app.get_image(), fmt::format("hilbert{:03}.tga", app.frame_counter));
         }
