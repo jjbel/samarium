@@ -373,4 +373,28 @@ void App::run(FunctionRef<void()> handle_input,
         this->display();
     }
 }
+
+void App::zoom_pan(f64 zoom_factor, f64 pan_factor)
+{
+    if (mouse.left) { transform.pos += mouse.current_pos - mouse.old_pos; }
+
+    const auto scale = 1.0 + zoom_factor * mouse.scroll_amount;
+    transform.scale *= Vector2::combine(scale);
+    transform.pos = mouse.current_pos + scale * (transform.pos - mouse.current_pos);
+}
+
+void App::zoom_pan(FunctionRef<bool()> zoom_condition,
+                   FunctionRef<bool()> pan_condition,
+                   f64 zoom_factor,
+                   f64 pan_factor)
+{
+    if (pan_condition()) { transform.pos += pan_factor * (mouse.current_pos - mouse.old_pos); }
+    if (zoom_condition())
+    {
+        const auto scale = 1.0 + zoom_factor * mouse.scroll_amount;
+        transform.scale *= Vector2::combine(scale);
+        transform.pos =
+            mouse.current_pos + scale * pan_factor * (transform.pos - mouse.current_pos);
+    }
+}
 } // namespace sm

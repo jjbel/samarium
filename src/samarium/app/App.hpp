@@ -228,5 +228,27 @@ class App
              FunctionRef<void(f64)> update,
              FunctionRef<void()> draw,
              u64 substeps = 1UL);
+
+    /**
+     * @brief               Zoom and pan by adjusting `transform`, by default on left-click
+     *
+     * @param  zoom_factor  Factor to zoom in by
+     * @param  pan_factor   Factor to scale panning by (normally 1)
+     */
+    void zoom_pan(f64 zoom_factor = 0.1, f64 pan_factor = 1.0);
+
+    /**
+     * @brief               Zoom and pan by adjusting `transform`, given conditions on when to zoom
+     * and pan
+     *
+     * @param  zoom_condition
+     * @param  pan_condition
+     * @param  zoom_factor
+     * @param  pan_factor
+     */
+    void zoom_pan(FunctionRef<bool()> zoom_condition,
+                  FunctionRef<bool()> pan_condition,
+                  f64 zoom_factor = 0.1,
+                  f64 pan_factor  = 1.0);
 };
 } // namespace sm
