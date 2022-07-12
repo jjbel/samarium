@@ -16,6 +16,7 @@ Samarium is a 2d physics simulation library written in modern C++20.
 ## Contents
 
 - [Contents](#contents)
+- [Samples](#samples)
 - [Quickstart](#quickstart)
 - [Prerequistes](#prerequistes)
 - [Installation](#installation)
@@ -23,6 +24,12 @@ Samarium is a 2d physics simulation library written in modern C++20.
 - [Tools](#tools)
 - [Documentation](#documentation)
 - [License](#license)
+
+## Samples
+
+[](https://user-images.githubusercontent.com/83468982/178472984-8cd83808-bfb2-478b-8a5e-3d45782f2c7d.mp4)
+
+[](https://user-images.githubusercontent.com/83468982/178473002-b7f896f6-d5ed-4cc5-be34-bcccab9ef11e.mp4)
 
 ## Quickstart
 

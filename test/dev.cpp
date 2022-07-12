@@ -88,7 +88,7 @@ int main()
         return temp;
     }();
 
-    auto app = App{{.dims{320, 320}}};
+    auto app = App{{.dims{360, 360}}};
     app.transform.scale *= 0.7;
     const auto viewport_box = app.viewport_box();
 
