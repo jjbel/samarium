@@ -376,11 +376,11 @@ void App::run(FunctionRef<void()> handle_input,
 
 void App::zoom_pan(f64 zoom_factor, f64 pan_factor)
 {
-    if (mouse.left) { transform.pos += mouse.current_pos - mouse.old_pos; }
+    if (mouse.left) { transform.pos += pan_factor * (mouse.current_pos - mouse.old_pos); }
 
     const auto scale = 1.0 + zoom_factor * mouse.scroll_amount;
     transform.scale *= Vector2::combine(scale);
-    transform.pos = mouse.current_pos + scale * (transform.pos - mouse.current_pos);
+    transform.pos = mouse.current_pos + scale * pan_factor * (transform.pos - mouse.current_pos);
 }
 
 void App::zoom_pan(FunctionRef<bool()> zoom_condition,
