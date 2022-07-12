@@ -39,7 +39,6 @@ cmake --build ./build
 
 | Dependency | URL | Documentation |
 | ---        | --- | --- |
-| python     | <https://www.python.org/downloads/> | <https://www.python.org/doc/> |
 | git        | <https://git-scm.com/downloads/> | <https://git-scm.com/docs/> |
 | cmake      | <https://cmake.org/download/> | <https://cmake.org/cmake/help/latest/> |
 | conan      | <https://conan.io/downloads.html/> | <https://docs.conan.io/en/latest/> |
