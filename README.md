@@ -73,9 +73,9 @@ For a fully-featured and self-contained example, run:
 
 ```sh
 git clone --depth 1 https://github.com/strangeQuark1041/samarium_example.git .
-conan install . -b missing -if ./build # Install deps in build folder
-cmake -B ./build
-cmake --build ./build
+conan install . -b missing --install-folder build # Install deps in build folder
+cmake -B build
+cmake --build build
 ./build/bin/example
 ```
 
