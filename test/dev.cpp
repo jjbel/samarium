@@ -8,156 +8,162 @@
 #include "samarium/graphics/colors.hpp"
 #include "samarium/samarium.hpp"
 
+#include "range/v3/view/concat.hpp"
 
 using namespace sm;
 using namespace sm::literals;
 
-// !!!!!!!!!!! EDIT THIS: !!!!!!!!!!!
-
-static constexpr auto window_width = 1000UL;
-static constexpr auto order        = 6UL;
-static constexpr auto duration     = 60UL;
-
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-using IntegerPair = Vector2_t<i32>;
-using Path        = std::vector<Vector2>;
-
-auto point_at(i32 index, i32 level)
+// !!!!! EDIT THIS !!!!!
+struct Params
 {
-    static constexpr auto points = std::to_array<IntegerPair>({{0, 0}, {0, 1}, {1, 1}, {1, 0}});
-
-    i32 thingy = index & 3;
-    auto v     = points[u64(thingy)];
-
-    for (auto j : range(1UL, u64(level)))
-    {
-        index >>= 2;
-        thingy = index & 3;
-
-        const auto len = static_cast<i32>(std::pow(2, j));
-
-        if (thingy == 0) { std::swap(v.x, v.y); }
-        else if (thingy == 1)
-        {
-            v.y += len;
-        }
-        else if (thingy == 2)
-        {
-            v += IntegerPair::combine(len);
-        }
-        else
-        {
-            const auto temp = len - 1 - v.x;
-            v.x             = len - 1 - v.y;
-            v.y             = temp;
-            v.x += len;
-        }
-    }
-
-    return v;
-}
-
-auto point_count(u64 level) { return u64(std::pow(2.0, 2.0 * static_cast<f64>(level))); }
-
-auto points_f64(u64 level)
-{
-    auto vec = Path(point_count(level));
-    for (auto i : range(vec.size()))
-    {
-        const auto point = point_at(i32(i), i32(level)).as<f64>();
-        vec[i]           = (point + Vector2::combine(0.5)) /
-                 std::pow(2.0, static_cast<f64>(level)); // rescale to [{0, 0}, {1, 1}]
-    }
-    return vec;
-}
-
-auto rescale(const Path& input, u64 factor)
-{
-    if (factor == 1UL) { return input; }
-
-    auto output = Path();
-    output.reserve(input.size() * factor);
-    const auto extra_size = input.size() * (factor - 1UL);
-
-    for (auto i : range(input.size() - 1UL))
-    {
-        auto count = extra_size / (input.size() - 1);
-        if (i < extra_size % (input.size() - 1)) { count++; }
-
-        output.push_back(input[i]);
-
-        for (auto j : range(1, count + 1UL))
-        {
-            const auto segment = input[i + 1] - input[i];
-            const auto adder   = segment / static_cast<f64>(count + 1);
-            output.push_back(input[i] + static_cast<f64>(j) * adder);
-        }
-    }
-    output.push_back(input.back());
-    return output;
-}
-
-auto levels_till(u64 level)
-{
-    auto levels = std::vector<Path>(level);
-    for (auto i : range(level)) { levels[i] = points_f64(i + 1); }
-    return levels;
-}
-
-auto rescaled_levels_till(u64 level)
-{
-    auto levels         = std::vector<Path>(level);
-    const auto max_size = point_count(level);
-
-    for (auto i : range(level))
-    {
-        const auto points = points_f64(i + 1);
-        levels[i]         = rescale(points, max_size / points.size());
-    }
-    return levels;
-}
+    f64 time_scale                 = 1.4;
+    Vector2 gravity                = -30.0_y;
+    f64 coefficient_of_friction    = 0.95;
+    f64 coefficient_of_restitution = 0.95; // bounciness
+    f64 spring_stiffness           = 150.0;
+    f64 spring_damping             = 55.0;
+    f64 particle_mass              = 0.6;
+    f64 particle_radius            = 1.6;
+    Vector2 particle_velocity{10, 20};
+    Dimensions particle_count_xy{4, 4};
+    Vector2 softbody_area{25, 25};
+};
 
 int main()
 {
-    const auto levels = rescaled_levels_till(order);
-    auto path         = levels[0];
-    auto current_iter = 0UL;
+    const auto params = Params{};
 
-    auto app = App{{.dims = Dimensions::combine(window_width)}};
-
-    const auto draw = [&]
+    const auto get_dual_from_indices = [&](auto indices)
     {
-        app.fill("#101317"_c);
+        const auto x = interp::map_range<f64>(
+            static_cast<f64>(indices.x), Extents<u64>{0UL, params.particle_count_xy.x}.as<f64>(),
+            Extents<f64>{-params.softbody_area.x / 2.0, params.softbody_area.x / 2.0});
 
-        if (app.frame_counter != 0 && app.frame_counter % duration == 0)
+        const auto y = interp::map_range<f64>(
+            static_cast<f64>(indices.y), Extents<u64>{0UL, params.particle_count_xy.y}.as<f64>(),
+            Extents<f64>{-params.softbody_area.y / 2.0, params.softbody_area.y / 2.0});
+
+        auto pos = Vector2{x, y};
+        pos.rotate(1);
+
+        const auto particle = Particle{
+            pos, params.particle_velocity, {}, params.particle_radius, params.particle_mass};
+
+        auto dual = Dual<Particle>();
+        dual.prev = particle;
+        dual.now  = particle;
+
+        return dual;
+    };
+
+
+    auto particles =
+        Grid<Dual<Particle>>::generate(params.particle_count_xy, get_dual_from_indices);
+
+
+    auto springs = [&]
+    {
+        std::vector<Spring> temp;
+        temp.reserve(params.particle_count_xy.x * params.particle_count_xy.y * 4UL);
+
+        for (auto i : range(params.particle_count_xy.y))
         {
-            current_iter = (current_iter + 1UL) % order;
+            for (auto j : range(params.particle_count_xy.x))
+            {
+                if (j != 0) { temp.emplace_back(particles[{j, i}].now, particles[{j - 1, i}].now); }
+                if (i != 0) { temp.emplace_back(particles[{j, i}].now, particles[{j, i - 1}].now); }
+                if (i != 0 && j != 0)
+                {
+                    temp.emplace_back(particles[{j, i}].now, particles[{j - 1, i - 1}].now,
+                                      params.spring_stiffness, params.spring_damping);
+                }
+                if (i != 0 && j != params.particle_count_xy.x - 1)
+                {
+                    temp.emplace_back(particles[{j, i}].now, particles[{j + 1, i - 1}].now,
+                                      params.spring_stiffness, params.spring_damping);
+                }
+            }
         }
 
-        const auto lerp_factor =
-            static_cast<f64>(app.frame_counter % duration) / static_cast<f64>(duration);
+        return temp;
+    }();
 
-        for (auto i : range(path.size()))
+    auto app = App{{.dims{320, 320}}};
+    app.transform.scale *= 0.7;
+    const auto viewport_box = app.viewport_box();
+
+    // const auto walls     = std::to_array({LineSegment{{-19, 20}, {19, 14}}});
+    const auto walls     = std::array<LineSegment, 0>{};
+    const auto colliders = ranges::views::concat(viewport_box, walls);
+
+    auto watch = Stopwatch{};
+
+    const auto update = [&](auto delta)
+    {
+        delta *= params.time_scale;
+
+        for (auto&& spring : springs) { spring.update(); }
+
+        for (auto&& particle : particles)
         {
-            path[i] = interp::lerp(
-                interp::ease(lerp_factor, 3),
-                Extents<Vector2>{levels[current_iter][i], levels[(current_iter + 1UL) % order][i]});
-        }
+            const auto mouse_pos = app.transform.apply_inverse(app.mouse.current_pos);
 
-        const auto mapper = [&](Vector2 vec) { return vec * static_cast<f64>(window_width); };
+            particle->apply_force(particle->mass * params.gravity);
 
-        for (auto i : range(path.size() - 1))
-        {
-            app.draw_line_segment({mapper(path[i]), mapper(path[i + 1])}, colors::aliceblue, 2.0);
-        }
+            if (math::within_distance(mouse_pos, particle->pos, particle->radius) && app.mouse.left)
+            {
+                particle->pos += app.mouse.vel() / app.transform.scale;
+                particle->vel = Vector2{};
+                particle->acc = Vector2{};
+            }
 
-        if (app.frame_counter < 360 and app.frame_counter > 5/*  && app.frame_counter % 2 == 0 */)
-        {
-            file::export_tga(app.get_image(), fmt::format("hilbert{:03}.tga", app.frame_counter));
+            particle->update(delta);
+
+            for (auto&& other_particle : particles)
+            {
+                phys::collide(particle.now, other_particle.now);
+            }
+
+            for (auto&& wall : colliders)
+            {
+                phys::collide(particle.now, wall, delta, params.coefficient_of_restitution,
+                              params.coefficient_of_friction);
+            }
         }
     };
 
-    app.transform = {.pos{0, 0}, .scale{1, 1}};
-    app.run(draw);
+    const auto draw = [&]
+    {
+        app.fill("#16161c"_c);
+
+        for (const auto& ls : colliders) { app.draw_line_segment(ls, colors::white, 0.1); }
+
+        for (const auto& spring : springs)
+        {
+            app.draw_line_segment(LineSegment{spring.p1.pos, spring.p2.pos},
+                                  colors::white.with_multiplied_alpha(0.5), 0.1);
+        }
+
+        for (auto& particle : particles)
+        {
+            app.draw(particle.now, {.fill_color = colors::red});
+            particle.prev = particle.now;
+        }
+
+        if (app.mouse.left)
+        {
+            app.draw(Circle{app.transform.apply_inverse(app.mouse.current_pos), 1.0},
+                     {.fill_color = "#4287f5"_c});
+        }
+
+        // print("Framerate:", std::round(1.0 / watch.seconds()));
+        watch.reset();
+
+        if (app.frame_counter >= 6 && app.frame_counter <= 360)
+        {
+            file::export_tga(app.get_image(), fmt::format("softbody{:03}.tga", app.frame_counter));
+        }
+    };
+
+    app.run(update, draw, 32);
 }
