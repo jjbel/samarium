@@ -18,8 +18,9 @@ constexpr auto count           = 2000UL;
 constexpr auto initial_speed   = 20.0;
 constexpr auto class_size      = 4.0;
 constexpr auto max_graph_speed = 60.0;
-constexpr auto graph_width     = 120.0;
+constexpr auto graph_width     = 80.0;
 constexpr auto graph_height    = 40.0;
+constexpr auto graph_centre    = Vector2{-37.5, 0.0};
 
 int main()
 {
@@ -30,11 +31,16 @@ int main()
     auto speeds      = std::vector<f64>(count);
     auto energy      = 0.0;
     auto frequencies = std::vector<f64>(static_cast<u64>(max_graph_speed / class_size + 1.0));
-    const auto walls = app.viewport_box();
+
+    auto box = app.transformed_bounding_box();
+    box.set_width(box.width() / 2.0);
+    print(box);
+    box.set_centre({app.transformed_dims().x / 4.0, 0.0});
+    const auto walls = box.line_segments();
 
     for (auto& i : particles)
     {
-        i.pos = rand.vector(app.transformed_bounding_box());
+        i.pos = rand.vector(box);
         // i.vel = rand.polar_vector({0, initial_speed});
         i.vel = rand.polar_vector({initial_speed, initial_speed + 0.001});
     }
@@ -60,6 +66,8 @@ int main()
 
     const auto draw = [&]
     {
+        app.zoom_pan();
+
         frequencies = std::vector<f64>(static_cast<u64>(max_graph_speed / class_size + 1.0));
 
         for (auto speed : speeds)
@@ -69,7 +77,7 @@ int main()
         }
 
         app.fill("#131417"_c);
-
+        app.draw(App::GridLines{});
         for (const auto& i : particles) { app.draw(i, {.fill_color = "#fc0330"_c}); }
 
         auto points              = std::vector<Vector2>(frequencies.size());
@@ -80,12 +88,13 @@ int main()
                                                   {-graph_width / 2.0, graph_width / 2.0});
             const auto y = interp::map_range<f64>(frequency, {0.0, max_frequency},
                                                   {-graph_height / 2.0, graph_height / 2.0});
-            points[i]    = Vector2{x, y};
+            points[i]    = Vector2{x, y} + graph_centre;
         }
-        app.draw_polyline(points, "#6179ff"_c, 2);
+        app.draw_polyline(points, "#6179ff"_c, 0.2);
 
 
-        fmt::print("\nfps: {}, energy: {:.5}, speeds: ", std::round(watch.current_fps()), energy);
+        // fmt::print("\nfps: {}, energy: {:.5}, speeds: ", std::round(watch.current_fps()),
+        // energy);
 
         // for (auto i : frequencies) { fmt::print("{:.3}, ", i); }
 
