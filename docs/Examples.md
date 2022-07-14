@@ -20,6 +20,12 @@ Render a Mandelbrot Set
 
 Highlights: panning, zooming, drawing to pixels
 
+## Gas Maxwell Boltzmann Distribution
+
+The speeds of particles of a gas approach a [Maxwell Boltzmann Distribution](https://en.wikipedia.org/wiki/Maxwell%E2%80%93Boltzmann_distribution)
+
+Highlights: particle simulation, plotting a graph
+
 ## Poisson Disk Sampling
 
 Distribute points evenly in a plane
