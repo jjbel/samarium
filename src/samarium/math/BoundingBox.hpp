@@ -7,8 +7,11 @@
 
 #pragma once
 
+#include <array>
+
 #include "Extents.hpp"
 #include "Vector2.hpp"
+#include "shapes.hpp"
 
 namespace sm
 {
@@ -81,5 +84,38 @@ template <concepts::Number T = f64> struct BoundingBox
     [[nodiscard]] constexpr friend auto operator==(const BoundingBox<T>& lhs,
                                                    const BoundingBox<T>& rhs) noexcept
         -> bool = default;
+
+    [[nodiscard]] constexpr auto centre() const noexcept { return (min + max) / static_cast<T>(2); }
+
+    constexpr auto set_centre(Vector2_t<T> new_centre) noexcept
+    {
+        const auto shift = new_centre - centre();
+        min += shift;
+        max += shift;
+    }
+
+    constexpr auto set_width(f64 new_width) noexcept
+    {
+        const auto half_width     = math::abs(new_width) / static_cast<T>(2);
+        const auto current_centre = centre();
+        min.x                     = current_centre.x - half_width;
+        max.x                     = current_centre.x + half_width;
+    }
+
+    constexpr auto set_height(f64 new_height) noexcept
+    {
+        const auto half_height    = math::abs(new_height) / static_cast<T>(2);
+        const auto current_centre = centre();
+        min.y                     = current_centre.y - half_height;
+        max.y                     = current_centre.y + half_height;
+    }
+
+    [[nodiscard]] constexpr auto line_segments() const noexcept requires concepts::FloatingPoint<T>
+    {
+        const auto top_right   = Vector2{max.x, min.y};
+        const auto bottom_left = Vector2{min.x, max.y};
+        return std::array<LineSegment, 4>{
+            {{min, top_right}, {top_right, max}, {max, bottom_left}, {bottom_left, min}}};
+    }
 };
 } // namespace sm
