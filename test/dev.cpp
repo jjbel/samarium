@@ -8,162 +8,89 @@
 #include "samarium/graphics/colors.hpp"
 #include "samarium/samarium.hpp"
 
+#include "range/v3/algorithm/minmax_element.hpp"
 #include "range/v3/view/concat.hpp"
 
 using namespace sm;
 using namespace sm::literals;
 
-// !!!!! EDIT THIS !!!!!
-struct Params
-{
-    f64 time_scale                 = 1.4;
-    Vector2 gravity                = -30.0_y;
-    f64 coefficient_of_friction    = 0.95;
-    f64 coefficient_of_restitution = 0.95; // bounciness
-    f64 spring_stiffness           = 150.0;
-    f64 spring_damping             = 55.0;
-    f64 particle_mass              = 0.6;
-    f64 particle_radius            = 1.6;
-    Vector2 particle_velocity{10, 20};
-    Dimensions particle_count_xy{4, 4};
-    Vector2 softbody_area{25, 25};
-};
+constexpr auto count           = 2000UL;
+constexpr auto initial_speed   = 20.0;
+constexpr auto class_size      = 4.0;
+constexpr auto max_graph_speed = 60.0;
+constexpr auto graph_width     = 120.0;
+constexpr auto graph_height    = 40.0;
 
 int main()
 {
-    const auto params = Params{};
+    auto app         = App{{.dims{1600, 800}}};
+    auto rand        = RandomGenerator{count * 2, RandomMode::Stable, 73};
+    auto particles   = ParticleSystem{count, Particle{.radius = 0.3, .mass = 0.1}};
+    auto watch       = Stopwatch{};
+    auto speeds      = std::vector<f64>(count);
+    auto energy      = 0.0;
+    auto frequencies = std::vector<f64>(static_cast<u64>(max_graph_speed / class_size + 1.0));
+    const auto walls = app.viewport_box();
 
-    const auto get_dual_from_indices = [&](auto indices)
+    for (auto& i : particles)
     {
-        const auto x = interp::map_range<f64>(
-            static_cast<f64>(indices.x), Extents<u64>{0UL, params.particle_count_xy.x}.as<f64>(),
-            Extents<f64>{-params.softbody_area.x / 2.0, params.softbody_area.x / 2.0});
+        i.pos = rand.vector(app.transformed_bounding_box());
+        // i.vel = rand.polar_vector({0, initial_speed});
+        i.vel = rand.polar_vector({initial_speed, initial_speed + 0.001});
+    }
 
-        const auto y = interp::map_range<f64>(
-            static_cast<f64>(indices.y), Extents<u64>{0UL, params.particle_count_xy.y}.as<f64>(),
-            Extents<f64>{-params.softbody_area.y / 2.0, params.softbody_area.y / 2.0});
-
-        auto pos = Vector2{x, y};
-        pos.rotate(1);
-
-        const auto particle = Particle{
-            pos, params.particle_velocity, {}, params.particle_radius, params.particle_mass};
-
-        auto dual = Dual<Particle>();
-        dual.prev = particle;
-        dual.now  = particle;
-
-        return dual;
-    };
-
-
-    auto particles =
-        Grid<Dual<Particle>>::generate(params.particle_count_xy, get_dual_from_indices);
-
-
-    auto springs = [&]
+    const auto update = [&](f64 dt)
     {
-        std::vector<Spring> temp;
-        temp.reserve(params.particle_count_xy.x * params.particle_count_xy.y * 4UL);
+        particles.for_each(
+            [&](Particle& particle)
+            {
+                for (const auto& wall : walls) { phys::collide(particle, wall, dt, 1.0); }
+            });
 
-        for (auto i : range(params.particle_count_xy.y))
+        particles.self_collision();
+        particles.update(dt);
+
+        energy = 0.0;
+        for (const auto& [speed, particle] : ranges::views::zip(speeds, particles))
         {
-            for (auto j : range(params.particle_count_xy.x))
-            {
-                if (j != 0) { temp.emplace_back(particles[{j, i}].now, particles[{j - 1, i}].now); }
-                if (i != 0) { temp.emplace_back(particles[{j, i}].now, particles[{j, i - 1}].now); }
-                if (i != 0 && j != 0)
-                {
-                    temp.emplace_back(particles[{j, i}].now, particles[{j - 1, i - 1}].now,
-                                      params.spring_stiffness, params.spring_damping);
-                }
-                if (i != 0 && j != params.particle_count_xy.x - 1)
-                {
-                    temp.emplace_back(particles[{j, i}].now, particles[{j + 1, i - 1}].now,
-                                      params.spring_stiffness, params.spring_damping);
-                }
-            }
-        }
-
-        return temp;
-    }();
-
-    auto app = App{{.dims{360, 360}}};
-    app.transform.scale *= 0.7;
-    const auto viewport_box = app.viewport_box();
-
-    // const auto walls     = std::to_array({LineSegment{{-19, 20}, {19, 14}}});
-    const auto walls     = std::array<LineSegment, 0>{};
-    const auto colliders = ranges::views::concat(viewport_box, walls);
-
-    auto watch = Stopwatch{};
-
-    const auto update = [&](auto delta)
-    {
-        delta *= params.time_scale;
-
-        for (auto&& spring : springs) { spring.update(); }
-
-        for (auto&& particle : particles)
-        {
-            const auto mouse_pos = app.transform.apply_inverse(app.mouse.current_pos);
-
-            particle->apply_force(particle->mass * params.gravity);
-
-            if (math::within_distance(mouse_pos, particle->pos, particle->radius) && app.mouse.left)
-            {
-                particle->pos += app.mouse.vel() / app.transform.scale;
-                particle->vel = Vector2{};
-                particle->acc = Vector2{};
-            }
-
-            particle->update(delta);
-
-            for (auto&& other_particle : particles)
-            {
-                phys::collide(particle.now, other_particle.now);
-            }
-
-            for (auto&& wall : colliders)
-            {
-                phys::collide(particle.now, wall, delta, params.coefficient_of_restitution,
-                              params.coefficient_of_friction);
-            }
+            speed = particle.vel.length();
+            energy += 0.5 * particle.mass * speed * speed;
         }
     };
 
     const auto draw = [&]
     {
-        app.fill("#16161c"_c);
+        frequencies = std::vector<f64>(static_cast<u64>(max_graph_speed / class_size + 1.0));
 
-        for (const auto& ls : colliders) { app.draw_line_segment(ls, colors::white, 0.1); }
-
-        for (const auto& spring : springs)
+        for (auto speed : speeds)
         {
-            app.draw_line_segment(LineSegment{spring.p1.pos, spring.p2.pos},
-                                  colors::white.with_multiplied_alpha(0.5), 0.1);
+            speed = std::min(speed, max_graph_speed);
+            frequencies.at(static_cast<u64>(speed / class_size)) += 1.0;
         }
 
-        for (auto& particle : particles)
-        {
-            app.draw(particle.now, {.fill_color = colors::red});
-            particle.prev = particle.now;
-        }
+        app.fill("#131417"_c);
 
-        if (app.mouse.left)
-        {
-            app.draw(Circle{app.transform.apply_inverse(app.mouse.current_pos), 1.0},
-                     {.fill_color = "#4287f5"_c});
-        }
+        for (const auto& i : particles) { app.draw(i, {.fill_color = "#fc0330"_c}); }
 
-        // print("Framerate:", std::round(1.0 / watch.seconds()));
-        watch.reset();
-
-        if (app.frame_counter >= 6 && app.frame_counter <= 360)
+        auto points              = std::vector<Vector2>(frequencies.size());
+        const auto max_frequency = ranges::max(frequencies);
+        for (auto [i, frequency] : ranges::views::enumerate(frequencies))
         {
-            file::export_tga(app.get_image(), fmt::format("softbody{:03}.tga", app.frame_counter));
+            const auto x = interp::map_range<f64>(i, {0.0, static_cast<f64>(frequencies.size())},
+                                                  {-graph_width / 2.0, graph_width / 2.0});
+            const auto y = interp::map_range<f64>(frequency, {0.0, max_frequency},
+                                                  {-graph_height / 2.0, graph_height / 2.0});
+            points[i]    = Vector2{x, y};
         }
+        app.draw_polyline(points, "#6179ff"_c, 2);
+
+
+        fmt::print("\nfps: {}, energy: {:.5}, speeds: ", std::round(watch.current_fps()), energy);
+
+        // for (auto i : frequencies) { fmt::print("{:.3}, ", i); }
+
+        // for (auto i : speeds) { fmt::print("{:.3}, ", i); }
     };
 
-    app.run(update, draw, 32);
+    app.run(update, draw, 1);
 }
