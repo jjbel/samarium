@@ -14,7 +14,7 @@
 using namespace sm;
 using namespace sm::literals;
 
-constexpr auto count           = 2000UL;
+constexpr auto count           = 1600UL;
 constexpr auto initial_speed   = 20.0;
 constexpr auto class_size      = 4.0;
 constexpr auto max_graph_speed = 60.0;
@@ -29,12 +29,10 @@ int main()
     auto particles   = ParticleSystem{count, Particle{.radius = 0.3, .mass = 0.1}};
     auto watch       = Stopwatch{};
     auto speeds      = std::vector<f64>(count);
-    auto energy      = 0.0;
     auto frequencies = std::vector<f64>(static_cast<u64>(max_graph_speed / class_size + 1.0));
 
     auto box = app.transformed_bounding_box();
     box.set_width(box.width() / 2.0);
-    print(box);
     box.set_centre({app.transformed_dims().x / 4.0, 0.0});
     const auto walls = box.line_segments();
 
@@ -56,11 +54,9 @@ int main()
         particles.self_collision();
         particles.update(dt);
 
-        energy = 0.0;
         for (const auto& [speed, particle] : ranges::views::zip(speeds, particles))
         {
             speed = particle.vel.length();
-            energy += 0.5 * particle.mass * speed * speed;
         }
     };
 
@@ -78,7 +74,13 @@ int main()
 
         app.fill("#131417"_c);
         app.draw(App::GridLines{});
-        for (const auto& i : particles) { app.draw(i, {.fill_color = "#fc0330"_c}); }
+        for (const auto& i : particles)
+        {
+            // if (box.contains(i.pos))
+            {
+                app.draw(i, {.fill_color = "#fc0330"_c});
+            } // particles leak, only draw if in box
+        }
 
         auto points              = std::vector<Vector2>(frequencies.size());
         const auto max_frequency = ranges::max(frequencies);
@@ -93,8 +95,7 @@ int main()
         app.draw_polyline(points, "#6179ff"_c, 0.2);
 
 
-        // fmt::print("\nfps: {}, energy: {:.5}, speeds: ", std::round(watch.current_fps()),
-        // energy);
+        fmt::print("\nfps: {}, speeds: ", std::round(watch.current_fps()));
 
         // for (auto i : frequencies) { fmt::print("{:.3}, ", i); }
 

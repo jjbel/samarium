@@ -58,4 +58,16 @@ void ParticleSystem::self_collision(f64 damping) noexcept
         }
     }
 }
+
+void ParticleSystem::self_collision(f64 damping, f64 distance_threshold) noexcept
+{
+    // TODO: use ranges::views::cartesian_product
+    for (auto i = particles.begin(); i != particles.end(); ++i)
+    {
+        for (auto j = particles.begin(); j != particles.end(); ++j)
+        {
+            if (i != j) { phys::collide(distance_threshold, *i, *j, damping); }
+        }
+    }
+}
 }; // namespace sm
