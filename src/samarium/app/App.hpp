@@ -54,11 +54,11 @@ enum class VertexMode
  */
 class App
 {
+  public:
     sf::RenderWindow sf_render_window;
     sf::Texture texture;
     u64 target_framerate;
 
-  public:
     struct Settings
     {
         Dimensions dims{sm::dimsFHD};
