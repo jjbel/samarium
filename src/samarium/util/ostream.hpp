@@ -16,13 +16,13 @@ auto operator<<(std::ostream& os, const sm::Color& a) -> std::ostream&;
 template <sm::concepts::Number T>
 auto operator<<(std::ostream& os, const sm::BoundingBox<T>& a) -> std::ostream&
 {
-    os << fmt::format("{}", a);
+    os << fmt::to_string(a);
     return os;
 }
 
 template <sm::concepts::Number T>
 auto operator<<(std::ostream& os, const sm::Vector2_t<T>& a) -> std::ostream&
 {
-    os << fmt::format("{}", a);
+    os << fmt::to_string(a);
     return os;
 }

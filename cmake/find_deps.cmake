@@ -12,7 +12,7 @@ find_package(
     COMPONENTS system window graphics
     REQUIRED
 )
-find_package(fmt 7 REQUIRED)
+find_package(fmt REQUIRED)
 find_package(range-v3 0.11.0 REQUIRED)
 
 function(link_deps target)

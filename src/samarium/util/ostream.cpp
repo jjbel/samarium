@@ -11,12 +11,12 @@
 
 std::ostream& operator<<(std::ostream& os, const sm::Version& a)
 {
-    os << fmt::format("{}", a);
+    os << fmt::to_string(a);
     return os;
 }
 
 std::ostream& operator<<(std::ostream& os, const sm::Color& a)
 {
-    os << fmt::format("{}", a);
+    os << fmt::to_string(a);
     return os;
 }

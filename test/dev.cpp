@@ -11,4 +11,4 @@
 using namespace sm;
 using namespace sm::literals;
 
-int main() {}
+int main() { print(Vector2{3.14, 2.71}, Indices{69, 42}); }
