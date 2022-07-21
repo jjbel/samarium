@@ -15,8 +15,8 @@ build/
 __pycache__/
 
 *.tga
-
 *.png
+*.bmp
 
 *.mp4
 
