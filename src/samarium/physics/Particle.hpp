@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <compare>
+
 #include "samarium/core/types.hpp"   // for f64
 #include "samarium/math/Vector2.hpp" // for Vector2
 #include "samarium/math/shapes.hpp"  // for Circle
@@ -26,5 +28,7 @@ struct Particle
     void apply_force(Vector2 force) noexcept;
 
     void update(f64 time_delta = 1.0 / 64) noexcept;
+
+    auto operator<=>(const Particle&) const = default;
 };
 } // namespace sm

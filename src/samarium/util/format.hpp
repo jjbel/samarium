@@ -135,7 +135,7 @@ template <> class formatter<std::complex<sm::f64>>
 
 namespace sm
 {
-auto date_time_str()
+inline auto date_time_str()
 {
     return fmt::format("{:%Y-%m-%d_%H-%M-%S}", std::chrono::system_clock::now());
 }

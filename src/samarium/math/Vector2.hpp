@@ -198,25 +198,9 @@ template <concepts::Number T> struct Vector2_t
     {
         return Vector2_t<T>{-x, -y};
     }
+
+    [[nodiscard]] constexpr auto operator<=>(const Vector2_t<T>&) const = default;
 };
-
-template <concepts::FloatingPoint T>
-[[nodiscard]] constexpr bool operator==(const Vector2_t<T>& lhs, const Vector2_t<T>& rhs) noexcept
-{
-    return math::almost_equal(lhs.x, rhs.x) && math::almost_equal(lhs.y, rhs.y);
-}
-
-template <concepts::Integral T>
-[[nodiscard]] constexpr bool operator==(const Vector2_t<T>& lhs, const Vector2_t<T>& rhs) noexcept
-{
-    return lhs.x == rhs.x && lhs.y == rhs.y;
-}
-
-template <concepts::Number T>
-[[nodiscard]] constexpr bool operator!=(const Vector2_t<T>& lhs, const Vector2_t<T>& rhs) noexcept
-{
-    return !operator==(lhs, rhs);
-}
 
 template <concepts::Number T>
 [[nodiscard]] constexpr auto operator+(Vector2_t<T> lhs, const Vector2_t<T>& rhs) noexcept
