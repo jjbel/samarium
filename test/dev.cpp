@@ -152,12 +152,31 @@ int main()
             particle.prev = particle.now;
         }
 
-        print("Framerate:", std::round(1.0 / watch.seconds()));
+        // print("Framerate:", std::round(1.0 / watch.seconds()));
         watch.reset();
 
-        file::export_to(file::Targa{}, app.get_image());
+        // file::export_to(file::Targa{}, app.get_image());
+        // if (app.frame_counter == 50)
+        {
+            auto temp_watch  = Stopwatch{};
+            const auto image = app.get_image();
+            temp_watch.print();
+
+            temp_watch.reset();
+            file::export_to(file::Targa{}, image);
+            temp_watch.print();
+
+            temp_watch.reset();
+            file::export_to(file::Bmp{}, image);
+            temp_watch.print();
+
+            temp_watch.reset();
+            file::export_to(file::Png{}, image);
+            temp_watch.print();
+
+            print();
+        }
     };
 
     app.run(update, draw, 32);
-    print(file::read("CHANGELOG.md").value());
 }
