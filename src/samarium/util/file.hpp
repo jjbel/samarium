@@ -8,18 +8,26 @@
 #pragma once
 
 #include <filesystem>
+#include <optional>
 #include <string>
 
 #include "../graphics/Image.hpp"
-#include "../util/util.hpp"
+#include "../util/format.hpp"
 
 namespace sm::file
 {
-void export_tga(const Image& image,
-                const std::filesystem::path& file_path = date_time_str() + ".tga");
+struct Text
+{
+};
 
-void export_to(const Image& image,
-               const std::filesystem::path& file_path = date_time_str() + ".tga");
+struct Targa
+{
+};
 
+auto read(Text, const std::filesystem::path& file_path) -> std::optional<std::string>;
 auto read(const std::filesystem::path& file_path) -> std::optional<std::string>;
+
+void export_to(Targa,
+               const Image& image,
+               const std::filesystem::path& file_path = date_time_str() + ".tga");
 } // namespace sm::file

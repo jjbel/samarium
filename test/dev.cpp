@@ -152,10 +152,12 @@ int main()
             particle.prev = particle.now;
         }
 
-        // print("Framerate:", std::round(1.0 / watch.seconds()));
+        print("Framerate:", std::round(1.0 / watch.seconds()));
         watch.reset();
-        for (const auto& i : particles) { print(i->pos); }
+
+        file::export_to(file::Targa{}, app.get_image());
     };
 
     app.run(update, draw, 32);
+    print(file::read("CHANGELOG.md").value());
 }

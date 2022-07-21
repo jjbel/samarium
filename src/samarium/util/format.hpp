@@ -137,6 +137,10 @@ namespace sm
 {
 inline auto date_time_str()
 {
-    return fmt::format("{:%Y-%m-%d_%H-%M-%S}", std::chrono::system_clock::now());
+    const auto now      = std::chrono::system_clock::now();
+    const auto duration = now.time_since_epoch();
+    const auto millis   = std::chrono::duration_cast<std::chrono::milliseconds>(duration) -
+                        std::chrono::duration_cast<std::chrono::seconds>(duration);
+    return fmt::format("{:%Y-%m-%d_%H-%M-%S-}{:03}", now, millis.count());
 }
 } // namespace sm

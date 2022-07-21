@@ -6,22 +6,22 @@
  */
 
 #include <array>      // for to_array, array
-#include <chrono>     // for filesystem
 #include <filesystem> // for path
 #include <fstream>    // for ifstream, ofstream, basic_ostream::write
-#include <iterator>
-#include <new> // for bad_alloc
-#include <optional>
-#include <string> // for string
+#include <iterator>   // for ifstreambuf_iterator
+#include <optional>   // for optional
+#include <string>     // for string
 
 #include "../core/types.hpp"     // for u8
 #include "../graphics/Color.hpp" // for BGR_t, bgr
 #include "../graphics/Image.hpp" // for Image
 #include "../math/Vector2.hpp"   // for Dimensions
 
+#include "file.hpp"
+
 namespace sm::file
 {
-void export_tga(const Image& image, const std::filesystem::path& file_path)
+void export_to(Targa, const Image& image, const std::filesystem::path& file_path)
 {
     namespace fs = std::filesystem;
 
@@ -32,19 +32,13 @@ void export_tga(const Image& image, const std::filesystem::path& file_path)
 
     const auto data = image.formatted_data(sm::bgr);
 
-    std::ofstream(file_path)
+    std::ofstream(file_path, std::ios::binary)
         .write(reinterpret_cast<const char*>(&tga_header[0]), 18)
         .write(reinterpret_cast<const char*>(&data[0]),
                static_cast<std::streamsize>(data.size() * data[0].size()));
 }
 
-void export_to(const Image& image, const std::filesystem::path& file_path)
-{
-    const auto extension = file_path.extension();
-    if (extension == ".tga") { export_tga(image, file_path); }
-}
-
-auto read(const std::filesystem::path& file_path) -> std::optional<std::string>
+auto read(Text, const std::filesystem::path& file_path) -> std::optional<std::string>
 {
     if (std::filesystem::exists(file_path))
     {
@@ -52,5 +46,10 @@ auto read(const std::filesystem::path& file_path) -> std::optional<std::string>
         return {std::string(std::istreambuf_iterator<char>{ifs}, {})};
     }
     else { return {}; }
+}
+
+auto read(const std::filesystem::path& file_path) -> std::optional<std::string>
+{
+    return read(Text{}, file_path);
 }
 } // namespace sm::file
