@@ -12,6 +12,9 @@
 #include <optional>   // for optional
 #include <string>     // for string
 
+#include "fpng/fpng.h"
+#include "stb_image_write.h"
+
 #include "../core/types.hpp"     // for u8
 #include "../graphics/Color.hpp" // for BGR_t, bgr
 #include "../graphics/Image.hpp" // for Image
@@ -21,23 +24,6 @@
 
 namespace sm::file
 {
-void export_to(Targa, const Image& image, const std::filesystem::path& file_path)
-{
-    namespace fs = std::filesystem;
-
-    const auto tga_header = std::to_array<u8>(
-        {0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, static_cast<u8>(255 & image.dims.x),
-         static_cast<u8>(255 & (image.dims.x >> 8)), static_cast<u8>(255 & image.dims.y),
-         static_cast<u8>(255 & (image.dims.y >> 8)), 24, 32});
-
-    const auto data = image.formatted_data(sm::bgr);
-
-    std::ofstream(file_path, std::ios::binary)
-        .write(reinterpret_cast<const char*>(&tga_header[0]), 18)
-        .write(reinterpret_cast<const char*>(&data[0]),
-               static_cast<std::streamsize>(data.size() * data[0].size()));
-}
-
 auto read(Text, const std::filesystem::path& file_path) -> std::optional<std::string>
 {
     if (std::filesystem::exists(file_path))
@@ -51,5 +37,34 @@ auto read(Text, const std::filesystem::path& file_path) -> std::optional<std::st
 auto read(const std::filesystem::path& file_path) -> std::optional<std::string>
 {
     return read(Text{}, file_path);
+}
+
+void export_to(Targa, const Image& image, const std::filesystem::path& file_path)
+{
+    const auto tga_header = std::to_array<u8>(
+        {0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, static_cast<u8>(255 & image.dims.x),
+         static_cast<u8>(255 & (image.dims.x >> 8)), static_cast<u8>(255 & image.dims.y),
+         static_cast<u8>(255 & (image.dims.y >> 8)), 24, 32});
+
+    const auto data = image.formatted_data(sm::bgr);
+
+    std::ofstream(file_path, std::ios::binary)
+        .write(reinterpret_cast<const char*>(&tga_header[0]), 18)
+        .write(reinterpret_cast<const char*>(&data[0]),
+               static_cast<std::streamsize>(data.size() * data[0].size()));
+}
+
+void export_to(Png, const Image& image, const std::filesystem::path& file_path)
+{
+    fpng::fpng_encode_image_to_file(file_path.c_str(), static_cast<const void*>(&image.front()),
+                                    static_cast<u32>(image.dims.x), static_cast<u32>(image.dims.y),
+                                    4U);
+}
+
+void export_to(Bmp, const Image& image, const std::filesystem::path& file_path)
+{
+    stbi_write_bmp(file_path.c_str(), static_cast<i32>(image.dims.x),
+                   static_cast<i32>(image.dims.y), 4 /* RGBA */,
+                   static_cast<const void*>(&image.front()));
 }
 } // namespace sm::file

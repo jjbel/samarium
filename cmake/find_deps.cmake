@@ -14,11 +14,13 @@ find_package(
 )
 find_package(fmt REQUIRED)
 find_package(range-v3 0.11.0 REQUIRED)
+find_package(stb REQUIRED)
 
 function(link_deps target)
     target_link_libraries(${target} PUBLIC fmt::fmt)
     target_link_libraries(${target} PUBLIC range-v3::range-v3)
     target_link_libraries(${target} PUBLIC sfml-graphics)
+    target_link_libraries(${target} PUBLIC stb::stb)
 
     if(USE_WARNINGS)
         target_compile_options(${target} PUBLIC ${WARNINGS})

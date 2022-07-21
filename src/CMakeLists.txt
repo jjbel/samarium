@@ -50,9 +50,20 @@ if(USE_WARNINGS)
     target_compile_options(samarium PUBLIC ${WARNINGS})
 endif()
 
+if(MSVC)
+    set(FPNG_OPTIONS "/w")
+else()
+    set(FPNG_OPTIONS "-fno-strict-aliasing;-msse4.1;-mpclmul;-w")
+endif()
+
+set_source_files_properties(
+    "samarium/util/fpng/fpng.cpp" PROPERTIES COMPILE_OPTIONS "${FPNG_OPTIONS}"
+)
+
 target_link_libraries(samarium PUBLIC fmt::fmt)
 target_link_libraries(samarium PUBLIC range-v3::range-v3)
 target_link_libraries(samarium PUBLIC sfml-graphics)
+target_link_libraries(samarium PUBLIC stb::stb)
 
 install(
     TARGETS samarium
