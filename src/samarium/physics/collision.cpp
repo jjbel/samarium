@@ -72,28 +72,7 @@ void collide(f64 distance_threshold, Particle& p1, Particle& p2, f64 damping)
 {
     if (!math::within_distance(p1.pos, p2.pos, distance_threshold)) { return; }
 
-    // if (&p1 == &p2) { return; } // prevent self-intersection
-
-    if (const auto point = did_collide(p1, p2))
-    {
-        // position changes
-        const auto shift  = (p1.radius + (math::distance(p1.pos, p2.pos) - p2.radius)) / 2;
-        const auto centre = p1.pos + (p2.pos - p1.pos).with_length(shift);
-        p1.pos            = centre + (p1.pos - centre).with_length(p1.radius);
-        p2.pos            = centre + (p2.pos - centre).with_length(p2.radius);
-
-        // velocity changes
-        const auto line      = p1.pos - p2.pos;
-        const auto length_sq = line.length_sq();
-        const auto factor    = 2.0 / (p1.mass + p2.mass);
-        const auto dot       = Vector2::dot(p1.vel - p2.vel, line);
-
-        const auto vel1 = line * (p2.mass * factor * dot / length_sq);
-        const auto vel2 = line * (-p1.mass * factor * dot / length_sq);
-
-        p1.vel -= vel1 * damping;
-        p2.vel -= vel2 * damping;
-    }
+    collide(p1, p2, damping);
 }
 
 void collide(Particle& current, const LineSegment& l, f64 dt, f64 damping, f64 friction)
