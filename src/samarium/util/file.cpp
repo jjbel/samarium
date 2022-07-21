@@ -12,7 +12,7 @@
 #include <optional>   // for optional
 #include <string>     // for string
 
-#include "fpng/fpng.h"
+#include "fpng/fpng.hpp"
 #include "stb_image_write.h"
 
 #include "../core/types.hpp"     // for u8

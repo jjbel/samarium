@@ -11,7 +11,7 @@
 #include <optional>
 #include <string>
 
-#include "fpng/fpng.h"
+#include "fpng/fpng.hpp"
 
 #include "../graphics/Image.hpp"
 #include "../util/format.hpp"

@@ -18,7 +18,7 @@
 // With gcc/clang on x86, compile with -msse4.1 -mpclmul -fno-strict-aliasing
 // Only tested with -fno-strict-aliasing (which the Linux kernel uses, and MSVC's default).
 //
-#include "fpng.h"
+#include "fpng.hpp"
 #include <assert.h>
 #include <string.h>
 
