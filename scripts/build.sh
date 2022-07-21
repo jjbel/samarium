@@ -1,8 +1,8 @@
 #!/bin/bash
 
 mold -run cmake --build --preset=default &> ./build/output
-sed -i 's#home##g' ./build/output
-sed -i 's#jb##g' ./build/output
+# sed -i 's#home##g' ./build/output
+# sed -i 's#jb##g' ./build/output
 sed -i 's#src##g' ./build/output
 sed -i 's#samarium##g' ./build/output
 sed -i 's#CMakeFiles##g' ./build/output
