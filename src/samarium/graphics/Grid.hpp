@@ -88,17 +88,17 @@ template <typename T> class Grid
 
     // -------------------------------Member functions------------------------------------
 
-    auto operator[](Indices indices) -> T&
+    auto operator[](Indices indices) -> reference
     {
         return this->data[indices.y * this->dims.x + indices.x];
     }
-    auto operator[](Indices indices) const -> const T&
+    auto operator[](Indices indices) const -> const_reference
     {
         return this->data[indices.y * this->dims.x + indices.x];
     }
 
     auto operator[](size_t index) noexcept -> T& { return this->data[index]; }
-    auto operator[](size_t index) const noexcept -> const T& { return this->data[index]; }
+    auto operator[](size_t index) const noexcept -> const_reference { return this->data[index]; }
 
     auto at(Indices indices) -> T&
     {
@@ -108,13 +108,10 @@ template <typename T> class Grid
                 fmt::format("sm::Grid: indices ({}, {}) out of range for dimensions ({}, {})",
                             indices.x, indices.y, this->dims.x, this->dims.y));
         }
-        else [[likely]]
-        {
-            return this->operator[](indices);
-        }
+        else [[likely]] { return this->operator[](indices); }
     }
 
-    auto at(Indices indices) const -> const T&
+    auto at(Indices indices) const -> const_reference
     {
         if (indices.x >= dims.x || indices.y >= dims.y) [[unlikely]]
         {
@@ -122,10 +119,7 @@ template <typename T> class Grid
                 fmt::format("sm::Grid: indices ({}, {}) out of range for dimensions ({}, {})",
                             indices.x, indices.y, this->dims.x, this->dims.y));
         }
-        else [[likely]]
-        {
-            return this->operator[](indices);
-        }
+        else [[likely]] { return this->operator[](indices); }
     }
 
     auto at(size_t index) -> T&
@@ -135,41 +129,29 @@ template <typename T> class Grid
             throw std::out_of_range(
                 fmt::format("sm::Grid: index {} out of range for size {}", index, this->size()));
         }
-        else [[likely]]
-        {
-            return this->data[index];
-        }
+        else [[likely]] { return this->data[index]; }
     }
 
-    auto at(size_t index) const -> const T&
+    auto at(size_t index) const -> const_reference
     {
         if (index >= this->size()) [[unlikely]]
         {
             throw std::out_of_range(
                 fmt::format("sm::Grid: index {} out of range for size {}", index, this->size()));
         }
-        else [[likely]]
-        {
-            return this->data[index];
-        }
+        else [[likely]] { return this->data[index]; }
     }
 
     auto at_or(Indices indices, T default_value) const -> T
     {
         if (indices.x >= dims.x || indices.y >= dims.y) [[unlikely]] { return default_value; }
-        else [[likely]]
-        {
-            return this->operator[](indices);
-        }
+        else [[likely]] { return this->operator[](indices); }
     }
 
     auto at_or(size_t index, T default_value) const -> T
     {
         if (index >= this->size()) [[unlikely]] { return default_value; }
-        else [[likely]]
-        {
-            return this->data[index];
-        }
+        else [[likely]] { return this->data[index]; }
     }
 
     auto begin() { return this->data.begin(); }
@@ -180,6 +162,12 @@ template <typename T> class Grid
 
     auto cbegin() const { return this->data.cbegin(); }
     auto cend() const { return this->data.cend(); }
+
+    auto front() const -> const_reference { return data.front(); }
+    auto front() -> reference { return data.front(); }
+
+    auto back() const -> const_reference { return data.back(); }
+    auto back() -> reference { return data.back(); }
 
     auto size() const { return this->data.size(); }
     auto max_size() const { return this->data.size(); } // for stl compatibility
