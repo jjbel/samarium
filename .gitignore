@@ -16,7 +16,7 @@ __pycache__/
 
 *.tga
 
-# *.png
+*.png
 
 *.mp4
 
