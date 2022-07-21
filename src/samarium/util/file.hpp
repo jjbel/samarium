@@ -7,12 +7,17 @@
 
 #pragma once
 
+#include <filesystem>
+#include <string>
+
 #include "../graphics/Image.hpp"
 #include "../util/util.hpp"
 
 namespace sm::file
 {
-void export_tga(const Image& image, const std::string& file_path = "samarium.tga");
+void export_tga(const Image& image, const std::filesystem::path& file_path = "samarium.tga");
 
-void export_to(const Image& image, const std::string& file_path = "samarium.tga");
+void export_to(const Image& image, const std::filesystem::path& file_path = "samarium.tga");
+
+auto read(const std::filesystem::path& file_path) -> std::optional<std::string>;
 } // namespace sm::file

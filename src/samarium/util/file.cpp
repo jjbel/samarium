@@ -5,11 +5,14 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
-#include <array>   // for to_array, array
-#include <chrono>  // for filesystem
-#include <fstream> // for ofstream, basic_ostream::write
-#include <new>     // for bad_alloc
-#include <string>  // for string
+#include <array>      // for to_array, array
+#include <chrono>     // for filesystem
+#include <filesystem> // for path
+#include <fstream>    // for ifstream, ofstream, basic_ostream::write
+#include <iterator>
+#include <new> // for bad_alloc
+#include <optional>
+#include <string> // for string
 
 #include "../core/types.hpp"     // for u8
 #include "../graphics/Color.hpp" // for BGR_t, bgr
@@ -18,7 +21,7 @@
 
 namespace sm::file
 {
-void export_tga(const Image& image, const std::string& file_path)
+void export_tga(const Image& image, const std::filesystem::path& file_path)
 {
     namespace fs = std::filesystem;
 
@@ -35,8 +38,19 @@ void export_tga(const Image& image, const std::string& file_path)
                static_cast<std::streamsize>(data.size() * data[0].size()));
 }
 
-void export_to(const Image& image, const std::string& file_path)
+void export_to(const Image& image, const std::filesystem::path& file_path)
 {
-    if (file_path.ends_with(".tga")) { export_tga(image, file_path); }
+    const auto extension = file_path.extension();
+    if (extension == ".tga") { export_tga(image, file_path); }
+}
+
+auto read(const std::filesystem::path& file_path) -> std::optional<std::string>
+{
+    if (std::filesystem::exists(file_path))
+    {
+        auto ifs = std::ifstream{file_path};
+        return {std::string(std::istreambuf_iterator<char>{ifs}, {})};
+    }
+    else { return {}; }
 }
 } // namespace sm::file
