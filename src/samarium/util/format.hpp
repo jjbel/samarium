@@ -7,7 +7,10 @@
 
 #pragma once
 
+#include "fmt/chrono.h"
 #include "fmt/color.h"
+#include "fmt/format.h"
+#include "fmt/ranges.h"
 
 #include "../core/version.hpp"
 #include "../graphics/Color.hpp"
@@ -129,3 +132,11 @@ template <> class formatter<std::complex<sm::f64>>
     }
 };
 } // namespace fmt
+
+namespace sm
+{
+auto date_time_str()
+{
+    return fmt::format("{:%Y-%m-%d_%H-%M-%S}", std::chrono::system_clock::now());
+}
+} // namespace sm

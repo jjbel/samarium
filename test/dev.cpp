@@ -11,4 +11,4 @@
 using namespace sm;
 using namespace sm::literals;
 
-int main() { print(file::read("test/dev.cpp").value()); }
+int main() { file::export_tga(Image{}); }
