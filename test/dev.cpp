@@ -8,8 +8,6 @@
 #include "samarium/graphics/colors.hpp"
 #include "samarium/samarium.hpp"
 
-#include "range/v3/view/concat.hpp"
-
 using namespace sm;
 using namespace sm::literals;
 
