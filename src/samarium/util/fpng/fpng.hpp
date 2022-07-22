@@ -15,7 +15,7 @@ namespace fpng
 {
 // ---- Library initialization - call once to identify if the processor supports SSE.
 // Otherwise you'll only get scalar fallbacks.
-void fpng_init();
+// void fpng_init();
 
 // ---- Useful Utilities
 

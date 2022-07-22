@@ -492,13 +492,14 @@ static void do_cpuid(uint32_t eax, uint32_t ecx, uint32_t* regs)
 
 struct cpu_info
 {
-    cpu_info() { memset(this, 0, sizeof(*this)); }
+    // cpu_info() { memset(this, 0, sizeof(*this)); }
 
     bool m_initialized, m_has_fpu, m_has_mmx, m_has_sse, m_has_sse2, m_has_sse3, m_has_ssse3,
         m_has_sse41, m_has_sse42, m_has_avx, m_has_avx2, m_has_pclmulqdq;
 
-    void init()
+    cpu_info()
     {
+        memset(this, 0, sizeof(*this));
         if (m_initialized) return;
 
         int regs[4];
@@ -559,9 +560,9 @@ struct cpu_info
 
 cpu_info g_cpu_info;
 
-void fpng_init() { g_cpu_info.init(); }
+// void fpng_init() { g_cpu_info.init(); }
 #else
-void fpng_init() {}
+// void fpng_init() {}
 #endif
 
 bool fpng_cpu_supports_sse41()
