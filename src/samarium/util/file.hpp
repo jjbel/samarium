@@ -34,6 +34,15 @@ struct Bmp
 {
 };
 
+namespace
+{
+static const auto inited = []()
+{
+    fpng::fpng_init();
+    return true;
+}();
+}
+
 auto read(Text, const std::filesystem::path& file_path) -> std::optional<std::string>;
 auto read(const std::filesystem::path& file_path) -> std::optional<std::string>;
 
@@ -48,10 +57,4 @@ void export_to(Png,
 void export_to(Bmp,
                const Image& image,
                const std::filesystem::path& file_path = date_time_str() + ".bmp");
-
-static const auto inited = []()
-{
-    fpng::fpng_init();
-    return true;
-}();
 } // namespace sm::file
