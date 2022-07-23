@@ -57,7 +57,9 @@ jobs:
           conan profile update settings.compiler.libcxx=libstdc++11 default
 
       - name: CMake Configure
-        run: cmake --preset=clang
+        run: |
+          conan install . -b missing -if build -pr:b=default
+          cmake --preset=default
 
       - name: CMake Build
         run: cmake --build --preset=default

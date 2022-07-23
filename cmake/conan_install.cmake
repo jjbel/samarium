@@ -7,8 +7,8 @@ if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/conan.lock)
 
     message(STATUS "Installing Conan dependencies... (this may take a few minutes)")
     execute_process(
-        COMMAND ${CONAN_EXE} install . -if ${CMAKE_CURRENT_BINARY_DIR} -b missing -o
-                samarium:build_tests=True
+        COMMAND ${CONAN_EXE} install . -b missing -if ${CMAKE_CURRENT_BINARY_DIR}
+                -pr:b=default -o samarium:build_tests=True
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
         OUTPUT_QUIET
     )

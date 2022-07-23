@@ -1,11 +1,7 @@
-# SPDX-License-Identifier: MIT
-# Copyright (c) 2022 Jai Bellare
-# See <https://opensource.org/licenses/MIT/> or LICENSE.md
-# Project homepage: <https://github.com/strangeQuark1041/samarium>
+from conan import ConanFile
+from conan.tools.cmake import CMake, cmake_layout
 
-from conans import ConanFile, CMake
-
-required_conan_version = ">=1.43.0"
+required_conan_version = ">=1.47.0"
 
 
 class SamariumConan(ConanFile):
@@ -16,13 +12,13 @@ class SamariumConan(ConanFile):
     url = "https://github.com/conan-io/conan-center-index/"
     license = "MIT"
     topics = ("cpp20", "physics", "2d", "simulation")
+    generators = "CMakeDeps", "CMakeToolchain"
 
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False], "fPIC": [
         True, False], "build_tests": [True, False]}
     default_options = {"shared": False, "fPIC": True, "build_tests": False}
 
-    generators = "cmake", "cmake_find_package"
     exports_sources = "src/*"
 
     def requirements(self):
@@ -34,7 +30,6 @@ class SamariumConan(ConanFile):
         if self.options.build_tests:
             self.requires('catch2/3.0.1')
             self.requires('benchmark/1.6.1')
-            self.requires('eigen/3.4.0')
 
     def configure(self):
         if self.options.shared:
@@ -44,18 +39,17 @@ class SamariumConan(ConanFile):
         if self.settings.os == "Windows":
             del self.options.fPIC
 
+    def layout(self):
+        cmake_layout(self, src_folder="src")
+
     def build(self):
-        cmake = CMake(self)  # get reference to cmake executable
-        cmake.configure(source_folder="src")  # run cmake
-        cmake.build()  # run cmake --build
+        cmake = CMake(self)
+        cmake.configure()
+        cmake.build()
 
     def package(self):
-        self.copy("*.h*", dst="include", src="src")
-        self.copy("*.lib", dst="lib", keep_path=False)
-        self.copy("*.dll", dst="bin", keep_path=False)
-        self.copy("*.dylib*", dst="lib", keep_path=False)
-        self.copy("*.so", dst="lib", keep_path=False)
-        self.copy("*.a", dst="lib", keep_path=False)
+        cmake = CMake(self)
+        cmake.install()
 
     def package_info(self):
         self.cpp_info.libs = ["samarium"]

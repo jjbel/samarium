@@ -18,12 +18,12 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
 list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})
 
 find_package(
-    SFML 2.5
+    SFML 2.5 CONFIG
     COMPONENTS system window graphics
     REQUIRED
 )
-find_package(fmt REQUIRED)
-find_package(range-v3 0.11.0 REQUIRED)
+find_package(fmt CONFIG REQUIRED)
+find_package(range-v3 0.11.0 CONFIG REQUIRED)
 
 add_subdirectory(samarium)
 
