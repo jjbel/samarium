@@ -5,7 +5,7 @@
 cmake_minimum_required(VERSION 3.15)
 project(samarium_dev LANGUAGES CXX)
 
-option(BUILD_UNIT_TESTS "Build unit tests" ON)
+option(BUILD_UNIT_TESTS "Build unit tests" OFF)
 option(BUILD_EXAMPLES "Build examples" ON)
 option(BUILD_BENCHMARKS "Build benchmarks" OFF)
 option(BUILD_COVERAGE "Generate coverage reports" OFF)

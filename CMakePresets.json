@@ -14,8 +14,7 @@
             "installDir": "${sourceDir}/build/install/",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release",
-                "CMAKE_EXPORT_COMPILE_COMMANDS": true,
-                "BUILD_UNIT_TESTS": false
+                "CMAKE_EXPORT_COMPILE_COMMANDS": true
             },
             "toolchainFile": "build/generators/conan_toolchain.cmake"
         },
