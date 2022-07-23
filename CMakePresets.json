@@ -19,6 +19,13 @@
             "toolchainFile": "build/generators/conan_toolchain.cmake"
         },
         {
+            "name": "ci",
+            "inherits": "default",
+            "cacheVariables": {
+                "BUILD_UNIT_TESTS": true
+            }
+        },
+        {
             "name": "ninja",
             "inherits": "default",
             "generator": "Ninja"

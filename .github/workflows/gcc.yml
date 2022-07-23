@@ -87,8 +87,8 @@ jobs:
 
       - name: CMake Configure
         run: |
-          conan install . -b missing -if build -pr:b=default
-          cmake --preset=default
+          conan install . -b missing -if build -pr:b=default -o samarium:build_tests=True
+          cmake --preset=ci
 
       - name: CMake Build
         run: build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} cmake --build --preset=default
