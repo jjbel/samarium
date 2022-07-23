@@ -54,3 +54,5 @@ __pycache__/
 
 # Conan libraries
 **/.conan/data
+
+CMakeUserPresets.json
