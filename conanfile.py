@@ -40,6 +40,7 @@ class SamariumConan(ConanFile):
             del self.options.fPIC
 
     def layout(self):
+        self.folders.source = "src"
         cmake_layout(self, src_folder="src")
 
     def build(self):
