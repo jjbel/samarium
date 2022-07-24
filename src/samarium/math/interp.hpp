@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <type_traits> // for std::is_invocable_v
+
 #include "../graphics/Color.hpp"
 #include "../math/Vector2.hpp"
 
@@ -41,10 +43,7 @@ namespace sm::interp
 [[nodiscard]] inline auto ease(f64 value, f64 factor = 2.0)
 {
     if (value < 0.5) { return 0.5 * std::pow(2.0 * value, factor); }
-    else
-    {
-        return 1.0 - 0.5 * std::pow(2.0 * (1.0 - value), factor);
-    }
+    else { return 1.0 - 0.5 * std::pow(2.0 * (1.0 - value), factor); }
 }
 
 /**
@@ -245,10 +244,7 @@ namespace sm::interp
 [[nodiscard]] constexpr auto ease_out_elastic(f64 value)
 {
     if (value == 0.0) { return 0.0; }
-    else if (value == 1.0)
-    {
-        return 1.0;
-    }
+    else if (value == 1.0) { return 1.0; }
     else
     {
         return std::pow(2.0, -10.0 * value) * std::sin((value * 10 - 0.75) * math::two_thirds_pi) +
@@ -503,5 +499,5 @@ namespace sm::concepts
  * interpolation)
  */
 template <typename T>
-concept Interpolator = std::invocable<T, f64>;
+concept Interpolator = std::is_invocable_v<T, f64>;
 } // namespace sm::concepts

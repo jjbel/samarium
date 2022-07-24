@@ -71,7 +71,6 @@ template <typename T> class Grid
     }
 
     template <typename Fn>
-    requires std::invocable<Fn, Indices>
     static auto generate(Dimensions dims, Fn&& fn)
     {
         auto grid = Grid<T>(dims);

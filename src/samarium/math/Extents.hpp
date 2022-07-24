@@ -60,8 +60,7 @@ template <typename T> struct Extents
     }
 
     template <typename Function>
-    constexpr auto
-    for_each(Function&& fn) const requires concepts::Integral<T> && std::invocable<Function, T>
+    constexpr auto for_each(Function&& fn) const requires concepts::Integral<T>
     {
         for (auto i = min; i <= max; i++) { fn(i); }
     }
