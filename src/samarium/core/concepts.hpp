@@ -51,7 +51,7 @@ concept Range = requires(T&& t)
     std::size(t);
 };
 
-template <class Container, class Value>
+/* template <class Container, class Value>
 concept Iterable = requires(Container&& t)
 {
     {
@@ -67,5 +67,5 @@ concept Iterable = requires(Container&& t)
         *std::cend(t)
         } -> std::convertible_to<Value>;
     std::size(t);
-};
+}; */
 } // namespace sm::concepts

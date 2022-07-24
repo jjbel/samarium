@@ -482,7 +482,7 @@ template <typename T, typename Output = T>
  * @param  points     Input points
  * @return Vector2
  */
-template <typename T> auto lerp_points(const T& points) requires concepts::Iterable<T, Vector2>
+template <typename T> auto lerp_points(const T& points)
 {
     return [&](f64 lerp_factor)
     {
