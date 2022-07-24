@@ -154,7 +154,7 @@ class Keymap
         }
     }
 
-    void push_back(const Keys_t& keys, std::invocable auto&& fn)
+    void push_back(const Keys_t& keys, auto&& fn)
     {
         map.push_back(keys);
         actions.emplace_back(fn);
