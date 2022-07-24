@@ -105,7 +105,7 @@ template <typename T> struct Extents
 
     [[nodiscard]] constexpr auto end() const noexcept requires concepts::Integral<T>
     {
-        return Iterator{max + static_cast<T>(1)};
+        return Extents<T>::Iterator{max + static_cast<T>(1)};
     }
 
     [[nodiscard]] constexpr auto operator[](u64 index) const noexcept requires concepts::Integral<T>
