@@ -71,7 +71,7 @@ class App
     ThreadPool thread_pool{};
     Transform transform;
     u64 frame_counter{};
-    Keymap keymap;
+    Keymap keymap{};
     Mouse mouse{sf_render_window};
 
     explicit App(const Settings& settings)

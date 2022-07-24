@@ -5,7 +5,11 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
+#include "range/v3/algorithm/all_of.hpp"
+#include "range/v3/view/enumerate.hpp" // for enumerate
+
 #include "samarium/math/Extents.hpp" // for range
+#include "samarium/util/print.hpp"   // for range
 
 #include "Keyboard.hpp"
 
@@ -19,14 +23,13 @@ void Keymap::clear()
 
 void Keymap::run() const
 {
-    for (auto i : range(map.size()))
+    print(map.size(), actions.size());
+    for (auto [i, key_combination] : ranges::views::enumerate(map))
     {
-        for (auto key : map[i])
+        if (ranges::all_of(key_combination, [](auto key) { return Keyboard::is_key_pressed(key); }))
         {
-            if (!Keyboard::is_key_pressed(key)) return;
+            actions[i]();
         }
-
-        actions[i]();
     }
 }
 } // namespace sm

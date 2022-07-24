@@ -13,8 +13,10 @@ using namespace sm::literals;
 
 int main()
 {
-    const auto e = Extents<i32>{-2, 4};
-    for (auto i : e) print(i);
-    print();
-    e.for_each([](auto i) { print(i); });
+    auto app = App{{}};
+
+    app.keymap.push_back({Keyboard::Key::W}, [] { print("Pressed w"); });
+
+    app.run([] {});
+    print("done");
 }
