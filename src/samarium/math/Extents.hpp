@@ -34,14 +34,8 @@ template <typename T> struct Extents
     [[nodiscard]] constexpr auto clamp(T value) const noexcept
     {
         if (value < min) { return min; }
-        else if (value > max)
-        {
-            return max;
-        }
-        else
-        {
-            return value;
-        }
+        else if (value > max) { return max; }
+        else { return value; }
     }
 
     [[nodiscard]] constexpr auto lerp(f64 factor) const noexcept requires concepts::Number<T>
@@ -111,7 +105,7 @@ template <typename T> struct Extents
 
     [[nodiscard]] constexpr auto end() const noexcept requires concepts::Integral<T>
     {
-        return Iterator{max};
+        return Iterator{max + static_cast<T>(1)};
     }
 
     [[nodiscard]] constexpr auto operator[](u64 index) const { return min + index; }

@@ -11,4 +11,10 @@
 using namespace sm;
 using namespace sm::literals;
 
-int main() {}
+int main()
+{
+    const auto e = Extents<i32>{-12, 4};
+    for (auto i : e) print(i);
+    print();
+    e.for_each([](auto i) { print(i); });
+}
