@@ -108,7 +108,10 @@ template <typename T> struct Extents
         return Iterator{max + static_cast<T>(1)};
     }
 
-    [[nodiscard]] constexpr auto operator[](u64 index) const { return min + index; }
+    [[nodiscard]] constexpr auto operator[](u64 index) const noexcept requires concepts::Integral<T>
+    {
+        return min + index;
+    }
 
     template <typename U> [[nodiscard]] constexpr auto as() const noexcept
     {
