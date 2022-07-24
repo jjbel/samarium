@@ -16,7 +16,7 @@
 
 namespace sm
 {
-template <size_t size> class Gradient
+template <u64 size> class Gradient
 {
     std::array<Color, size> colors;
 
@@ -28,8 +28,8 @@ template <size_t size> class Gradient
         const auto mapped = factor * (size - 1UL) + 0.01;
         // TODO the +0.1 prevents the map range from dividing by 0
 
-        const auto lower = static_cast<size_t>(mapped);            // static_cast rounds down
-        const auto upper = static_cast<size_t>(std::ceil(mapped)); // round up
+        const auto lower = static_cast<u64>(mapped);            // static_cast rounds down
+        const auto upper = static_cast<u64>(std::ceil(mapped)); // round up
         const auto mapped_factor =
             interp::map_range<f64>(mapped, {std::floor(mapped), std::ceil(mapped)}, {0.0, 1.0});
 
@@ -66,10 +66,7 @@ template <> class Gradient<3>
     {
         factor = Extents<f64>{0.0, 1.0}.clamp(factor);
         if (factor < 0.5) { return interp::lerp_rgb(2.0 * factor, from, mid); }
-        else
-        {
-            return interp::lerp_rgb(2.0 * (factor - 0.5), mid, to);
-        }
+        else { return interp::lerp_rgb(2.0 * (factor - 0.5), mid, to); }
     }
 };
 } // namespace sm

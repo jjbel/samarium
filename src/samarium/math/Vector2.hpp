@@ -252,8 +252,8 @@ template <concepts::Number T>
 }
 
 using Vector2    = Vector2_t<f64>;
-using Indices    = Vector2_t<size_t>;
-using Dimensions = Vector2_t<size_t>;
+using Indices    = Vector2_t<u64>;
+using Dimensions = Vector2_t<u64>;
 
 namespace literals
 {

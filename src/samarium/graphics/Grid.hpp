@@ -31,7 +31,7 @@ constexpr inline auto dims720 = Dimensions{1280UL, 720UL};
 constexpr inline auto dims480 = Dimensions{640UL, 480UL};
 constexpr inline auto dimsP2  = Dimensions{2048UL, 1024UL};
 
-constexpr auto convert_1d_to_2d(Dimensions dims, size_t index)
+constexpr auto convert_1d_to_2d(Dimensions dims, u64 index)
 {
     return Indices{index % dims.x, index / dims.x};
 }
@@ -57,7 +57,7 @@ template <typename T> class Grid
     using iterator        = T*;
     using const_iterator  = T const*;
     using difference_type = std::ptrdiff_t;
-    using size_type       = std::size_t;
+    using size_type       = u64;
 
     // Public members
     std::vector<T> data;
@@ -70,8 +70,7 @@ template <typename T> class Grid
     {
     }
 
-    template <typename Fn>
-    static auto generate(Dimensions dims, Fn&& fn)
+    template <typename Fn> static auto generate(Dimensions dims, Fn&& fn)
     {
         auto grid = Grid<T>(dims);
         for (auto y : range(dims.y))
@@ -96,8 +95,8 @@ template <typename T> class Grid
         return this->data[indices.y * this->dims.x + indices.x];
     }
 
-    auto operator[](size_t index) noexcept -> T& { return this->data[index]; }
-    auto operator[](size_t index) const noexcept -> const_reference { return this->data[index]; }
+    auto operator[](u64 index) noexcept -> T& { return this->data[index]; }
+    auto operator[](u64 index) const noexcept -> const_reference { return this->data[index]; }
 
     auto at(Indices indices) -> T&
     {
@@ -121,7 +120,7 @@ template <typename T> class Grid
         else [[likely]] { return this->operator[](indices); }
     }
 
-    auto at(size_t index) -> T&
+    auto at(u64 index) -> T&
     {
         if (index >= this->size()) [[unlikely]]
         {
@@ -131,7 +130,7 @@ template <typename T> class Grid
         else [[likely]] { return this->data[index]; }
     }
 
-    auto at(size_t index) const -> const_reference
+    auto at(u64 index) const -> const_reference
     {
         if (index >= this->size()) [[unlikely]]
         {
@@ -147,7 +146,7 @@ template <typename T> class Grid
         else [[likely]] { return this->operator[](indices); }
     }
 
-    auto at_or(size_t index, T default_value) const -> T
+    auto at_or(u64 index, T default_value) const -> T
     {
         if (index >= this->size()) [[unlikely]] { return default_value; }
         else [[likely]] { return this->data[index]; }

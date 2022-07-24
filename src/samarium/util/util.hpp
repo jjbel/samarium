@@ -7,16 +7,15 @@
 
 #pragma once
 
+#include <stdexcept> // for invalid_argument
+
 #include "../core/types.hpp" // for u8
-#include <stddef.h>          // for size_t
-#include <stdexcept>         // for invalid_argument
-#include <string>            // for string
 
 namespace sm::util
 {
-[[nodiscard]] consteval size_t strlen(const char* str) // NOSONAR
+[[nodiscard]] consteval u64 strlen(const char* str) // NOSONAR
 {
-    return *str ? 1u + strlen(str + 1) : 0u;
+    return *str ? 1UL + strlen(str + 1UL) : 0UL;
 }
 
 [[nodiscard]] consteval u8 hex_to_int_safe(char ch)
