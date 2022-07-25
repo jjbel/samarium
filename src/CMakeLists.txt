@@ -24,6 +24,7 @@ find_package(
 )
 find_package(fmt CONFIG REQUIRED)
 find_package(range-v3 0.11.0 CONFIG REQUIRED)
+find_package(stb CONFIG REQUIRED)
 
 add_subdirectory(samarium)
 
