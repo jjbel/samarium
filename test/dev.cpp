@@ -13,10 +13,33 @@ using namespace sm::literals;
 
 int main()
 {
-    auto app = App{{}};
+    const auto speed = 2;
 
-    app.keymap.push_back({Keyboard::Key::W}, [] { print("Pressed w"); });
+    auto app = App{{.dims = {1800, 900}}};
+    app.transform.scale *= 6;
 
-    app.run([] {});
-    print("done");
+    auto player = Vector2{};
+    const auto disp   = Vector2{3, 3};
+
+    app.keymap.push_back({Keyboard::Key::Space}, [] { print("Jump"); });
+
+    const auto update = [&](f64 dt)
+    {
+        app.zoom_pan();
+        app.transform.pos.x -= speed * dt * app.transform.scale.x;
+        player += Vector2{.x = speed * dt};
+    };
+
+    const auto draw = [&]
+    {
+        app.fill("#141724"_c);
+        app.draw(App::GridLines{.scale = 1.0, .axis_thickness = 0.016, .line_thickness = 0.01});
+        // app.draw(App::GridDots{.scale = 1.0, .thickness = 0.03});
+        app.draw(BoundingBox<f64>::from_centre_width_height(player, disp.x, disp.y),
+                 {.fill_color = "#ff6c17"_c, .border_width = 0.1});
+        // app.draw(BoundingBox<f64>{{-4, -4}, {4, 5}},
+        //          {.border_color = "#fc035a"_c, .border_width = 0.1});
+    };
+
+    app.run(update, draw);
 }
