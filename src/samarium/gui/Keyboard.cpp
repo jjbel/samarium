@@ -10,7 +10,7 @@
 
 #include "Keyboard.hpp"
 
-namespace sm
+namespace sm::Keyboard
 {
 void Keymap::clear()
 {
@@ -28,4 +28,4 @@ void Keymap::run() const
         }
     }
 }
-} // namespace sm
+} // namespace sm::Keyboard

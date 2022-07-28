@@ -18,13 +18,16 @@ int main()
     auto app = App{{.dims = {1800, 900}}};
     app.transform.scale *= 6;
 
-    auto player = Vector2{};
-    const auto disp   = Vector2{3, 3};
+    auto player     = Vector2{};
+    const auto disp = Vector2{3, 3};
 
-    app.keymap.push_back({Keyboard::Key::Space}, [] { print("Jump"); });
+    // app.keymap.push_back({Keyboard::Key::Space}, [] { print("Jump"); });
+    auto jumper =
+        Keyboard::EventListener<Keyboard::Event::Down, Keyboard::Key::Space>{[] { print("Jump"); }};
 
     const auto update = [&](f64 dt)
     {
+        jumper();
         app.zoom_pan();
         app.transform.pos.x -= speed * dt * app.transform.scale.x;
         player += Vector2{.x = speed * dt};
