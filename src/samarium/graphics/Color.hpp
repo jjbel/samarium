@@ -156,8 +156,8 @@ struct Color
 
 struct ShapeColor
 {
-    Color fill_color{};
-    Color border_color{};
+    Color fill_color{0, 0, 0, 0};
+    Color border_color{0, 0, 0, 0};
     f64 border_width{};
 };
 
