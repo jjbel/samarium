@@ -130,6 +130,21 @@ void App::draw(Circle circle, ShapeColor color, u64 vertex_count)
     sf_render_window.draw(shape);
 }
 
+void App::draw(BoundingBox<f64> box, ShapeColor color)
+{
+    const auto border_width = static_cast<f32>(color.border_width * transform.scale.x);
+    const auto pos          = transform.apply(box.centre()).as<f32>();
+    const auto displacement = sfml((box.displacement() * transform.scale.x).as<f32>().abs());
+
+    auto shape = sf::RectangleShape{displacement};
+    shape.setFillColor(sfml(color.fill_color));
+    shape.setOutlineColor(sfml(color.border_color));
+    shape.setOutlineThickness(border_width);
+    shape.setPosition(pos.x - displacement.x / 2.0f, pos.y - displacement.y / 2.0f);
+
+    sf_render_window.draw(shape);
+}
+
 void App::draw(const Particle& particle, ShapeColor color)
 {
     this->draw(particle.as_circle(), color);

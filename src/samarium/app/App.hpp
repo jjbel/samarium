@@ -135,6 +135,8 @@ class App
 
     void draw(Circle circle, ShapeColor color, u64 vertex_count = 64);
 
+    void draw(BoundingBox<f64> box, ShapeColor color);
+
     void draw(const Particle& particle, ShapeColor color);
 
     void draw_line_segment(const LineSegment& ls,
