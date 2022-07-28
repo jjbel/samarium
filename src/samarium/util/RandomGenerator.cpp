@@ -12,9 +12,9 @@
 
 #include "range/v3/algorithm/generate.hpp" // for generate, generate_fn
 
-#include "samarium/graphics/Grid.hpp"    // for Grid
 #include "samarium/math/BoundingBox.hpp" // for BoundingBox
 #include "samarium/math/vector_math.hpp" // for within_distance
+#include "samarium/util/Grid.hpp"        // for Grid
 
 #include "RandomGenerator.hpp"
 

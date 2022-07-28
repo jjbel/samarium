@@ -21,16 +21,8 @@
 #include "../math/BoundingBox.hpp"
 #include "../math/Extents.hpp"
 
-#include "Color.hpp"
-
 namespace sm
 {
-constexpr inline auto dims4K  = Dimensions{3840UL, 2160UL};
-constexpr inline auto dimsFHD = Dimensions{1920UL, 1080UL};
-constexpr inline auto dims720 = Dimensions{1280UL, 720UL};
-constexpr inline auto dims480 = Dimensions{640UL, 480UL};
-constexpr inline auto dimsP2  = Dimensions{2048UL, 1024UL};
-
 constexpr auto convert_1d_to_2d(Dimensions dims, u64 index)
 {
     return Indices{index % dims.x, index / dims.x};
@@ -64,7 +56,7 @@ template <typename T> class Grid
     const Dimensions dims;
 
     // Constructors
-    explicit Grid(Dimensions dims_ = dimsFHD) : data(dims_.x * dims_.y), dims{dims_} {}
+    explicit Grid(Dimensions dims_) : data(dims_.x * dims_.y), dims{dims_} {}
 
     explicit Grid(Dimensions dims_, T init_value) : data(dims_.x * dims_.y, init_value), dims{dims_}
     {

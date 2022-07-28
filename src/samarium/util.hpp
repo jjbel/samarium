@@ -8,13 +8,14 @@
 #pragma once
 
 #include "util/FunctionRef.hpp"
+#include "util/Grid.hpp"
 #include "util/RandomGenerator.hpp"
 #include "util/Stopwatch.hpp"
 #include "util/file.hpp"
 #include "util/format.hpp"
-// #include "util/ostream.hpp"
 #include "util/noise.hpp"
 #include "util/print.hpp"
 #include "util/random.hpp"
-// #include "util/terminal_dims.hpp"
 #include "util/util.hpp"
+// #include "util/ostream.hpp"
+// #include "util/terminal_dims.hpp"

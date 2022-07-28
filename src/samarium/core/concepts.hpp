@@ -14,7 +14,7 @@
 namespace sm::concepts
 {
 
-constexpr auto reason(const char* const /* reason_string */) { return true; };
+constexpr inline auto reason(const char* const /* reason_string */) { return true; };
 
 template <typename T>
 concept Integral =

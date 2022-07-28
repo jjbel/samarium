@@ -20,8 +20,7 @@
 
 #include "samarium/core/types.hpp"       // for f64, u32, u64
 #include "samarium/graphics/Color.hpp"   // for Color, ShapeColor
-#include "samarium/graphics/Grid.hpp"    // for dimsFHD
-#include "samarium/graphics/Image.hpp"   // for Image
+#include "samarium/graphics/Image.hpp"   // for Image, dimsFHD
 #include "samarium/gui/Keyboard.hpp"     // for Keyboard, Keyboard::Key
 #include "samarium/gui/Mouse.hpp"        // for Mouse
 #include "samarium/math/BoundingBox.hpp" // for BoundingBox
