@@ -18,7 +18,7 @@ int main()
     auto app = App{{.dims = {1800, 900}}};
     app.transform.scale *= 6;
 
-    auto player     = Vector2{};
+    auto player     = Particle{};
     const auto disp = Vector2{3, 3};
 
     // app.keymap.push_back({Keyboard::Key::Space}, [] { print("Jump"); });
@@ -30,7 +30,7 @@ int main()
         jumper();
         app.zoom_pan();
         app.transform.pos.x -= speed * dt * app.transform.scale.x;
-        player += Vector2{.x = speed * dt};
+        player.pos.x += speed * dt;
     };
 
     const auto draw = [&]
@@ -38,7 +38,7 @@ int main()
         app.fill("#141724"_c);
         app.draw(App::GridLines{.scale = 1.0, .axis_thickness = 0.016, .line_thickness = 0.01});
         // app.draw(App::GridDots{.scale = 1.0, .thickness = 0.03});
-        app.draw(BoundingBox<f64>::from_centre_width_height(player, disp.x, disp.y),
+        app.draw(BoundingBox<f64>::from_centre_width_height(player.pos, disp.x, disp.y),
                  {.fill_color = "#ff6c17"_c, .border_width = 0.1});
         // app.draw(BoundingBox<f64>{{-4, -4}, {4, 5}},
         //          {.border_color = "#fc035a"_c, .border_width = 0.1});
