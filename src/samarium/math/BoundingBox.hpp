@@ -60,6 +60,8 @@ template <concepts::Number T = f64> struct BoundingBox
         return vec.x >= min.x && vec.x <= max.x && vec.y >= min.y && vec.y <= max.y;
     }
 
+    [[nodiscard]] constexpr auto displacement() const noexcept { return max - min; }
+
     [[nodiscard]] constexpr auto clamp(Vector2_t<T> vec) const
     {
         return Vector2_t<T>{Extents<T>{min.x, max.x}.clamp(vec.x),
