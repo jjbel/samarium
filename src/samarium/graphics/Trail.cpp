@@ -19,7 +19,7 @@ void Trail::push_back(Vector2 pos)
     else
     {
         ranges::rotate(this->trail, this->trail.begin() + 1);
-        this->trail.back() = std::move(pos);
+        this->trail.back() = pos;
     }
 }
 
