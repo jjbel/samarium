@@ -25,7 +25,7 @@ int main()
     auto jumper     = Keyboard::OnKeyDown{{Keyboard::Key::Space},
                                       [&]
                                       {
-                                          player.vel.y += 15;
+                                          player.vel.y += 12;
                                           print("Jump");
                                       }};
 
