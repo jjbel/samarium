@@ -18,6 +18,7 @@
 #include "range/v3/view/transform.hpp"
 #include "range/v3/view/zip.hpp"
 
+#include "../graphics/Color.hpp"
 #include "../math/BoundingBox.hpp"
 #include "../math/Extents.hpp"
 
