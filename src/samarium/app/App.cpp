@@ -251,6 +251,8 @@ void App::draw_screen_space(FunctionRef<Color(Indices)> callable,
 
 void App::draw_polyline(std::span<const Vector2> vertices, Color color, f64 thickness)
 {
+    if (vertices.size() < 2) { return; }
+
     for (auto i : range(vertices.size() - 1UL))
     {
         draw_line_segment(LineSegment{vertices[i], vertices[i + 1UL]}, color, thickness);
@@ -259,6 +261,8 @@ void App::draw_polyline(std::span<const Vector2> vertices, Color color, f64 thic
 
 void App::draw_polygon(std::span<const Vector2> vertices, Color color, f64 thickness)
 {
+    if (vertices.size() < 3) { return; }
+
     for (auto i : range(vertices.size() - 1UL))
     {
         draw_line_segment(LineSegment{vertices[i], vertices[i + 1UL]}, color, thickness);
@@ -268,6 +272,7 @@ void App::draw_polygon(std::span<const Vector2> vertices, Color color, f64 thick
 
 void App::draw_vertices(std::span<const Vector2> vertices, VertexMode mode)
 {
+    if (vertices.empty()) { return; }
     auto converted = sf::VertexArray(static_cast<sf::PrimitiveType>(mode), vertices.size());
     for (auto i : range(vertices.size())) { converted[i].position = sfml(vertices[i].as<f32>()); }
     sf_render_window.draw(converted);
@@ -275,6 +280,7 @@ void App::draw_vertices(std::span<const Vector2> vertices, VertexMode mode)
 
 void App::draw(const Trail& trail, Color color, f64 thickness, f64 fade_factor)
 {
+    if (trail.size() < 2) { return; }
     const auto vertices = trail.span();
     for (auto i : range(vertices.size() - 1UL))
     {

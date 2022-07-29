@@ -13,6 +13,8 @@
 
 #include "SFML/Window/Keyboard.hpp" // for Keyboard, Keyboard::Key
 
+#include "samarium/util/StaticVector.hpp"
+
 namespace sm::Keyboard
 {
 enum class Key
@@ -128,56 +130,49 @@ inline auto is_key_pressed(Key key)
     return sf::Keyboard::isKeyPressed(static_cast<sf::Keyboard::Key>(key));
 }
 
-enum class Event
-{
-    Press,
-    Up,
-    Down
-};
-
 using Action = std::function<void()>;
+using KeySet = StaticVector<Key, 8>;
 
-template <Event event, Key key> struct EventListener;
-
-template <Key key> struct EventListener<Event::Press, key>
+struct OnKeyPress
 {
+    KeySet key_set;
     Action action;
 
-    auto operator()() const
+    explicit OnKeyPress(const KeySet& key_set_, const Action& action_)
+        : key_set(key_set_), action(action_)
     {
-        if (is_key_pressed(key)) { action(); }
     }
+
+    void operator()() const;
 };
 
-template <Key key> struct EventListener<Event::Up, key>
+struct OnKeyDown
 {
+    KeySet key_set;
     Action action;
 
-    explicit EventListener(const Action& action_) : action(action_) {}
-
-    auto operator()()
+    explicit OnKeyDown(const KeySet& key_set_, const Action& action_)
+        : key_set(key_set_), action(action_)
     {
-        const auto current = is_key_pressed(key);
-        if (!current && previous) { action(); }
-        previous = current;
     }
+
+    void operator()();
 
   private:
     bool previous{false};
 };
 
-template <Key key> struct EventListener<Event::Down, key>
+struct OnKeyUp
 {
+    KeySet key_set;
     Action action;
 
-    explicit EventListener(const Action& action_) : action(action_) {}
-
-    auto operator()()
+    explicit OnKeyUp(const KeySet& key_set_, const Action& action_)
+        : key_set(key_set_), action(action_)
     {
-        const auto current = is_key_pressed(key);
-        if (!previous && current) { action(); }
-        previous = current;
     }
+
+    void operator()();
 
   private:
     bool previous{false};
@@ -185,32 +180,14 @@ template <Key key> struct EventListener<Event::Down, key>
 
 class Keymap
 {
-    using Keys_t   = std::vector<Keyboard::Key>;
-    using Action_t = std::function<void()>;
-
-    std::vector<Keys_t> map;
-    std::vector<Action_t> actions;
+    std::vector<Action> actions;
 
   public:
     Keymap() = default;
 
-    explicit Keymap(const std::vector<std::pair<Keys_t, Action_t>>& input_keymap)
-    {
-        map.reserve(input_keymap.size());
-        actions.reserve(input_keymap.size());
+    explicit Keymap(const std::vector<Action>& event_listeners) : actions(event_listeners) {}
 
-        for (const auto& [key, action] : input_keymap)
-        {
-            map.push_back(key);
-            actions.push_back(action);
-        }
-    }
-
-    void push_back(const Keys_t& keys, auto&& fn)
-    {
-        map.push_back(keys);
-        actions.emplace_back(fn);
-    }
+    void push_back(auto&& action) { actions.emplace_back(action); }
 
     void clear();
 

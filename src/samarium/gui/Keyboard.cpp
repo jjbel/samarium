@@ -10,22 +10,33 @@
 
 #include "Keyboard.hpp"
 
+#include "samarium/util/print.hpp"
+
 namespace sm::Keyboard
 {
-void Keymap::clear()
+void OnKeyPress::operator()() const
 {
-    this->map.clear();
-    this->actions.clear();
+    if (ranges::all_of(key_set, is_key_pressed)) { action(); }
 }
+
+void OnKeyDown::operator()()
+{
+    const auto current = ranges::all_of(key_set, is_key_pressed);
+    if (!previous && current) { action(); }
+    previous = current;
+}
+
+void OnKeyUp::operator()()
+{
+    const auto current = ranges::all_of(key_set, is_key_pressed);
+    if (!current && previous) { action(); }
+    previous = current;
+}
+
+void Keymap::clear() { this->actions.clear(); }
 
 void Keymap::run() const
 {
-    for (auto [i, key_combination] : ranges::views::enumerate(map))
-    {
-        if (ranges::all_of(key_combination, [](auto key) { return Keyboard::is_key_pressed(key); }))
-        {
-            actions[i]();
-        }
-    }
+    for (const auto& action : actions) { action(); }
 }
 } // namespace sm::Keyboard

@@ -87,9 +87,9 @@ class App
 
         sf_render_window.setFramerateLimit(settings.framerate);
 
-        keymap.push_back({Keyboard::Key::Escape}, // exit by default with Escape
-                         [&sf_render_window = this->sf_render_window]
-                         { sf_render_window.close(); });
+        keymap.push_back(Keyboard::OnKeyDown({Keyboard::Key::Escape}, // exit by default with Escape
+                                             [&sf_render_window = this->sf_render_window]
+                                             { sf_render_window.close(); }));
     }
 
     /// Load the current GPU pixels to the image to draw on manually
