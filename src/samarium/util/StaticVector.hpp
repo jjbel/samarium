@@ -20,69 +20,69 @@ namespace sm
  * https://cpp-optimizations.netlify.app/small_vectors/
  *
  * @tparam T
- * @tparam capacity
+ * @tparam max_size
  */
-template <typename T, u64 capacity> class StaticVector
+template <typename T, u64 max_size> struct StaticVector
 {
-  public:
     using value_type     = T;
     using size_type      = u64;
-    using iterator       = typename std::array<T, capacity>::iterator;
-    using const_iterator = typename std::array<T, capacity>::const_iterator;
+    using iterator       = typename std::array<T, max_size>::iterator;
+    using const_iterator = typename std::array<T, max_size>::const_iterator;
 
-    explicit StaticVector(u8 n = 0) : _size{n}
+    constexpr explicit StaticVector(u8 n = 0) : _size{n}
     {
-        if (_size > capacity) { throw std::overflow_error("SmallVector overflow"); }
+        if (_size > max_size) { throw std::overflow_error("SmallVector overflow"); }
     }
 
-    StaticVector(const StaticVector& other)     = default;
-    StaticVector(StaticVector&& other) noexcept = default;
+    constexpr StaticVector(const StaticVector& other)     = default;
+    constexpr StaticVector(StaticVector&& other) noexcept = default;
 
-    explicit StaticVector(std::initializer_list<T> init) : _size{init.size()}
+    constexpr explicit StaticVector(std::initializer_list<T> init) : _size{init.size()}
     {
         for (u8 i = 0; i < _size; i++) { _storage[i] = init[i]; }
     }
 
-    void push_back(T val)
+    constexpr void push_back(T val)
     {
         _storage[_size++] = val;
-        if (_size > capacity) { throw std::overflow_error("SmallVector overflow"); }
+        if (_size > max_size) { throw std::overflow_error("SmallVector overflow"); }
     }
 
-    void pop_back()
+    constexpr void pop_back()
     {
         if (_size == 0) { throw std::underflow_error("SmallVector underflow"); }
         back().~T(); // call destructor
         _size--;
     }
 
-    u64 size() const noexcept { return _size; }
+    constexpr u64 size() const noexcept { return _size; }
+    constexpr u64 capacity() const noexcept { return max_size; }
 
-    void clear()
+    constexpr void clear()
     {
         while (_size > 0) { pop_back(); }
     }
 
-    T& front() noexcept { return _storage.front(); }
-    const T& front() const noexcept { return _storage.front(); }
+    constexpr T& front() noexcept { return _storage.front(); }
+    constexpr const T& front() const noexcept { return _storage.front(); }
 
-    T& back() noexcept { return _storage[_size - 1]; }
-    const T& back() const noexcept { return _storage[_size - 1]; }
+    constexpr T& back() noexcept { return _storage[_size - 1]; }
+    constexpr const T& back() const noexcept { return _storage[_size - 1]; }
 
-    iterator begin() noexcept { return _storage.begin(); }
-    const_iterator begin() const noexcept { return _storage.begin(); }
+    constexpr iterator begin() noexcept { return _storage.begin(); }
+    constexpr const_iterator begin() const noexcept { return _storage.begin(); }
 
-    iterator end() noexcept { return _storage.end(); }
-    const_iterator end() const noexcept { return _storage.end(); }
+    constexpr iterator end() noexcept { return _storage.end(); }
+    constexpr const_iterator end() const noexcept { return _storage.end(); }
 
-    T& operator[](u8 index) noexcept { return _storage[index]; }
-    const T& operator[](u8 index) const noexcept { return _storage[index]; }
+    constexpr T& operator[](u8 index) noexcept { return _storage[index]; }
+    constexpr const T& operator[](u8 index) const noexcept { return _storage[index]; }
 
-    T& data() noexcept { return _storage.data(); }
-    const T& data() const noexcept { return _storage.data(); }
+    constexpr T& data() noexcept { return _storage.data(); }
+    constexpr const T& data() const noexcept { return _storage.data(); }
 
   private:
-    std::array<T, capacity> _storage;
+    std::array<T, max_size> _storage;
     u8 _size = 0;
 };
 } // namespace sm
