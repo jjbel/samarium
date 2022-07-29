@@ -37,9 +37,10 @@ template <typename T, u64 max_size> struct StaticVector
     constexpr StaticVector(const StaticVector& other)     = default;
     constexpr StaticVector(StaticVector&& other) noexcept = default;
 
-    constexpr explicit StaticVector(std::initializer_list<T> init) : _size{init.size()}
+    explicit(false) constexpr StaticVector(std::initializer_list<T> init)
+        : _size{static_cast<u8>(init.size())}
     {
-        for (u8 i = 0; i < _size; i++) { _storage[i] = init[i]; }
+        for (u8 i = 0; i < _size; i++) { _storage[i] = *(init.begin() + i); }
     }
 
     constexpr void push_back(T val)
@@ -72,8 +73,8 @@ template <typename T, u64 max_size> struct StaticVector
     constexpr iterator begin() noexcept { return _storage.begin(); }
     constexpr const_iterator begin() const noexcept { return _storage.begin(); }
 
-    constexpr iterator end() noexcept { return _storage.end(); }
-    constexpr const_iterator end() const noexcept { return _storage.end(); }
+    constexpr iterator end() noexcept { return _storage.begin() + _size; }
+    constexpr const_iterator end() const noexcept { return _storage.begin() + _size; }
 
     constexpr T& operator[](u8 index) noexcept { return _storage[index]; }
     constexpr const T& operator[](u8 index) const noexcept { return _storage[index]; }
