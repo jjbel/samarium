@@ -51,7 +51,7 @@ template <typename T, u64 max_size> struct StaticVector
 
     constexpr void pop_back()
     {
-        if (_size == 0) { throw std::underflow_error("SmallVector underflow"); }
+        // if (_size == 0) { throw std::underflow_error("SmallVector underflow"); }
         back().~T(); // call destructor
         _size--;
     }
@@ -81,6 +81,8 @@ template <typename T, u64 max_size> struct StaticVector
 
     constexpr T& data() noexcept { return _storage.data(); }
     constexpr const T& data() const noexcept { return _storage.data(); }
+
+    // constexpr void erase(const_iterator pos) { (*pos).~T();  }
 
   private:
     std::array<T, max_size> _storage;

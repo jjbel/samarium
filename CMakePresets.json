@@ -41,7 +41,7 @@
             "name": "clang",
             "inherits": "ninja",
             "cacheVariables": {
-                "CMAKE_CXX_COMPILER": "clang++"
+                "CMAKE_CXX_COMPILER": "/usr/bin/clang++"
             }
         },
         {
@@ -62,6 +62,7 @@
             "description": "Use gcc, Ninja, and skip extra tests",
             "inherits": "clang",
             "cacheVariables": {
+                "USE_UBSAN": true,
                 "BUILD_UNIT_TESTS": false,
                 "BUILD_EXAMPLES": false,
                 "BUILD_DOCS": false,
