@@ -17,14 +17,21 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
 list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})
 
-find_package(
-    SFML 2.5 CONFIG
-    COMPONENTS system window graphics
-    REQUIRED
-)
-find_package(fmt CONFIG REQUIRED)
-find_package(range-v3 0.11.0 CONFIG REQUIRED)
-find_package(stb CONFIG REQUIRED)
+if(NOT SFML_FOUND)
+    find_package(SFML CONFIG REQUIRED)
+endif()
+
+if(NOT fmt_FOUND)
+    find_package(fmt CONFIG REQUIRED)
+endif()
+
+if(NOT range-v3_FOUND)
+    find_package(range-v3 CONFIG REQUIRED)
+endif()
+
+if(NOT stb_FOUND)
+    find_package(stb CONFIG REQUIRED)
+endif()
 
 add_subdirectory(samarium)
 
@@ -63,7 +70,7 @@ set_source_files_properties(
 
 target_link_libraries(samarium PUBLIC fmt::fmt)
 target_link_libraries(samarium PUBLIC range-v3::range-v3)
-target_link_libraries(samarium PUBLIC sfml-graphics)
+target_link_libraries(samarium PUBLIC sfml::sfml)
 target_link_libraries(samarium PUBLIC stb::stb)
 
 install(
