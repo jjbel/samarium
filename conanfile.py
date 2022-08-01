@@ -43,6 +43,7 @@ class SamariumConan(ConanFile):
     def layout(self):
         self.folders.source = "src"
         cmake_layout(self, src_folder="src")
+        self.folders.generators = "build"
 
     def build(self):
         cmake = CMake(self)

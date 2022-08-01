@@ -16,7 +16,7 @@
                 "CMAKE_BUILD_TYPE": "Release",
                 "CMAKE_EXPORT_COMPILE_COMMANDS": true
             },
-            "toolchainFile": "build/generators/conan_toolchain.cmake"
+            "toolchainFile": "build/conan_toolchain.cmake"
         },
         {
             "name": "ci",
