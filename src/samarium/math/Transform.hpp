@@ -16,7 +16,8 @@ class Transform
 {
   public:
     Vector2 pos{};
-    Vector2 scale{};
+    Vector2 scale{1.0, 1.0};
+    f64 rotation{};
 
     [[nodiscard]] constexpr auto apply(Vector2 vec) const noexcept { return vec * scale + pos; }
 
