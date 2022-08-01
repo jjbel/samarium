@@ -9,6 +9,8 @@
 
 #include <stdexcept> // for invalid_argument
 
+#include "range/v3/action/transform.hpp"
+
 #include "../core/types.hpp" // for u8
 
 namespace sm::util
@@ -24,5 +26,10 @@ namespace sm::util
     if ('a' <= ch && ch <= 'f') { return static_cast<u8>(ch - 'a' + 10); }
     if ('A' <= ch && ch <= 'F') { return static_cast<u8>(ch - 'A' + 10); }
     throw std::invalid_argument("hex character must be 0-9, a-f, or A-F");
+}
+
+template <typename Range, typename To> [[nodiscard]] inline auto range_cast(const Range& range)
+{
+    return ranges::actions::transform(range, [](const auto& value) { return (To)value; });
 }
 } // namespace sm::util
