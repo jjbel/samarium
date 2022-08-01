@@ -1,16 +1,8 @@
-# SPDX-License-Identifier: MIT Copyright (c) 2022 Jai Bellare See
-# <https://opensource.org/licenses/MIT/> or LICENSE.md Project homepage:
-# <https://github.com/strangeQuark1041/samarium>
-
 cmake_minimum_required(VERSION 3.15)
-project(PackageTest CXX)
+project(test_package)
 
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
+find_package(samarium REQUIRED CONFIG)
 
-include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-conan_basic_setup()
-
-add_executable(example example.cpp)
-
-target_link_libraries(example ${CONAN_LIBS})
+add_executable(${PROJECT_NAME} example.cpp)
+target_link_libraries(${PROJECT_NAME} samarium::samarium)
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
