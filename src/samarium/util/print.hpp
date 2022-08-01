@@ -18,6 +18,7 @@
 #include "fmt/color.h"
 #include "fmt/format.h"
 #include "fmt/ranges.h"
+#include "fmt/std.h"
 
 #include "samarium/util/format.hpp"
 
