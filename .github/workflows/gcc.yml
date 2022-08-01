@@ -84,12 +84,10 @@ jobs:
         run: |
           conan profile new default --detect
           conan profile update settings.compiler.libcxx=libstdc++11 default
-          conan config set tools.system.package_manager:mode=install
-          conan config get tools.system.package_manager
 
       - name: CMake Configure
         run: |
-          conan install . -b missing -if build -pr:b=default -o samarium:build_tests=True
+          conan install . -b missing -if build -pr:b=default -o samarium:build_tests=True -c tools.system.package_manager:mode=install
           cmake --preset=ci
 
       - name: CMake Build
@@ -97,11 +95,6 @@ jobs:
 
       - name: CTest
         run: ctest --preset=default
-
-      # - name: Build Coverage
-      #   run: ./scripts/coverage_wrapper.sh
-      #   continue-on-error: true
-      # - run: true
 
       - name: Run sonar-scanner
         env:
@@ -149,7 +142,7 @@ jobs:
         run: git clone https://github.com/strangeQuark1041/samarium.git
 
       - name: Conan Create
-        run: conan create samarium -b missing
+        run: conan create samarium -b missing -c tools.system.package_manager:mode=install
 
       - name: Run Example
         run: |
