@@ -11,6 +11,8 @@
 #include <initializer_list> // for initializer_list
 #include <stdexcept>        // for overflow_error, underflow_error
 
+#include "range/v3/algorithm/copy.hpp"
+
 #include "samarium/core/types.hpp"
 
 namespace sm
@@ -22,7 +24,7 @@ namespace sm
  * @tparam T
  * @tparam max_size
  */
-template <typename T, u64 max_size> struct StaticVector
+template <typename T, u8 max_size> struct StaticVector
 {
     using value_type     = T;
     using size_type      = u64;
@@ -43,7 +45,7 @@ template <typename T, u64 max_size> struct StaticVector
         for (u8 i = 0; i < _size; i++) { _storage[i] = *(init.begin() + i); }
     }
 
-    constexpr void push_back(T val)
+    constexpr void push_back(const T& val)
     {
         _storage[_size++] = val;
         if (_size > max_size) { throw std::overflow_error("SmallVector overflow"); }
@@ -82,7 +84,19 @@ template <typename T, u64 max_size> struct StaticVector
     constexpr T& data() noexcept { return _storage.data(); }
     constexpr const T& data() const noexcept { return _storage.data(); }
 
-    // constexpr void erase(const_iterator pos) { (*pos).~T();  }
+    constexpr void erase(const_iterator pos)
+    {
+        // (*pos).~T();
+        ranges::copy(pos + 1, end(), pos);
+        _size--;
+    }
+
+    constexpr void erase(const_iterator from, const_iterator to)
+    {
+        // (*pos).~T();
+        ranges::copy(to + 1, end(), from);
+        _size -= to - from;
+    }
 
   private:
     std::array<T, max_size> _storage;
