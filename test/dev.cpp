@@ -19,6 +19,11 @@ constexpr auto ground_height = 100.0;
 
 int main()
 {
+    auto watch = Stopwatch{};
+    print(file::find("RussoOne-Regular.ttf", "/home/jb").value());
+    watch.print();
+
+
     auto app            = App{{.dims{1600, 900}}};
     app.transform.scale = {1.0, -1.0};              // + is towards top-right
     app.transform.pos   = {0.0, f64(app.dims().y)}; // origin at bottom left
@@ -37,5 +42,5 @@ int main()
         viewport = app.transformed_bounding_box();
     };
 
-    app.run(update, draw);
+    // app.run(update, draw);
 }
