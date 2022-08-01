@@ -26,6 +26,7 @@ class SamariumConan(ConanFile):
         self.requires("sfml/2.5.1")
         self.requires("range-v3/0.12.0")
         self.requires("stb/cci.20210910")
+        self.requires("tl-expected/20190710")
 
         if self.options.build_tests:
             self.requires('catch2/3.0.1')

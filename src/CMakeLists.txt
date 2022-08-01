@@ -33,6 +33,10 @@ if(NOT stb_FOUND)
     find_package(stb CONFIG REQUIRED)
 endif()
 
+if(NOT tl-expected_FOUND)
+    find_package(tl-expected CONFIG REQUIRED)
+endif()
+
 add_subdirectory(samarium)
 
 add_library(samarium ${SAMARIUM_SOURCES})
@@ -72,6 +76,7 @@ target_link_libraries(samarium PUBLIC fmt::fmt)
 target_link_libraries(samarium PUBLIC range-v3::range-v3)
 target_link_libraries(samarium PUBLIC sfml::sfml)
 target_link_libraries(samarium PUBLIC stb::stb)
+target_link_libraries(samarium PUBLIC tl::expected)
 
 install(
     TARGETS samarium
