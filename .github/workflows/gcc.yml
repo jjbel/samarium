@@ -87,7 +87,7 @@ jobs:
 
       - name: CMake Configure
         run: |
-          conan install . -b missing -if build -pr:b=default -o samarium:build_tests=True -c tools.system.package_manager:mode=install
+          conan install . -b missing -if build -pr:b=default -o samarium:build_tests=True -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=True
           cmake --preset=ci
 
       - name: CMake Build
@@ -142,7 +142,7 @@ jobs:
         run: git clone https://github.com/strangeQuark1041/samarium.git
 
       - name: Conan Create
-        run: conan create samarium -b missing -c tools.system.package_manager:mode=install
+        run: conan create samarium -b missing -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=True
 
       - name: Run Example
         run: |
