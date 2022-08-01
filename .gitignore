@@ -12,6 +12,8 @@ build/
 
 .ignore/
 
+.ignore*
+
 __pycache__/
 
 *.tga
