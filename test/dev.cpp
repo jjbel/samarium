@@ -11,7 +11,7 @@
 #include "range/v3/action/remove_if.hpp"
 #include "range/v3/algorithm/contains.hpp"
 #include "range/v3/algorithm/remove_copy_if.hpp"
- 
+
 using namespace sm;
 using namespace sm::literals;
 
@@ -20,7 +20,7 @@ constexpr auto ground_height = 100.0;
 int main()
 {
     auto app            = App{{.dims{1600, 900}}};
-    app.transform.scale = {1.0, -1.0}; // + is towards top-right
+    app.transform.scale = {1.0, -1.0};              // + is towards top-right
     app.transform.pos   = {0.0, f64(app.dims().y)}; // origin at bottom left
 
     auto distance = 0.0;
