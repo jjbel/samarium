@@ -19,10 +19,20 @@ constexpr auto ground_height = 100.0;
 
 int main()
 {
-    auto watch = Stopwatch{};
-    print(file::find("RussoOne-Regular.ttf", "/home/jb").value());
-    watch.print();
+    const auto ttf = file::read(file::find("RussoOne-Regular.ttf", "/home/jb/").value()).value();
+    auto font      = sf::Font{};
+    if (!font.loadFromFile(file::find("RussoOne-Regular.ttf", "/home/jb/").value()))d
+    {
+        throw std::exception();
+    }
+    auto text = sf::Text{};
+    text.setFont(font);
+    text.setString("SCORE: 769");
+    text.setCharacterSize(40);
+    text.setFillColor(sfml("#d6ebff"_c));
+    text.setPosition({500, 400});
 
+    auto watch = Stopwatch{};
 
     auto app            = App{{.dims{1600, 900}}};
     app.transform.scale = {1.0, -1.0};              // + is towards top-right
@@ -36,11 +46,13 @@ int main()
     const auto draw   = [&]
     {
         app.fill("#0b0f14"_c);
-        app.draw(BoundingBox<f64>{{viewport.min.x, 0.0}, {viewport.max.x, ground_height}},
-                 {.fill_color = "#555c66"_c});
+        // app.draw(BoundingBox<f64>{{viewport.min.x, 0.0}, {viewport.max.x, ground_height}},
+        //          {.fill_color = "#555c66"_c});
+
+        app.sf_render_window.draw(text);
 
         viewport = app.transformed_bounding_box();
     };
 
-    // app.run(update, draw);
+    app.run(update, draw);
 }
