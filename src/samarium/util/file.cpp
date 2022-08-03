@@ -39,7 +39,7 @@ auto read(const std::filesystem::path& file_path) -> tl::expected<std::string, F
     return read(Text{}, file_path);
 }
 
-void export_to(Targa, const Image& image, const std::filesystem::path& file_path)
+void write(Targa, const Image& image, const std::filesystem::path& file_path)
 {
     const auto tga_header = std::to_array<u8>(
         {0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, static_cast<u8>(255 & image.dims.x),
@@ -54,7 +54,7 @@ void export_to(Targa, const Image& image, const std::filesystem::path& file_path
                static_cast<std::streamsize>(data.size() * data[0].size()));
 }
 
-void export_to(Bmp, const Image& image, const std::filesystem::path& file_path)
+void write(Bmp, const Image& image, const std::filesystem::path& file_path)
 {
     stbi_write_bmp(file_path.string().c_str(), static_cast<i32>(image.dims.x),
                    static_cast<i32>(image.dims.y), 4 /* RGBA */,

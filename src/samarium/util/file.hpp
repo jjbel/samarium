@@ -42,22 +42,21 @@ auto read(Text, const std::filesystem::path& file_path)
     -> tl::expected<std::string, FileNotFoundError>;
 auto read(const std::filesystem::path& file_path) -> tl::expected<std::string, FileNotFoundError>;
 
-void export_to(Targa,
-               const Image& image,
-               const std::filesystem::path& file_path = date_time_str() + ".tga");
+void write(Targa,
+           const Image& image,
+           const std::filesystem::path& file_path = date_time_str() + ".tga");
 
-inline void export_to(Png,
-                      const Image& image,
-                      const std::filesystem::path& file_path = date_time_str() + ".png")
+inline void
+write(Png, const Image& image, const std::filesystem::path& file_path = date_time_str() + ".png")
 {
     fpng::fpng_encode_image_to_file(
         file_path.string().c_str(), static_cast<const void*>(&image.front()),
         static_cast<u32>(image.dims.x), static_cast<u32>(image.dims.y), 4U);
 }
 
-void export_to(Bmp,
-               const Image& image,
-               const std::filesystem::path& file_path = date_time_str() + ".bmp");
+void write(Bmp,
+           const Image& image,
+           const std::filesystem::path& file_path = date_time_str() + ".bmp");
 
 auto find(const std::string& file_name,
           const std::filesystem::path& directory = std::filesystem::current_path())

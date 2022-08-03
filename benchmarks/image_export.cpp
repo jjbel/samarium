@@ -14,40 +14,40 @@ using namespace sm;
 static void bm_file_export_Targa(benchmark::State& state)
 {
     const auto image = Image{{static_cast<u64>(state.range(0)), static_cast<u64>(state.range(0))}};
-    for (auto _ : state) { file::export_to(file::Targa{}, image, "benchmark.tga"); }
+    for (auto _ : state) { file::write(file::Targa{}, image, "benchmark.tga"); }
     std::filesystem::remove("benchmark.tga");
 }
 
 static void bm_file_export_Bmp(benchmark::State& state)
 {
     const auto image = Image{{static_cast<u64>(state.range(0)), static_cast<u64>(state.range(0))}};
-    for (auto _ : state) { file::export_to(file::Bmp{}, image, "benchmark.bmp"); }
+    for (auto _ : state) { file::write(file::Bmp{}, image, "benchmark.bmp"); }
     std::filesystem::remove("benchmark.bmp");
 }
 
 static void bm_file_export_Png(benchmark::State& state)
 {
     const auto image = Image{{static_cast<u64>(state.range(0)), static_cast<u64>(state.range(0))}};
-    for (auto _ : state) { file::export_to(file::Bmp{}, image, "benchmark.png"); }
+    for (auto _ : state) { file::write(file::Bmp{}, image, "benchmark.png"); }
     std::filesystem::remove("benchmark.png");
 }
 
 BENCHMARK(bm_file_export_Targa)
-    ->Name("file::export_to(file::Targa)")
+    ->Name("file::write(file::Targa)")
     ->Arg(200)
     ->Arg(800)
     ->Arg(1600)
     ->Arg(3200);
 
 BENCHMARK(bm_file_export_Bmp)
-    ->Name("file::export_to(file::Bmp)")
+    ->Name("file::write(file::Bmp)")
     ->Arg(200)
     ->Arg(800)
     ->Arg(1600)
     ->Arg(3200);
 
 BENCHMARK(bm_file_export_Png)
-    ->Name("file::export_to(file::Png)")
+    ->Name("file::write(file::Png)")
     ->Arg(200)
     ->Arg(800)
     ->Arg(1600)

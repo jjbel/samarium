@@ -21,7 +21,7 @@ int main()
 {
     const auto ttf = file::read(file::find("RussoOne-Regular.ttf", "/home/jb/").value()).value();
     auto font      = sf::Font{};
-    if (!font.loadFromFile(file::find("RussoOne-Regular.ttf", "/home/jb/").value()))d
+    if (!font.loadFromFile(file::find("RussoOne-Regular.ttf", "/home/jb/").value()))
     {
         throw std::exception();
     }
