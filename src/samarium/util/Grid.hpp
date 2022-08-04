@@ -10,6 +10,7 @@
 #include <compare>
 #include <functional>
 #include <iterator>
+#include <span>
 
 #include "fmt/format.h"
 #include "range/v3/algorithm/copy.hpp"
@@ -47,21 +48,29 @@ template <typename T> class Grid
     using value_type      = T;
     using reference       = T&;
     using const_reference = const T&;
-    using iterator        = T*;
+    using interator       = T*;
     using const_iterator  = T const*;
     using difference_type = std::ptrdiff_t;
     using size_type       = u64;
 
-    // Public members
     std::vector<T> data;
     const Dimensions dims;
 
     // Constructors
     explicit Grid(Dimensions dims_) : data(dims_.x * dims_.y), dims{dims_} {}
 
-    explicit Grid(Dimensions dims_, T init_value) : data(dims_.x * dims_.y, init_value), dims{dims_}
+    Grid(Dimensions dims_, T init_value) : data(dims_.x * dims_.y, init_value), dims{dims_} {}
+
+    explicit Grid(std::span<T> span, Dimensions dims_) : data(span.begin(), span.end()), dims{dims_}
     {
     }
+
+    // explicit Grid(const void* pixels, Dimensions dims_)
+    //     : data(reinterpret_cast<const_iterator>(pixels),
+    //            reinterpret_cast<const_iterator>(pixels) + dims_.x * dims_.y),
+    //       dims{dims_}
+    // {
+    // }
 
     template <typename Fn> static auto generate(Dimensions dims, Fn&& fn)
     {
