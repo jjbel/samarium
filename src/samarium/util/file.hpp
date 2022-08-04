@@ -34,13 +34,18 @@ struct Bmp
 {
 };
 
-struct FileNotFoundError
+struct FileError
 {
 };
 
-auto read(Text, const std::filesystem::path& file_path)
-    -> tl::expected<std::string, FileNotFoundError>;
-auto read(const std::filesystem::path& file_path) -> tl::expected<std::string, FileNotFoundError>;
+template <typename T> using ExpectedFile = tl::expected<T, FileError>;
+
+auto read(Text, const std::filesystem::path& file_path) -> ExpectedFile<std::string>;
+
+auto read(const std::filesystem::path& file_path) -> ExpectedFile<std::string>;
+
+auto read_image(const std::filesystem::path& file_path) -> ExpectedFile<Image>;
+
 
 void write(Targa,
            const Image& image,
@@ -60,11 +65,11 @@ void write(Bmp,
 
 auto find(const std::string& file_name,
           const std::filesystem::path& directory = std::filesystem::current_path())
-    -> tl::expected<std::filesystem::path, FileNotFoundError>;
+    -> tl::expected<std::filesystem::path, FileError>;
 
 auto find(const std::string& file_name, std::span<std::filesystem::path> search_paths)
-    -> tl::expected<std::filesystem::path, FileNotFoundError>;
+    -> tl::expected<std::filesystem::path, FileError>;
 
 auto find(const std::string& file_name, std::initializer_list<std::filesystem::path> search_paths)
-    -> tl::expected<std::filesystem::path, FileNotFoundError>;
+    -> tl::expected<std::filesystem::path, FileError>;
 } // namespace sm::file

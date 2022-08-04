@@ -6,37 +6,96 @@
  */
 
 #include <array>      // for to_array, array
+#include <cstring>    // for memcpy
 #include <filesystem> // for path
 #include <fstream>    // for ifstream, ofstream, basic_ostream::write
 #include <iterator>   // for ifstreambuf_iterator
 #include <string>     // for string
 
 #include "fpng/fpng.hpp"
+#include "range/v3/algorithm/copy.hpp"
+#include "stb_image.h"
 #include "stb_image_write.h"
 
-#include "../core/types.hpp"     // for u8
-#include "../graphics/Color.hpp" // for BGR_t, bgr
-#include "../graphics/Image.hpp" // for Image
-#include "../math/Vector2.hpp"   // for Dimensions
+#include "samarium/core/types.hpp"     // for u8
+#include "samarium/graphics/Color.hpp" // for BGR_t, bgr
+#include "samarium/graphics/Image.hpp" // for Image
+#include "samarium/math/Extents.hpp"   // for range
+#include "samarium/math/Vector2.hpp"   // for Dimensions
+
+#include "samarium/util/print.hpp" // for Dimensions
 
 #include "file.hpp"
 
 namespace sm::file
 {
-auto read(Text, const std::filesystem::path& file_path)
-    -> tl::expected<std::string, FileNotFoundError>
+auto read(Text, const std::filesystem::path& file_path) -> ExpectedFile<std::string>
 {
-    if (std::filesystem::exists(file_path))
+    if (std::filesystem::exists(file_path) && std::filesystem::is_regular_file(file_path))
     {
         auto ifs = std::ifstream{file_path};
         return {std::string(std::istreambuf_iterator<char>{ifs}, {})};
     }
-    else { return tl::unexpected<FileNotFoundError>{{}}; }
+    else { return tl::unexpected<FileError>{{}}; }
 }
 
-auto read(const std::filesystem::path& file_path) -> tl::expected<std::string, FileNotFoundError>
+auto read(const std::filesystem::path& file_path) -> ExpectedFile<std::string>
 {
     return read(Text{}, file_path);
+}
+
+auto read_image(const std::filesystem::path& file_path) -> ExpectedFile<Image>
+{
+    if (!std::filesystem::exists(file_path) || !std::filesystem::is_regular_file(file_path))
+    {
+        return tl::unexpected<FileError>{{}};
+    }
+
+    auto width         = 0;
+    auto height        = 0;
+    auto channel_count = 0;
+
+    const auto data = stbi_load(file_path.string().c_str(), &width, &height, &channel_count, 0);
+
+    if (!data) { return tl::unexpected<FileError>{{}}; }
+
+    auto image = Image{{static_cast<u64>(width), static_cast<u64>(height)}};
+    print(image.dims);
+
+    if (channel_count == 4) { std::memcpy(&image.front(), data, image.size()); }
+    else if (channel_count == 3)
+    {
+        for (auto i : range(image.size()))
+        {
+            image[i].r = data[i * 3];
+            image[i].g = data[i * 3 + 1];
+            image[i].b = data[i * 3 + 2];
+        }
+    }
+    else if (channel_count == 2)
+    {
+        for (auto i : range(image.size()))
+        {
+            const auto value = data[i * 2];
+            image[i].r       = value;
+            image[i].g       = value;
+            image[i].b       = value;
+            image[i].a       = data[i * 2 + 1];
+        }
+    }
+    else if (channel_count == 1)
+    {
+        for (auto i : range(image.size()))
+        {
+            const auto value = data[i];
+            image[i].r       = value;
+            image[i].g       = value;
+            image[i].b       = value;
+        }
+    }
+    else { tl::unexpected<FileError>{{}}; }
+
+    return image;
 }
 
 void write(Targa, const Image& image, const std::filesystem::path& file_path)
@@ -63,7 +122,7 @@ void write(Bmp, const Image& image, const std::filesystem::path& file_path)
 
 
 auto find(const std::string& file_name, const std::filesystem::path& directory)
-    -> tl::expected<std::filesystem::path, FileNotFoundError>
+    -> tl::expected<std::filesystem::path, FileError>
 {
     for (const auto& dir_entry : std::filesystem::recursive_directory_iterator(directory))
     {
@@ -73,11 +132,11 @@ auto find(const std::string& file_name, const std::filesystem::path& directory)
         }
     }
 
-    return tl::unexpected<FileNotFoundError>{{}};
+    return tl::unexpected<FileError>{{}};
 }
 
 auto find(const std::string& file_name, std::span<std::filesystem::path> search_paths)
-    -> tl::expected<std::filesystem::path, FileNotFoundError>
+    -> tl::expected<std::filesystem::path, FileError>
 {
     for (const auto& path : search_paths)
     {
@@ -92,11 +151,11 @@ auto find(const std::string& file_name, std::span<std::filesystem::path> search_
         else if (!std::filesystem::exists(path)) { continue; }
     }
 
-    return tl::unexpected<FileNotFoundError>{{}};
+    return tl::unexpected<FileError>{{}};
 }
 
 auto find(const std::string& file_name, std::initializer_list<std::filesystem::path> search_paths)
-    -> tl::expected<std::filesystem::path, FileNotFoundError>
+    -> tl::expected<std::filesystem::path, FileError>
 {
     for (const auto& path : search_paths)
     {
@@ -111,6 +170,6 @@ auto find(const std::string& file_name, std::initializer_list<std::filesystem::p
         else if (!std::filesystem::exists(path)) { continue; }
     }
 
-    return tl::unexpected<FileNotFoundError>{{}};
+    return tl::unexpected<FileError>{{}};
 }
 } // namespace sm::file

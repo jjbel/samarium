@@ -19,40 +19,48 @@ constexpr auto ground_height = 100.0;
 
 int main()
 {
-    const auto ttf = file::read(file::find("RussoOne-Regular.ttf", "/home/jb/").value()).value();
-    auto font      = sf::Font{};
-    if (!font.loadFromFile(file::find("RussoOne-Regular.ttf", "/home/jb/").value()))
-    {
-        throw std::exception();
-    }
-    auto text = sf::Text{};
-    text.setFont(font);
-    text.setString("SCORE: 769");
-    text.setCharacterSize(40);
-    text.setFillColor(sfml("#d6ebff"_c));
-    text.setPosition({500, 400});
-
     auto watch = Stopwatch{};
+    auto image = file::read_image("/home/jb/Pictures/red-heart.png").value();
+    watch.print();
+    file::write(file::Png{}, image);
 
-    auto app            = App{{.dims{1600, 900}}};
-    app.transform.scale = {1.0, -1.0};              // + is towards top-right
-    app.transform.pos   = {0.0, f64(app.dims().y)}; // origin at bottom left
 
-    auto distance = 0.0;
-    auto viewport = app.transformed_bounding_box();
-    print(viewport);
+    // const auto
 
-    const auto update = [&](f64 dt) {};
-    const auto draw   = [&]
-    {
-        app.fill("#0b0f14"_c);
-        // app.draw(BoundingBox<f64>{{viewport.min.x, 0.0}, {viewport.max.x, ground_height}},
-        //          {.fill_color = "#555c66"_c});
+    // const auto ttf = file::read(file::find("RussoOne-Regular.ttf", "/home/jb/").value()).value();
+    // auto font      = sf::Font{};
+    // if (!font.loadFromFile(file::find("RussoOne-Regular.ttf", "/home/jb/").value()))
+    // {
+    //     throw std::exception();
+    // }
+    // auto text = sf::Text{};
+    // text.setFont(font);
+    // text.setString("SCORE: 769");
+    // text.setCharacterSize(40);
+    // text.setFillColor(sfml("#d6ebff"_c));
+    // text.setPosition({500, 400});
 
-        app.sf_render_window.draw(text);
+    // auto watch = Stopwatch{};
 
-        viewport = app.transformed_bounding_box();
-    };
+    // auto app            = App{{.dims{1600, 900}}};
+    // app.transform.scale = {1.0, -1.0};              // + is towards top-right
+    // app.transform.pos   = {0.0, f64(app.dims().y)}; // origin at bottom left
 
-    app.run(update, draw);
+    // auto distance = 0.0;
+    // auto viewport = app.transformed_bounding_box();
+    // print(viewport);
+
+    // const auto update = [&](f64 dt) {};
+    // const auto draw   = [&]
+    // {
+    //     app.fill("#0b0f14"_c);
+    //     // app.draw(BoundingBox<f64>{{viewport.min.x, 0.0}, {viewport.max.x, ground_height}},
+    //     //          {.fill_color = "#555c66"_c});
+
+    //     app.sf_render_window.draw(text);
+
+    //     viewport = app.transformed_bounding_box();
+    // };
+
+    // app.run(update, draw);
 }
