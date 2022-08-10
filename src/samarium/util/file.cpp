@@ -60,9 +60,8 @@ auto read_image(const std::filesystem::path& file_path) -> ExpectedFile<Image>
     if (!data) { return tl::unexpected<FileError>{{}}; }
 
     auto image = Image{{static_cast<u64>(width), static_cast<u64>(height)}};
-    print(image.dims);
 
-    if (channel_count == 4) { std::memcpy(&image.front(), data, image.size()); }
+    if (channel_count == 4) { std::memcpy(&image.front(), data, image.size() * 4); }
     else if (channel_count == 3)
     {
         for (auto i : range(image.size()))

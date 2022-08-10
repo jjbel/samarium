@@ -19,9 +19,8 @@ constexpr auto ground_height = 100.0;
 
 int main()
 {
-    auto watch = Stopwatch{};
     auto image = file::read_image("/home/jb/Pictures/red-heart.png").value();
-    watch.print();
+    // print(image.dims);
     file::write(file::Png{}, image);
 
 
