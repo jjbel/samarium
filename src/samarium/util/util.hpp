@@ -10,6 +10,7 @@
 #include <stdexcept> // for invalid_argument
 
 #include "range/v3/action/transform.hpp"
+#include "range/v3/view/transform.hpp"
 
 #include "../core/types.hpp" // for u8
 
@@ -28,8 +29,13 @@ namespace sm::util
     throw std::invalid_argument("hex character must be 0-9, a-f, or A-F");
 }
 
-template <typename Range, typename To> [[nodiscard]] inline auto range_cast(const Range& range)
+template <typename To, typename Range> [[nodiscard]] inline auto range_cast(const Range& range)
 {
     return ranges::actions::transform(range, [](const auto& value) { return (To)value; });
+}
+
+template <typename To, typename Range> [[nodiscard]] inline auto cast_view(const Range& range)
+{
+    return range | ranges::views::transform([](const auto& value) { return (To)value; });
 }
 } // namespace sm::util
