@@ -15,7 +15,7 @@ using namespace sm;
 using namespace sm::literals;
 
 static constexpr auto initial_speed = 10.0;
-static constexpr auto class_size    = 0.5;
+static constexpr auto class_size    = 0.3;
 static constexpr auto max_speed     = initial_speed * 2.5;
 static constexpr auto plot_scale    = 0.98;
 
@@ -76,14 +76,15 @@ int main()
         auto frequencies = std::vector<u16>(static_cast<u64>(max_speed / class_size));
 
         for (auto speed : speed_data) { frequencies.at(std::min(speed, frequencies.size() - 1))++; }
-        const auto data_size = frequencies.size();
-        auto points          = std::vector<Vector2>(data_size);
+        const auto data_size     = frequencies.size();
+        const auto max_frequency = ranges::max(frequencies);
+        auto points              = std::vector<Vector2>(data_size);
         for (auto i : range(data_size))
         {
             const auto x = interp::map_range<u64, f64>(i, {0UL, data_size},
                                                        {0.0, viewport.max.x * plot_scale});
             const auto y = interp::map_range<f64, f64>(
-                static_cast<f64>(frequencies[i]), {0.0, static_cast<f64>(speed_data.size())},
+                static_cast<f64>(frequencies[i]), {0.0, static_cast<f64>(max_frequency)},
                 {viewport.min.y * plot_scale, viewport.max.y * plot_scale});
 
             points[i] = Vector2{x, y};
