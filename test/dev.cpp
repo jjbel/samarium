@@ -8,131 +8,90 @@
 #include "samarium/graphics/colors.hpp"
 #include "samarium/samarium.hpp"
 
-#include "range/v3/action/remove_if.hpp"
-#include "range/v3/algorithm/contains.hpp"
-#include "range/v3/algorithm/remove_copy_if.hpp"
+#include "range/v3/algorithm/max_element.hpp"
 #include "range/v3/view/take.hpp"
 
 using namespace sm;
 using namespace sm::literals;
 
-using complex = std::complex<f64>;
-
-constexpr auto integration_steps = 256UL;
-
-
-auto raise_to_power(complex x) { return std::pow(math::e, math::two_pi_i * x); }
-
-auto sample_at(const std::vector<complex>& points, f64 factor)
-{
-    const auto floor = static_cast<u64>(std::floor(factor * static_cast<f64>(points.size())));
-    if (floor == 0) { return points[0]; }
-    return interp::lerp<complex>(factor - static_cast<f64>(floor),
-                                 {points[floor], points[floor - 1]});
-}
-
-auto map_index(i32 i)
-{
-    if (i % 2 == 0) { return i / 2; }
-    else { return -(i + 1) / 2; }
-}
-
-auto indices(u64 resolution)
-{
-    return ranges::views::iota(0) | ranges::views::transform(map_index) |
-           ranges::views::take(resolution);
-}
-
-struct FourierState
-{
-    std::vector<complex> coefficients{};
-
-    auto refresh(const std::vector<complex>& points, u64 resolution)
-    {
-        coefficients.clear();
-        coefficients.reserve(resolution);
-
-        for (auto j : indices(resolution))
-        {
-            const auto function = [&](f64 factor)
-            { return raise_to_power(-factor * f64(j)) * sample_at(points, factor); };
-
-            const auto coefficient =
-                math::integral<complex, f64>(function, 0.0, 1.0, integration_steps);
-            coefficients.push_back(coefficient);
-        }
-
-        for (auto i : coefficients) { print(i); }
-    }
-
-    auto draw(App& app, f64 time)
-    {
-        auto sum = complex{};
-        for (auto [index, coeff] : ranges::views::zip(indices(coefficients.size()), coefficients))
-        {
-            auto current = coeff * raise_to_power(f64(index) * time); // base vector
-
-            app.draw_line_segment({from_complex(sum), from_complex(sum + current)}, colors::white,
-                                  0.08);
-            sum += current;
-        }
-    }
-};
-
-enum class Mode
-{
-    Input,
-    Draw
-};
-
+static constexpr auto initial_speed = 10.0;
+static constexpr auto class_size    = 0.5;
+static constexpr auto max_speed     = initial_speed * 2.5;
+static constexpr auto plot_scale    = 0.98;
 
 int main()
 {
-    auto fourier_resolution = 10UL;
-    auto app                = App{{.dims{1800, 900}}};
-    auto current_mode       = Mode::Input;
-    auto fourier_state      = FourierState{};
+    auto rand = RandomGenerator{};
 
-    const auto& mouse = app.mouse;
+    auto app            = App{{.dims{1920, 1080}}};
+    const auto viewport = app.transformed_bounding_box();
+    auto half_viewport  = BoundingBox<f64>{.min = viewport.min, .max = {0.0, viewport.max.y}};
 
-    auto points = std::vector<complex>{};
-
-    const auto refresh = [&]
-    {
-        current_mode = Mode::Draw;
-        print("\nPoints: ", points.size());
-        fourier_state.refresh(points, fourier_resolution);
-        print();
-    };
-
-    app.keymap.push_back(Keyboard::OnKeyDown{{Keyboard::Key::Enter}, refresh});
-
-
-    const auto draw_curve = [&]
-    {
-        if (points.size() < 2) { return; }
-
-        for (auto i : range(points.size() - 1UL))
+    auto ps = ParticleSystem::generate(
+        2000,
+        [&](u64 /* index */)
         {
-            app.draw_line_segment({from_complex(points[i]), from_complex(points[i + 1UL])},
-                                  "#c31432"_c, 0.15);
-        }
-    };
+            auto particle =
+                Particle{.pos    = rand.vector(half_viewport),
+                         .vel    = rand.polar_vector({initial_speed, initial_speed + 0.0000001}),
+                         .radius = 0.2};
+            return particle;
+        });
 
-    auto mouse_click_previous = false;
-    auto time                 = 0.0;
+    const auto walls = viewport.line_segments();
 
-    const auto run = [&]
+    const auto update = [&](f64 dt)
     {
-        const auto mouse_pos = app.transform.apply_inverse(mouse.current_pos);
-        if (mouse.left && !mouse_click_previous) { points.push_back(to_complex(mouse_pos)); }
-        app.fill("#240b36"_c);
-        draw_curve();
-
-        if (current_mode == Mode::Draw) { fourier_state.draw(app, time); }
-        mouse_click_previous = mouse.left;
-        time += 1;
+        ps.self_collision();
+        for (auto& particle : ps)
+        {
+            for (const auto& wall : walls) { phys::collide(particle, wall, dt); }
+        }
+        ps.update(dt);
     };
 
-    app.run(run);
+    auto watch      = Stopwatch{};
+    const auto draw = [&]
+    {
+        app.fill("#0e1117"_c);
+        app.draw(App::GridLines{});
+
+        for (const auto& particle : ps)
+        {
+            if (half_viewport.contains(particle.pos))
+            {
+                app.draw(particle, {.fill_color = "#ff150d"_c});
+            }
+        }
+
+        const auto speed_data =
+            ps | ranges::views::transform(
+                     [](const auto& particle)
+                     {
+                         auto length = particle.vel.length();
+                         length      = interp::clamp(length, {0.0, max_speed});
+                         return static_cast<u64>(std::round(length / class_size));
+                     });
+
+        auto frequencies = std::vector<u16>(static_cast<u64>(max_speed / class_size));
+
+        for (auto speed : speed_data) { frequencies.at(std::min(speed, frequencies.size() - 1))++; }
+        const auto data_size = frequencies.size();
+        auto points          = std::vector<Vector2>(data_size);
+        for (auto i : range(data_size))
+        {
+            const auto x = interp::map_range<u64, f64>(i, {0UL, data_size},
+                                                       {0.0, viewport.max.x * plot_scale});
+            const auto y = interp::map_range<f64, f64>(
+                static_cast<f64>(frequencies[i]), {0.0, static_cast<f64>(speed_data.size())},
+                {viewport.min.y * plot_scale, viewport.max.y * plot_scale});
+
+            points[i] = Vector2{x, y};
+        }
+        app.draw_polyline(points, "#0352fc"_c, 0.22);
+
+        print(std::round(watch.current_fps()));
+    };
+
+    app.run(update, draw, 1);
 }

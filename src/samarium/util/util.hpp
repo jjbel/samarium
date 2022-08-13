@@ -7,12 +7,14 @@
 
 #pragma once
 
+#include <concepts>
 #include <stdexcept> // for invalid_argument
+#include <type_traits>
 
 #include "range/v3/action/transform.hpp"
 #include "range/v3/view/transform.hpp"
 
-#include "../core/types.hpp" // for u8
+#include "samarium/core/types.hpp" // for u8
 
 namespace sm::util
 {
@@ -34,8 +36,14 @@ template <typename To, typename Range> [[nodiscard]] inline auto range_cast(cons
     return ranges::actions::transform(range, [](const auto& value) { return (To)value; });
 }
 
-template <typename To, typename Range> [[nodiscard]] inline auto cast_view(const Range& range)
+template <typename To> [[nodiscard]] inline auto cast_view()
 {
-    return range | ranges::views::transform([](const auto& value) { return (To)value; });
+    return ranges::views::transform([](const auto& value) { return (To)value; });
+}
+
+template <typename T>
+[[nodiscard]] inline auto project_view(T&& proj) requires std::is_member_object_pointer_v<T>
+{
+    return ranges::views::transform([proj](const auto& value) { return value.*proj; });
 }
 } // namespace sm::util
