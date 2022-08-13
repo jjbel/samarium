@@ -16,8 +16,8 @@ using namespace sm::literals;
 
 static constexpr auto initial_speed = 10.0;
 static constexpr auto class_size    = 0.3;
-static constexpr auto max_speed     = initial_speed * 2.5;
-static constexpr auto plot_scale    = 0.98;
+static constexpr auto max_speed     = initial_speed * 3.0;
+static constexpr auto plot_scale    = 0.9;
 
 int main()
 {
@@ -33,8 +33,9 @@ int main()
         {
             auto particle =
                 Particle{.pos    = rand.vector(half_viewport),
-                         .vel    = rand.polar_vector({initial_speed, initial_speed + 0.0000001}),
-                         .radius = 0.2};
+                         .vel    = rand.polar_vector({0.0, max_speed}),
+                         .radius = 0.2,
+                         .mass   = 1.0};
             return particle;
         });
 
@@ -89,7 +90,7 @@ int main()
 
             points[i] = Vector2{x, y};
         }
-        app.draw_polyline(points, "#0352fc"_c, 0.22);
+        app.draw_polyline(points, "#0352fc"_c, 0.12);
 
         print(std::round(watch.current_fps()));
     };
