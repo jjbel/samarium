@@ -5,115 +5,101 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
-#include "samarium/graphics/colors.hpp"
 #include "samarium/samarium.hpp"
 
-#include "range/v3/algorithm/max_element.hpp"
-#include "range/v3/numeric/accumulate.hpp"
-#include "range/v3/view/drop.hpp"
-#include "range/v3/view/take.hpp"
+#include "range/v3/view/concat.hpp"
 
 using namespace sm;
 using namespace sm::literals;
 
-static constexpr auto initial_speed = 10.0;
-static constexpr auto class_size    = 0.3;
-static constexpr auto max_speed     = initial_speed * 3.0;
-static constexpr auto plot_scale    = 0.9;
-
-template <typename T> inline auto moving_average(const std::vector<T>& data, u64 window_size)
-{
-    // if (data.size() <= window_size)
-    // {
-    //     return std::vector<f64>{{ranges::accumulate(data, 0) / static_cast<T>(data.size())}};
-    // }
-
-    auto result = std::vector<f64>(data.size() - window_size + 1);
-    for (auto i : range(result.size()))
-    {
-        auto sub_range = data | ranges::views::drop(i) | ranges::views::take(window_size);
-        result[i]      = ranges::accumulate(sub_range, 0) / static_cast<T>(window_size);
-    }
-    return result;
-}
+constexpr auto count           = 2000UL;
+constexpr auto initial_speed   = 40.0;
+constexpr auto class_size      = 4.0;
+constexpr auto max_graph_speed = initial_speed * 3.0;
+constexpr auto graph_width     = 90.0;
+constexpr auto graph_height    = 60.0;
+constexpr auto graph_centre    = Vector2{-47.5, 0.0};
 
 int main()
 {
-    auto rand = RandomGenerator{};
+    auto app = App{{.dims{1920, 1080}}};
 
-    auto app            = App{{.dims{1920, 1080}}};
-    const auto viewport = app.transformed_bounding_box();
-    auto half_viewport  = BoundingBox<f64>{.min = viewport.min, .max = {0.0, viewport.max.y}};
+    auto box = app.transformed_bounding_box();
+    box.set_width(box.width() / 2.0);
+    print(box);
+    box.set_centre({app.transformed_dims().x / 4.0, 0.0});
 
-    auto ps = ParticleSystem::generate(
-        500,
+    auto rand      = RandomGenerator{};
+    auto particles = ParticleSystem::generate(
+        count,
         [&](u64 /* index */)
         {
-            auto particle =
-                Particle{.pos    = rand.vector(half_viewport),
-                         .vel    = rand.polar_vector({initial_speed, initial_speed + 0.00001}),
-                         .radius = .2,
-                         .mass   = 10};
-            return particle;
+            return Particle{.pos = rand.vector(box),
+                            // .vel = rand.polar_vector({0, initial_speed});
+                            .vel    = rand.polar_vector({initial_speed, initial_speed + 0.001}),
+                            .radius = 0.3,
+                            .mass   = 0.1};
         });
 
-    const auto walls = viewport.line_segments();
+    auto watch       = Stopwatch{};
+    auto speeds      = std::vector<f64>(count);
+    auto energy      = 0.0;
+    const auto walls = box.line_segments();
 
     const auto update = [&](f64 dt)
     {
-        ps.self_collision();
-        for (auto& particle : ps)
+        particles.for_each(
+            [&](Particle& particle)
+            {
+                for (const auto& wall : walls) { phys::collide(particle, wall, dt, 1.0); }
+            });
+
+        particles.self_collision();
+        particles.update(dt);
+
+        energy = 0.0;
+        for (const auto& [speed, particle] : ranges::views::zip(speeds, particles))
         {
-            for (const auto& wall : walls) { phys::collide(particle, wall, dt); }
+            speed = particle.vel.length();
+            energy += 0.5 * particle.mass * speed * speed;
         }
-        ps.update(dt);
     };
 
-    auto watch      = Stopwatch{};
     const auto draw = [&]
     {
-        app.fill("#0e1117"_c);
+        // app.zoom_pan();
+
+        auto frequencies = std::vector<f64>(static_cast<u64>(max_graph_speed / class_size + 1.0));
+
+        for (auto speed : speeds)
+        {
+            speed = std::min(speed, max_graph_speed);
+            frequencies.at(static_cast<u64>(speed / class_size)) += 1.0;
+        }
+
+        app.fill("#131417"_c);
         app.draw(App::GridLines{});
-
-        for (const auto& particle : ps)
+        for (const auto& particle : particles)
         {
-            if (half_viewport.contains(particle.pos))
-            {
-                app.draw(particle, {.fill_color = "#ff150d"_c});
-            }
+            if (box.contains(particle.pos)) { app.draw(particle, {.fill_color = "#fc0330"_c}); }
         }
 
-        const auto speed_data =
-            ps | ranges::views::transform(
-                     [](const auto& particle)
-                     {
-                         auto length = particle.vel.length();
-                         length      = interp::clamp(length, {0.0, max_speed});
-                         return static_cast<u64>(std::round(length / class_size));
-                     });
+        auto points              = std::vector<Vector2>(frequencies.size());
+        const auto max_frequency = ranges::max(frequencies);
 
-        auto frequencies = std::vector<u16>(static_cast<u64>(max_speed / class_size));
-        for (auto speed : speed_data) { frequencies.at(std::min(speed, frequencies.size() - 1))++; }
-        const auto smoothed_frequencies = moving_average(frequencies, 6);
-
-        const auto data_size     = smoothed_frequencies.size();
-        const auto max_frequency = ranges::max(smoothed_frequencies);
-
-        auto points = std::vector<Vector2>(data_size);
-        for (auto i : range(data_size))
+        for (auto [i, frequency] : ranges::views::enumerate(frequencies))
         {
-            const auto x = interp::map_range<u64, f64>(i, {0UL, data_size},
-                                                       {0.0, viewport.max.x * plot_scale});
-            const auto y = interp::map_range<f64, f64>(
-                smoothed_frequencies[i], {0.0, max_frequency},
-                {viewport.min.y * plot_scale, viewport.max.y * plot_scale});
-
-            points[i] = Vector2{x, y};
+            const auto x = interp::map_range<u64, f64>(i, {0UL, frequencies.size()},
+                                                       {-graph_width / 2.0, graph_width / 2.0});
+            const auto y = interp::map_range<f64>(frequency, {0.0, max_frequency},
+                                                  {-graph_height / 2.0, graph_height / 2.0});
+            points[i]    = Vector2{x, y} + graph_centre;
         }
-        app.draw_polyline(points, "#0352fc"_c, 0.12);
+        app.draw_polyline(points, "#6179ff"_c, 0.2);
 
-        print(std::round(watch.current_fps()));
+        fmt::print("\nfps: {}, energy: {:.5}, temperature: {:.4}", std::round(watch.current_fps()),
+                   energy, energy / particles.size());
     };
 
-    app.run(update, draw, 2);
+    app.run(update, draw, 1);
 }
