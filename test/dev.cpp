@@ -9,6 +9,8 @@
 #include "samarium/samarium.hpp"
 
 #include "range/v3/algorithm/max_element.hpp"
+#include "range/v3/numeric/accumulate.hpp"
+#include "range/v3/view/drop.hpp"
 #include "range/v3/view/take.hpp"
 
 using namespace sm;
@@ -19,6 +21,22 @@ static constexpr auto class_size    = 0.3;
 static constexpr auto max_speed     = initial_speed * 3.0;
 static constexpr auto plot_scale    = 0.9;
 
+template <typename T> inline auto moving_average(const std::vector<T>& data, u64 window_size)
+{
+    // if (data.size() <= window_size)
+    // {
+    //     return std::vector<f64>{{ranges::accumulate(data, 0) / static_cast<T>(data.size())}};
+    // }
+
+    auto result = std::vector<f64>(data.size() - window_size + 1);
+    for (auto i : range(result.size()))
+    {
+        auto sub_range = data | ranges::views::drop(i) | ranges::views::take(window_size);
+        result[i]      = ranges::accumulate(sub_range, 0) / static_cast<T>(window_size);
+    }
+    return result;
+}
+
 int main()
 {
     auto rand = RandomGenerator{};
@@ -28,14 +46,14 @@ int main()
     auto half_viewport  = BoundingBox<f64>{.min = viewport.min, .max = {0.0, viewport.max.y}};
 
     auto ps = ParticleSystem::generate(
-        2000,
+        500,
         [&](u64 /* index */)
         {
             auto particle =
                 Particle{.pos    = rand.vector(half_viewport),
-                         .vel    = rand.polar_vector({0.0, max_speed}),
-                         .radius = 0.2,
-                         .mass   = 1.0};
+                         .vel    = rand.polar_vector({initial_speed, initial_speed + 0.00001}),
+                         .radius = .2,
+                         .mass   = 10};
             return particle;
         });
 
@@ -75,17 +93,19 @@ int main()
                      });
 
         auto frequencies = std::vector<u16>(static_cast<u64>(max_speed / class_size));
-
         for (auto speed : speed_data) { frequencies.at(std::min(speed, frequencies.size() - 1))++; }
-        const auto data_size     = frequencies.size();
-        const auto max_frequency = ranges::max(frequencies);
-        auto points              = std::vector<Vector2>(data_size);
+        const auto smoothed_frequencies = moving_average(frequencies, 6);
+
+        const auto data_size     = smoothed_frequencies.size();
+        const auto max_frequency = ranges::max(smoothed_frequencies);
+
+        auto points = std::vector<Vector2>(data_size);
         for (auto i : range(data_size))
         {
             const auto x = interp::map_range<u64, f64>(i, {0UL, data_size},
                                                        {0.0, viewport.max.x * plot_scale});
             const auto y = interp::map_range<f64, f64>(
-                static_cast<f64>(frequencies[i]), {0.0, static_cast<f64>(max_frequency)},
+                smoothed_frequencies[i], {0.0, max_frequency},
                 {viewport.min.y * plot_scale, viewport.max.y * plot_scale});
 
             points[i] = Vector2{x, y};
@@ -95,5 +115,5 @@ int main()
         print(std::round(watch.current_fps()));
     };
 
-    app.run(update, draw, 1);
+    app.run(update, draw, 2);
 }
