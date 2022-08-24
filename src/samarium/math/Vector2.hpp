@@ -252,7 +252,7 @@ template <concepts::Number T>
 }
 
 using Vector2    = Vector2_t<f64>;
-using Vector2f    = Vector2_t<f32>;
+using Vector2f   = Vector2_t<f32>;
 using Indices    = Vector2_t<u64>;
 using Dimensions = Vector2_t<u64>;
 
