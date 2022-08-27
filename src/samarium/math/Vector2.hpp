@@ -152,6 +152,11 @@ template <concepts::Number T> struct Vector2_t
         return p1.x * p2.x + p1.y * p2.y;
     }
 
+    [[nodiscard]] static constexpr auto cross(Vector2_t<T> p1, Vector2_t<T> p2) noexcept
+    {
+        return p1.x * p2.y - p1.y * p2.x;
+    }
+
     [[nodiscard]] constexpr auto abs() const noexcept
     {
         return Vector2_t<T>{std::abs(x), std::abs(y)};
