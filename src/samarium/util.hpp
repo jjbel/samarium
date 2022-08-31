@@ -12,6 +12,7 @@
 #include "util/RandomGenerator.hpp"
 #include "util/StaticVector.hpp"
 #include "util/Stopwatch.hpp"
+#include "util/expected.hpp"
 #include "util/file.hpp"
 #include "util/format.hpp"
 #include "util/noise.hpp"
