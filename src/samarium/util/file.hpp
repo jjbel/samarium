@@ -34,11 +34,7 @@ struct Bmp
 {
 };
 
-struct FileError
-{
-};
-
-template <typename T> using ExpectedFile = tl::expected<T, FileError>;
+template <typename T> using ExpectedFile = tl::expected<T, std::string>;
 
 auto read(Text, const std::filesystem::path& file_path) -> ExpectedFile<std::string>;
 
@@ -65,11 +61,11 @@ void write(Bmp,
 
 auto find(const std::string& file_name,
           const std::filesystem::path& directory = std::filesystem::current_path())
-    -> tl::expected<std::filesystem::path, FileError>;
+    -> tl::expected<std::filesystem::path, std::string>;
 
 auto find(const std::string& file_name, std::span<std::filesystem::path> search_paths)
-    -> tl::expected<std::filesystem::path, FileError>;
+    -> tl::expected<std::filesystem::path, std::string>;
 
 auto find(const std::string& file_name, std::initializer_list<std::filesystem::path> search_paths)
-    -> tl::expected<std::filesystem::path, FileError>;
+    -> tl::expected<std::filesystem::path, std::string>;
 } // namespace sm::file

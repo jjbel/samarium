@@ -31,12 +31,19 @@ namespace sm::file
 {
 auto read(Text, const std::filesystem::path& file_path) -> ExpectedFile<std::string>
 {
-    if (std::filesystem::exists(file_path) && std::filesystem::is_regular_file(file_path))
+    if (!std::filesystem::exists(file_path))
+    {
+        return tl::make_unexpected(fmt::format("'{}' does not exist", file_path));
+    }
+    else if (!std::filesystem::is_regular_file(file_path))
+    {
+        return tl::make_unexpected(fmt::format("'{}' is not a file", file_path));
+    }
+    else
     {
         auto ifs = std::ifstream{file_path};
         return {std::string(std::istreambuf_iterator<char>{ifs}, {})};
     }
-    else { return tl::unexpected<FileError>{{}}; }
 }
 
 auto read(const std::filesystem::path& file_path) -> ExpectedFile<std::string>
@@ -46,9 +53,13 @@ auto read(const std::filesystem::path& file_path) -> ExpectedFile<std::string>
 
 auto read_image(const std::filesystem::path& file_path) -> ExpectedFile<Image>
 {
-    if (!std::filesystem::exists(file_path) || !std::filesystem::is_regular_file(file_path))
+    if (!std::filesystem::exists(file_path))
     {
-        return tl::unexpected<FileError>{{}};
+        return tl::make_unexpected(fmt::format("'{}' does not exist", file_path));
+    }
+    else if (!std::filesystem::is_regular_file(file_path))
+    {
+        return tl::make_unexpected(fmt::format("'{}' is not a file", file_path));
     }
 
     auto width         = 0;
@@ -57,7 +68,7 @@ auto read_image(const std::filesystem::path& file_path) -> ExpectedFile<Image>
 
     const auto data = stbi_load(file_path.string().c_str(), &width, &height, &channel_count, 0);
 
-    if (!data) { return tl::unexpected<FileError>{{}}; }
+    if (!data) { return tl::make_unexpected(fmt::format("Error while reading '{}'", file_path)); }
 
     auto image = Image{{static_cast<u64>(width), static_cast<u64>(height)}};
 
@@ -92,9 +103,13 @@ auto read_image(const std::filesystem::path& file_path) -> ExpectedFile<Image>
             image[i].b       = value;
         }
     }
-    else { tl::unexpected<FileError>{{}}; }
+    else
+    {
+        return tl::make_unexpected(
+            fmt::format("'{}' has unknown channel count: '{}'", file_path, channel_count));
+    }
 
-    return image;
+    return {image};
 }
 
 void write(Targa, const Image& image, const std::filesystem::path& file_path)
@@ -121,7 +136,7 @@ void write(Bmp, const Image& image, const std::filesystem::path& file_path)
 
 
 auto find(const std::string& file_name, const std::filesystem::path& directory)
-    -> tl::expected<std::filesystem::path, FileError>
+    -> tl::expected<std::filesystem::path, std::string>
 {
     for (const auto& dir_entry : std::filesystem::recursive_directory_iterator(directory))
     {
@@ -131,11 +146,11 @@ auto find(const std::string& file_name, const std::filesystem::path& directory)
         }
     }
 
-    return tl::unexpected<FileError>{{}};
+    return tl::make_unexpected(fmt::format("File not found: '{}'", file_name));
 }
 
 auto find(const std::string& file_name, std::span<std::filesystem::path> search_paths)
-    -> tl::expected<std::filesystem::path, FileError>
+    -> tl::expected<std::filesystem::path, std::string>
 {
     for (const auto& path : search_paths)
     {
@@ -147,14 +162,13 @@ auto find(const std::string& file_name, std::span<std::filesystem::path> search_
         {
             if (std::filesystem::exists(path)) { return {std::filesystem::canonical(path)}; }
         }
-        else if (!std::filesystem::exists(path)) { continue; }
     }
 
-    return tl::unexpected<FileError>{{}};
+    return tl::make_unexpected(fmt::format("File not found: '{}'", file_name));
 }
 
 auto find(const std::string& file_name, std::initializer_list<std::filesystem::path> search_paths)
-    -> tl::expected<std::filesystem::path, FileError>
+    -> tl::expected<std::filesystem::path, std::string>
 {
     for (const auto& path : search_paths)
     {
@@ -166,9 +180,8 @@ auto find(const std::string& file_name, std::initializer_list<std::filesystem::p
         {
             if (std::filesystem::exists(path)) { return {std::filesystem::canonical(path)}; }
         }
-        else if (!std::filesystem::exists(path)) { continue; }
     }
 
-    return tl::unexpected<FileError>{{}};
+    return tl::make_unexpected(fmt::format("File not found: '{}'", file_name));
 }
 } // namespace sm::file
