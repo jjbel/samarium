@@ -9,15 +9,16 @@
 
 #include <stdexcept>
 
+#include "fmt/format.h"
 #include "tl/expected.hpp"
 
 namespace sm
 {
 template <typename T, typename E> using expected = tl::expected<T, E>;
 
-template <typename T> [[nodiscard]] inline auto expect(expected<T, std::string>&& value)
+template <typename T, typename E> [[nodiscard]] inline auto expect(expected<T, E>&& value)
 {
     if (value) { return std::move(value.value()); }
-    else { throw std::runtime_error{"Bad expected access:\n" + value.error()}; }
+    else { throw std::runtime_error{fmt::format("Bad expected access:\n{}", value.error())}; }
 }
 } // namespace sm
