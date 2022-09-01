@@ -136,7 +136,7 @@ void write(Bmp, const Image& image, const std::filesystem::path& file_path)
 
 
 auto find(const std::string& file_name, const std::filesystem::path& directory)
-    -> tl::expected<std::filesystem::path, std::string>
+    -> Expected<std::filesystem::path, std::string>
 {
     for (const auto& dir_entry : std::filesystem::recursive_directory_iterator(directory))
     {
@@ -150,7 +150,7 @@ auto find(const std::string& file_name, const std::filesystem::path& directory)
 }
 
 auto find(const std::string& file_name, std::span<std::filesystem::path> search_paths)
-    -> tl::expected<std::filesystem::path, std::string>
+    -> Expected<std::filesystem::path, std::string>
 {
     for (const auto& path : search_paths)
     {
@@ -168,7 +168,7 @@ auto find(const std::string& file_name, std::span<std::filesystem::path> search_
 }
 
 auto find(const std::string& file_name, std::initializer_list<std::filesystem::path> search_paths)
-    -> tl::expected<std::filesystem::path, std::string>
+    -> Expected<std::filesystem::path, std::string>
 {
     for (const auto& path : search_paths)
     {

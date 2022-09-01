@@ -14,9 +14,9 @@
 
 namespace sm
 {
-template <typename T, typename E> using expected = tl::expected<T, E>;
+template <typename T, typename E> using Expected = tl::expected<T, E>;
 
-template <typename T, typename E> [[nodiscard]] inline auto expect(expected<T, E>&& value)
+template <typename T, typename E> [[nodiscard]] inline auto expect(Expected<T, E>&& value)
 {
     if (value) { return std::move(value.value()); }
     else { throw std::runtime_error{fmt::format("Bad expected access:\n{}", value.error())}; }
