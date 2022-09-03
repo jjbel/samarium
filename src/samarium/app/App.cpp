@@ -209,7 +209,8 @@ void App::draw_world_space(FunctionRef<Color(Vector2)> callable,
         }
     };
 
-    thread_pool.parallelize_loop(y_range.min, y_range.max + 1, job, thread_pool.get_thread_count());
+    thread_pool.parallelize_loop(y_range.min, y_range.max + 1, job, thread_pool.get_thread_count())
+        .wait();
 
     store_pixels();
 }
@@ -245,7 +246,8 @@ void App::draw_screen_space(FunctionRef<Color(Indices)> callable,
             }
         }
     };
-    thread_pool.parallelize_loop(y_range.min, y_range.max + 1, job, thread_pool.get_thread_count());
+    thread_pool.parallelize_loop(y_range.min, y_range.max + 1, job, thread_pool.get_thread_count())
+        .wait();
     store_pixels();
 }
 

@@ -27,12 +27,17 @@ if(NOT tl-expected_FOUND)
     find_package(tl-expected CONFIG REQUIRED)
 endif()
 
+if(NOT bshoshany-thread-pool_FOUND)
+    find_package(bshoshany-thread-pool CONFIG REQUIRED)
+endif()
+
 function(link_deps target)
     target_link_libraries(${target} PUBLIC fmt::fmt)
     target_link_libraries(${target} PUBLIC range-v3::range-v3)
     target_link_libraries(${target} PUBLIC sfml::sfml)
     target_link_libraries(${target} PUBLIC stb::stb)
     target_link_libraries(${target} PUBLIC tl::expected)
+    target_link_libraries(${target} PUBLIC bshoshany-thread-pool::bshoshany-thread-pool)
 
     if(USE_WARNINGS)
         target_compile_options(${target} PUBLIC ${WARNINGS})

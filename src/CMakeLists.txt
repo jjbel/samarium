@@ -37,6 +37,10 @@ if(NOT tl-expected_FOUND)
     find_package(tl-expected CONFIG REQUIRED)
 endif()
 
+if(NOT bshoshany-thread-pool_FOUND)
+    find_package(bshoshany-thread-pool CONFIG REQUIRED)
+endif()
+
 add_subdirectory(samarium)
 
 add_library(samarium ${SAMARIUM_SOURCES})
@@ -77,6 +81,7 @@ target_link_libraries(samarium PUBLIC range-v3::range-v3)
 target_link_libraries(samarium PUBLIC sfml::sfml)
 target_link_libraries(samarium PUBLIC stb::stb)
 target_link_libraries(samarium PUBLIC tl::expected)
+target_link_libraries(samarium PUBLIC bshoshany-thread-pool::bshoshany-thread-pool)
 
 install(
     TARGETS samarium

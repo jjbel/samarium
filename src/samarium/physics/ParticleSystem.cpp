@@ -11,7 +11,6 @@
 #include "samarium/math/Extents.hpp"     // for Extents, Extents<>::Iter...
 #include "samarium/physics/Particle.hpp" // for Particle
 #include "samarium/util/FunctionRef.hpp" // for FunctionRef
-#include "samarium/util/ThreadPool.hpp"  // for ThreadPool
 
 #include "ParticleSystem.hpp"
 
@@ -29,7 +28,7 @@ void ParticleSystem::update(ThreadPool& thread_pool, f64 time_delta) noexcept
         for (auto i : range(min, max)) { particles[i].update(time_delta); }
     };
 
-    thread_pool.parallelize_loop(0UL, particles.size(), job, thread_pool.get_thread_count());
+    thread_pool.parallelize_loop(0UL, particles.size(), job, thread_pool.get_thread_count()).wait();
 }
 
 void ParticleSystem::apply_force(Vector2 force) noexcept
