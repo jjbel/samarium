@@ -1,8 +1,8 @@
 // fpng.h - unlicense (see end of fpng.cpp)
 #pragma once
 
-#include <stdint.h>
-#include <stdlib.h>
+#include <cstdint>
+#include <cstdlib>
 #include <vector>
 
 #ifndef FPNG_TRAIN_HUFFMAN_TABLES
@@ -15,7 +15,7 @@ namespace fpng
 {
 // ---- Library initialization - call once to identify if the processor supports SSE.
 // Otherwise you'll only get scalar fallbacks.
-// void fpng_init();
+int32_t fpng_init();
 
 // ---- Useful Utilities
 
