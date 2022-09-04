@@ -27,6 +27,7 @@ class SamariumConan(ConanFile):
         self.requires("range-v3/0.12.0")
         self.requires("stb/cci.20210910")
         self.requires("tl-expected/20190710")
+        self.requires("tl-function-ref/1.0.0")
         self.requires("bshoshany-thread-pool/3.3.0")
 
         if self.options.build_tests:

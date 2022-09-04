@@ -26,6 +26,7 @@
 #include "samarium/math/BoundingBox.hpp" // for BoundingBox
 #include "samarium/math/Transform.hpp"   // for Transform
 #include "samarium/math/Vector2.hpp"     // for Vector2, Dimensions
+#include "samarium/util/FunctionRef.hpp" // for ThreadPool
 #include "samarium/util/Stopwatch.hpp"   // for Stopwatch
 #include "samarium/util/ThreadPool.hpp"  // for ThreadPool
 
@@ -34,7 +35,6 @@ namespace sm
 class Trail;
 struct Particle;
 struct LineSegment;
-template <class F> class FunctionRef;
 struct Circle;
 
 enum class VertexMode
