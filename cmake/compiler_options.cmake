@@ -71,6 +71,8 @@ function(set_compiler_options)
                    # printf)
         -Wimplicit-fallthrough # warn on statements that fallthrough without an explicit
                                # annotation
+        -msse4.1
+        -mpclmul
     )
 
     if(OPTIONS_AS_ERRORS)
