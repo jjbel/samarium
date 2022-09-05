@@ -3,6 +3,12 @@
 # <https://github.com/strangeQuark1041/samarium>
 
 cmake_minimum_required(VERSION 3.15)
+
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
+option(RUN_CONAN "Run Conan from CMake itself to automatically get dependenices" OFF)
+include(conan_install)
+
 project(samarium_dev LANGUAGES CXX)
 
 option(BUILD_UNIT_TESTS "Build unit tests" OFF)
@@ -16,14 +22,11 @@ option(OPTIONS_AS_ERRORS "Treat compiler warnings as errors" OFF)
 option(USE_CCACHE "Use CCache to speed up compilation" OFF)
 option(USE_UBSAN "Use Undefined Behaviour Sanitizer" OFF)
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-
 include(check_project_structure)
 include(ccache)
 include(compiler_options)
 include(docs)
-# include(conan_install)
-# include(find_deps)
+include(find_deps)
 include(CTest)
 include(Catch)
 

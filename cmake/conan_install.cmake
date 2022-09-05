@@ -2,17 +2,19 @@
 # <https://opensource.org/licenses/MIT/> or LICENSE.md Project homepage:
 # <https://github.com/strangeQuark1041/samarium>
 
-if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/conan.lock)
+if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/conan.lock AND RUN_CONAN)
     find_program(CONAN_EXE conan REQUIRED)
 
-    message(STATUS "Installing Conan dependencies... (this may take a few minutes)")
+    message(STATUS "Installing dependencies... (this may take a few minutes)")
     execute_process(
-        COMMAND ${CONAN_EXE} install . -b missing -if ${CMAKE_CURRENT_BINARY_DIR}
-                -pr:b=default -o samarium:build_tests=True
+        COMMAND
+            ${CONAN_EXE} install . -b missing -if ${CMAKE_CURRENT_BINARY_DIR}
+            -pr:b=cmake/clang_${CMAKE_BUILD_TYPE}.profile
+            -pr=cmake/clang_${CMAKE_BUILD_TYPE}.profile
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
         OUTPUT_QUIET
     )
-    set(CONAN_CMAKE_SILENT_OUTPUT True)
+    set(CMAKE_TOOLCHAIN_FILE ${CMAKE_BINARY_DIR}/conan_toolchain.cmake)
 else()
-    message(STATUS "Conan dependencies already installed")
+    message(STATUS "Dependencies already installed")
 endif()

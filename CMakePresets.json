@@ -15,8 +15,7 @@
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release",
                 "CMAKE_EXPORT_COMPILE_COMMANDS": true
-            },
-            "toolchainFile": "build/conan_toolchain.cmake"
+            }
         },
         {
             "name": "ci",
@@ -66,7 +65,8 @@
                 "BUILD_UNIT_TESTS": false,
                 "BUILD_EXAMPLES": false,
                 "BUILD_DOCS": false,
-                "BUILD_BENCHMARKS": false
+                "BUILD_BENCHMARKS": false,
+                "RUN_CONAN": true
             }
         },
         {
@@ -74,7 +74,8 @@
             "description": "Debug version of dev",
             "inherits": "dev",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug"
+                "CMAKE_BUILD_TYPE": "Debug",
+                "RUN_CONAN": true
             }
         },
         {
