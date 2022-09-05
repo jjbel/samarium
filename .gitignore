@@ -4,8 +4,6 @@ dev/
 
 build/
 
-.vscode/
-
 .history
 
 .cache/
