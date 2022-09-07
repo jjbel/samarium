@@ -15,24 +15,31 @@ class SamariumConan(ConanFile):
     generators = "CMakeDeps", "CMakeToolchain"
 
     settings = "os", "compiler", "build_type", "arch"
-    options = {"shared": [True, False], "fPIC": [
-        True, False], "build_tests": [True, False]}
+    options = {
+        "shared": [True, False],
+        "fPIC": [True, False],
+        "build_tests": [True, False],
+    }
     default_options = {"shared": False, "fPIC": True, "build_tests": False}
 
     exports_sources = "src/*"
 
     def requirements(self):
-        self.requires("fmt/9.0.0")
-        self.requires("sfml/2.5.1")
-        self.requires("range-v3/0.12.0")
-        self.requires("stb/cci.20210910")
-        self.requires("tl-expected/20190710")
-        self.requires("tl-function-ref/1.0.0")
-        self.requires("bshoshany-thread-pool/3.3.0")
+        deps = [
+            "fmt/9.0.0",
+            "sfml/2.5.1",
+            "range-v3/0.12.0",
+            "stb/cci.20210910",
+            "tl-expected/20190710",
+            "tl-function-ref/1.0.0",
+            "bshoshany-thread-pool/3.3.0",
+        ]
 
         if self.options.build_tests:
-            self.requires('catch2/3.0.1')
-            self.requires('benchmark/1.6.1')
+            self.requires += ["catch2/3.0.1", "benchmark/1.6.1"]
+
+        for dep in deps:
+            self.requires(dep)
 
     def configure(self):
         if self.options.shared:
