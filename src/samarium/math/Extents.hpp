@@ -10,7 +10,7 @@
 #include <compare>
 #include <iterator>
 
-#include "../core/concepts.hpp"
+#include "samarium/core/concepts.hpp"
 
 namespace sm
 {

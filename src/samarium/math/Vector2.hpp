@@ -9,6 +9,8 @@
 
 #include <type_traits> // For is_signed_v
 
+#include "samarium/core/concepts.hpp"
+
 #include "Extents.hpp"
 #include "math.hpp"
 
