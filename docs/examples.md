@@ -1,4 +1,6 @@
-# Examples
+# Included Examples
+
+These examples are included with the library in ``/examples``
 
 ## Fourier Series
 

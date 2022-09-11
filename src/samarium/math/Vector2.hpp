@@ -32,13 +32,13 @@ template <concepts::Number T> struct Vector2_t
     T x{};
     T y{};
 
+    [[nodiscard]] constexpr auto length() const noexcept { return std::sqrt(x * x + y * y); }
+
     struct Polar
     {
         T length{};
         T angle{};
     };
-
-    [[nodiscard]] constexpr auto length() const noexcept { return std::sqrt(x * x + y * y); }
 
     [[nodiscard]] constexpr auto length_sq() const noexcept { return x * x + y * y; }
 
