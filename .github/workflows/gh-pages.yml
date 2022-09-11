@@ -44,7 +44,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: docs
-        run: python3 -m pip install -r ./requirements.txt
+        run: python3 -m pip install -r ./requirements.txt --quiet
 
       - name: Run Sphinx Build
         working-directory: docs
