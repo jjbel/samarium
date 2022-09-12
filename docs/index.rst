@@ -12,9 +12,8 @@ Welcome to Samarium's documentation!
     examples
     reference/index
 
-Indices and tables
+Useful Links
 ==================
 
 * :ref:`genindex`
-* :ref:`modindex`
 * :ref:`search`

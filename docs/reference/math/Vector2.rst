@@ -1,5 +1,4 @@
 Vector2
 =======
 
-.. doxygenstruct:: sm::Vector2_t
-    :members:
+.. doxygenfile:: Vector2.hpp

@@ -15,7 +15,13 @@ author = "Jai Bellare"
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = ["breathe", "myst_parser", "sphinx.ext.mathjax", "sphinx_copybutton"]
+extensions = [
+    "breathe",
+    "myst_parser",
+    "sphinx.ext.mathjax",
+    "sphinx_copybutton",
+    "sphinxext.opengraph",
+]
 
 exclude_patterns = ["build", "Thumbs.db", ".DS_Store"]
 
@@ -42,14 +48,14 @@ breathe_domain_by_extension = {
     "hpp": "cpp",
 }
 
+breathe_default_members = ("members", "undoc-members")
+
 primary_domain = "cpp"
 highlight_language = "cpp"
 
-# Configuration for mathjax extension
-#
-# Set path for mathjax js to a https URL as sometimes the docs are displayed under https
-# and we can't load an http mathjax file from an https view of the docs. So we change to a https
-# mathjax file which we can load from http or https. We break the url over two lines.
+ogp_site_url="https://strangequark1041.github.io/samarium/c"
+ogp_site_name = "Samarium Docs"
+
 mathjax_path = (
     "https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
 )
