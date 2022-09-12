@@ -43,6 +43,12 @@ jobs:
         with:
           python-version: "3.9"
 
+      - name: Install Doxygen
+        run: |
+          sudo apt-add-repository universe
+          sudo apt-get update
+          sudo apt-get install doxygen
+
       - name: Upgrade pip
         run: |
           # install pip=>20.1 to use "pip cache dir"
