@@ -17,33 +17,20 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
 list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})
 
-if(NOT SFML_FOUND)
-    find_package(SFML CONFIG REQUIRED)
-endif()
-
-if(NOT fmt_FOUND)
-    find_package(fmt CONFIG REQUIRED)
-endif()
-
-if(NOT range-v3_FOUND)
-    find_package(range-v3 CONFIG REQUIRED)
-endif()
-
-if(NOT stb_FOUND)
-    find_package(stb CONFIG REQUIRED)
-endif()
-
-if(NOT tl-expected_FOUND)
-    find_package(tl-expected CONFIG REQUIRED)
-endif()
-
-if(NOT tl-function-ref_FOUND)
-    find_package(tl-function-ref CONFIG REQUIRED)
-endif()
-
-if(NOT bshoshany-thread-pool_FOUND)
-    find_package(bshoshany-thread-pool CONFIG REQUIRED)
-endif()
+foreach(
+    DEPENDENCY
+    SFML
+    fmt
+    range-v3
+    stb
+    tl-expected
+    tl-function-ref
+    bshoshany-thread-pool
+)
+    if(NOT ${DEPENDENCY}_FOUND)
+        find_package(${DEPENDENCY} CONFIG REQUIRED)
+    endif()
+endforeach()
 
 add_subdirectory(samarium)
 
@@ -80,13 +67,18 @@ set_source_files_properties(
     "samarium/util/fpng/fpng.cpp" PROPERTIES COMPILE_OPTIONS "${FPNG_OPTIONS}"
 )
 
-target_link_libraries(samarium PUBLIC fmt::fmt)
-target_link_libraries(samarium PUBLIC range-v3::range-v3)
-target_link_libraries(samarium PUBLIC sfml::sfml)
-target_link_libraries(samarium PUBLIC stb::stb)
-target_link_libraries(samarium PUBLIC tl::expected)
-target_link_libraries(samarium PUBLIC tl::function-ref)
-target_link_libraries(samarium PUBLIC bshoshany-thread-pool::bshoshany-thread-pool)
+foreach(
+    DEPENDENCY
+    fmt::fmt
+    range-v3::range-v3
+    sfml::sfml
+    stb::stb
+    tl::expected
+    tl::function-ref
+    bshoshany-thread-pool::bshoshany-thread-pool
+)
+    target_link_libraries(samarium PUBLIC ${DEPENDENCY})
+endforeach()
 
 install(
     TARGETS samarium
