@@ -17,7 +17,6 @@ set(SAMARIUM_SOURCES
     samarium/util/Stopwatch.cpp
     samarium/util/file.cpp
     samarium/util/ostream.cpp
-    samarium/util/util.cpp
     samarium/util/noise.cpp
     samarium/util/fpng/fpng.cpp
     PARENT_SCOPE
