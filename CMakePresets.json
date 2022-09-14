@@ -63,7 +63,7 @@
             "cacheVariables": {
                 "USE_UBSAN": false,
                 "BUILD_UNIT_TESTS": false,
-                "BUILD_EXAMPLES": false,
+                "BUILD_EXAMPLES": true,
                 "BUILD_DOCS": false,
                 "BUILD_BENCHMARKS": false,
                 "RUN_CONAN": true
