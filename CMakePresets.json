@@ -21,7 +21,8 @@
             "name": "ci",
             "inherits": "default",
             "cacheVariables": {
-                "BUILD_UNIT_TESTS": true
+                "BUILD_UNIT_TESTS": true,
+                "RUN_CONAN": true
             }
         },
         {
@@ -65,8 +66,7 @@
                 "BUILD_UNIT_TESTS": false,
                 "BUILD_EXAMPLES": false,
                 "BUILD_DOCS": false,
-                "BUILD_BENCHMARKS": false,
-                "RUN_CONAN": true
+                "BUILD_BENCHMARKS": false
             }
         },
         {
@@ -75,8 +75,7 @@
             "inherits": "dev",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
-                "USE_UBSAN": true,
-                "RUN_CONAN": true
+                "USE_UBSAN": true
             }
         },
         {

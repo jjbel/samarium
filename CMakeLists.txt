@@ -6,7 +6,7 @@ cmake_minimum_required(VERSION 3.15)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
-option(RUN_CONAN "Run Conan from CMake itself to automatically get dependenices" OFF)
+option(RUN_CONAN "Run Conan from CMake itself to automatically get dependenices" ON)
 include(conan_install)
 
 project(samarium_dev LANGUAGES CXX)
