@@ -8,6 +8,7 @@
 #pragma once
 
 #include "math/Dual.hpp"
+#include "math/Polynomial.hpp"
 #include "math/SecondOrderDynamics.hpp"
 #include "math/Transform.hpp"
 #include "math/Vector2.hpp"
