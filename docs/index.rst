@@ -10,7 +10,7 @@ Welcome to Samarium's documentation!
     :maxdepth: 1
 
     examples
-    reference/index
+    api/index
 
 Useful Links
 ==================
