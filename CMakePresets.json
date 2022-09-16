@@ -45,19 +45,6 @@
             }
         },
         {
-            "name": "coverage",
-            "displayName": "Build for Coverage Analysis",
-            "description": "Use GCC's coverage feature",
-            "inherits": "gcc",
-            "generator": "Unix Makefiles",
-            "binaryDir": "${sourceDir}/build/",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
-                "BUILD_COVERAGE": true,
-                "BUILD_UNIT_TESTS": true
-            }
-        },
-        {
             "name": "dev",
             "description": "Use gcc, Ninja, and skip extra tests",
             "inherits": "clang",
@@ -97,14 +84,6 @@
             "cacheVariables": {
                 "USE_IWYU": "TRUE"
             }
-        },
-        {
-            "name": "docs",
-            "description": "Build Documentation",
-            "inherits": "default",
-            "cacheVariables": {
-                "BUILD_DOCS": "TRUE"
-            }
         }
     ],
     "buildPresets": [
@@ -113,12 +92,6 @@
             "configurePreset": "default",
             "configuration": "Release",
             "jobs": 6
-        },
-        {
-            "name": "coverage",
-            "configurePreset": "coverage",
-            "configuration": "Debug",
-            "cleanFirst": true
         },
         {
             "name": "iwyu",
@@ -133,10 +106,6 @@
             "configurePreset": "default",
             "configuration": "Release",
             "output": { "outputOnFailure": true, "verbosity": "default" }
-        },
-        {
-            "name": "coverage",
-            "configurePreset": "coverage"
         }
     ]
 }
