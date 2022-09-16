@@ -75,6 +75,7 @@
             "inherits": "dev",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
+                "USE_UBSAN": true,
                 "RUN_CONAN": true
             }
         },
