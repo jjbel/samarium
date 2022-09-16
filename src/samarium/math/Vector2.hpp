@@ -7,9 +7,10 @@
 
 #pragma once
 
-#include <type_traits> // For is_signed_v
+#include <utility>
 
 #include "samarium/core/concepts.hpp"
+#include "samarium/core/types.hpp"
 
 #include "Extents.hpp"
 #include "math.hpp"
@@ -25,7 +26,7 @@ namespace sm
  * auto vec = Vector2{.x = 4.2, .y = -1.4};
  * @endcode
  */
-template <concepts::Number T> struct Vector2_t
+template <typename T> struct Vector2_t
 {
     using value_type = T;
 
@@ -60,7 +61,7 @@ template <concepts::Number T> struct Vector2_t
 
     [[nodiscard]] constexpr auto to_polar() const noexcept
     {
-        return Polar{this->length(), std::atan(this->y / this->x)};
+        return Polar{this->length(), this->angle()};
     }
 
     constexpr auto normalize() noexcept
@@ -144,7 +145,7 @@ template <concepts::Number T> struct Vector2_t
         return *this;
     }
 
-    template <concepts::Number U> constexpr auto as() const noexcept
+    template <typename U> constexpr auto as() const noexcept
     {
         return Vector2_t<U>{static_cast<U>(this->x), static_cast<U>(this->y)};
     }
@@ -188,7 +189,7 @@ template <concepts::Number T> struct Vector2_t
         this->set_length(extents.clamp(this->length()));
     }
 
-    template <concepts::Number U> [[nodiscard]] constexpr auto clamped_to(Vector2_t<U> box) const
+    template <typename U> [[nodiscard]] constexpr auto clamped_to(Vector2_t<U> box) const
     {
         return Vector2_t<T>{
             math::min(math::max(this->x, static_cast<T>(0)), static_cast<T>(box.x)),
@@ -201,61 +202,82 @@ template <concepts::Number T> struct Vector2_t
         return math::almost_equal(this->length_sq(), 0.0);
     }
 
-    [[nodiscard]] constexpr auto negated() const noexcept requires std::is_signed_v<T>
-    {
-        return Vector2_t<T>{-x, -y};
-    }
+    [[nodiscard]] constexpr auto negated() const noexcept { return Vector2_t<T>{-x, -y}; }
 
     [[nodiscard]] constexpr auto operator<=>(const Vector2_t<T>&) const = default;
 };
 
-template <concepts::Number T>
+template <typename T>
 [[nodiscard]] constexpr auto operator+(Vector2_t<T> lhs, const Vector2_t<T>& rhs) noexcept
 {
     lhs += rhs;
     return lhs;
 }
 
-template <concepts::Number T>
+template <typename T>
 [[nodiscard]] constexpr auto operator-(Vector2_t<T> lhs, const Vector2_t<T>& rhs) noexcept
 {
     lhs -= rhs;
     return lhs;
 }
 
-template <concepts::Number T>
+template <typename T>
 [[nodiscard]] constexpr auto operator*(Vector2_t<T> lhs, const Vector2_t<T>& rhs) noexcept
 {
     lhs *= rhs;
     return lhs;
 }
 
-template <concepts::Number T>
-[[nodiscard]] constexpr auto operator*(Vector2_t<T> lhs, T rhs) noexcept
+template <typename T> [[nodiscard]] constexpr auto operator*(Vector2_t<T> lhs, T rhs) noexcept
 {
     lhs *= rhs;
     return lhs;
 }
 
-template <concepts::Number T>
-[[nodiscard]] constexpr auto operator*(T lhs, Vector2_t<T> rhs) noexcept
+template <typename T> [[nodiscard]] constexpr auto operator*(T lhs, Vector2_t<T> rhs) noexcept
 {
     rhs *= lhs;
     return rhs;
 }
 
-template <concepts::Number T>
+template <typename T>
 [[nodiscard]] constexpr auto operator/(Vector2_t<T> lhs, const Vector2_t<T>& rhs) noexcept
 {
     lhs /= rhs;
     return lhs;
 }
 
-template <concepts::Number T>
-[[nodiscard]] constexpr auto operator/(Vector2_t<T> lhs, T rhs) noexcept
+template <typename T> [[nodiscard]] constexpr auto operator/(Vector2_t<T> lhs, T rhs) noexcept
 {
     lhs /= rhs;
     return lhs;
+}
+
+template <std::size_t Index, typename T> auto&& Vector2_t_get(T&& p)
+{
+    static_assert(Index < 2, "Index out of bounds for sm::Vector2_t");
+    if constexpr (Index == 0) { return std::forward<T>(p).x; }
+    if constexpr (Index == 1) { return std::forward<T>(p).y; }
+}
+
+template <std::size_t Index, typename T> auto&& get(Vector2_t<T>& p)
+{
+    return Vector2_t_get<Index>(p);
+}
+
+template <std::size_t Index, typename T> auto&& get(Vector2_t<T> const& p)
+{
+    return Vector2_t_get<Index>(p);
+}
+
+template <std::size_t Index, typename T> auto&& get(Vector2_t<T>&& p)
+{
+    return Vector2_t_get<Index>(std::move(p));
+}
+
+template <std::size_t Index, typename T> auto&& get(Vector2_t<T> const&& p)
+{
+    return Vector2_t_get<Index>(move(p));
 }
 
 using Vector2    = Vector2_t<f64>;
@@ -265,8 +287,21 @@ using Dimensions = Vector2_t<u64>;
 
 namespace literals
 {
-consteval auto operator"" _x(f80 x) noexcept { return Vector2{static_cast<f64>(x), 0}; }
-consteval auto operator"" _y(f80 y) noexcept { return Vector2{0, static_cast<f64>(y)}; }
+consteval auto operator"" _x(f80 x) noexcept { return Vector2{static_cast<f64>(x), 0.0}; }
+consteval auto operator"" _y(f80 y) noexcept { return Vector2{0.0, static_cast<f64>(y)}; }
 } // namespace literals
-
 } // namespace sm
+
+namespace std
+{
+template <typename T> struct tuple_size<sm::Vector2_t<T>>
+{
+    static constexpr size_t value = 2;
+};
+
+template <size_t Index, typename T>
+struct tuple_element<Index, sm::Vector2_t<T>> : conditional<Index == 0, T, T>
+{
+    static_assert(Index < 2, "Index out of bounds for Vector2_t");
+};
+} // namespace std

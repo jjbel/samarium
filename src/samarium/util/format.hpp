@@ -47,6 +47,11 @@ template <sm::concepts::FloatingPoint T> class formatter<sm::Vector2_t<T>>
     }
 };
 
+template <typename T, typename Char> struct is_tuple_formattable<sm::Vector2_t<T>, Char>
+{
+    static constexpr auto value = false;
+};
+
 template <> class formatter<sm::Version>
 {
   public:
