@@ -5,15 +5,9 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 #define SAMARIUM_HEADER_ONLY
-#include "samarium/graphics/Image.hpp"
 #include "samarium/samarium.hpp"
-#include "samarium/util/Stopwatch.hpp"
-#include "samarium/util/file.hpp"
-#include "samarium/util/fpng/fpng.hpp"
-#include <chrono>
-#include <thread>
 
 using namespace sm;
 using namespace sm::literals;
 
-int main() {}
+int main() { print(polynomial_from_roots<3>({-1.0, 1.0}).coeffs); }
