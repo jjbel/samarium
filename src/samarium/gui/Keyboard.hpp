@@ -194,3 +194,39 @@ class Keymap
     void run() const;
 };
 } // namespace sm::Keyboard
+
+#if defined(SAMARIUM_HEADER_ONLY) || defined(SAMARIUM_KEYBOARD_IMPL)
+
+#include "range/v3/algorithm/all_of.hpp"
+#include "range/v3/view/enumerate.hpp" // for enumerate
+
+namespace sm::Keyboard
+{
+void OnKeyPress::operator()() const
+{
+    if (ranges::all_of(key_set, is_key_pressed)) { action(); }
+}
+
+void OnKeyDown::operator()()
+{
+    const auto current = ranges::all_of(key_set, is_key_pressed);
+    if (!previous && current) { action(); }
+    previous = current;
+}
+
+void OnKeyUp::operator()()
+{
+    const auto current = ranges::all_of(key_set, is_key_pressed);
+    if (!current && previous) { action(); }
+    previous = current;
+}
+
+void Keymap::clear() { this->actions.clear(); }
+
+void Keymap::run() const
+{
+    for (const auto& action : actions) { action(); }
+}
+} // namespace sm::Keyboard
+
+#endif

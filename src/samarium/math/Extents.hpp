@@ -108,7 +108,8 @@ template <typename T> struct Extents
         // return Iterator{max + static_cast<T>(1)};
     }
 
-    [[nodiscard]] constexpr auto operator[](u64 index) const noexcept requires concepts::Integral<T>
+    [[nodiscard]] constexpr auto
+    operator[](usize index) const noexcept requires concepts::Integral<T>
     {
         return min + index;
     }
@@ -119,12 +120,11 @@ template <typename T> struct Extents
     }
 };
 
+[[maybe_unused]] constexpr auto range(usize max) { return Extents<usize>{0UL, max}; }
 
-[[nodiscard]] constexpr auto range(u64 max) { return Extents<u64>{0UL, max}; }
+[[maybe_unused]] constexpr auto range(usize min, usize max) { return Extents<usize>{min, max}; }
 
-[[nodiscard]] constexpr auto range(u64 min, u64 max) { return Extents<u64>{min, max}; }
+[[maybe_unused]] constexpr auto irange(i32 max) { return Extents<i32>{0, max}; }
 
-[[nodiscard]] constexpr auto irange(i32 max) { return Extents<i32>{0, max}; }
-
-[[nodiscard]] constexpr auto irange(i32 min, i32 max) { return Extents<i32>{min, max}; }
+[[maybe_unused]] constexpr auto irange(i32 min, i32 max) { return Extents<i32>{min, max}; }
 } // namespace sm

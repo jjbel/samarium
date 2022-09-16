@@ -5,18 +5,7 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
-#include "fmt/format.h"
-
+#ifndef SAMARIUM_HEADER_ONLY
+#define SAMARIUM_OSTREAM_IMPL
 #include "ostream.hpp"
-
-std::ostream& operator<<(std::ostream& os, const sm::Version& a)
-{
-    os << fmt::to_string(a);
-    return os;
-}
-
-std::ostream& operator<<(std::ostream& os, const sm::Color& a)
-{
-    os << fmt::to_string(a);
-    return os;
-}
+#endif // !SAMARIUM_HEADER_ONLY

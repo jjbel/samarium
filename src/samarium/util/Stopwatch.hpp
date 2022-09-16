@@ -30,3 +30,32 @@ struct Stopwatch
     void print() const;
 };
 } // namespace sm
+
+
+#if defined(SAMARIUM_HEADER_ONLY) || defined(SAMARIUM_STOPWATCH_IMPL)
+
+#include "fmt/format.h"
+
+namespace sm
+{
+void Stopwatch::reset() { start = std::chrono::steady_clock::now(); }
+
+auto Stopwatch::time() const -> Stopwatch::Duration_t
+{
+    const auto finish = std::chrono::steady_clock::now();
+    return std::chrono::duration_cast<Duration_t>(finish - start);
+}
+
+[[nodiscard]] auto Stopwatch::seconds() const -> f64 { return this->time().count(); }
+
+[[nodiscard]] auto Stopwatch::current_fps() -> f64
+{
+    const auto sec = seconds();
+    reset();
+    return 1.0 / sec;
+}
+
+void Stopwatch::print() const { fmt::print("{:.3}ms\n", this->time().count() * 1000.0); }
+}; // namespace sm
+
+#endif

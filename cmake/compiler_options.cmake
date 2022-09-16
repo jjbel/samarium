@@ -86,7 +86,7 @@ function(set_compiler_options)
         # https://docs.microsoft.com/en-us/cpp/sanitizers/asan?view=msvc-170
     endif()
 
-    set(CLANG_OPTIONS ${COMMON_OPTIONS} -fcolor-diagnostics -ferror-limit=10)
+    set(CLANG_OPTIONS ${COMMON_OPTIONS} -fcolor-diagnostics -ferror-limit=10 -Wno-header-guard)
 
     set(GCC_OPTIONS
         ${COMMON_OPTIONS}

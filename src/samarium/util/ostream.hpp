@@ -26,3 +26,22 @@ auto operator<<(std::ostream& os, const sm::Vector2_t<T>& a) -> std::ostream&
     os << fmt::to_string(a);
     return os;
 }
+
+
+#if defined(SAMARIUM_HEADER_ONLY) || defined(SAMARIUM_OSTREAM_IMPL)
+
+#include "fmt/format.h"
+
+std::ostream& operator<<(std::ostream& os, const sm::Version& a)
+{
+    os << fmt::to_string(a);
+    return os;
+}
+
+std::ostream& operator<<(std::ostream& os, const sm::Color& a)
+{
+    os << fmt::to_string(a);
+    return os;
+}
+
+#endif

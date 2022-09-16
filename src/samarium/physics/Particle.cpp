@@ -5,20 +5,7 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
-#include "samarium/math/shapes.hpp" // for Circle
-
+#ifndef SAMARIUM_HEADER_ONLY
+#define SAMARIUM_PARTICLE_IMPL
 #include "Particle.hpp"
-
-namespace sm
-{
-[[nodiscard]] Circle Particle::as_circle() const noexcept { return Circle{pos, radius}; }
-
-void Particle::apply_force(Vector2 force) noexcept { acc += force / mass; }
-
-void Particle::update(f64 time_delta) noexcept
-{
-    vel += acc * time_delta;
-    pos += vel * time_delta;
-    acc = Vector2{}; // reset acceleration
-}
-}; // namespace sm
+#endif // !SAMARIUM_HEADER_ONLY

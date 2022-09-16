@@ -44,3 +44,25 @@ class Trail
     [[nodiscard]] auto span() const -> std::span<const Vector2>;
 };
 } // namespace sm
+
+#if defined(SAMARIUM_HEADER_ONLY) || defined(SAMARIUM_TRAIL_IMPL)
+
+#include <utility> // for move
+
+#include "range/v3/algorithm/rotate.hpp" // for rotate
+
+namespace sm
+{
+void Trail::push_back(Vector2 pos)
+{
+    if (this->max_length > this->trail.size()) { this->trail.push_back(pos); }
+    else
+    {
+        ranges::rotate(this->trail, this->trail.begin() + 1);
+        this->trail.back() = pos;
+    }
+}
+
+std::span<const Vector2> Trail::span() const { return std::span(this->trail); }
+} // namespace sm
+#endif
