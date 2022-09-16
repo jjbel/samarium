@@ -32,7 +32,7 @@ foreach(
     endif()
 endforeach()
 
-add_subdirectory(samarium)
+file(GLOB_RECURSE SAMARIUM_SOURCES "*.cpp")
 
 add_library(samarium ${SAMARIUM_SOURCES})
 add_library(samarium::samarium ALIAS samarium)
