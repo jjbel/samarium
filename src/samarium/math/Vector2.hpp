@@ -277,7 +277,7 @@ template <std::size_t Index, typename T> auto&& get(Vector2_t<T>&& p)
 
 template <std::size_t Index, typename T> auto&& get(Vector2_t<T> const&& p)
 {
-    return Vector2_t_get<Index>(move(p));
+    return Vector2_t_get<Index>(std::move(p));
 }
 
 using Vector2    = Vector2_t<f64>;
@@ -299,8 +299,13 @@ template <typename T> struct tuple_size<sm::Vector2_t<T>>
     static constexpr size_t value = 2;
 };
 
-template <size_t Index, typename T> struct tuple_element<Index, sm::Vector2_t<T>> : T
+template <typename T> struct tuple_element<0, sm::Vector2_t<T>>
 {
-    static_assert(Index < 2, "Index out of bounds for Vector2_t");
+    using type = T;
+};
+
+template <typename T> struct tuple_element<1, sm::Vector2_t<T>>
+{
+    using type = T;
 };
 } // namespace std
