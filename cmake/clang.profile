@@ -10,7 +10,4 @@ build_type=Debug
 
 [options]
 [build_requires]
-
 [env]
-CC=clang
-CXX=clang++

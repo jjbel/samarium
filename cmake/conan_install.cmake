@@ -15,8 +15,8 @@ if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/conan.lock AND RUN_CONAN)
     execute_process(
         COMMAND
             ${CONAN_EXE} install . -b missing -if ${CMAKE_CURRENT_BINARY_DIR}
-            -pr:b=cmake/clang_${CMAKE_BUILD_TYPE}.profile
-            -pr=cmake/clang_${CMAKE_BUILD_TYPE}.profile ${DEPS_OPTION}
+            -pr:b=cmake/clang.profile -pr=cmake/clang.profile ${DEPS_OPTION} -s
+            build_type=${CMAKE_BUILD_TYPE}
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
         OUTPUT_QUIET
     )
