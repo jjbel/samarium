@@ -299,8 +299,7 @@ template <typename T> struct tuple_size<sm::Vector2_t<T>>
     static constexpr size_t value = 2;
 };
 
-template <size_t Index, typename T>
-struct tuple_element<Index, sm::Vector2_t<T>> : conditional<Index == 0, T, T>
+template <size_t Index, typename T> struct tuple_element<Index, sm::Vector2_t<T>> : T
 {
     static_assert(Index < 2, "Index out of bounds for Vector2_t");
 };
