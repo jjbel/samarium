@@ -1,28 +1,34 @@
 # SPDX-License-Identifier: MIT Copyright (c) 2022 Jai Bellare See
-# <https://opensource.org/licenses/MIT/> or LICENSE.md Project homepage:
-# <https://github.com/strangeQuark1041/samarium>
+# <https://opensource.org/licenses/MIT/> or LICENSE.md Project
+# homepage:<https://github.com/strangeQuark1041/samarium>
 
-# https://vicrucann.github.io/tutorials/quick-cmake-doxygen/
+if(BUILD_DOCS)
+    find_program(PYTHON_EXE NAMES python python3 REQUIRED)
 
-# https://gist.github.com/strangeQuark1041/acba76d25b213327a568a9f3c9152550
+    execute_process(
+        COMMAND ${PYTHON_EXE} -m pip install -r requirements.txt --quiet
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/docs
+        OUTPUT_QUIET
+    )
 
-if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease" AND BUILD_DOCS)
-    # check if Doxygen is installed
-    find_program(DOXYGEN_EXECUTABLE NAMES doxygen)
+    execute_process(
+        COMMAND ${PYTHON_EXE} make.py
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/docs
+        OUTPUT_QUIET
+    )
 
-    if(DOXYGEN_EXECUTABLE)
-        message("Doxygen build started")
+    message(STATUS "Built docs, view 'docs/build/html/index.html'")
+endif()
 
-        # note the option ALL which allows to build the docs together with the application
-        add_custom_target(
-            docs ALL
-            COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_SOURCE_DIR}/docs/src/Doxyfile
-            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-            COMMENT
-                "Generating API documentation with Doxygen. Open build/docs/index.html"
-            VERBATIM
-        )
-    else()
-        message(WARNING "Doxygen need to be installed to generate documentation")
-    endif()
+if(BUILD_DOCS_TARGET)
+    find_program(PYTHON_EXE NAMES python python3 REQUIRED)
+
+    add_custom_target(
+        docs
+        COMMAND ${PYTHON_EXE} -m pip install -r requirements.txt --quiet
+        COMMAND ${PYTHON_EXE} make.py
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/docs
+    )
+
+    message(STATUS "Added docs target, view 'docs/build/html/index.html' after building")
 endif()
