@@ -10,4 +10,4 @@
 using namespace sm;
 using namespace sm::literals;
 
-int main() { print(polynomial_from_roots<3>({-1.0, 1.0}).coeffs); }
+int main() {}
