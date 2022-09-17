@@ -9,5 +9,7 @@ compiler.libcxx=libstdc++
 build_type=Debug
 
 [options]
+fPIC=False
+
 [build_requires]
 [env]
