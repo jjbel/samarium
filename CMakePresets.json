@@ -14,7 +14,17 @@
             "installDir": "${sourceDir}/build/install/",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release",
-                "CMAKE_EXPORT_COMPILE_COMMANDS": true
+                "CMAKE_EXPORT_COMPILE_COMMANDS": true,
+                "CMAKE_COLOR_DIAGNOSTICS": true,
+                "CMAKE_COMPILE_WARNING_AS_ERROR": false,
+                "BUILD_UNIT_TESTS": false,
+                "BUILD_EXAMPLES": true,
+                "BUILD_BENCHMARKS": false,
+                "BUILD_DOCS": false,
+                "BUILD_DOCS_TARGET": true,
+                "USE_WARNINGS": true,
+                "USE_CCACHE": true,
+                "USE_UBSAN": false
             }
         },
         {

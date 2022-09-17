@@ -12,8 +12,6 @@
 cmake_minimum_required(VERSION 3.15)
 
 function(set_compiler_options)
-    # option(OPTIONS_AS_ERRORS "Treat compiler warnings as errors" OFF)
-
     set(MSVC_OPTIONS
         /std:c++latest # https://github.com/microsoft/STL/issues/1814#issuecomment-845572895
         /W4 # Baseline reasonable warnings
@@ -75,18 +73,13 @@ function(set_compiler_options)
         -mpclmul
     )
 
-    if(OPTIONS_AS_ERRORS)
-        set(COMMON_OPTIONS ${COMMON_OPTIONS} -Werror)
-        set(MSVC_OPTIONS ${MSVC_OPTIONS} /WX)
-    endif()
-
     if(USE_UBSAN)
         set(MSVC_OPTIONS ${MSVC_OPTIONS} /fsanitize=address)
         set(COMMON_OPTIONS ${COMMON_OPTIONS} -fsanitize=undefined)
         # https://docs.microsoft.com/en-us/cpp/sanitizers/asan?view=msvc-170
     endif()
 
-    set(CLANG_OPTIONS ${COMMON_OPTIONS} -fcolor-diagnostics -ferror-limit=10 -Wno-header-guard)
+    set(CLANG_OPTIONS ${COMMON_OPTIONS} -Wno-header-guard)
 
     set(GCC_OPTIONS
         ${COMMON_OPTIONS}
@@ -97,7 +90,6 @@ function(set_compiler_options)
         -Wlogical-op # warn about logical operations being used where bitwise were
                      # probably wanted
         -Wno-useless-cast # warn if you perform a cast to the same type
-        -fdiagnostics-color=always
     )
 
     if(MSVC)

@@ -14,12 +14,10 @@ project(samarium_dev LANGUAGES CXX)
 option(BUILD_UNIT_TESTS "Build unit tests" OFF)
 option(BUILD_EXAMPLES "Build examples" ON)
 option(BUILD_BENCHMARKS "Build benchmarks" OFF)
-option(BUILD_COVERAGE "Generate coverage reports" OFF)
 option(BUILD_DOCS "Build documentation on running CMake" OFF)
 option(BUILD_DOCS_TARGET "Build documentation as a target" ON)
 
 option(USE_WARNINGS "Set useful compiler flags and warnings" ON)
-option(OPTIONS_AS_ERRORS "Treat compiler warnings as errors" OFF)
 option(USE_CCACHE "Use CCache to speed up compilation" OFF)
 option(USE_UBSAN "Use Undefined Behaviour Sanitizer" OFF)
 
