@@ -3,4 +3,5 @@ furo
 sphinx
 sphinx-copybutton
 myst-parser
+sphinx-mathjax-offline
 sphinxext-opengraph

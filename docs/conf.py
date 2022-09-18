@@ -18,6 +18,7 @@ author = "Jai Bellare"
 extensions = [
     "breathe",
     "myst_parser",
+    "sphinx-mathjax-offline",
     "sphinx.ext.mathjax",
     "sphinx_copybutton",
     "sphinxext.opengraph",
@@ -55,9 +56,5 @@ highlight_language = "cpp"
 
 ogp_site_url = "https://strangequark1041.github.io/samarium/"
 ogp_site_name = "Samarium Docs"
-
-mathjax_path = (
-    "https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
-)
 
 run(["doxygen", "Doxyfile.cfg"], check=True)
