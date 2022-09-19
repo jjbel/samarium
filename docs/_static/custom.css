@@ -1,12 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Fira+Code&family=Heebo:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&family=Source+Code+Pro:wght@300&display=swap');
 
 h1,
 h2,
 p {
-    font-family: 'Heebo', Helvetica, sans-serif;
+    font-family: 'Roboto Mono', monospace;
 }
 
 .highlight,
 .sig {
-    font-family: 'Fira Code', monospace;
+    font-family: 'Source Code Pro', monospace;
 }

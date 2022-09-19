@@ -37,6 +37,16 @@ html_css_files = [
     "custom.css",
 ]
 
+html_theme_options = {
+    "dark_css_variables": {
+        "color-brand-primary": "#1c76fc",
+        "color-brand-content": "#1c76fc",
+    },
+}
+
+pygments_style = "one-dark"
+pygments_dark_style = "one-dark"
+
 source_suffix = [".rst", ".md"]
 
 # Breathe configuration

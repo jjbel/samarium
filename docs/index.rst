@@ -11,6 +11,7 @@ Welcome to Samarium's documentation!
 
     examples
     api/index
+    license
 
 Useful Links
 ==================
