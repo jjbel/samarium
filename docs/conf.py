@@ -11,9 +11,8 @@ from subprocess import run
 project = "Samarium"
 copyright = "2022, Jai Bellare"
 author = "Jai Bellare"
-
-# -- General configuration ---------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
+version = "2.0.0"
+release = "2.0.0"
 
 extensions = [
     "breathe",
