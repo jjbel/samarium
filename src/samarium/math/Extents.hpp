@@ -11,6 +11,7 @@
 #include <iterator>
 
 #include "samarium/core/concepts.hpp"
+#include "samarium/math/math.hpp"
 
 namespace sm
 {
@@ -29,6 +30,16 @@ template <typename T> struct Extents
     [[nodiscard]] constexpr auto contains(T value) const noexcept
     {
         return min <= value && value <= max;
+    }
+
+    [[nodiscard]] constexpr auto overlaps(Extents<T> other) const noexcept
+    {
+        return min <= other.max && other.min <= max;
+    }
+
+    [[nodiscard]] constexpr auto union_with(Extents<T> other) const noexcept
+    {
+        return Extents<T>{math::min(min, other.min), math::max(max, other.max)};
     }
 
     [[nodiscard]] constexpr auto clamp(T value) const noexcept
@@ -62,7 +73,7 @@ template <typename T> struct Extents
     template <typename Function>
     constexpr auto for_each(Function&& fn) const requires concepts::Integral<T>
     {
-        for (auto i = min; i <= max; i++) { fn(i); }
+        for (auto i = min; i < max; i++) { fn(i); }
     }
 
     struct Iterator
