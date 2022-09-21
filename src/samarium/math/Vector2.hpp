@@ -52,6 +52,11 @@ template <typename T> struct Vector2_t
         return Vector2_t{.x = value, .y = value};
     }
 
+    [[nodiscard]] static constexpr auto make(auto x, auto y)
+    {
+        return Vector2_t<T>{static_cast<T>(x), static_cast<T>(y)};
+    }
+
     [[nodiscard]] static constexpr auto
     from_polar(Polar polar) noexcept requires concepts::FloatingPoint<T>
     {
