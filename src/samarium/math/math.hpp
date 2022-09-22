@@ -10,7 +10,7 @@
 #include <cmath>
 #include <numbers>
 
-#include "../core/concepts.hpp"
+#include "samarium/core/concepts.hpp"
 
 namespace sm::math
 {
@@ -46,10 +46,7 @@ template <concepts::FloatingPoint T>
 template <typename T> [[nodiscard]] constexpr auto min(T value0, T value1) noexcept
 {
     if (value0 < value1) { return value0; }
-    else
-    {
-        return value1;
-    }
+    else { return value1; }
 }
 
 /**
@@ -63,10 +60,7 @@ template <typename T> [[nodiscard]] constexpr auto min(T value0, T value1) noexc
 template <typename T> [[nodiscard]] constexpr auto max(T value0, T value1) noexcept
 {
     if (value0 > value1) { return value0; }
-    else
-    {
-        return value1;
-    }
+    else { return value1; }
 }
 
 /**
