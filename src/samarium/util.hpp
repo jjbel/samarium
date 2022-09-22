@@ -13,6 +13,7 @@
 #include "util/HashGrid.hpp"
 #include "util/Map.hpp"
 #include "util/RandomGenerator.hpp"
+#include "util/SmallVector.hpp"
 #include "util/StaticVector.hpp"
 #include "util/Stopwatch.hpp"
 #include "util/file.hpp"
