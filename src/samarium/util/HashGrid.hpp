@@ -60,17 +60,15 @@ template <typename T, usize Count = 32> struct HashGrid
             {{0, 0}, {-1, -1}, {-1, 0}, {-1, 1}, {0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}});
 
         const auto coords = to_coords(pos);
-        auto out          = StaticVector<T, Count * 9>(Count * 9);
-        auto current_size = usize(0);
+        auto out          = StaticVector<T, Count * 9>();
 
-        for (auto i : range(9))
+        for (auto offset : offsets)
         {
-            const auto iter = map.find(coords + offsets[i]);
+            const auto& iter = map.find(coords + offset);
             if (iter == map.end()) { continue; }
-            ranges::copy(iter->second, out.begin() + current_size + iter->second.size());
-            current_size += iter->second.size();
+            for (const auto& i : iter->second) { out.push_back(i); }
         }
-        out.resize(current_size);
+
         return out;
     }
 };
