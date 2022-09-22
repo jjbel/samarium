@@ -7,12 +7,14 @@
 
 #pragma once
 
+#include "util/Expected.hpp"
 #include "util/FunctionRef.hpp"
 #include "util/Grid.hpp"
+#include "util/HashGrid.hpp"
+#include "util/Map.hpp"
 #include "util/RandomGenerator.hpp"
 #include "util/StaticVector.hpp"
 #include "util/Stopwatch.hpp"
-#include "util/Expected.hpp"
 #include "util/file.hpp"
 #include "util/format.hpp"
 #include "util/noise.hpp"
