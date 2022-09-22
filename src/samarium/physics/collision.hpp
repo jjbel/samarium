@@ -12,14 +12,7 @@
 #include "samarium/core/types.hpp"   // for f64
 #include "samarium/math/Vector2.hpp" // for Vector2
 
-namespace sm
-{
-struct LineSegment;
-}
-namespace sm
-{
-struct Particle;
-}
+#include "Particle.hpp"
 
 namespace sm::phys
 {
@@ -39,7 +32,6 @@ void collide(
 #include "samarium/math/Vector2.hpp"     // for Vector2
 #include "samarium/math/shapes.hpp"      // for LineSegment
 #include "samarium/math/vector_math.hpp" // for distance, clamped_intersection
-#include "samarium/physics/Particle.hpp" // for Particle
 
 namespace sm::phys
 {
@@ -95,13 +87,6 @@ void collide(Particle& p1, Particle& p2, f64 damping)
         p1.vel -= vel1 * damping;
         p2.vel -= vel2 * damping;
     }
-}
-
-void collide(f64 distance_threshold, Particle& p1, Particle& p2, f64 damping)
-{
-    if (!math::within_distance(p1.pos, p2.pos, distance_threshold)) { return; }
-
-    collide(p1, p2, damping);
 }
 
 void collide(Particle& current, const LineSegment& l, f64 dt, f64 damping, f64 friction)
