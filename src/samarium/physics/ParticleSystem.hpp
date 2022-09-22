@@ -60,7 +60,7 @@ struct ParticleSystem
     void for_each(FunctionRef<void(Particle&)> function);
 
     template <usize MaxParticlesInCell = 32>
-    void self_collision(f64 damping = 1.0, f64 cell_size = 1.0) noexcept
+    void self_collision(f64 damping = 1.0, f64 cell_size = 2.0) noexcept
     {
         auto hash_grid = HashGrid<u64, MaxParticlesInCell>{cell_size};
         hash_grid.map.reserve(particles.size());
@@ -71,15 +71,10 @@ struct ParticleSystem
         {
             for (auto j : hash_grid.neighbors(particles[i].pos))
             {
-                if (i != j)
-                {
-                    phys::collide(particles[i], particles[j], damping);
-                    count++;
-                }
+                if (i != j) { count += phys::collide(particles[i], particles[j], damping); }
             }
         }
-        print("# collisions:", count);
-        print(hash_grid.map.size());
+        // print(count);
     }
 
     auto operator[](u64 index) noexcept { return particles[index]; }

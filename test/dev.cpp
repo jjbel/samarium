@@ -13,11 +13,12 @@
 
 #include "range/v3/algorithm/minmax_element.hpp"
 #include "range/v3/view/concat.hpp"
+#include "range/v3/view/take.hpp"
 
 using namespace sm;
 using namespace sm::literals;
 
-constexpr auto count           = 100000UL;
+constexpr auto count           = 10000UL;
 constexpr auto initial_speed   = 20.0;
 constexpr auto class_size      = 4.0;
 constexpr auto max_graph_speed = 60.0;
@@ -50,6 +51,7 @@ int main()
 
     const auto update = [&](f64 dt)
     {
+        watch.reset();
         particles.for_each(
             [&](Particle& particle)
             {
@@ -57,9 +59,9 @@ int main()
             });
         particles.update(dt);
 
-        watch.reset();
+        // auto w = Stopwatch{};
         particles.self_collision();
-        watch.print();
+        // w.print();
 
         energy = 0.0;
         for (const auto& [speed, particle] : ranges::views::zip(speeds, particles))
@@ -71,7 +73,7 @@ int main()
 
     const auto draw = [&]
     {
-        // app.zoom_pan();
+        app.zoom_pan();
 
         frequencies = std::vector<f64>(static_cast<u64>(max_graph_speed / class_size + 1.0));
 
@@ -83,7 +85,10 @@ int main()
 
         app.fill("#131417"_c);
         app.draw(App::GridLines{});
-        for (const auto& i : particles) { app.draw(i, {.fill_color = "#fc0330"_c}); }
+        // for (const auto& i : particles | ranges::views::take(1000))
+        // {
+        //     app.draw(i, {.fill_color = "#fc0330"_c});
+        // }
 
         auto points              = std::vector<Vector2>(frequencies.size());
         const auto max_frequency = ranges::max(frequencies);
@@ -98,12 +103,8 @@ int main()
         // app.draw_polyline(points, "#6179ff"_c, 0.2);
 
 
-        // fmt::print("\nfps: {}, energy: {:.5}, speeds: ", std::round(watch.current_fps()),
-        // energy);
-
-        // for (auto i : frequencies) { fmt::print("{:.3}, ", i); }
-
-        // for (auto i : speeds) { fmt::print("{:.3}, ", i); }
+        // fmt::print("\nfps: {}", std::round(watch.current_fps()));
+        watch.print();
     };
 
     app.run(update, draw, 1);
