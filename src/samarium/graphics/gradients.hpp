@@ -25,4 +25,6 @@ constexpr inline auto magma =
              Color::from_double_array(std::array{0.439062, 0.120298, 0.506555}),
              Color::from_double_array(std::array{0.944006, 0.377643, 0.365136}),
              Color::from_double_array(std::array{0.987053, 0.991438, 0.749504})};
+constexpr inline auto viridis =
+    Gradient{Color{68, 2, 85}, Color{40, 123, 142}, Color{248, 230, 33}};
 } // namespace sm::gradients
