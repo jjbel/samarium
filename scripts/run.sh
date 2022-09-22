@@ -1,7 +1,9 @@
 #!/bin/bash
 
 if [ ! -d "./build" ]; then
-    cmake --preset=dev &> /dev/null
+    echo "Running CMake..."
+    cmake --preset=dev &> /dev/null && \
+    echo "Done"
 fi
 
 PROGRAM=./build/test/samarium_tests
