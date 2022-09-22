@@ -59,9 +59,9 @@ int main()
             });
         particles.update(dt);
 
-        // auto w = Stopwatch{};
+        auto w = Stopwatch{};
         particles.self_collision();
-        // w.print();
+        w.print();
 
         energy = 0.0;
         for (const auto& [speed, particle] : ranges::views::zip(speeds, particles))
@@ -104,7 +104,7 @@ int main()
 
 
         // fmt::print("\nfps: {}", std::round(watch.current_fps()));
-        watch.print();
+        // watch.print();
     };
 
     app.run(update, draw, 1);
