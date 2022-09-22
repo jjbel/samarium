@@ -10,14 +10,18 @@
 #include <span>   // for span
 #include <vector> // for vector
 
+#include "range/v3/algorithm/fill.hpp" // for fill, fill_fn
 #include "range/v3/view/enumerate.hpp" // for enumerate, enumerate_fn
 
 #include "samarium/core/types.hpp"       // for u64, f64
 #include "samarium/math/Vector2.hpp"     // for Vector2
 #include "samarium/util/FunctionRef.hpp" // for Vector2
+#include "samarium/util/HashGrid.hpp"    // for HashGrid
 #include "samarium/util/ThreadPool.hpp"  // for ThreadPool
+#include "samarium/util/print.hpp"       // for FunctionRef
 
-#include "Particle.hpp" // for Particle
+#include "Particle.hpp"  // for Particle
+#include "collision.hpp" // for collide
 
 namespace sm
 {
@@ -31,12 +35,12 @@ struct ParticleSystem
      * @param  size
      * @param  default_particle
      */
-    ParticleSystem(u64 size = 100UL, const Particle& default_particle = {})
+    explicit ParticleSystem(u64 size = 100UL, const Particle& default_particle = {})
         : particles(size, default_particle)
     {
     }
 
-    static auto generate(u64 size, FunctionRef<Particle(u64)> function) -> ParticleSystem
+    static auto generate(u64 size, FunctionRef<Particle(u64)> function)
     {
         auto output = ParticleSystem(size);
         for (auto [i, particle] : ranges::views::enumerate(output.particles))
@@ -55,8 +59,28 @@ struct ParticleSystem
 
     void for_each(FunctionRef<void(Particle&)> function);
 
-    void self_collision(f64 damping = 1.0) noexcept;
-    void self_collision(f64 damping, f64 distance_threshold) noexcept;
+    template <usize MaxParticlesInCell = 32>
+    void self_collision(f64 damping = 1.0, f64 cell_size = 1.0) noexcept
+    {
+        auto hash_grid = HashGrid<u64, MaxParticlesInCell>{cell_size};
+        hash_grid.map.reserve(particles.size());
+        for (auto i : range(particles.size())) { hash_grid.insert(particles[i].pos, i); }
+
+        usize count = 0;
+        for (auto i : range(particles.size()))
+        {
+            for (auto j : hash_grid.neighbors(particles[i].pos))
+            {
+                if (i != j)
+                {
+                    phys::collide(particles[i], particles[j], damping);
+                    count++;
+                }
+            }
+        }
+        print("# collisions:", count);
+        print(hash_grid.map.size());
+    }
 
     auto operator[](u64 index) noexcept { return particles[index]; }
     auto operator[](u64 index) const noexcept { return particles[index]; }
@@ -75,15 +99,15 @@ struct ParticleSystem
 };
 } // namespace sm
 
-
 #if defined(SAMARIUM_HEADER_ONLY) || defined(SAMARIUM_PARTICLE_SYSTEM_IMPL)
 
-#include "range/v3/algorithm/for_each.hpp" // for for_each, for_each_fn
+#include "range/v3/algorithm/for_each.hpp" // for for_each
+#include "range/v3/algorithm/sort.hpp"     // for sort
 
-#include "collision.hpp"                 // for collide
 #include "samarium/math/Extents.hpp"     // for Extents, Extents<>::Iter...
 #include "samarium/physics/Particle.hpp" // for Particle
 #include "samarium/util/FunctionRef.hpp" // for FunctionRef
+#include "samarium/util/util.hpp"        // for project_view
 
 namespace sm
 {
@@ -115,30 +139,6 @@ void ParticleSystem::apply_forces(std::span<Vector2> forces) noexcept
 void ParticleSystem::for_each(FunctionRef<void(Particle&)> function)
 {
     ranges::for_each(particles, function);
-}
-
-void ParticleSystem::self_collision(f64 damping) noexcept
-{
-    // TODO: use ranges::views::cartesian_product
-    for (auto i = particles.begin(); i != particles.end(); ++i)
-    {
-        for (auto j = particles.begin(); j != particles.end(); ++j)
-        {
-            if (i != j) { phys::collide(*i, *j, damping); }
-        }
-    }
-}
-
-void ParticleSystem::self_collision(f64 damping, f64 distance_threshold) noexcept
-{
-    // TODO: use ranges::views::cartesian_product
-    for (auto i = particles.begin(); i != particles.end(); ++i)
-    {
-        for (auto j = particles.begin(); j != particles.end(); ++j)
-        {
-            if (i != j) { phys::collide(distance_threshold, *i, *j, damping); }
-        }
-    }
 }
 }; // namespace sm
 #endif
