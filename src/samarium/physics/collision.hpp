@@ -18,7 +18,7 @@ namespace sm::phys
 {
 [[nodiscard]] auto did_collide(const Particle& p1, const Particle& p2) -> std::optional<Vector2>;
 
-void collide(Particle& p1, Particle& p2, f64 damping = 1.0);
+[[maybe_unused]] bool collide(Particle& p1, Particle& p2, f64 damping = 1.0);
 
 void collide(f64 distance_threshold, Particle& p1, Particle& p2, f64 damping = 1.0);
 
@@ -44,7 +44,7 @@ namespace sm::phys
     else { return std::nullopt; }
 }
 
-void collide(Particle& p1, Particle& p2, f64 damping)
+[[maybe_unused]] bool collide(Particle& p1, Particle& p2, f64 damping)
 {
     /*
         https://courses.lumenlearning.com/boundless-physics/chapter/collisions/#:~:text=particles%20are%20involved%20in%20an-,elastic%20collision,-%2C%20the%20velocity%20of%20the%20first
@@ -86,7 +86,9 @@ void collide(Particle& p1, Particle& p2, f64 damping)
 
         p1.vel -= vel1 * damping;
         p2.vel -= vel2 * damping;
+        return true;
     }
+    return false;
 }
 
 void collide(Particle& current, const LineSegment& l, f64 dt, f64 damping, f64 friction)
