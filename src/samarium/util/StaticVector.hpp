@@ -39,7 +39,7 @@
 //                  DOCUMENTATION
 //
 // Simply include this file wherever you need.
-// It defines the class itlib::StaticVector, which is almost a drop-in
+// It defines the class itlib::static_vector, which is almost a drop-in
 // replacement of std::vector, but has a fixed capacity as a template argument.
 // It gives you the benefits of using std::array (cache-locality) with the
 // flexibility of std::vector - dynamic size.
@@ -47,7 +47,7 @@
 //
 // Example:
 //
-// itlib::StaticVector<int, 4> myvec; // a static vector of size 0 and capacity 4
+// itlib::static_vector<int, 4> myvec; // a static vector of size 0 and capacity 4
 // myvec.resize(2); // vector is {0,0}
 // myvec[1] = 11; // vector is {0,11}
 // myvec.push_back(7); // vector is {0,11,7}
@@ -68,7 +68,7 @@
 //
 // An out of range error is a runtime error which is triggered when the vector
 // needs to be resized with a size higher than its capacity.
-// For example: itlib::StaticVector<int, 100> v(101);
+// For example: itlib::static_vector<int, 100> v(101);
 //
 // This is set by defining ITLIB_STATIC_VECTOR_ERROR_HANDLING to one of the
 // following values:
@@ -102,16 +102,15 @@
 //                  MISC
 //
 // * There is an unused (and unusable) allocator class defined inside
-// StaticVector. It's point is to be a sham for templates which refer to
+// static_vector. It's point is to be a sham for templates which refer to
 // container::allocator. It also allows it to work with itlib::flat_map
 //
 //
 //                  TESTS
 //
-// You can find unit tests for StaticVector in its official repo:
+// You can find unit tests for static_vector in its official repo:
 // https://github.com/iboB/itlib/blob/master/test/
 //
-
 #pragma once
 
 #include <cstddef>
@@ -126,42 +125,42 @@
 #define ITLIB_STATIC_VECTOR_ERROR_HANDLING_ASSERT_AND_RESCUE 5
 
 #if !defined(ITLIB_STATIC_VECTOR_ERROR_HANDLING)
-#define ITLIB_STATIC_VECTOR_ERROR_HANDLING ITLIB_STATIC_VECTOR_ERROR_HANDLING_THROW
+#define ITLIB_STATIC_VECTOR_ERROR_HANDLING ITLIB_STATIC_VECTOR_ERROR_HANDLING_ASSERT
 #endif
 
 #if ITLIB_STATIC_VECTOR_ERROR_HANDLING == ITLIB_STATIC_VECTOR_ERROR_HANDLING_NONE
-#define STATIC_VECTOR_OUT_OF_RANGE_IF(cond, rescue_return)
+#define I_ITLIB_STATIC_VECTOR_OUT_OF_RANGE_IF(cond, rescue_return)
 #elif ITLIB_STATIC_VECTOR_ERROR_HANDLING == ITLIB_STATIC_VECTOR_ERROR_HANDLING_THROW
 #include <stdexcept>
-#define STATIC_VECTOR_OUT_OF_RANGE_IF(cond, rescue_return) \
-    if (cond) throw std::out_of_range("sm::StaticVector out of range")
+#define I_ITLIB_STATIC_VECTOR_OUT_OF_RANGE_IF(cond, rescue_return) \
+    if (cond) throw std::out_of_range("itlib::static_vector out of range")
 #elif ITLIB_STATIC_VECTOR_ERROR_HANDLING == ITLIB_STATIC_VECTOR_ERROR_HANDLING_ASSERT
 #include <cassert>
-#define STATIC_VECTOR_OUT_OF_RANGE_IF(cond, rescue_return) \
-    assert(!(cond) && "sm::StaticVector out of range")
+#define I_ITLIB_STATIC_VECTOR_OUT_OF_RANGE_IF(cond, rescue_return) \
+    assert(!(cond) && "itlib::static_vector out of range")
 #elif ITLIB_STATIC_VECTOR_ERROR_HANDLING == ITLIB_STATIC_VECTOR_ERROR_HANDLING_RESCUE
-#define STATIC_VECTOR_OUT_OF_RANGE_IF(cond, rescue_return) \
+#define I_ITLIB_STATIC_VECTOR_OUT_OF_RANGE_IF(cond, rescue_return) \
     if (cond) return rescue_return
 #elif ITLIB_STATIC_VECTOR_ERROR_HANDLING == ITLIB_STATIC_VECTOR_ERROR_HANDLING_ASSERT_AND_THROW
 #include <cassert>
 #include <stdexcept>
-#define STATIC_VECTOR_OUT_OF_RANGE_IF(cond, rescue_return)            \
-    do {                                                              \
-        if (cond)                                                     \
-        {                                                             \
-            assert(false && "sm::StaticVector out of range");         \
-            throw std::out_of_range("sm::StaticVector out of range"); \
-        }                                                             \
+#define I_ITLIB_STATIC_VECTOR_OUT_OF_RANGE_IF(cond, rescue_return)        \
+    do {                                                                  \
+        if (cond)                                                         \
+        {                                                                 \
+            assert(false && "itlib::static_vector out of range");         \
+            throw std::out_of_range("itlib::static_vector out of range"); \
+        }                                                                 \
     } while (false)
 #elif ITLIB_STATIC_VECTOR_ERROR_HANDLING == ITLIB_STATIC_VECTOR_ERROR_HANDLING_ASSERT_AND_RESCUE
 #include <cassert>
-#define STATIC_VECTOR_OUT_OF_RANGE_IF(cond, rescue_return)    \
-    do {                                                      \
-        if (cond)                                             \
-        {                                                     \
-            assert(false && "sm::StaticVector out of range"); \
-            return rescue_return;                             \
-        }                                                     \
+#define I_ITLIB_STATIC_VECTOR_OUT_OF_RANGE_IF(cond, rescue_return) \
+    do {                                                           \
+        if (cond)                                                  \
+        {                                                          \
+            assert(false && "itlib::static_vector out of range");  \
+            return rescue_return;                                  \
+        }                                                          \
     } while (false)
 #else
 #error "Unknown ITLIB_STATIC_VECTOR_ERRROR_HANDLING"
@@ -169,15 +168,15 @@
 
 
 #if defined(ITLIB_STATIC_VECTOR_NO_DEBUG_BOUNDS_CHECK)
-#define STATIC_VECTOR_BOUNDS_CHECK(i)
+#define I_ITLIB_STATIC_VECTOR_BOUNDS_CHECK(i)
 #else
 #include <cassert>
-#define STATIC_VECTOR_BOUNDS_CHECK(i) assert((i) < this->size())
+#define I_ITLIB_STATIC_VECTOR_BOUNDS_CHECK(i) assert((i) < this->size())
 #endif
 
-namespace sm
+namespace itlib
 {
-template <typename T, std::size_t Capacity> struct StaticVector
+template <typename T, size_t Capacity> struct static_vector
 {
     struct fake_allocator
     {
@@ -186,8 +185,9 @@ template <typename T, std::size_t Capacity> struct StaticVector
         typedef const T* const_pointer;
     };
 
+  public:
     using value_type             = T;
-    using size_type              = std::size_t;
+    using size_type              = size_t;
     using difference_type        = ptrdiff_t;
     using reference              = T&;
     using const_reference        = const T&;
@@ -199,41 +199,41 @@ template <typename T, std::size_t Capacity> struct StaticVector
     using const_reverse_iterator = std::reverse_iterator<const_iterator>;
     using allocator_type         = fake_allocator;
 
-    StaticVector() = default;
+    static_vector() = default;
 
-    explicit StaticVector(std::size_t count) { resize(count); }
+    explicit static_vector(size_t count) { resize(count); }
 
-    StaticVector(std::size_t count, const T& value) { assign_impl_val(count, value); }
+    static_vector(size_t count, const T& value) { assign_impl_val(count, value); }
 
     template <class InputIterator, typename = decltype(*std::declval<InputIterator>())>
-    StaticVector(InputIterator first, InputIterator last)
+    static_vector(InputIterator first, InputIterator last)
     {
         assign_impl_iter(first, last);
     }
 
-    StaticVector(std::initializer_list<T> l) { assign_impl_ilist(l); }
+    static_vector(std::initializer_list<T> l) { assign_impl_ilist(l); }
 
-    StaticVector(const StaticVector& v)
+    static_vector(const static_vector& v)
     {
         for (const auto& i : v) { push_back(i); }
     }
 
-    template <std::size_t CapacityB> explicit StaticVector(const StaticVector<T, CapacityB>& v)
+    template <size_t CapacityB> static_vector(const static_vector<T, CapacityB>& v)
     {
-        STATIC_VECTOR_OUT_OF_RANGE_IF(v.size() > Capacity, );
+        I_ITLIB_STATIC_VECTOR_OUT_OF_RANGE_IF(v.size() > Capacity, );
 
         for (const auto& i : v) { push_back(i); }
     }
 
-    StaticVector(StaticVector&& v) noexcept(std::is_nothrow_move_constructible_v<T>)
+    static_vector(static_vector&& v) noexcept(std::is_nothrow_move_constructible<T>::value)
     {
         for (auto i = v.begin(); i != v.end(); ++i) { emplace_back(std::move(*i)); }
         v.clear();
     }
 
-    ~StaticVector() { clear(); }
+    ~static_vector() { clear(); }
 
-    StaticVector& operator=(const StaticVector& v)
+    static_vector& operator=(const static_vector& v)
     {
         if (this == &v)
         {
@@ -247,7 +247,7 @@ template <typename T, std::size_t Capacity> struct StaticVector
         return *this;
     }
 
-    StaticVector& operator=(StaticVector&& v) noexcept(std::is_nothrow_move_assignable<T>::value)
+    static_vector& operator=(static_vector&& v) noexcept(std::is_nothrow_move_assignable<T>::value)
     {
         clear();
         for (auto i = v.begin(); i != v.end(); ++i) { emplace_back(std::move(*i)); }
@@ -277,13 +277,13 @@ template <typename T, std::size_t Capacity> struct StaticVector
 
     const_reference at(size_type i) const
     {
-        STATIC_VECTOR_BOUNDS_CHECK(i);
+        I_ITLIB_STATIC_VECTOR_BOUNDS_CHECK(i);
         return *reinterpret_cast<const T*>(m_data + i);
     }
 
     reference at(size_type i)
     {
-        STATIC_VECTOR_BOUNDS_CHECK(i);
+        I_ITLIB_STATIC_VECTOR_BOUNDS_CHECK(i);
         return *reinterpret_cast<T*>(m_data + i);
     }
 
@@ -331,11 +331,11 @@ template <typename T, std::size_t Capacity> struct StaticVector
     // capacity
     bool empty() const noexcept { return m_size == 0; }
 
-    std::size_t size() const noexcept { return m_size; }
+    size_t size() const noexcept { return m_size; }
 
-    static constexpr std::size_t max_size() noexcept { return Capacity; }
+    static constexpr size_t max_size() noexcept { return Capacity; }
 
-    static constexpr std::size_t capacity() noexcept { return Capacity; }
+    static constexpr size_t capacity() noexcept { return Capacity; }
 
     // modifiers
     void pop_back()
@@ -351,7 +351,7 @@ template <typename T, std::size_t Capacity> struct StaticVector
 
     void push_back(const_reference v)
     {
-        STATIC_VECTOR_OUT_OF_RANGE_IF(size() >= Capacity, );
+        I_ITLIB_STATIC_VECTOR_OUT_OF_RANGE_IF(size() >= Capacity, );
 
         ::new (m_data + m_size) T(v);
         ++m_size;
@@ -359,7 +359,7 @@ template <typename T, std::size_t Capacity> struct StaticVector
 
     void push_back(T&& v)
     {
-        STATIC_VECTOR_OUT_OF_RANGE_IF(size() >= Capacity, );
+        I_ITLIB_STATIC_VECTOR_OUT_OF_RANGE_IF(size() >= Capacity, );
 
         ::new (m_data + m_size) T(std::move(v));
         ++m_size;
@@ -367,7 +367,7 @@ template <typename T, std::size_t Capacity> struct StaticVector
 
     template <typename... Args> reference emplace_back(Args&&... args)
     {
-        STATIC_VECTOR_OUT_OF_RANGE_IF(size() >= Capacity, );
+        I_ITLIB_STATIC_VECTOR_OUT_OF_RANGE_IF(size() >= Capacity, );
 
         ::new (m_data + m_size) T(std::forward<Args>(args)...);
         ++m_size;
@@ -376,7 +376,7 @@ template <typename T, std::size_t Capacity> struct StaticVector
 
     iterator insert(iterator position, const value_type& val)
     {
-        STATIC_VECTOR_OUT_OF_RANGE_IF(size() >= Capacity, position);
+        I_ITLIB_STATIC_VECTOR_OUT_OF_RANGE_IF(size() >= Capacity, position);
 
         if (position == end())
         {
@@ -395,7 +395,7 @@ template <typename T, std::size_t Capacity> struct StaticVector
 
     template <typename... Args> iterator emplace(iterator position, Args&&... args)
     {
-        STATIC_VECTOR_OUT_OF_RANGE_IF(size() >= Capacity, position);
+        I_ITLIB_STATIC_VECTOR_OUT_OF_RANGE_IF(size() >= Capacity, position);
 
         if (position == end())
         {
@@ -426,17 +426,17 @@ template <typename T, std::size_t Capacity> struct StaticVector
 
     void resize(size_type n)
     {
-        STATIC_VECTOR_OUT_OF_RANGE_IF(n > Capacity, );
+        I_ITLIB_STATIC_VECTOR_OUT_OF_RANGE_IF(n > Capacity, );
 
         while (m_size > n) { pop_back(); }
 
         while (n > m_size) { emplace_back(); }
     }
 
-    void swap(StaticVector& v)
+    void swap(static_vector& v)
     {
-        StaticVector* longer;
-        StaticVector* shorter;
+        static_vector* longer;
+        static_vector* shorter;
 
         if (v.m_size > m_size)
         {
@@ -449,14 +449,11 @@ template <typename T, std::size_t Capacity> struct StaticVector
             shorter = &v;
         }
 
-        for (std::size_t i = 0; i < shorter->size(); ++i)
-        {
-            std::swap(shorter->at(i), longer->at(i));
-        }
+        for (size_t i = 0; i < shorter->size(); ++i) { std::swap(shorter->at(i), longer->at(i)); }
 
         auto short_size = shorter->m_size;
 
-        for (std::size_t i = shorter->size(); i < longer->size(); ++i)
+        for (size_t i = shorter->size(); i < longer->size(); ++i)
         {
             shorter->emplace_back(std::move(longer->at(i)));
             longer->at(i).~T();
@@ -466,41 +463,52 @@ template <typename T, std::size_t Capacity> struct StaticVector
     }
 
   private:
-    void assign_impl_val(std::size_t count, const T& value)
+    void assign_impl_val(size_t count, const T& value)
     {
-        STATIC_VECTOR_OUT_OF_RANGE_IF(count > Capacity, );
+        I_ITLIB_STATIC_VECTOR_OUT_OF_RANGE_IF(count > Capacity, );
 
-        for (std::size_t i = 0; i < count; ++i) { push_back(value); }
+        for (size_t i = 0; i < count; ++i) { push_back(value); }
     }
 
     template <class InputIterator> void assign_impl_iter(InputIterator first, InputIterator last)
     {
-        STATIC_VECTOR_OUT_OF_RANGE_IF(long(last - first) > long(Capacity), );
+        I_ITLIB_STATIC_VECTOR_OUT_OF_RANGE_IF(long(last - first) > long(Capacity), );
 
         for (auto i = first; i != last; ++i) { push_back(*i); }
     }
 
     void assign_impl_ilist(std::initializer_list<T> l)
     {
-        STATIC_VECTOR_OUT_OF_RANGE_IF(l.size() > Capacity, );
+        I_ITLIB_STATIC_VECTOR_OUT_OF_RANGE_IF(l.size() > Capacity, );
 
         for (auto&& i : l) { push_back(i); }
     }
 
-    typename std::aligned_storage_t<sizeof(T), std::alignment_of_v<T>> m_data[Capacity];
-    std::size_t m_size = 0;
+    typename std::aligned_storage<sizeof(T), std::alignment_of<T>::value>::type m_data[Capacity];
+    size_t m_size = 0;
 };
 
-template <typename T, std::size_t CapacityA, std::size_t CapacityB>
-constexpr auto operator==(const StaticVector<T, CapacityA>& a, const StaticVector<T, CapacityB>& b)
+template <typename T, size_t CapacityA, size_t CapacityB>
+bool operator==(const static_vector<T, CapacityA>& a, const static_vector<T, CapacityB>& b)
 {
     if (a.size() != b.size()) { return false; }
 
-    for (std::size_t i = 0; i < a.size(); ++i)
+    for (size_t i = 0; i < a.size(); ++i)
     {
-        if (!(a[i] == b[i])) { return false; }
+        if (!(a[i] == b[i])) return false;
     }
 
     return true;
 }
-} // namespace sm
+
+template <typename T, size_t CapacityA, size_t CapacityB>
+bool operator!=(const static_vector<T, CapacityA>& a, const static_vector<T, CapacityB>& b)
+{
+    return !operator==(a, b);
+}
+} // namespace itlib
+
+namespace sm
+{
+template <typename T, size_t Capacity> using StaticVector = itlib::static_vector<T, Capacity>;
+}
