@@ -2,4 +2,4 @@
 
 - `./samarium/`: contains the actual source code for the library
 
-- `./CMAkeLists.txt`: builds the library
+- `./CMakeLists.txt`: builds the library
