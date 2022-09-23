@@ -26,7 +26,7 @@ class SamariumConan(ConanFile):
 
     def requirements(self):
         deps = [
-            "fmt/9.0.0",
+            "fmt/9.1.0",
             "sfml/2.5.1",
             "range-v3/0.12.0",
             "stb/cci.20210910",
