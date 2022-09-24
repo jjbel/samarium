@@ -8,8 +8,6 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 if(BUILD_EXAMPLES)
-    include(find_deps)
-
     file(GLOB files "*.cpp")
     foreach(file ${files})
         get_filename_component(EXAMPLE_NAME ${file} NAME_WE)

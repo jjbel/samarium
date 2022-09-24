@@ -17,20 +17,41 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
 list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})
 
-foreach(
-    DEPENDENCY
-    SFML
-    fmt
-    range-v3
-    stb
-    tl-expected
-    tl-function-ref
-    bshoshany-thread-pool
-)
-    if(NOT ${DEPENDENCY}_FOUND)
-        find_package(${DEPENDENCY} CONFIG REQUIRED)
+function(link_deps target)
+    foreach(
+        DEPENDENCY
+        SFML
+        fmt
+        range-v3
+        stb
+        tl-expected
+        tl-function-ref
+        bshoshany-thread-pool
+    )
+        if(NOT ${DEPENDENCY}_FOUND)
+            find_package(${DEPENDENCY} CONFIG REQUIRED)
+        endif()
+    endforeach()
+
+    foreach(
+        DEPENDENCY
+        fmt::fmt
+        range-v3::range-v3
+        sfml::sfml
+        stb::stb
+        tl::expected
+        tl::function-ref
+        bshoshany-thread-pool::bshoshany-thread-pool
+    )
+        target_link_libraries(${target} PUBLIC ${DEPENDENCY})
+    endforeach()
+
+    if(USE_WARNINGS)
+        target_compile_options(${target} PUBLIC ${WARNINGS})
     endif()
-endforeach()
+
+    message(STATUS "Linking deps for ${target}")
+endfunction()
 
 file(GLOB_RECURSE SAMARIUM_SOURCES "*.cpp")
 
@@ -67,18 +88,7 @@ set_source_files_properties(
     "samarium/util/fpng/fpng.cpp" PROPERTIES COMPILE_OPTIONS "${FPNG_OPTIONS}"
 )
 
-foreach(
-    DEPENDENCY
-    fmt::fmt
-    range-v3::range-v3
-    sfml::sfml
-    stb::stb
-    tl::expected
-    tl::function-ref
-    bshoshany-thread-pool::bshoshany-thread-pool
-)
-    target_link_libraries(samarium PUBLIC ${DEPENDENCY})
-endforeach()
+link_deps(samarium)
 
 install(
     TARGETS samarium

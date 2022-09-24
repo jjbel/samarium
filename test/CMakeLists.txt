@@ -25,5 +25,4 @@ endif()
 
 target_link_libraries(samarium_tests PUBLIC samarium::samarium)
 
-include(find_deps)
 link_deps(samarium_tests)

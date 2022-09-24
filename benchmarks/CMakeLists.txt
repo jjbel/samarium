@@ -14,6 +14,5 @@ if(BUILD_BENCHMARKS)
     target_link_libraries(samarium_benchmarks PUBLIC samarium::samarium)
     target_link_libraries(samarium_benchmarks PUBLIC benchmark::benchmark)
 
-    include(find_deps)
     link_deps(samarium_benchmarks)
 endif()
