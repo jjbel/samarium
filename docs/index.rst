@@ -10,8 +10,10 @@ Welcome to Samarium's documentation!
     :maxdepth: 1
 
     examples
-    api/index
+    building
+    changelog
     license
+    api/index
 
 Useful Links
 ==================
