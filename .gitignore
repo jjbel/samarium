@@ -1,58 +1,17 @@
 bin/
-
 dev/
-
 build/
-
 .history
-
 .cache/
-
 .ignore/
-
 .ignore*
-
 __pycache__/
+CMakeUserPresets.json
+**/.conan/data
+/usr/include/c++
 
 *.tga
 *.png
 *.bmp
 
 *.mp4
-
-# Prerequisites
-*.d
-
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app
-
-# System Headers
-/usr/include/c++
-
-# Conan libraries
-**/.conan/data
-
-CMakeUserPresets.json
