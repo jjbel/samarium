@@ -14,7 +14,7 @@ add_executable(samarium_tests)
 
 if(BUILD_UNIT_TESTS)
     find_package(Catch2 3 REQUIRED)
-    add_subdirectory(tests)
+    file(GLOB_RECURSE SAMARIUM_TESTS_SOURCES "*.cpp")
     target_sources(samarium_tests PUBLIC ${SAMARIUM_TESTS_SOURCES})
     target_link_libraries(samarium_tests PUBLIC Catch2::Catch2WithMain)
 
