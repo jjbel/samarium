@@ -67,9 +67,6 @@ jobs:
         id: conan
         uses: turtlebrowser/get-conan@main
 
-      - name: Install gcovr
-        run: pip3 install gcovr
-
       - name: Install other deps
         run: sudo apt-get update && sudo apt-get install libtbb-dev tree
 
@@ -78,7 +75,6 @@ jobs:
           conan    --version
           cmake    --version
           g++      --version
-          gcovr    --version
 
       - name: Configure Conan
         run: |
