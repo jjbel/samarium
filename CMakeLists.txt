@@ -1,6 +1,7 @@
-# SPDX-License-Identifier: MIT Copyright (c) 2022 Jai Bellare See
-# <https://opensource.org/licenses/MIT/> or LICENSE.md Project homepage:
-# <https://github.com/strangeQuark1041/samarium>
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2022 Jai Bellare
+# See <https://opensource.org/licenses/MIT/> or LICENSE.md
+# Project homepage: <https://github.com/strangeQuark1041/samarium>
 
 cmake_minimum_required(VERSION 3.15)
 
@@ -26,8 +27,10 @@ include(ccache)
 include(compiler_options)
 include(docs)
 include(CTest)
-include(Catch)
 include(include_what_you_use)
+if(BUILD_UNIT_TESTS)
+    include(Catch)
+endif()
 
 add_subdirectory(src)
 add_subdirectory(test)
