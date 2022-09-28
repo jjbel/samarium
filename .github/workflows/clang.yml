@@ -40,14 +40,14 @@ jobs:
       - name: Check Tool Versions
         run: |
           printf "#include <ciso646>\nint main () {}" | clang -E -stdlib=libc++ -x c++ -dM - | grep _LIBCPP_VERSION
-          printf "conan: $(conan    --version)\n"
-          printf "cmake: $(cmake    --version)\n"
-          printf "clang: $(clang++  --version)\n"
-          printf "gcc:   $(g++  --version)\n"
-          printf "clang: $(which clang++)\n"
-          printf "gcc:   $(which g++)\n"
-          printf "libc++:$(ldconfig -p | grep libc++)\n"
-          printf "libstdc++:$(ldconfig -p | grep libstdc++)\n"
+          printf "conan: $(conan    --version)\n\n"
+          printf "cmake: $(cmake    --version)\n\n"
+          printf "clang: $(clang++  --version)\n\n"
+          printf "gcc:   $(g++  --version)\n\n"
+          printf "clang: $(which clang++)\n\n"
+          printf "gcc:   $(which g++)\n\n"
+          printf "libc++:$(ldconfig -p | grep libc++)\n\n"
+          printf "libstdc++:$(ldconfig -p | grep libstdc++)\n\n"
 
       - name: Configure Conan
         run: |
@@ -56,10 +56,11 @@ jobs:
           conan config set tools.system.package_manager:mode=install
           conan config get tools.system.package_manager
 
+      - name: Run Conan
+        run: conan install . -b missing -if build -pr:b=default -o samarium:build_tests=True -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=True
+
       - name: CMake Configure
-        run: |
-          conan install . -b missing -if build -pr:b=default -o samarium:build_tests=True -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=True
-          cmake --preset=ci
+        run: cmake --preset=ci
 
       - name: CMake Build
         run: cmake --build --preset=default
