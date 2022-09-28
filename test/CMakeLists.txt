@@ -14,10 +14,11 @@ add_executable(samarium_tests)
 
 if(BUILD_UNIT_TESTS)
     find_package(Catch2 3 REQUIRED)
-    file(GLOB_RECURSE SAMARIUM_TESTS_SOURCES "*.cpp")
+    file(GLOB_RECURSE SAMARIUM_TESTS_SOURCES "tests/*.cpp")
     target_sources(samarium_tests PUBLIC ${SAMARIUM_TESTS_SOURCES})
     target_link_libraries(samarium_tests PUBLIC Catch2::Catch2WithMain)
 
+    include(Catch)
     catch_discover_tests(samarium_tests)
 else()
     target_sources(samarium_tests PUBLIC dev.cpp)
