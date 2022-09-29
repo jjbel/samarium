@@ -1,4 +1,4 @@
-core functions
-==============
+Core Math Functions
+===================
 
 .. doxygennamespace:: sm::math
