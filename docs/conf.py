@@ -21,7 +21,23 @@ extensions = [
     "sphinx.ext.mathjax",
     "sphinx_copybutton",
     "sphinxext.opengraph",
+    "sphinx.ext.extlinks",
 ]
+
+HEAD_REF = run(
+    ["git", "rev-parse", "HEAD"], check=True, capture_output=True
+).stdout.decode("unicode_escape")
+
+extlinks = {
+    "github": (
+        f"https://github.com/strangeQuark1041/samarium/tree/{HEAD_REF}/%s",
+        "%s",
+    ),
+    "src": (
+        f"https://github.com/strangeQuark1041/samarium/tree/{HEAD_REF}/src/samarium/%s",
+        "samarium/%s",
+    ),
+}
 
 exclude_patterns = ["build", "Thumbs.db", ".DS_Store"]
 
@@ -39,11 +55,10 @@ html_css_files = [
 html_theme_options = {
     "dark_css_variables": {
         "color-brand-primary": "#1c76fc",
-        "color-brand-content": "#1c76fc"
+        "color-brand-content": "#1c76fc",
     },
 }
 
-# pygments_style = "one-dark"
 pygments_dark_style = "one-dark"
 
 source_suffix = [".rst", ".md"]
