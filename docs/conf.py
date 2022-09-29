@@ -30,11 +30,11 @@ HEAD_REF = run(
 
 extlinks = {
     "github": (
-        f"https://github.com/strangeQuark1041/samarium/tree/{HEAD_REF}/%s",
+        f"https://github.com/strangeQuark1041/samarium/blob/{HEAD_REF}/%s",
         "%s",
     ),
     "src": (
-        f"https://github.com/strangeQuark1041/samarium/tree/{HEAD_REF}/src/samarium/%s",
+        f"https://github.com/strangeQuark1041/samarium/blob/{HEAD_REF}/src/samarium/%s",
         "samarium/%s",
     ),
 }
