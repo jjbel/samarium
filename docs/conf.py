@@ -26,7 +26,7 @@ extensions = [
 
 HEAD_REF = run(
     ["git", "rev-parse", "HEAD"], check=True, capture_output=True
-).stdout.decode("unicode_escape")
+).stdout.decode("unicode_escape")[:-1]
 
 extlinks = {
     "github": (
