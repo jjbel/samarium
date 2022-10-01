@@ -6,7 +6,7 @@ required_conan_version = ">=1.47.0"
 
 class SamariumConan(ConanFile):
     name = "samarium"
-    version = "1.0.1"
+    version = "1.0.2"
     description = "2-D physics simulation library"
     homepage = "https://strangequark1041.github.io/samarium/"
     url = "https://github.com/conan-io/conan-center-index/"

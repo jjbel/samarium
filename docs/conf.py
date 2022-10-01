@@ -11,8 +11,8 @@ from subprocess import run
 project = "Samarium"
 copyright = "2022, Jai Bellare"
 author = "Jai Bellare"
-version = "2.0.0"
-release = "2.0.0"
+version = "1.0.2"
+release = "1.0.2"
 
 extensions = [
     "breathe",
