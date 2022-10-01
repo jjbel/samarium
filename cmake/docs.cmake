@@ -26,11 +26,12 @@ if(BUILD_DOCS_TARGET)
     add_custom_target(
         docs
         COMMAND ${PYTHON_EXE} -m pip install -r src/requirements.txt --quiet
-        COMMAND ${PYTHON_EXE} src/make.py
+        COMMAND ${PYTHON_EXE} src/make.py html
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/docs
     )
 
     message(
-        STATUS "Build the docs target, view 'docs/src/build/html/index.html' after building"
+        STATUS
+            "Build the docs target, view 'docs/src/build/html/index.html' after building"
     )
 endif()
