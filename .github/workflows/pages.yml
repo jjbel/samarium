@@ -63,17 +63,17 @@ jobs:
             ${{ runner.os }}-pip-
 
       - name: Install dependencies
-        run: python3 -m pip install -r ./requirements.txt
+        run: python3 -m pip install -r ./src/requirements.txt
         working-directory: docs
 
       - name: Run Sphinx
         working-directory: docs
-        run: python3 make.py
+        run: python3 src/make.py
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          path: ./docs/build/html
+          path: ./docs/src/build/html
 
   deploy:
     environment:

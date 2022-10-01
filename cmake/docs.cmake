@@ -6,13 +6,13 @@ if(BUILD_DOCS)
     find_program(PYTHON_EXE NAMES python python3 REQUIRED)
 
     execute_process(
-        COMMAND ${PYTHON_EXE} -m pip install -r requirements.txt --quiet
+        COMMAND ${PYTHON_EXE} -m pip install -r src/requirements.txt --quiet
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/docs
         OUTPUT_QUIET
     )
 
     execute_process(
-        COMMAND ${PYTHON_EXE} make.py
+        COMMAND ${PYTHON_EXE} src/make.py
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/docs
         OUTPUT_QUIET
     )
@@ -25,10 +25,12 @@ if(BUILD_DOCS_TARGET)
 
     add_custom_target(
         docs
-        COMMAND ${PYTHON_EXE} -m pip install -r requirements.txt --quiet
-        COMMAND ${PYTHON_EXE} make.py
+        COMMAND ${PYTHON_EXE} -m pip install -r src/requirements.txt --quiet
+        COMMAND ${PYTHON_EXE} src/make.py
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/docs
     )
 
-    message(STATUS "Added docs target, view 'docs/build/html/index.html' after building")
+    message(
+        STATUS "Build the docs target, view 'docs/src/build/html/index.html' after building"
+    )
 endif()

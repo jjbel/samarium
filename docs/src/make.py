@@ -7,16 +7,17 @@ from pathlib import Path
 import time
 
 SOURCEDIR = "."
-BUILDDIR = "build/html"
+BUILDDIR = "src/build/html"
 SPHINXOPTS = []
 SPHINXBUILD = "sphinx-build"
-TARGET = argv[1] if len(argv) == 2 else "dirhtml";
+TARGET = argv[1] if len(argv) == 2 else "dirhtml"
 
 Path(BUILDDIR).mkdir(parents=True, exist_ok=True)
 
 start = time.time()
 run(
-    [SPHINXBUILD, "-TEqb", TARGET, "-j", "auto", SOURCEDIR, BUILDDIR] + SPHINXOPTS,
+    [SPHINXBUILD, "-c", "src", "-Tqb", TARGET, "-j", "auto", SOURCEDIR, BUILDDIR]
+    + SPHINXOPTS,
     check=True,
 )
 end = time.time()
