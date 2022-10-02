@@ -53,9 +53,17 @@ html_css_files = [
 ]
 
 html_theme_options = {
+    "light_css_variables": {
+        "color-brand-primary": "#ff3800",
+        "color-brand-content": "#ff3800",
+        # "color-background-primary": "#232733",
+        # "color-background-secondary": "#1d212c",
+    },
     "dark_css_variables": {
-        "color-brand-primary": "#1c76fc",
-        "color-brand-content": "#1c76fc",
+        "color-brand-primary": "#ff3800",
+        "color-brand-content": "#ff3800",
+        "color-background-primary": "#1a1e2a",
+        "color-background-secondary": "#11151f",
     },
 }
 
@@ -66,14 +74,12 @@ source_suffix = [".rst", ".md"]
 # Breathe configuration
 
 breathe_projects = {"samarium": "build/doxygenxml/"}
-
 breathe_default_project = "samarium"
-
 breathe_domain_by_extension = {
     "hpp": "cpp",
 }
-
 breathe_default_members = ("members", "undoc-members")
+breathe_show_include = False
 
 primary_domain = "cpp"
 highlight_language = "cpp"

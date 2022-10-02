@@ -7,7 +7,7 @@ Samarium Documentation
 ====================================
 
 ..  toctree::
-    :maxdepth: 1
+    :maxdepth: 2
 
     examples
     building
