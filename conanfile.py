@@ -36,7 +36,7 @@ class SamariumConan(ConanFile):
         ]
 
         if self.options.build_tests:
-            deps += ["catch2/3.1.0", "benchmark/1.6.1"]
+            deps += ["catch2/3.1.0", "benchmark/1.7.0"]
 
         for dep in deps:
             self.requires(dep)
