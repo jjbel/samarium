@@ -10,7 +10,7 @@ SOURCEDIR = "."
 BUILDDIR = "src/build/html"
 SPHINXOPTS = []
 SPHINXBUILD = "sphinx-build"
-TARGET = argv[1] if len(argv) == 2 else "dirhtml"
+TARGET = argv[1] if len(argv) == 2 else "html"
 
 Path(BUILDDIR).mkdir(parents=True, exist_ok=True)
 

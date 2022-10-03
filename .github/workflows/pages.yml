@@ -68,7 +68,7 @@ jobs:
 
       - name: Run Sphinx
         working-directory: docs
-        run: python3 src/make.py
+        run: python3 src/make.py dirhtml
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1

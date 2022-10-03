@@ -26,7 +26,7 @@ if(BUILD_DOCS_TARGET)
     add_custom_target(
         docs
         COMMAND ${PYTHON_EXE} -m pip install -r src/requirements.txt --quiet
-        COMMAND ${PYTHON_EXE} src/make.py html
+        COMMAND ${PYTHON_EXE} src/make.py
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/docs
     )
 
