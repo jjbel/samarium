@@ -1,5 +1,7 @@
-math
+Math
 ====
+
+File: :src:`math.hpp`
 
 Core math utilities
 
@@ -9,3 +11,4 @@ Core math utilities
     math
     Vector2
     interp
+    BoundingBox

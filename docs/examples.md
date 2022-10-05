@@ -16,6 +16,8 @@ Interpolate between different order [Hilbert Curves](https://en.wikipedia.org/wi
 
 Highlights: `interp`, `lerp`, `ease`, seamless looping
 
+[](https://user-images.githubusercontent.com/83468982/178473002-b7f896f6-d5ed-4cc5-be34-bcccab9ef11e.mp4)
+
 ## Mandelbrot
 
 Render a Mandelbrot Set
@@ -51,3 +53,5 @@ Use the `SecondOrderDynamics` struct to make a point follow the cursor.
 Full-fledged softbody simulation using damped springs
 
 Highlights: `Grid`, `Spring`
+
+[](https://user-images.githubusercontent.com/83468982/178472984-8cd83808-bfb2-478b-8a5e-3d45782f2c7d.mp4)

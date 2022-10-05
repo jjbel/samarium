@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700&family=Barlow+Semi+Condensed:wght@400;500&family=Source+Code+Pro:wght@300&family=JetBrains+Mono:wght@100&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700&family=Barlow+Semi+Condensed:wght@400;500&family=Source+Code+Pro:wght@300&family=Roboto+Mono:wght@200&display=swap');
 
 h1,
 h2 {
@@ -14,7 +14,7 @@ p {
 .highlight,
 .sig,
 .headerlink {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: 'Roboto Mono', monospace;
 }
 
 a {

@@ -32,12 +32,18 @@ Contents
 
 ..  toctree::
     :maxdepth: 2
+    :caption: About
 
     examples
     building
     changelog
     license
-    api/index
+
+..  toctree::
+    :maxdepth: 2
+    :caption: API Reference
+
+    api/math/index
 
 Useful Links
 ==================

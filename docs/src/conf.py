@@ -54,16 +54,16 @@ html_css_files = [
 
 html_theme_options = {
     "light_css_variables": {
-        "color-brand-primary": "#ff3800",
-        "color-brand-content": "#ff3800",
+        # "color-brand-primary": "#ff3800",
+        # "color-brand-content": "#ff3800",
         # "color-background-primary": "#232733",
         # "color-background-secondary": "#1d212c",
     },
     "dark_css_variables": {
-        "color-brand-primary": "#ff3800",
-        "color-brand-content": "#ff3800",
-        "color-background-primary": "#1a1e2a",
-        "color-background-secondary": "#11151f",
+        # "color-brand-primary": "#ff0749",
+        # "color-brand-content": "#ff0749",
+        # "color-background-primary": "#191c2b",
+        # "color-background-secondary": "#090b10",
     },
 }
 
