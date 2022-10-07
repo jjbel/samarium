@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Samarium Documentation
+Samarium Docs
 ====================================
 
 .. image:: https://readthedocs.org/projects/pybind11/badge?version=latest
@@ -22,7 +22,8 @@ Samarium Documentation
     :target: https://sonarcloud.io/summary/new_code?id=strangeQuark1041_samarium
   
 .. image:: https://img.shields.io/tokei/lines/github/strangeQuark1041/samarium
-.. image:: https://img.shields.io/github/repo-size/strangeQuark1041/samarium
+.. image:: https://img.shields.io/github/languages/code-size/strangeQuark1041/samarium
+   :alt: GitHub code size in bytes
 .. image:: https://img.shields.io/badge/license-MIT-yellow
     :target: https://github.com/strangeQuark1041/samarium/blob/main/LICENSE.md
 .. image:: https://img.shields.io/badge/language-C%2B%2B20-yellow

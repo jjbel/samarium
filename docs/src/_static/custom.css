@@ -1,14 +1,28 @@
-@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700&family=Barlow+Semi+Condensed:wght@400;500&family=Source+Code+Pro:wght@300&family=Roboto+Mono:wght@200&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400&family=Roboto+Mono:wght@200&display=swap');
+
+html,
+body {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 400;
+}
 
 h1,
 h2 {
-    font-family: 'Barlow Condensed', sans-serif;
-    /* color: #111a31; */
+    font-family: 'Raleway', sans-serif;
+    font-weight: 300;
 }
 
-p {
-    font-family: 'Barlow Semi Condensed', sans-serif;
-    font-weight: 400;
+h1 {
+    font-size: 3em;
+    text-transform: uppercase;
+    background: -webkit-linear-gradient(
+        right,
+        rgb(255, 105, 60),
+        rgb(250, 19, 96)
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .highlight,
@@ -17,6 +31,8 @@ p {
     font-family: 'Roboto Mono', monospace;
 }
 
-a {
-    font-weight: 500;
+section,
+.function {
+    margin-top: 3em;
+    margin-bottom: 3em;
 }

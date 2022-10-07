@@ -58,12 +58,13 @@ html_theme_options = {
         # "color-brand-content": "#ff3800",
         # "color-background-primary": "#232733",
         # "color-background-secondary": "#1d212c",
+        "font-stack": "Raleway, sans-serif"
     },
     "dark_css_variables": {
         # "color-brand-primary": "#ff0749",
         # "color-brand-content": "#ff0749",
-        # "color-background-primary": "#191c2b",
-        # "color-background-secondary": "#090b10",
+        "color-background-primary": "#101018",
+        "color-background-secondary": "#0c0d13",
     },
 }
 
