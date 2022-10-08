@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include <utility>
-
 #include "samarium/core/concepts.hpp"
 #include "samarium/core/types.hpp"
 
@@ -258,33 +256,6 @@ template <typename T> [[nodiscard]] constexpr auto operator/(Vector2_t<T> lhs, T
     return lhs;
 }
 
-template <std::size_t Index, typename T> auto&& Vector2_t_get(T&& p)
-{
-    static_assert(Index < 2, "Index out of bounds for sm::Vector2_t");
-    if constexpr (Index == 0) { return std::forward<T>(p).x; }
-    if constexpr (Index == 1) { return std::forward<T>(p).y; }
-}
-
-template <std::size_t Index, typename T> auto&& get(Vector2_t<T>& p)
-{
-    return Vector2_t_get<Index>(p);
-}
-
-template <std::size_t Index, typename T> auto&& get(Vector2_t<T> const& p)
-{
-    return Vector2_t_get<Index>(p);
-}
-
-template <std::size_t Index, typename T> auto&& get(Vector2_t<T>&& p)
-{
-    return Vector2_t_get<Index>(std::move(p));
-}
-
-template <std::size_t Index, typename T> auto&& get(Vector2_t<T> const&& p)
-{
-    return Vector2_t_get<Index>(std::move(p));
-}
-
 using Vector2    = Vector2_t<f64>;
 using Vector2f   = Vector2_t<f32>;
 using Indices    = Vector2_t<u64>;
@@ -296,21 +267,3 @@ consteval auto operator"" _x(f80 x) noexcept { return Vector2{static_cast<f64>(x
 consteval auto operator"" _y(f80 y) noexcept { return Vector2{0.0, static_cast<f64>(y)}; }
 } // namespace literals
 } // namespace sm
-
-namespace std
-{
-template <typename T> struct tuple_size<sm::Vector2_t<T>>
-{
-    static constexpr size_t value = 2;
-};
-
-template <typename T> struct tuple_element<0, sm::Vector2_t<T>>
-{
-    using type = T;
-};
-
-template <typename T> struct tuple_element<1, sm::Vector2_t<T>>
-{
-    using type = T;
-};
-} // namespace std
