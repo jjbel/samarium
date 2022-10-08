@@ -18,9 +18,15 @@ class SamariumConan(ConanFile):
     options = {
         "shared": [True, False],
         "fPIC": [True, False],
+        "header_only": [True, False],
         "build_tests": [True, False],
     }
-    default_options = {"shared": False, "fPIC": True, "build_tests": False}
+    default_options = {
+        "shared": False,
+        "fPIC": True,
+        "header_only": False,
+        "build_tests": False,
+    }
 
     exports_sources = "src/*"
 
@@ -56,7 +62,9 @@ class SamariumConan(ConanFile):
 
     def build(self):
         cmake = CMake(self)
-        cmake.configure()
+        cmake.configure(
+            variables={"SAMARIUM_HEADER_ONLY": str(self.options.header_only)}
+        )
         cmake.build()
 
     def package(self):

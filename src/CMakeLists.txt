@@ -40,6 +40,7 @@ set_target_properties(
 
 target_include_directories(samarium PUBLIC "${CMAKE_CURRENT_LIST_DIR}")
 
+message(STATUS "SAMARIUM_HEADER_ONLY set to ${SAMARIUM_HEADER_ONLY}")
 if(SAMARIUM_HEADER_ONLY)
     target_compile_definitions(samarium PUBLIC "SAMARIUM_HEADER_ONLY")
 endif()
