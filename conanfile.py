@@ -39,6 +39,9 @@ class SamariumConan(ConanFile):
             "tl-expected/20190710",
             "tl-function-ref/1.0.0",
             "bshoshany-thread-pool/3.3.0",
+            "glfw/3.3.8",
+            "glm/cci.20220420",
+            "glad/0.1.36",
         ]
 
         if self.options.build_tests:
@@ -50,6 +53,9 @@ class SamariumConan(ConanFile):
     def configure(self):
         if self.options.shared:
             del self.options.fPIC
+
+        self.options["glad"].gl_profile = "core"
+        self.options["glad"].gl_version = "4.6"
 
     def config_options(self):
         if self.settings.os == "Windows":

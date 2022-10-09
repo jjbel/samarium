@@ -83,6 +83,9 @@ function(link_deps target)
         tl-expected
         tl-function-ref
         bshoshany-thread-pool
+        glm
+        glad
+        glfw3
     )
         if(NOT ${DEPENDENCY}_FOUND)
             find_package(${DEPENDENCY} CONFIG REQUIRED)
@@ -98,6 +101,9 @@ function(link_deps target)
         tl::expected
         tl::function-ref
         bshoshany-thread-pool::bshoshany-thread-pool
+        glad::glad
+        glfw
+        glm::glm
     )
         target_link_libraries(${target} PUBLIC ${DEPENDENCY})
     endforeach()
