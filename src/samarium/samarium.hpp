@@ -7,11 +7,12 @@
 
 #pragma once
 
-#include "app.hpp"
-#include "core.hpp"
-#include "geometry.hpp"
-#include "graphics.hpp"
-#include "gui.hpp"
-#include "math.hpp"
-#include "physics.hpp"
-#include "util.hpp"
+#include "samarium/app.hpp"
+#include "samarium/core.hpp"
+#include "samarium/geometry.hpp"
+#include "samarium/gl.hpp"
+#include "samarium/graphics.hpp"
+#include "samarium/gui.hpp"
+#include "samarium/math.hpp"
+#include "samarium/physics.hpp"
+#include "samarium/util.hpp"
