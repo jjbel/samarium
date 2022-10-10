@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 if(BUILD_EXAMPLES)
-    file(GLOB files "*.cpp")
+    file(GLOB_RECURSE files "*.cpp")
     foreach(file ${files})
         get_filename_component(EXAMPLE_NAME ${file} NAME_WE)
         add_executable(${EXAMPLE_NAME} ${file})
