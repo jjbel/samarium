@@ -15,7 +15,7 @@ int main()
     auto window = Window{{1024, 1024}};
     auto watch  = Stopwatch{};
 
-    auto action = keyboard::OnKeyPress(window.handle, {Key::W}, [] { print("Key"); });
+    auto action = keyboard::OnKeyPress(*window.handle.get(), {Key::W}, [] { print("Key"); });
 
     while (window.is_open())
     {

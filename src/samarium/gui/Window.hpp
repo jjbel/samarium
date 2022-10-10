@@ -22,14 +22,23 @@
 #include "samarium/util/print.hpp"
 
 #include "Mouse.hpp"
-#include "WindowHandle.hpp"
 #include "keyboard.hpp"
 
 namespace sm
 {
 struct Window
 {
-    WindowHandle handle{};
+    struct Deleter
+    {
+        auto operator()(GLFWwindow* ptr) const
+        {
+            glfwDestroyWindow(ptr);
+            glfwTerminate();
+        }
+    };
+    using Handle = std::unique_ptr<GLFWwindow, Deleter>;
+
+    Handle handle{};
     gl::Context context{};
     glm::mat4 view{1.0f};
     Mouse mouse{};
@@ -51,8 +60,8 @@ struct Window
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_SAMPLES, 4);
 
-        handle = WindowHandle(glfwCreateWindow(static_cast<i32>(dims.x), static_cast<i32>(dims.y),
-                                               title.c_str(), nullptr, nullptr));
+        handle = Handle(glfwCreateWindow(static_cast<i32>(dims.x), static_cast<i32>(dims.y),
+                                         title.c_str(), nullptr, nullptr));
 
         if (!handle) { throw std::runtime_error("Error: failed to create window"); }
 

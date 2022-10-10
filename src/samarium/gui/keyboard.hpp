@@ -14,8 +14,6 @@
 #include "samarium/core/types.hpp"
 #include "samarium/util/StaticVector.hpp"
 
-#include "WindowHandle.hpp"
-
 namespace sm
 {
 enum class Key
@@ -152,12 +150,12 @@ using KeySet = StaticVector<Key, 8>;
 
 struct OnKeyPress
 {
-    const WindowHandle& handle;
+    GLFWwindow& window;
     KeySet key_set;
     Action action;
 
-    explicit OnKeyPress(const WindowHandle& target_window_handle, KeySet key_set_, Action action_)
-        : handle{target_window_handle}, key_set(std::move(key_set_)), action(std::move(action_))
+    explicit OnKeyPress(GLFWwindow& window_, KeySet key_set_, Action action_)
+        : window{window_}, key_set(std::move(key_set_)), action(std::move(action_))
     {
     }
 
@@ -166,12 +164,12 @@ struct OnKeyPress
 
 struct OnKeyDown
 {
-    const WindowHandle& handle;
+    GLFWwindow& window;
     KeySet key_set;
     Action action;
 
-    explicit OnKeyDown(const WindowHandle& target_window_handle, KeySet key_set_, Action action_)
-        : handle{target_window_handle}, key_set(std::move(key_set_)), action(std::move(action_))
+    explicit OnKeyDown(GLFWwindow& window_, KeySet key_set_, Action action_)
+        : window{window_}, key_set(std::move(key_set_)), action(std::move(action_))
     {
     }
 
@@ -183,12 +181,12 @@ struct OnKeyDown
 
 struct OnKeyUp
 {
-    const WindowHandle& handle;
+    GLFWwindow& window;
     KeySet key_set;
     Action action;
 
-    explicit OnKeyUp(const WindowHandle& target_window_handle, KeySet key_set_, Action action_)
-        : handle{target_window_handle}, key_set(std::move(key_set_)), action(std::move(action_))
+    explicit OnKeyUp(GLFWwindow& window_, KeySet key_set_, Action action_)
+        : window{window_}, key_set(std::move(key_set_)), action(std::move(action_))
     {
     }
 
@@ -200,14 +198,10 @@ struct OnKeyUp
 
 class Keymap
 {
-    const WindowHandle& handle;
     std::vector<Action> actions;
 
   public:
-    explicit Keymap(const WindowHandle& target_window_handle, std::vector<Action> event_listeners)
-        : handle{target_window_handle}, actions(std::move(event_listeners))
-    {
-    }
+    explicit Keymap(std::vector<Action> event_listeners) : actions(std::move(event_listeners)) {}
 
     void push_back(const auto& action) { actions.emplace_back(action); }
 
@@ -229,7 +223,7 @@ namespace sm::keyboard
 void OnKeyPress::operator()() const
 {
     if (ranges::all_of(key_set, [&](Key key)
-                       { return glfwGetKey(handle.get(), static_cast<i32>(key)) == GLFW_PRESS; }))
+                       { return glfwGetKey(&window, static_cast<i32>(key)) == GLFW_PRESS; }))
     {
         action();
     }
@@ -237,18 +231,16 @@ void OnKeyPress::operator()() const
 
 void OnKeyDown::operator()()
 {
-    const auto current =
-        ranges::all_of(key_set, [&](Key key)
-                       { return glfwGetKey(handle.get(), static_cast<i32>(key)) == GLFW_PRESS; });
+    const auto current = ranges::all_of(
+        key_set, [&](Key key) { return glfwGetKey(&window, static_cast<i32>(key)) == GLFW_PRESS; });
     if (!previous && current) { action(); }
     previous = current;
 }
 
 void OnKeyUp::operator()()
 {
-    const auto current =
-        ranges::all_of(key_set, [&](Key key)
-                       { return glfwGetKey(handle.get(), static_cast<i32>(key)) == GLFW_PRESS; });
+    const auto current = ranges::all_of(
+        key_set, [&](Key key) { return glfwGetKey(&window, static_cast<i32>(key)) == GLFW_PRESS; });
     if (!current && previous) { action(); }
     previous = current;
 }
