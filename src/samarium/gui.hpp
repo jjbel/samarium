@@ -7,6 +7,7 @@
 
 #pragma once
 
-#include "gui/Keyboard.hpp"
-#include "gui/Mouse.hpp"
-#include "gui/sfml.hpp"
+#include "samarium/gui/Mouse.hpp"
+#include "samarium/gui/Window.hpp"
+#include "samarium/gui/keyboard.hpp"
+// #include "samarium/gui/sfml.hpp"

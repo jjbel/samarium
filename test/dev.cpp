@@ -14,6 +14,9 @@ int main()
 {
     auto window = Window{{1024, 1024}};
     auto watch  = Stopwatch{};
+
+    auto action = keyboard::OnKeyPress(window.handle, {Key::W}, [] { print("Key"); });
+
     while (window.is_open())
     {
         draw::fill("#1c151b"_c);
@@ -21,6 +24,10 @@ int main()
         watch.reset();
 
         if (Window::resized) { print("Resized"); }
+        if (window.mouse.left) { print("Left"); }
+        if (window.mouse.right) { print("Right"); }
+        if (window.is_key_pressed(Key::Space)) { print("Space"); }
+        action();
         window.display();
     }
 }

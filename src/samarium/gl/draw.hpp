@@ -2,10 +2,10 @@
 
 #include <vector>
 
-#include "Window.hpp"
 #include "gl.hpp"
 
 #include "samarium/graphics/Color.hpp"
+#include "samarium/gui/Window.hpp"
 #include "samarium/math/Vector2.hpp"
 #include "samarium/math/shapes.hpp"
 #include "samarium/math/vector_math.hpp"

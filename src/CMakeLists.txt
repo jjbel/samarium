@@ -19,7 +19,30 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
 list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})
 
-file(GLOB_RECURSE SAMARIUM_SOURCES "*.cpp")
+set(SAMARIUM_SOURCES
+    # samarium/app/App.cpp
+    samarium/gl/Context.cpp
+    samarium/gl/draw.cpp
+    samarium/gl/gl.cpp
+    samarium/gl/Shader.cpp
+    samarium/gl/Texture.cpp
+    samarium/graphics/Trail.cpp
+    samarium/gui/Mouse.cpp
+    samarium/gui/Window.cpp
+    samarium/gui/keyboard.cpp
+    samarium/physics/collision.cpp
+    samarium/physics/Particle.cpp
+    samarium/physics/ParticleSystem.cpp
+    samarium/physics/RigidBody.cpp
+    samarium/physics/Spring.cpp
+    samarium/util/file.cpp
+    samarium/util/fpng/fpng.cpp
+    samarium/util/noise.cpp
+    samarium/util/ostream.cpp
+    samarium/util/RandomGenerator.cpp
+    samarium/util/Stopwatch.cpp
+    samarium/util/util.cpp
+)
 
 add_library(samarium ${SAMARIUM_SOURCES})
 add_library(samarium::samarium ALIAS samarium)

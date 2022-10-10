@@ -7,5 +7,5 @@
 
 #ifndef SAMARIUM_HEADER_ONLY
 #define SAMARIUM_KEYBOARD_IMPL
-#include "Keyboard.hpp"
+#include "keyboard.hpp"
 #endif // !SAMARIUM_HEADER_ONLY

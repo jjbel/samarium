@@ -1,35 +1,38 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2022 Jai Bellare
+ * See <https://opensource.org/licenses/MIT/> or LICENSE.md
+ * Project homepage: https://github.com/strangeQuark1041/samarium
+ */
+
 #pragma once
 
 #include <memory>    // for unique_ptr
 #include <stdexcept> // for string
 #include <string>    // for runtime_error
+#include <utility>
 
-#include "Context.hpp"
-#include "gl.hpp"
+#include "samarium/gl/Context.hpp"
+#include "samarium/gl/gl.hpp"
 
 #include "GLFW/glfw3.h"
 #include "samarium/math/Vector2.hpp"
 #include "samarium/util/Expected.hpp"
+#include "samarium/util/StaticVector.hpp"
 #include "samarium/util/print.hpp"
+
+#include "Mouse.hpp"
+#include "WindowHandle.hpp"
+#include "keyboard.hpp"
 
 namespace sm
 {
 struct Window
 {
-    struct Deleter
-    {
-        auto operator()(GLFWwindow* ptr) const
-        {
-            glfwDestroyWindow(ptr);
-            glfwTerminate();
-        }
-    };
-
-    using Handle = std::unique_ptr<GLFWwindow, Deleter>;
-
-    Handle handle{};
+    WindowHandle handle{};
     gl::Context context{};
     glm::mat4 view{1.0f};
+    Mouse mouse{};
 
     static inline bool resized;
 
@@ -48,8 +51,8 @@ struct Window
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_SAMPLES, 4);
 
-        handle = Handle(glfwCreateWindow(static_cast<i32>(dims.x), static_cast<i32>(dims.y),
-                                         title.c_str(), nullptr, nullptr));
+        handle = WindowHandle(glfwCreateWindow(static_cast<i32>(dims.x), static_cast<i32>(dims.y),
+                                               title.c_str(), nullptr, nullptr));
 
         if (!handle) { throw std::runtime_error("Error: failed to create window"); }
 
@@ -77,7 +80,11 @@ struct Window
 
     void close();
 
+    void get_inputs();
+
     void display();
+
+    auto is_key_pressed(Key key) const -> bool;
 
     [[nodiscard]] auto dims() const -> Dimensions;
 
@@ -98,14 +105,32 @@ auto Window::is_open() -> bool { return !glfwWindowShouldClose(handle.get()); }
 
 void Window::close() { glfwSetWindowShouldClose(handle.get(), true); }
 
+void Window::get_inputs()
+{
+    glfwPollEvents();
+    mouse.left    = glfwGetMouseButton(handle.get(), GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
+    mouse.right   = glfwGetMouseButton(handle.get(), GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS;
+    mouse.old_pos = mouse.pos;
+
+    auto xpos = 0.0;
+    auto ypos = 0.0;
+    glfwGetCursorPos(handle.get(), &xpos, &ypos);
+    mouse.pos = {xpos, ypos};
+}
+
 void Window::display()
 {
     resized = false;
     glfwSwapBuffers(handle.get());
-    glfwPollEvents();
+    get_inputs();
 
     const auto aspect = static_cast<f32>(aspect_ratio());
     view              = glm::ortho(-aspect, aspect, -1.0f, 1.0f, -10.0f, 10.0f);
+}
+
+auto Window::is_key_pressed(Key key) const -> bool
+{
+    return glfwGetKey(handle.get(), static_cast<i32>(key)) == GLFW_PRESS;
 }
 
 auto Window::dims() const -> Dimensions
