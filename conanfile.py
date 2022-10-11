@@ -39,6 +39,7 @@ class SamariumConan(ConanFile):
             "tl-expected/20190710",
             "tl-function-ref/1.0.0",
             "bshoshany-thread-pool/3.3.0",
+            "unordered_dense/1.4.0",
             "glfw/3.3.8",
             "glm/cci.20220420",
             "glad/0.1.36",

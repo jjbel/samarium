@@ -106,6 +106,7 @@ function(link_deps target)
         tl-expected
         tl-function-ref
         bshoshany-thread-pool
+        unordered_dense
         glm
         glad
         glfw3
@@ -124,6 +125,7 @@ function(link_deps target)
         tl::expected
         tl::function-ref
         bshoshany-thread-pool::bshoshany-thread-pool
+        unordered_dense::unordered_dense
         glad::glad
         glfw
         glm::glm
