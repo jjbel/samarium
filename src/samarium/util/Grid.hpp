@@ -206,5 +206,7 @@ template <typename T> class Grid
     auto enumerate_1d() { return ranges::views::enumerate(*this); }
 
     auto enumerate_2d() { return ranges::views::zip(iota_view_2d(dims), *this); }
+
+    auto byte_size() const { return size() * sizeof(T); }
 };
 } // namespace sm
