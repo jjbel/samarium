@@ -57,7 +57,7 @@
         {
             "name": "dev",
             "description": "Use gcc, Ninja, and skip extra tests",
-            "inherits": "clang",
+            "inherits": "gcc",
             "cacheVariables": {
                 "CMAKE_INTERPROCEDURAL_OPTIMIZATION": false,
                 "CMAKE_UNITY_BUILD": false,
@@ -75,7 +75,7 @@
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
                 "USE_UBSAN": true,
-                "BUILD_EXAMPLES": true
+                "BUILD_BENCHMARKS": true
             }
         },
         {

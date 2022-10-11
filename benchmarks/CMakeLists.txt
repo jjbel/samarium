@@ -9,10 +9,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 if(BUILD_BENCHMARKS)
     find_package(benchmark 1.6 CONFIG REQUIRED)
-    add_executable(samarium_benchmarks main.cpp random.cpp image_export.cpp)
+    add_executable(samarium_benchmarks random.cpp image_export.cpp)
 
     target_link_libraries(samarium_benchmarks PUBLIC samarium::samarium)
-    target_link_libraries(samarium_benchmarks PUBLIC benchmark::benchmark)
+    target_link_libraries(samarium_benchmarks PUBLIC benchmark::benchmark_main)
 
     link_deps(samarium_benchmarks)
 endif()

@@ -17,6 +17,7 @@ static void bm_RandomGenerator_uncached(benchmark::State& state)
     auto rand = RandomGenerator{0};
 
     for (auto _ : state) { benchmark::DoNotOptimize(rand.random()); }
+    state.SetItemsProcessed(state.iterations());
 }
 
 static void bm_RandomGenerator_cached(benchmark::State& state)
@@ -24,6 +25,7 @@ static void bm_RandomGenerator_cached(benchmark::State& state)
     auto rand = RandomGenerator(1024);
 
     for (auto _ : state) { benchmark::DoNotOptimize(rand.random()); }
+    state.SetItemsProcessed(state.iterations());
 }
 
 BENCHMARK(bm_RandomGenerator_uncached)->Name("RandomGenerator::random() without cache");
