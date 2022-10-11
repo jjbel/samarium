@@ -27,6 +27,10 @@ struct Targa
 {
 };
 
+struct Pam
+{
+};
+
 struct Png
 {
 };
@@ -47,6 +51,17 @@ auto read_image(const std::filesystem::path& file_path) -> ExpectedFile<Image>;
 void write(Targa,
            const Image& image,
            const std::filesystem::path& file_path = date_time_str() + ".tga");
+
+/**
+ * @brief               Write image to file_path in the NetBPM PAM format
+ *
+ * @param  image
+ * @param  file_path
+ * @details See https://en.wikipedia.org/wiki/Netpbm#PAM_graphics_format
+ */
+void write(Pam,
+           const Image& image,
+           const std::filesystem::path& file_path = date_time_str() + ".pam");
 
 inline void
 write(Png, const Image& image, const std::filesystem::path& file_path = date_time_str() + ".png")
@@ -182,17 +197,35 @@ auto read_image(const std::filesystem::path& file_path) -> ExpectedFile<Image>
 
 void write(Targa, const Image& image, const std::filesystem::path& file_path)
 {
-    const auto tga_header = std::to_array<u8>(
+    const auto header = std::to_array<u8>(
         {0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, static_cast<u8>(255 & image.dims.x),
          static_cast<u8>(255 & (image.dims.x >> 8)), static_cast<u8>(255 & image.dims.y),
          static_cast<u8>(255 & (image.dims.y >> 8)), 24, 32});
 
-    const auto data = image.formatted_data(sm::bgr);
+    const auto data = image.formatted_data(bgr);
 
     std::ofstream(file_path, std::ios::binary)
-        .write(reinterpret_cast<const char*>(&tga_header[0]), 18)
+        .write(reinterpret_cast<const char*>(&header[0]), header.size())
         .write(reinterpret_cast<const char*>(&data[0]),
                static_cast<std::streamsize>(data.size() * data[0].size()));
+}
+
+void write(Pam, const Image& image, const std::filesystem::path& file_path)
+{
+    const auto header = fmt::format(R"(P7
+WIDTH {}
+HEIGHT {}
+DEPTH 4
+MAXVAL 255
+TUPLTYPE RGB_ALPHA
+ENDHDR
+)",
+                                    image.dims.x, image.dims.y);
+
+    std::ofstream(file_path, std::ios::binary)
+        .write(&header[0], header.size())
+        .write(reinterpret_cast<const char*>(&image[0]),
+               static_cast<std::streamsize>(image.byte_size()));
 }
 
 void write(Bmp, const Image& image, const std::filesystem::path& file_path)
