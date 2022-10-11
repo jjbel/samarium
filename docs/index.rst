@@ -45,6 +45,7 @@ Contents
     :caption: API Reference
 
     api/math/index
+    api/util/index
 
 Useful Links
 ==================
