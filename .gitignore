@@ -15,3 +15,6 @@ CMakeUserPresets.json
 *.bmp
 
 *.mp4
+
+# Valgrid files
+vgcore.*
