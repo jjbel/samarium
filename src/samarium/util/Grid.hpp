@@ -170,7 +170,6 @@ template <typename T> class Grid
     auto back() -> reference { return data.back(); }
 
     auto size() const { return this->data.size(); }
-    auto max_size() const { return this->data.size(); } // for stl compatibility
     auto empty() const { return this->data.size() == 0; }
 
     auto bounding_box() const { return BoundingBox<u64>{Indices{}, dims - Indices{1, 1}}; }
