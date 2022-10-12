@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include "core/inline.hpp"
+
 #include "core/concepts.hpp"
 #include "core/types.hpp"
 #include "core/version.hpp"

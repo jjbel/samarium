@@ -38,26 +38,28 @@ struct Stopwatch
 
 #include "fmt/format.h"
 
+#include "samarium/core/inline.hpp" // for SM_INLINE
+
 namespace sm
 {
-void Stopwatch::reset() { start = std::chrono::steady_clock::now(); }
+SM_INLINE void Stopwatch::reset() { start = std::chrono::steady_clock::now(); }
 
-auto Stopwatch::time() const -> Stopwatch::Duration_t
+SM_INLINE auto Stopwatch::time() const -> Stopwatch::Duration_t
 {
     const auto finish = std::chrono::steady_clock::now();
     return std::chrono::duration_cast<Duration_t>(finish - start);
 }
 
-[[nodiscard]] auto Stopwatch::seconds() const -> f64 { return this->time().count(); }
+[[nodiscard]] SM_INLINE auto Stopwatch::seconds() const -> f64 { return this->time().count(); }
 
-[[nodiscard]] auto Stopwatch::current_fps() -> f64
+[[nodiscard]] SM_INLINE auto Stopwatch::current_fps() -> f64
 {
     const auto sec = seconds();
     reset();
     return 1.0 / sec;
 }
 
-void Stopwatch::print() const { fmt::print("{:.3}ms\n", this->time().count() * 1000.0); }
+SM_INLINE void Stopwatch::print() const { fmt::print("{:.3}ms\n", this->time().count() * 1000.0); }
 }; // namespace sm
 
 #endif

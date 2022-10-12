@@ -103,6 +103,7 @@ auto find(const std::string& file_name, std::initializer_list<std::filesystem::p
 #include "stb_image.h"
 #include "stb_image_write.h"
 
+#include "samarium/core/inline.hpp"    // for SM_INLINE
 #include "samarium/core/types.hpp"     // for u8
 #include "samarium/graphics/Color.hpp" // for BGR_t, bgr
 #include "samarium/graphics/Image.hpp" // for Image
@@ -113,7 +114,7 @@ auto find(const std::string& file_name, std::initializer_list<std::filesystem::p
 
 namespace sm::file
 {
-auto read(Text, const std::filesystem::path& file_path) -> ExpectedFile<std::string>
+SM_INLINE auto read(Text, const std::filesystem::path& file_path) -> ExpectedFile<std::string>
 {
     if (!std::filesystem::exists(file_path))
     {
@@ -130,12 +131,12 @@ auto read(Text, const std::filesystem::path& file_path) -> ExpectedFile<std::str
     }
 }
 
-auto read(const std::filesystem::path& file_path) -> ExpectedFile<std::string>
+SM_INLINE auto read(const std::filesystem::path& file_path) -> ExpectedFile<std::string>
 {
     return read(Text{}, file_path);
 }
 
-auto read_image(const std::filesystem::path& file_path) -> ExpectedFile<Image>
+SM_INLINE auto read_image(const std::filesystem::path& file_path) -> ExpectedFile<Image>
 {
     if (!std::filesystem::exists(file_path))
     {
@@ -196,7 +197,7 @@ auto read_image(const std::filesystem::path& file_path) -> ExpectedFile<Image>
     return {image};
 }
 
-void write(Targa, const Image& image, const std::filesystem::path& file_path)
+SM_INLINE void write(Targa, const Image& image, const std::filesystem::path& file_path)
 {
     const auto header = std::to_array<u8>(
         {0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, static_cast<u8>(255 & image.dims.x),
@@ -211,7 +212,7 @@ void write(Targa, const Image& image, const std::filesystem::path& file_path)
                static_cast<std::streamsize>(data.size() * data[0].size()));
 }
 
-void write(Pam, const Image& image, const std::filesystem::path& file_path)
+SM_INLINE void write(Pam, const Image& image, const std::filesystem::path& file_path)
 {
     const auto header = fmt::format(R"(P7
 WIDTH {}
@@ -229,7 +230,7 @@ ENDHDR
                static_cast<std::streamsize>(image.byte_size()));
 }
 
-void write(Bmp, const Image& image, const std::filesystem::path& file_path)
+SM_INLINE void write(Bmp, const Image& image, const std::filesystem::path& file_path)
 {
     stbi_write_bmp(file_path.string().c_str(), static_cast<i32>(image.dims.x),
                    static_cast<i32>(image.dims.y), 4 /* RGBA */,
@@ -237,7 +238,7 @@ void write(Bmp, const Image& image, const std::filesystem::path& file_path)
 }
 
 
-auto find(const std::string& file_name, const std::filesystem::path& directory)
+SM_INLINE auto find(const std::string& file_name, const std::filesystem::path& directory)
     -> Expected<std::filesystem::path, std::string>
 {
     for (const auto& dir_entry : std::filesystem::recursive_directory_iterator(directory))
@@ -251,7 +252,7 @@ auto find(const std::string& file_name, const std::filesystem::path& directory)
     return tl::make_unexpected(fmt::format("File not found: {}", file_name));
 }
 
-auto find(const std::string& file_name, std::span<std::filesystem::path> search_paths)
+SM_INLINE auto find(const std::string& file_name, std::span<std::filesystem::path> search_paths)
     -> Expected<std::filesystem::path, std::string>
 {
     for (const auto& path : search_paths)
@@ -269,7 +270,8 @@ auto find(const std::string& file_name, std::span<std::filesystem::path> search_
     return tl::make_unexpected(fmt::format("File not found: {}", file_name));
 }
 
-auto find(const std::string& file_name, std::initializer_list<std::filesystem::path> search_paths)
+SM_INLINE auto find(const std::string& file_name,
+                    std::initializer_list<std::filesystem::path> search_paths)
     -> Expected<std::filesystem::path, std::string>
 {
     for (const auto& path : search_paths)

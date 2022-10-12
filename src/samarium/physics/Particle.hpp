@@ -33,15 +33,20 @@ struct Particle
 
 
 #if defined(SAMARIUM_HEADER_ONLY) || defined(SAMARIUM_PARTICLE_IMPL)
+
+#include "samarium/core/inline.hpp" // for SM_INLINE
 #include "samarium/math/shapes.hpp" // for Circle
 
 namespace sm
 {
-[[nodiscard]] auto Particle::as_circle() const noexcept -> Circle { return Circle{pos, radius}; }
+[[nodiscard]] SM_INLINE auto Particle::as_circle() const noexcept -> Circle
+{
+    return Circle{pos, radius};
+}
 
-void Particle::apply_force(Vector2 force) noexcept { acc += force / mass; }
+SM_INLINE void Particle::apply_force(Vector2 force) noexcept { acc += force / mass; }
 
-void Particle::update(f64 time_delta) noexcept
+SM_INLINE void Particle::update(f64 time_delta) noexcept
 {
     vel += acc * time_delta;
     pos += vel * time_delta;
