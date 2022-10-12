@@ -83,9 +83,7 @@ template <concepts::Number T = f64> struct BoundingBox
     [[nodiscard]] constexpr auto x_range() const { return Extents<T>{min.x, max.x}; }
     [[nodiscard]] constexpr auto y_range() const { return Extents<T>{min.y, max.y}; }
 
-    [[nodiscard]] constexpr friend auto operator==(const BoundingBox<T>& lhs,
-                                                   const BoundingBox<T>& rhs) noexcept
-        -> bool = default;
+    [[nodiscard]] constexpr auto operator==(const BoundingBox<T>&) const -> bool = default;
 
     [[nodiscard]] constexpr auto centre() const noexcept { return (min + max) / static_cast<T>(2); }
 
