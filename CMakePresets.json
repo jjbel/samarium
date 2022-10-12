@@ -57,7 +57,7 @@
         {
             "name": "dev",
             "description": "Use gcc, Ninja, and skip extra tests",
-            "inherits": "gcc",
+            "inherits": "clang",
             "cacheVariables": {
                 "CMAKE_INTERPROCEDURAL_OPTIMIZATION": false,
                 "CMAKE_UNITY_BUILD": false,
@@ -92,7 +92,7 @@
         {
             "name": "iwyu",
             "description": "Run Include What You Use",
-            "inherits": "clang",
+            "inherits": "debug",
             "generator": "Unix Makefiles",
             "cacheVariables": {
                 "USE_IWYU": "TRUE"

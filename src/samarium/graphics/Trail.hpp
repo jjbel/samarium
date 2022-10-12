@@ -10,6 +10,8 @@
 #include <span>   // for span
 #include <vector> // for vector
 
+#include "range/v3/algorithm/rotate.hpp" // for rotate, rotate_fn
+
 #include "samarium/core/types.hpp"   // for u64
 #include "samarium/math/Vector2.hpp" // for Vector2
 

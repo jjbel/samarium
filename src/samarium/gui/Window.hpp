@@ -7,19 +7,21 @@
 
 #pragma once
 
-#include <memory>    // for unique_ptr
-#include <stdexcept> // for string
-#include <string>    // for runtime_error
-#include <utility>
+#include <memory>    // for allocator, unique_ptr
+#include <stdexcept> // for runtime_error
+#include <string>    // for string
 
-#include "samarium/gl/Context.hpp"
-#include "samarium/gl/gl.hpp"
+#include "glad/glad.h" // for gladLoadGLLoader, glEnable
 
-#include "GLFW/glfw3.h"
-#include "samarium/math/Vector2.hpp"
-#include "samarium/util/Expected.hpp"
-#include "samarium/util/StaticVector.hpp"
-#include "samarium/util/print.hpp"
+#include "GLFW/glfw3.h"                // for glfwWindowHint, glfwGetMous...
+#include "glm/ext/matrix_float4x4.hpp" // for mat4
+
+#include "samarium/core/types.hpp"     // for f64, i32, u64, f32
+#include "samarium/gl/Context.hpp"     // for Context
+#include "samarium/gl/gl.hpp"          // for enable_debug_output, versio...
+#include "samarium/graphics/Image.hpp" // for Image
+#include "samarium/math/Vector2.hpp"   // for Dimensions, Vector2_t, Vector2
+#include "samarium/util/Grid.hpp"      // for Grid
 
 #include "Mouse.hpp"
 #include "keyboard.hpp"
@@ -105,6 +107,8 @@ struct Window
 
 
 #if defined(SAMARIUM_HEADER_ONLY) || defined(SAMARIUM_WINDOW_IMPL)
+
+#include"glm/gtc/matrix_transform.hpp" // for ortho
 
 #include "Window.hpp"
 

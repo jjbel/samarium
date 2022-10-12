@@ -7,7 +7,9 @@
 
 #pragma once
 
-#include <chrono>
+#include <chrono> // for duration
+
+#include "fmt/core.h" // for print
 
 #include "samarium/core/types.hpp"
 

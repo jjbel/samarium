@@ -1,16 +1,14 @@
 #pragma once
 
-#include <filesystem>
-#include <stdexcept>
-#include <string>
-#include <vector>
+#include <stdexcept> // for logic_error
+#include <vector>    // for vector
 
-#include "glad/glad.h"
-#include "range/v3/range_concepts.hpp"
+#include "fmt/core.h"  // for print
+#include "glad/glad.h" // for GLenum, GL_SHADER_STORAGE_BUFFER
 
-#include "samarium/graphics/Color.hpp"
-#include "samarium/util/file.hpp"
-#include "samarium/util/print.hpp"
+#include "samarium/core/types.hpp"     // for f32, i64, u32, i32
+#include "samarium/graphics/Color.hpp" // for Color
+#include "samarium/math/Vector2.hpp"   // for Vector2_t
 
 namespace sm::gl
 {

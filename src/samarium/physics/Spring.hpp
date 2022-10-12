@@ -8,6 +8,7 @@
 #pragma once
 
 #include "samarium/core/types.hpp"       // for f64
+#include "samarium/math/Vector2.hpp"     // for Vector2_t, operator-, Vector2
 #include "samarium/math/vector_math.hpp" // for distance
 
 #include "Particle.hpp" // for Particle

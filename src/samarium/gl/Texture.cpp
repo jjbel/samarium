@@ -1,3 +1,5 @@
+#include <glad/glad.h> // for GLenum, GLint, glTextureParameteri, GL_FALSE
+
 #include "Texture.hpp"
 
 namespace sm::gl

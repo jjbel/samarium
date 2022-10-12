@@ -7,12 +7,16 @@
 
 #pragma once
 
-#include <functional>
+#include <functional> // for function
+#include <utility>    // for move
+#include <vector>     // for vector
 
-#include "GLFW/glfw3.h"
+#include "GLFW/glfw3.h"                     // for glfwGetKey, GLFWwindow
+#include "range/v3/algorithm/all_of.hpp"    // for all_of, all_of_fn
+#include "range/v3/functional/identity.hpp" // for identity
 
-#include "samarium/core/types.hpp"
-#include "samarium/util/StaticVector.hpp"
+#include "samarium/core/types.hpp"        // for i32
+#include "samarium/util/StaticVector.hpp" // for StaticVector
 
 namespace sm
 {

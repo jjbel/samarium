@@ -7,10 +7,8 @@
 
 #pragma once
 
-#include <compare>
-
 #include "samarium/core/types.hpp"   // for f64
-#include "samarium/math/Vector2.hpp" // for Vector2
+#include "samarium/math/Vector2.hpp" // for Vector2, operator*, Vector2_t
 #include "samarium/math/shapes.hpp"  // for Circle
 
 namespace sm
@@ -29,7 +27,7 @@ struct Particle
 
     void update(f64 time_delta = 1.0 / 64) noexcept;
 
-    auto operator<=>(const Particle&) const = default;
+    [[nodiscard]] auto operator==(const Particle&) const -> bool = default;
 };
 } // namespace sm
 

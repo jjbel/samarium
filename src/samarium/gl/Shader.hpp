@@ -1,17 +1,21 @@
 #pragma once
 
-#include <filesystem>
-#include <stdexcept>
-#include <string>
-#include <vector>
+#include <filesystem>  // for path
+#include <string>      // for string
+#include <string_view> // for string_view
+#include <type_traits> // for decay<>::type
+#include <utility>     // for move
 
-#include "glad/glad.h"
-#include "glm/glm.hpp"
-#include "glm/gtc/type_ptr.hpp"
+#include "fmt/core.h"                  // for format
+#include "glad/glad.h"                 // for glDeleteProgram, glDeleteShader
+#include "glm/ext/matrix_float4x4.hpp" // for mat4
+#include "tl/expected.hpp"             // for make_unexpected
 
-#include "samarium/util/Expected.hpp"
-#include "samarium/util/file.hpp"
-#include "samarium/util/print.hpp"
+#include "samarium/core/types.hpp"     // for u32, u64, i32, f32
+#include "samarium/graphics/Color.hpp" // for Color
+#include "samarium/math/Vector2.hpp"   // for Vector2
+#include "samarium/util/Expected.hpp"  // for Expected, expect
+#include "samarium/util/file.hpp"      // for read
 
 namespace sm::gl
 {

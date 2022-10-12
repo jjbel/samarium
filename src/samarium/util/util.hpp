@@ -7,14 +7,12 @@
 
 #pragma once
 
-#include <concepts>
 #include <stdexcept> // for invalid_argument
-#include <type_traits>
 
-#include "range/v3/action/transform.hpp"
-#include "range/v3/view/transform.hpp"
+#include "range/v3/action/transform.hpp" // for transform
+#include "range/v3/view/transform.hpp"   // for transform
 
-#include "samarium/core/types.hpp" // for u8
+#include "samarium/core/types.hpp" // for u8, u64
 
 namespace sm::util
 {

@@ -7,11 +7,8 @@
 
 #pragma once
 
-#include <compare>
-
 #include "samarium/core/types.hpp"   // for f64
-#include "samarium/math/Vector2.hpp" // for Vector2
-#include "samarium/math/math.hpp"    // for math
+#include "samarium/math/Vector2.hpp" // for Vector2, operator*, operator/
 
 namespace sm
 {
@@ -47,6 +44,6 @@ struct RigidBody
         a_acc = 0.0; // reset acceleration
     }
 
-    constexpr auto operator<=>(const RigidBody&) const = default;
+    [[nodiscard]] constexpr auto operator==(const RigidBody&) const -> bool = default;
 };
 } // namespace sm

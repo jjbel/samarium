@@ -1,8 +1,10 @@
 #pragma once
 
-#include "glad/glad.h"
-#include "samarium/graphics/Image.hpp"
-#include "samarium/math/Vector2.hpp"
+#include "glad/glad.h"                 // for GLenum, GL_RGBA8, glDeleteTex...
+
+#include "samarium/core/types.hpp"     // for u32, i32
+#include "samarium/graphics/Image.hpp" // for Image
+#include "samarium/math/Vector2.hpp"   // for Dimensions
 
 namespace sm::gl
 {

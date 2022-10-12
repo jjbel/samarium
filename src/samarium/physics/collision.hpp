@@ -7,12 +7,14 @@
 
 #pragma once
 
-#include <optional> // for optional
+#include <optional> // for optional, nullopt
 
-#include "samarium/core/types.hpp"   // for f64
-#include "samarium/math/Vector2.hpp" // for Vector2
+#include "samarium/core/types.hpp"       // for f64
+#include "samarium/math/Vector2.hpp"     // for Vector2_t, operator+, opera...
+#include "samarium/math/shapes.hpp"      // for LineSegment
+#include "samarium/math/vector_math.hpp" // for distance, clamped_intersection
 
-#include "Particle.hpp"
+#include "Particle.hpp" // for Particle
 
 namespace sm::phys
 {

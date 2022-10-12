@@ -1,3 +1,10 @@
+#include "fmt/format.h"         // for buffer::append
+#include "glad/glad.h"          // for GL_COMPILE_STATUS, glCompileS...
+#include "glm/gtc/type_ptr.hpp" //for value_ptr
+
+#include "samarium/graphics/Color.hpp" // for Color
+#include "samarium/util/print.hpp"     // for error
+
 #include "Shader.hpp"
 
 namespace sm::gl
@@ -20,7 +27,8 @@ VertexShader::VertexShader(const std::string& source) : handle(glCreateShader(GL
     }
 }
 
-FragmentShader::FragmentShader(const std::string& source) : handle(glCreateShader(GL_FRAGMENT_SHADER))
+FragmentShader::FragmentShader(const std::string& source)
+    : handle(glCreateShader(GL_FRAGMENT_SHADER))
 {
     const auto str = source.c_str();
     glShaderSource(handle, 1, &str, nullptr);

@@ -1,8 +1,8 @@
-#include <string_view>
+#include <glad/glad.h> // for glCreateVertexArrays, glBindVer...
+
+#include "samarium/math/Extents.hpp" // for Extents, Extents<>::Iterator
 
 #include "gl.hpp"
-
-#include "samarium/math/Extents.hpp"
 
 namespace sm::gl
 {

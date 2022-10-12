@@ -13,6 +13,7 @@
 #include <span>
 
 #include "fmt/format.h"
+
 #include "range/v3/algorithm/copy.hpp"
 #include "range/v3/view/enumerate.hpp"
 #include "range/v3/view/iota.hpp"

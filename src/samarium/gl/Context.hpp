@@ -1,12 +1,16 @@
 #pragma once
 
-#include <string>
+#include <string> // for allocator, string
 
-#include "samarium/util/Map.hpp"
+#include "glad/glad.h" // for GL_FLOAT, GL_TRUE, GL_UNSIGNED_BYTE
 
-#include "Shader.hpp"
-#include "Texture.hpp"
-#include "gl.hpp"
+#include "samarium/core/types.hpp" // for f32
+#include "samarium/gl/Context.hpp"
+#include "samarium/util/Map.hpp" // for Map
+
+#include "Shader.hpp"  // for Shader, FragmentShader, VertexShader
+#include "Texture.hpp" // for Texture
+#include "gl.hpp"      // for VertexArray, VertexAttribute, Buf...
 
 namespace sm::gl
 {

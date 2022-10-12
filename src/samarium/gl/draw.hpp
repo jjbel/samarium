@@ -1,14 +1,22 @@
 #pragma once
 
-#include <vector>
+#include <span>   // for span
+#include <vector> // for vector, allocator
 
-#include "gl.hpp"
+#include "glad/glad.h" // for glDrawArrays, GL_COLOR_BUFFER...
 
-#include "samarium/graphics/Color.hpp"
-#include "samarium/gui/Window.hpp"
-#include "samarium/math/Vector2.hpp"
-#include "samarium/math/shapes.hpp"
-#include "samarium/math/vector_math.hpp"
+#include "samarium/core/types.hpp"     // for f32, f64, u64, i32
+#include "samarium/gl/Context.hpp"     // for Context
+#include "samarium/gl/Shader.hpp"      // for Shader
+#include "samarium/graphics/Color.hpp" // for Color, ShapeColor
+#include "samarium/gui/Window.hpp"     // for Window
+#include "samarium/math/Vector2.hpp"   // for Vector2f, Vector2_t, operator*
+#include "samarium/math/math.hpp"      // for two_pi
+#include "samarium/math/shapes.hpp"    // for Circle
+#include "samarium/util/Map.hpp"       // for Map
+
+#include "draw.hpp"
+#include "gl.hpp" // for Buffer, VertexArray
 
 namespace sm::draw
 {

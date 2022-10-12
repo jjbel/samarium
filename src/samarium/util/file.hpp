@@ -7,15 +7,16 @@
 
 #pragma once
 
-#include <filesystem>
-#include <string>
+#include <filesystem>       // for path
+#include <initializer_list> // for initializer_list
+#include <string>           // for string, operator+
 
-#include "fpng/fpng.hpp"
+#include "samarium/graphics/Image.hpp" // for Image
+#include "samarium/math/Vector2.hpp"   // for Dimensions
+#include "samarium/util/format.hpp"    // for date_time_str
 
-#include "samarium/graphics/Image.hpp"
-#include "samarium/util/format.hpp"
-
-#include "Expected.hpp"
+#include "Expected.hpp"  // for Expected
+#include "fpng/fpng.hpp" // for fpng_encode_image_to_file
 
 namespace sm::file
 {
@@ -96,7 +97,7 @@ auto find(const std::string& file_name, std::initializer_list<std::filesystem::p
 #include <iterator>   // for ifstreambuf_iterator
 #include <string>     // for string
 
-#include "fpng/fpng.hpp"
+#include "fmt/os.h"
 #include "range/v3/algorithm/copy.hpp"
 #include "samarium/util/Stopwatch.hpp"
 #include "stb_image.h"
@@ -108,7 +109,7 @@ auto find(const std::string& file_name, std::initializer_list<std::filesystem::p
 #include "samarium/math/Extents.hpp"   // for range
 #include "samarium/math/Vector2.hpp"   // for Dimensions
 
-#include "samarium/util/print.hpp" // for Dimensions
+#include "fpng/fpng.hpp"
 
 namespace sm::file
 {
@@ -223,7 +224,7 @@ ENDHDR
                                     image.dims.x, image.dims.y);
 
     std::ofstream(file_path, std::ios::binary)
-        .write(&header[0], header.size())
+        .write(&header[0], static_cast<std::streamsize>(header.size()))
         .write(reinterpret_cast<const char*>(&image[0]),
                static_cast<std::streamsize>(image.byte_size()));
 }

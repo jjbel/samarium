@@ -6,21 +6,29 @@
  */
 
 #pragma once
-
+#include <memory> // for allocator_trai...
 #include <span>   // for span
 #include <vector> // for vector
 
-#include "range/v3/algorithm/fill.hpp" // for fill, fill_fn
-#include "range/v3/view/enumerate.hpp" // for enumerate, enumerate_fn
+#include "BS_thread_pool.hpp"                         // for multi_future
+#include "range/v3/algorithm/for_each.hpp"            // for for_each, for_...
+#include "range/v3/functional/identity.hpp"           // for identity
+#include "range/v3/iterator/basic_iterator.hpp"       // for basic_iterator
+#include "range/v3/iterator/unreachable_sentinel.hpp" // for operator==
+#include "range/v3/view/enumerate.hpp"                // for enumerate, enu...
+#include "range/v3/view/view.hpp"                     // for view_closure
+#include "range/v3/view/zip.hpp"                      // for zip_view
+#include "range/v3/view/zip_with.hpp"                 // for iter_zip_with_...
+#include "tl/function_ref.hpp"                        // for function_ref
 
-#include "samarium/core/types.hpp"       // for u64, f64
+#include "samarium/core/types.hpp"       // for f64, u64, usize
+#include "samarium/math/Extents.hpp"     // for Extents, range
 #include "samarium/math/Vector2.hpp"     // for Vector2
-#include "samarium/util/FunctionRef.hpp" // for Vector2
+#include "samarium/physics/Particle.hpp" // for Particle
+#include "samarium/util/FunctionRef.hpp" // for FunctionRef
 #include "samarium/util/HashGrid.hpp"    // for HashGrid
 #include "samarium/util/ThreadPool.hpp"  // for ThreadPool
-#include "samarium/util/print.hpp"       // for FunctionRef
 
-#include "Particle.hpp"  // for Particle
 #include "collision.hpp" // for collide
 
 namespace sm
