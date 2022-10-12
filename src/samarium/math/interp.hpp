@@ -9,8 +9,8 @@
 
 #include <type_traits> // for std::is_invocable_v
 
-#include "../graphics/Color.hpp"
-#include "../math/Vector2.hpp"
+#include "samarium/graphics/Color.hpp"
+#include "samarium/math/Vector2.hpp"
 
 #include "Extents.hpp"
 

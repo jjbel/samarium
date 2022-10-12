@@ -12,14 +12,14 @@
 #include "fmt/format.h"
 #include "fmt/ranges.h"
 
-#include "../core/version.hpp"
-#include "../graphics/Color.hpp"
-#include "../math/BoundingBox.hpp"
-#include "../math/Transform.hpp"
-#include "../math/Vector2.hpp"
-#include "../math/complex.hpp"
-#include "../math/shapes.hpp"
-#include "../physics/Particle.hpp"
+#include "samarium/core/version.hpp"
+#include "samarium/graphics/Color.hpp"
+#include "samarium/math/BoundingBox.hpp"
+#include "samarium/math/Transform.hpp"
+#include "samarium/math/Vector2.hpp"
+#include "samarium/math/complex.hpp"
+#include "samarium/math/shapes.hpp"
+#include "samarium/physics/Particle.hpp"
 
 namespace fmt
 {

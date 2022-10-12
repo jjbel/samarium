@@ -7,7 +7,7 @@
 
 #include <iostream>
 
-#include "../util/format.hpp"
+#include "samarium/util/format.hpp"
 
 auto operator<<(std::ostream& os, const sm::Version& a) -> std::ostream&;
 

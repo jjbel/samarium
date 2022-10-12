@@ -11,8 +11,8 @@
 #include <string_view>
 
 
-#include "../core/concepts.hpp" // for u8
-#include "../util/util.hpp"     // for util::strlen
+#include "samarium/core/concepts.hpp" // for u8
+#include "samarium/util/util.hpp"     // for util::strlen
 
 namespace sm
 {

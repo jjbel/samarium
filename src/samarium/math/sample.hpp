@@ -9,7 +9,7 @@
 
 #include <vector>
 
-#include "../util/FunctionRef.hpp"
+#include "samarium/util/FunctionRef.hpp"
 
 #include "Extents.hpp"
 

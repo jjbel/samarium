@@ -9,8 +9,8 @@
 
 #include <array>
 
-#include "../math/interp.hpp"
-#include "../util/print.hpp"
+#include "samarium/math/interp.hpp"
+#include "samarium/util/print.hpp"
 
 #include "Color.hpp"
 

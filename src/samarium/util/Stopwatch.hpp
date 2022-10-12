@@ -9,7 +9,7 @@
 
 #include <chrono>
 
-#include "../core/types.hpp"
+#include "samarium/core/types.hpp"
 
 namespace sm
 {

@@ -11,8 +11,8 @@
 
 #include "range/v3/view/transform.hpp"
 
-#include "../math/shapes.hpp"
-#include "../math/vector_math.hpp"
+#include "samarium/math/shapes.hpp"
+#include "samarium/math/vector_math.hpp"
 
 namespace sm
 {
