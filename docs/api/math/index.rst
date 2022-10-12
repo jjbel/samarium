@@ -12,3 +12,4 @@ Core math utilities
     Vector2
     interp
     BoundingBox
+    SecondOrderDynamics
