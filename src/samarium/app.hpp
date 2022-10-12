@@ -7,4 +7,4 @@
 
 #pragma once
 
-#include "app/App.hpp"
+#include "samarium/app/App.hpp"

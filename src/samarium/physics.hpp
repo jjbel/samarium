@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "physics/Particle.hpp"
-#include "physics/ParticleSystem.hpp"
-#include "physics/RigidBody.hpp"
-#include "physics/Spring.hpp"
-#include "physics/collision.hpp"
+#include "samarium/physics/Particle.hpp"
+#include "samarium/physics/ParticleSystem.hpp"
+#include "samarium/physics/RigidBody.hpp"
+#include "samarium/physics/Spring.hpp"
+#include "samarium/physics/collision.hpp"

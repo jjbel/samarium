@@ -7,12 +7,12 @@
 
 #pragma once
 
-#include "math/Dual.hpp"
-#include "math/Polynomial.hpp"
-#include "math/SecondOrderDynamics.hpp"
-#include "math/Transform.hpp"
-#include "math/Vector2.hpp"
-#include "math/complex.hpp"
-#include "math/math.hpp"
-#include "math/sample.hpp"
-#include "math/vector_math.hpp"
+#include "samarium/math/Dual.hpp"
+#include "samarium/math/Polynomial.hpp"
+#include "samarium/math/SecondOrderDynamics.hpp"
+#include "samarium/math/Transform.hpp"
+#include "samarium/math/Vector2.hpp"
+#include "samarium/math/complex.hpp"
+#include "samarium/math/math.hpp"
+#include "samarium/math/sample.hpp"
+#include "samarium/math/vector_math.hpp"

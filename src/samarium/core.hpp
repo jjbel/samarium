@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include "core/inline.hpp"
+#include "samarium/core/inline.hpp"
 
-#include "core/concepts.hpp"
-#include "core/types.hpp"
-#include "core/version.hpp"
-#include "util/ThreadPool.hpp"
+#include "samarium/core/concepts.hpp"
+#include "samarium/core/types.hpp"
+#include "samarium/core/version.hpp"
+#include "samarium/util/ThreadPool.hpp"

@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include "graphics/Color.hpp"
-#include "graphics/Gradient.hpp"
-#include "graphics/Image.hpp"
-#include "graphics/Trail.hpp"
-// #include "graphics/colors.hpp"
-#include "graphics/gradients.hpp"
+#include "samarium/graphics/Color.hpp"
+#include "samarium/graphics/Gradient.hpp"
+#include "samarium/graphics/Image.hpp"
+#include "samarium/graphics/Trail.hpp"
+// #include "samarium/graphics/colors.hpp"
+// #include "samarium/graphics/gradients.hpp"
