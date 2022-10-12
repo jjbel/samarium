@@ -150,8 +150,7 @@ struct Color
                           static_cast<T>(a)};
     }
 
-    [[nodiscard]] constexpr friend auto operator==(const Color& lhs, const Color& rhs) noexcept
-        -> bool = default;
+    [[nodiscard]] constexpr auto operator==(const Color&) const -> bool = default;
 };
 
 struct ShapeColor
