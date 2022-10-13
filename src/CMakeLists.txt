@@ -107,6 +107,7 @@ function(link_deps target)
         tl-function-ref
         bshoshany-thread-pool
         unordered_dense
+        svector
         glm
         glad
         glfw3
@@ -126,6 +127,7 @@ function(link_deps target)
         tl::function-ref
         bshoshany-thread-pool::bshoshany-thread-pool
         unordered_dense::unordered_dense
+        svector::svector
         glad::glad
         glfw
         glm::glm
