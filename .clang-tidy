@@ -8,7 +8,6 @@ Checks: "*,\
   -google-readability-todo,\
   -altera-unroll-loops,\
   -altera-struct-pack-align,\
-  -cppcoreguidelines-avoid-magic-numbers,\
   -fuchsia-*,\
   -llvm-header-guard,\
   -llvm-include-order,\
