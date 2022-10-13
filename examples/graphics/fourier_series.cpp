@@ -41,7 +41,7 @@ auto target_shape(f64 t)
         out = interp::map_range<f64, complex>(
             t, Extents<f64>{0.75, 1.0}, Extents<complex>{complex{-1.0, -1.0}, complex{1.0, -1.0}});
     }
-    return to_complex(from_complex(out).rotated_by(1) * Vector2{1.0, 1.6} + Vector2{0.0, 0.5}) +
+    return to_complex(from_complex(out).rotated(1) * Vector2{1.0, 1.6} + Vector2{0.0, 0.5}) +
            complex{0.3, -0.4}; // rotate, scale to make it interesting
 }
 

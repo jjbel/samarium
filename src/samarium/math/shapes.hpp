@@ -24,7 +24,7 @@ struct Circle
     /* Assuming point is on Circle, move it counter-clockwise */
     [[nodiscard]] constexpr auto move_along(Vector2 point, f64 distance) const noexcept
     {
-        return centre + (point - centre).rotated_by(distance / this->radius);
+        return centre + (point - centre).rotated(distance / this->radius);
     }
 };
 

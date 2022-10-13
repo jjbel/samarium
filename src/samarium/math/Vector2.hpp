@@ -173,12 +173,24 @@ template <typename T> struct Vector2_t
         return to.angle() - from.angle();
     }
 
-    constexpr void rotate(f64 amount) noexcept { *this = this->with_angle(this->angle() + amount); }
+    constexpr void rotate(f64 angle) noexcept { *this = this->with_angle(this->angle() + angle); }
 
-    [[nodiscard]] constexpr auto rotated_by(f64 amount) const noexcept
+    [[nodiscard]] constexpr auto rotated(f64 angle) const noexcept
     {
         auto temp = *this;
-        temp.rotate(amount);
+        temp.rotate(angle);
+        return temp;
+    }
+
+    constexpr void rotate_about(f64 angle, Vector2_t<T> pivot) noexcept
+    {
+        *this = (*this - pivot).with_angle(this->angle() + angle) + pivot;
+    }
+
+    [[nodiscard]] constexpr auto rotated_about(f64 angle, Vector2_t<T> pivot) const noexcept
+    {
+        auto temp = *this;
+        temp.rotate_about(angle, pivot);
         return temp;
     }
 
