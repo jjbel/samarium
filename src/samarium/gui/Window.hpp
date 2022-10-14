@@ -42,7 +42,7 @@ struct Window
 
     Handle handle{};
     gl::Context context{};
-    glm::mat4 view{1.0f};
+    glm::mat4 view{1.0F};
     Mouse mouse{};
 
     static inline bool resized;
@@ -56,7 +56,8 @@ struct Window
 
     explicit Window(Dimensions dims, const std::string& title = "Samarium Window")
     {
-        glfwInit();
+        if (!glfwInit()) { throw std::runtime_error("Error: failed to initialize glfw"); }
+
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, gl::version_major);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, gl::version_minor);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -85,7 +86,13 @@ struct Window
         context.init();
     }
 
-    Window(const Window&) = delete;
+    Window(const Window&)            = delete;
+    Window& operator=(const Window&) = delete;
+
+    Window(Window&&) noexcept            = default;
+    Window& operator=(Window&&) noexcept = default;
+
+    ~Window() = default;
 
     [[nodiscard]] auto is_open() -> bool;
 
@@ -108,7 +115,7 @@ struct Window
 
 #if defined(SAMARIUM_HEADER_ONLY) || defined(SAMARIUM_WINDOW_IMPL)
 
-#include"glm/gtc/matrix_transform.hpp" // for ortho
+#include "glm/gtc/matrix_transform.hpp" // for ortho
 
 #include "Window.hpp"
 
