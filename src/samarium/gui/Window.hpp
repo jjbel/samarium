@@ -44,6 +44,7 @@ struct Window
     gl::Context context{};
     glm::mat4 view{1.0F};
     Mouse mouse{};
+    keyboard::Keymap keymap{};
 
     static inline bool resized;
 
@@ -56,7 +57,7 @@ struct Window
 
     explicit Window(Dimensions dims, const std::string& title = "Samarium Window")
     {
-        if (!glfwInit()) { throw std::runtime_error("Error: failed to initialize glfw"); }
+        if (glfwInit() == 0) { throw std::runtime_error("Error: failed to initialize glfw"); }
 
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, gl::version_major);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, gl::version_minor);
@@ -84,6 +85,8 @@ struct Window
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         context.init();
+
+        keymap.push_back(keyboard::OnKeyPress{*handle, {Key::Escape}, [this] { this->close(); }});
     }
 
     Window(const Window&)            = delete;
@@ -136,6 +139,8 @@ void Window::get_inputs()
     auto ypos = 0.0;
     glfwGetCursorPos(handle.get(), &xpos, &ypos);
     mouse.pos = {xpos, ypos};
+
+    keymap.run();
 }
 
 void Window::display()

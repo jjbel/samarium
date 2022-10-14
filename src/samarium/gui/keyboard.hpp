@@ -149,16 +149,16 @@ enum class Key
 
 namespace keyboard
 {
-using Action = std::function<void()>;
-using KeySet = StaticVector<Key, 8>;
+using Callable = std::function<void()>;
+using KeySet   = StaticVector<Key, 8>;
 
 struct OnKeyPress
 {
     GLFWwindow& window;
     KeySet key_set;
-    Action action;
+    Callable action;
 
-    explicit OnKeyPress(GLFWwindow& window_, KeySet key_set_, Action action_)
+    explicit OnKeyPress(GLFWwindow& window_, KeySet key_set_, Callable action_)
         : window{window_}, key_set(std::move(key_set_)), action(std::move(action_))
     {
     }
@@ -170,9 +170,9 @@ struct OnKeyDown
 {
     GLFWwindow& window;
     KeySet key_set;
-    Action action;
+    Callable action;
 
-    explicit OnKeyDown(GLFWwindow& window_, KeySet key_set_, Action action_)
+    explicit OnKeyDown(GLFWwindow& window_, KeySet key_set_, Callable action_)
         : window{window_}, key_set(std::move(key_set_)), action(std::move(action_))
     {
     }
@@ -187,9 +187,9 @@ struct OnKeyUp
 {
     GLFWwindow& window;
     KeySet key_set;
-    Action action;
+    Callable action;
 
-    explicit OnKeyUp(GLFWwindow& window_, KeySet key_set_, Action action_)
+    explicit OnKeyUp(GLFWwindow& window_, KeySet key_set_, Callable action_)
         : window{window_}, key_set(std::move(key_set_)), action(std::move(action_))
     {
     }
@@ -200,12 +200,9 @@ struct OnKeyUp
     bool previous{false};
 };
 
-class Keymap
+struct Keymap
 {
-    std::vector<Action> actions;
-
-  public:
-    explicit Keymap(std::vector<Action> event_listeners) : actions(std::move(event_listeners)) {}
+    std::vector<Callable> actions{};
 
     void push_back(const auto& action) { actions.emplace_back(action); }
 
