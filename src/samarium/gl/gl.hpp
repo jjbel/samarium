@@ -131,9 +131,9 @@ using ElementBuffer = Buffer<BufferType::Element>;
 
 struct VertexAttribute
 {
-    i32 size;
-    GLenum type;
-    u32 offset;
+    i32 size{};
+    GLenum type{};
+    u32 offset{};
     GLboolean normalized{GL_FALSE};
 };
 
@@ -216,9 +216,9 @@ inline void message_callback(GLenum source,
                              GLenum type,
                              GLuint id,
                              GLenum severity,
-                             GLsizei /* length */,
+                             [[maybe_unused]] GLsizei length,
                              GLchar const* message,
-                             void const* /* user_param */)
+                             [[maybe_unused]] void const* user_param)
 {
     const auto src_str = [source]
     {
