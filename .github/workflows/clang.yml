@@ -2,9 +2,9 @@ name: Clang
 
 on:
   push:
-    branches: [main, gl]
+    branches: [main]
   pull_request:
-    branches: [main, gl]
+    branches: [main]
   schedule:
     - cron: "0 2 * * *" # run everyday to keep fresh
 
