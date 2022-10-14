@@ -75,7 +75,7 @@ function(set_compiler_options)
 
     if(USE_UBSAN)
         set(MSVC_OPTIONS ${MSVC_OPTIONS} /fsanitize=address)
-        set(COMMON_OPTIONS ${COMMON_OPTIONS} -fsanitize=undefined)
+        set(COMMON_OPTIONS ${COMMON_OPTIONS} -fsanitize=undefined,address -fno-omit-frame-pointer)
         # https://docs.microsoft.com/en-us/cpp/sanitizers/asan?view=msvc-170
     endif()
 
@@ -105,15 +105,16 @@ function(set_compiler_options)
         )
     endif()
 
-    set(OPTIONS
+    set(COMPILER_OPTIONS
         ${PROJECT_OPTIONS}
         PARENT_SCOPE
     )
 endfunction()
 
 set_compiler_options()
-add_compile_options(${OPTIONS})
+add_compile_options(${COMPILER_OPTIONS})
+message("COMPILER_OPTIONS: [${COMPILER_OPTIONS}]")
 
 if(USE_UBSAN AND NOT MSVC)
-    add_link_options(-fsanitize=undefined)
+    add_link_options(-fsanitize=undefined,address)
 endif()
