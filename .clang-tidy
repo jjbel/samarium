@@ -12,6 +12,7 @@ Checks: "*,\
   -llvm-include-order,\
   -llvmlibc-*,\
   -readability-identifier-naming,\
+  -cppcoreguidelines-avoid-magic-numbers,\
   -misc-non-private-member-variables-in-classes"
 WarningsAsErrors: ""
 CheckOptions:
