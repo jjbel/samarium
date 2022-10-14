@@ -18,7 +18,7 @@ int main()
     auto window = Window{{1024, 1024}};
     auto watch  = Stopwatch{};
 
-    auto action = keyboard::OnKeyPress(*window.handle, {Key::W}, [] { print("Key"); });
+    window.keymap.push_back(keyboard::OnKeyPress(*window.handle, {Key::W}, [] { print("Key"); }));
 
     while (window.is_open())
     {
@@ -30,7 +30,6 @@ int main()
         if (window.mouse.left) { print("Left"); }
         if (window.mouse.right) { print("Right"); }
         if (window.is_key_pressed(Key::Space)) { print("Space"); }
-        action();
         window.display();
     }
 }
