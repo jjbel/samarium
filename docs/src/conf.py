@@ -22,6 +22,7 @@ extensions = [
     "sphinx_copybutton",
     "sphinxext.opengraph",
     "sphinx.ext.extlinks",
+    "sphinx_substitution_extensions",
 ]
 
 HEAD_REF = run(
@@ -60,6 +61,8 @@ html_theme_options = {
     "dark_css_variables": {
         "color-background-primary": "#101018",
         "color-background-secondary": "#0c0d13",
+        "color-brand-primary": "#00a6ff",
+        "color-brand-content": "#00a6ff",
     },
 }
 
@@ -68,7 +71,6 @@ pygments_dark_style = "one-dark"
 source_suffix = [".rst", ".md"]
 
 # Breathe configuration
-
 breathe_projects = {"samarium": "build/doxygenxml/"}
 breathe_default_project = "samarium"
 breathe_domain_by_extension = {
@@ -82,5 +84,7 @@ highlight_language = "cpp"
 
 ogp_site_url = "https://strangequark1041.github.io/samarium/"
 ogp_site_name = "Samarium Docs"
+
+rst_prolog = f".. |version| replace:: {version}"
 
 run(["doxygen", "Doxyfile.cfg"], check=True)

@@ -5,3 +5,4 @@ sphinx-copybutton
 myst-parser
 sphinx-mathjax-offline
 sphinxext-opengraph
+Sphinx-Substitution-Extensions
