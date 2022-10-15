@@ -2,7 +2,7 @@ name: GCC
 
 on:
   push:
-    branches: [main]
+    branches: [main, gl]
   pull_request:
     branches: [main]
   schedule:
