@@ -8,13 +8,13 @@
 #include "samarium/gl/gl.hpp"
 #include "samarium/math/Vector2.hpp"
 #include "samarium/samarium.hpp"
+#include <GLFW/glfw3.h>
 
 using namespace sm;
 using namespace sm::literals;
 
 int main()
 {
-    print(gl::version_major, gl::version_minor);
     auto window = Window{{1024, 1024}};
     auto watch  = Stopwatch{};
 
@@ -23,13 +23,18 @@ int main()
     while (window.is_open())
     {
         draw::fill("#1c151b"_c);
-        draw::circle(window, {{0.2, 0.3}, 0.4}, {.fill_color = "#fa2844"_c});
+        draw::circle(window, {{-1.0, -1.0}, 0.1}, {.fill_color = "#fa2844"_c});
+        draw::circle(window, {{-1.0, 1.0}, 0.1}, {.fill_color = "#fa2844"_c});
+        draw::circle(window, {{1.0, 1.0}, 0.1}, {.fill_color = "#fa2844"_c});
+        draw::circle(window, {{1.0, -1.0}, 0.1}, {.fill_color = "#fa2844"_c});
         watch.reset();
 
-        if (Window::resized) { print("Resized"); }
-        if (window.mouse.left) { print("Left"); }
-        if (window.mouse.right) { print("Right"); }
-        if (window.is_key_pressed(Key::Space)) { print("Space"); }
+        // if (Window::resized) { print("Resized"); }
+        // if (window.mouse.left) { print("Left"); }
+        // if (window.mouse.right) { print("Right"); }
+        // if (window.is_key_pressed(Key::Space)) { print("Space"); }
+        // print(window.viewport)
+        print(window.view);
         window.display();
     }
 }
