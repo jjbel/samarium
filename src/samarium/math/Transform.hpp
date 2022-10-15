@@ -7,7 +7,11 @@
 
 #pragma once
 
+#include "glm/ext/matrix_float4x4.hpp" // for mat4
+#include "glm/gtx/transform.hpp"
+
 #include "BoundingBox.hpp"
+#include "samarium/math/math.hpp"
 #include "shapes.hpp"
 
 namespace sm
@@ -43,6 +47,14 @@ class Transform
     {
         return LineSegment{// -ve sign may invalidate min, max so recalculate it
                            apply_inverse(l.p1), apply_inverse(l.p2)};
+    }
+
+    [[nodiscard]] constexpr auto as_matrix() const noexcept
+    {
+        return glm::translate(glm::rotate(glm::scale(glm::vec3{static_cast<f32>(scale.x),
+                                                               static_cast<f32>(scale.y), 1.0F}),
+                                          static_cast<f32>(rotation), glm::vec3{0.0F, 0.0F, 1.0F}),
+                              glm::vec3{static_cast<f32>(pos.x), static_cast<f32>(pos.y), 0.0F});
     }
 };
 } // namespace sm
