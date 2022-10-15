@@ -49,7 +49,7 @@ class Transform
                            apply_inverse(l.p1), apply_inverse(l.p2)};
     }
 
-    [[nodiscard]] constexpr auto as_matrix() const noexcept
+    [[nodiscard]] auto as_matrix() const noexcept
     {
         return glm::translate(glm::rotate(glm::scale(glm::vec3{static_cast<f32>(scale.x),
                                                                static_cast<f32>(scale.y), 1.0F}),
