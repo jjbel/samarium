@@ -2,7 +2,7 @@ name: Clang
 
 on:
   push:
-    branches: [main]
+    branches: [main, gl]
   pull_request:
     branches: [main]
   schedule:
@@ -26,6 +26,9 @@ jobs:
 
       - name: Install Ninja
         uses: seanmiddleditch/gha-setup-ninja@master
+
+      - name: Install mold
+        uses: rui314/setup-mold@v1
 
       - name: Install CMake
         uses: jwlawson/actions-setup-cmake@v1.12
@@ -67,3 +70,6 @@ jobs:
 
       - name: CTest
         run: ctest --preset=default
+
+      - name: Check Linker
+        run: readelf -p .comment ./build/test/samarium_tests
