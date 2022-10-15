@@ -33,6 +33,7 @@
             "inherits": "default",
             "cacheVariables": {
                 "BUILD_UNIT_TESTS": true,
+                "BUILD_EXAMPLES": false,
                 "RUN_CONAN": true
             }
         },
