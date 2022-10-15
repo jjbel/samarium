@@ -65,9 +65,6 @@ jobs:
         id: conan
         uses: turtlebrowser/get-conan@main
 
-      - name: Install other deps
-        run: sudo apt-get update && sudo apt-get install libtbb-dev tree
-
       - name: Check Tool Versions
         run: |
           conan    --version
@@ -96,9 +93,6 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           sonar-scanner --define sonar.host.url="${{ env.SONAR_SERVER_URL }}" --define sonar.cfamily.build-wrapper-output="${{ env.BUILD_WRAPPER_OUT_DIR }}"
-
-      - name: View Source Tree
-        run: tree
 
   install:
     runs-on: ubuntu-20.04

@@ -34,9 +34,6 @@ jobs:
         id: conan
         uses: turtlebrowser/get-conan@main
 
-      - name: Install TBB
-        run: sudo apt-get update && sudo apt-get install libtbb-dev
-
       - name: Check Tool Versions
         run: |
           printf "#include <ciso646>\nint main () {}" | clang -E -stdlib=libc++ -x c++ -dM - | grep _LIBCPP_VERSION
