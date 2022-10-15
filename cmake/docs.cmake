@@ -1,6 +1,7 @@
-# SPDX-License-Identifier: MIT Copyright (c) 2022 Jai Bellare See
-# <https://opensource.org/licenses/MIT/> or LICENSE.md Project
-# homepage:<https://github.com/strangeQuark1041/samarium>
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2022 Jai Bellare
+# See <https://opensource.org/licenses/MIT/> or LICENSE.md
+# Project homepage: <https://github.com/strangeQuark1041/samarium>
 
 if(BUILD_DOCS)
     find_program(PYTHON_EXE NAMES python python3 REQUIRED)
@@ -17,7 +18,7 @@ if(BUILD_DOCS)
         OUTPUT_QUIET
     )
 
-    message(STATUS "Built docs, view 'docs/build/html/index.html'")
+    message(STATUS "samarium: built docs, view 'docs/src/build/html/index.html'")
 endif()
 
 if(BUILD_DOCS_TARGET)
@@ -32,6 +33,6 @@ if(BUILD_DOCS_TARGET)
 
     message(
         STATUS
-            "Build the docs target, view 'docs/src/build/html/index.html' after building"
+            "samarium: duild the docs target, view 'docs/src/build/html/index.html' after building"
     )
 endif()

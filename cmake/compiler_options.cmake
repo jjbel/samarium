@@ -1,8 +1,9 @@
-# SPDX-License-Identifier: MIT Copyright (c) 2022 Jai Bellare See
-# <https://opensource.org/licenses/MIT/> or LICENSE.md Project homepage:
-# <https://github.com/strangeQuark1041/samarium>
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2022 Jai Bellare
+# See <https://opensource.org/licenses/MIT/> or LICENSE.md
+# Project homepage: <https://github.com/strangeQuark1041/samarium>
 
-# Credit:
+# from:
 # https://github.com/cpp-best-practices/cpp_starter_project/blob/master/cmake/CompilerWarnings.cmake
 
 # from here:
@@ -75,7 +76,9 @@ function(set_compiler_options)
 
     if(USE_UBSAN)
         set(MSVC_OPTIONS ${MSVC_OPTIONS} /fsanitize=address)
-        set(COMMON_OPTIONS ${COMMON_OPTIONS} -fsanitize=undefined,address -fno-omit-frame-pointer)
+        set(COMMON_OPTIONS ${COMMON_OPTIONS} -fsanitize=undefined,address
+                           -fno-omit-frame-pointer
+        )
         # https://docs.microsoft.com/en-us/cpp/sanitizers/asan?view=msvc-170
     endif()
 
@@ -113,7 +116,7 @@ endfunction()
 
 set_compiler_options()
 add_compile_options(${COMPILER_OPTIONS})
-message("COMPILER_OPTIONS: [${COMPILER_OPTIONS}]")
+message(STATUS "samarium: set compiler options: [${COMPILER_OPTIONS}]")
 
 if(USE_UBSAN AND NOT MSVC)
     add_link_options(-fsanitize=undefined,address)

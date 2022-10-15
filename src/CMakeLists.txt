@@ -63,7 +63,8 @@ set_target_properties(
 
 target_include_directories(samarium PUBLIC "${CMAKE_CURRENT_LIST_DIR}")
 
-message(STATUS "SAMARIUM_HEADER_ONLY set to ${SAMARIUM_HEADER_ONLY}")
+option(SAMARIUM_HEADER_ONLY "Inline some cpp files for better performance" FALSE)
+message(STATUS "samarium: SAMARIUM_HEADER_ONLY set to ${SAMARIUM_HEADER_ONLY}")
 if(SAMARIUM_HEADER_ONLY)
     target_compile_definitions(samarium PUBLIC "SAMARIUM_HEADER_ONLY")
 endif()
@@ -139,7 +140,7 @@ function(link_deps target)
         target_compile_options(${target} PUBLIC ${WARNINGS})
     endif()
 
-    message(STATUS "Linking deps for ${target}")
+    message(STATUS "samarium: linking deps for ${target}")
 endfunction()
 
 link_deps(samarium)
