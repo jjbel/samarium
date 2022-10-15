@@ -89,6 +89,12 @@ function(set_compiler_options)
         add_link_options(-fuse-ld=${USE_LINKER})
     endif()
 
+    if(USE_LTO)
+        message(STATUS "samarium: using ThinLTO")
+        set(CLANG_OPTIONS ${COMMON_OPTIONS} -flto=thin)
+        add_link_options(-flto=thin)
+    endif()
+
     set(GCC_OPTIONS
         ${COMMON_OPTIONS}
         -Wmisleading-indentation # warn if indentation implies blocks where blocks do not

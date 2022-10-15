@@ -22,6 +22,7 @@ option(USE_WARNINGS "Set useful compiler flags and warnings" ON)
 option(USE_CCACHE "Use CCache to speed up compilation" OFF)
 option(USE_LINKER "Change the default linker" "")
 option(USE_UBSAN "Use Undefined Behaviour Sanitizer" OFF)
+option(USE_THIN_LTO "Use ThinLTO" OFF)
 
 include(check_project_structure)
 include(ccache)
