@@ -63,6 +63,7 @@
                 "CMAKE_INTERPROCEDURAL_OPTIMIZATION": false,
                 "CMAKE_UNITY_BUILD": false,
                 "USE_UBSAN": false,
+                "USE_LINKER": "mold",
                 "BUILD_UNIT_TESTS": false,
                 "BUILD_EXAMPLES": false,
                 "BUILD_DOCS": false,

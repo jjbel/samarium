@@ -84,6 +84,11 @@ function(set_compiler_options)
 
     set(CLANG_OPTIONS ${COMMON_OPTIONS} -Wno-header-guard)
 
+    if(USE_LINKER)
+        message(STATUS "samarium: using linker: ${USE_LINKER}")
+        add_link_options(-fuse-ld=${USE_LINKER})
+    endif()
+
     set(GCC_OPTIONS
         ${COMMON_OPTIONS}
         -Wmisleading-indentation # warn if indentation implies blocks where blocks do not
