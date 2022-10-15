@@ -54,7 +54,7 @@ void polyline_impl(Window& window, std::span<Vector2f> points, Color color, f32 
     shader.set("thickness", thickness);
     shader.set("screen_dims", window.dims().as<f64>());
 
-    shader.set("view", window.view);
+    shader.set("view", window.view.as_matrix());
     shader.set("color", color);
 
     auto& buffer = window.context.shader_storage_buffers.at("default");
@@ -79,7 +79,7 @@ void polygon(Window& window, std::span<Vector2f> points, ShapeColor color)
     {
         auto& shader = window.context.shaders.at("Pos");
         shader.use();
-        shader.set("view", window.view);
+        shader.set("view", window.view.as_matrix());
         shader.set("color", color.fill_color);
         auto& buffer = window.context.vertex_buffers.at("default");
         auto& vao    = window.context.vertex_arrays.at("Pos");

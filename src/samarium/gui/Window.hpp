@@ -20,6 +20,7 @@
 #include "samarium/gl/Context.hpp"     // for Context
 #include "samarium/gl/gl.hpp"          // for enable_debug_output, versio...
 #include "samarium/graphics/Image.hpp" // for Image
+#include "samarium/math/Transform.hpp" // for Transform
 #include "samarium/math/Vector2.hpp"   // for Dimensions, Vector2_t, Vector2
 #include "samarium/util/Grid.hpp"      // for Grid
 
@@ -42,7 +43,7 @@ struct Window
 
     Handle handle{};
     gl::Context context{};
-    glm::mat4 view{1.0F};
+    Transform view{};
     Mouse mouse{};
     keyboard::Keymap keymap{};
 
@@ -55,39 +56,7 @@ struct Window
         Window::resized = true;
     }
 
-    explicit Window(Dimensions dims, const std::string& title = "Samarium Window")
-    {
-        if (glfwInit() == 0) { throw std::runtime_error("Error: failed to initialize glfw"); }
-
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, gl::version_major);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, gl::version_minor);
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        glfwWindowHint(GLFW_SAMPLES, 4);
-
-        handle = Handle(glfwCreateWindow(static_cast<i32>(dims.x), static_cast<i32>(dims.y),
-                                         title.c_str(), nullptr, nullptr));
-
-        if (!handle) { throw std::runtime_error("Error: failed to create window"); }
-
-        glfwMakeContextCurrent(handle.get());
-        glfwSetFramebufferSizeCallback(handle.get(), framebuffer_size_callback);
-
-        if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-        {
-            throw std::runtime_error("Error: failed to initialize GLAD");
-        }
-
-        gl::enable_debug_output();
-
-        glEnable(GL_MULTISAMPLE);
-
-        glEnable(GL_BLEND); // enable blending function
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-        context.init();
-
-        keymap.push_back(keyboard::OnKeyPress{*handle, {Key::Escape}, [this] { this->close(); }});
-    }
+    explicit Window(Dimensions dims, const std::string& title = "Samarium Window");
 
     Window(const Window&)            = delete;
     Window& operator=(const Window&) = delete;
@@ -105,7 +74,7 @@ struct Window
 
     void display();
 
-    auto is_key_pressed(Key key) const -> bool;
+    [[nodiscard]] auto is_key_pressed(Key key) const -> bool;
 
     [[nodiscard]] auto dims() const -> Dimensions;
 
@@ -120,15 +89,51 @@ struct Window
 
 #include "glm/gtc/matrix_transform.hpp" // for ortho
 
+#include "samarium/core/inline.hpp"
+
 #include "Window.hpp"
 
 namespace sm
 {
-auto Window::is_open() -> bool { return !glfwWindowShouldClose(handle.get()); }
+SM_INLINE Window::Window(Dimensions dims, const std::string& title)
+{
+    if (glfwInit() == 0) { throw std::runtime_error("Error: failed to initialize glfw"); }
 
-void Window::close() { glfwSetWindowShouldClose(handle.get(), true); }
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, gl::version_major);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, gl::version_minor);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_SAMPLES, 4);
 
-void Window::get_inputs()
+    handle = Handle(glfwCreateWindow(static_cast<i32>(dims.x), static_cast<i32>(dims.y),
+                                     title.c_str(), nullptr, nullptr));
+
+    if (!handle) { throw std::runtime_error("Error: failed to create window"); }
+
+    glfwMakeContextCurrent(handle.get());
+    glfwSetFramebufferSizeCallback(handle.get(), framebuffer_size_callback);
+
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    {
+        throw std::runtime_error("Error: failed to initialize GLAD");
+    }
+
+    gl::enable_debug_output();
+
+    glEnable(GL_MULTISAMPLE);
+
+    glEnable(GL_BLEND); // enable blending function
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    context.init();
+
+    keymap.push_back(keyboard::OnKeyPress{*handle, {Key::Escape}, [this] { this->close(); }});
+}
+
+SM_INLINE auto Window::is_open() -> bool { return !glfwWindowShouldClose(handle.get()); }
+
+SM_INLINE void Window::close() { glfwSetWindowShouldClose(handle.get(), true); }
+
+SM_INLINE void Window::get_inputs()
 {
     glfwPollEvents();
     mouse.left    = glfwGetMouseButton(handle.get(), GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
@@ -143,22 +148,20 @@ void Window::get_inputs()
     keymap.run();
 }
 
-void Window::display()
+SM_INLINE void Window::display()
 {
     resized = false;
     glfwSwapBuffers(handle.get());
     get_inputs();
-
-    const auto aspect = static_cast<f32>(aspect_ratio());
-    view              = glm::ortho(-aspect, aspect, -1.0f, 1.0f, -10.0f, 10.0f);
+    view.scale.y = view.scale.x * aspect_ratio();
 }
 
-auto Window::is_key_pressed(Key key) const -> bool
+SM_INLINE auto Window::is_key_pressed(Key key) const -> bool
 {
     return glfwGetKey(handle.get(), static_cast<i32>(key)) == GLFW_PRESS;
 }
 
-auto Window::dims() const -> Dimensions
+SM_INLINE auto Window::dims() const -> Dimensions
 {
     auto width  = 0;
     auto height = 0;
@@ -167,13 +170,13 @@ auto Window::dims() const -> Dimensions
     return {static_cast<u64>(width), static_cast<u64>(height)};
 }
 
-auto Window::aspect_ratio() const -> f64
+SM_INLINE auto Window::aspect_ratio() const -> f64
 {
     const auto current_dims = dims().as<f64>();
     return current_dims.x / current_dims.y;
 }
 
-auto Window::get_image() const -> Image
+SM_INLINE auto Window::get_image() const -> Image
 {
     const auto current_dims = this->dims();
     auto image              = Image{current_dims};
