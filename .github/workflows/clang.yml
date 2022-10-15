@@ -27,9 +27,6 @@ jobs:
       - name: Install Ninja
         uses: seanmiddleditch/gha-setup-ninja@master
 
-      - name: Install mold
-        uses: rui314/setup-mold@v1
-
       - name: Install CMake
         uses: jwlawson/actions-setup-cmake@v1.12
 
@@ -61,6 +58,9 @@ jobs:
 
       - name: Run Conan
         run: conan install . -b missing -if build -pr:b=default -o samarium:build_tests=True -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=True
+
+      - name: Install mold
+        uses: rui314/setup-mold@v1
 
       - name: CMake Configure
         run: cmake --preset=ci
