@@ -43,6 +43,7 @@ struct Window
 
     Handle handle{};
     gl::Context context{};
+    Dimensions dims{};
     Transform view{};
     Mouse mouse{};
     keyboard::Keymap keymap{};
@@ -56,7 +57,7 @@ struct Window
         Window::resized = true;
     }
 
-    explicit Window(Dimensions dims, const std::string& title = "Samarium Window");
+    explicit Window(Dimensions dims_, const std::string& title = "Samarium Window");
 
     Window(const Window&)            = delete;
     Window& operator=(const Window&) = delete;
@@ -66,7 +67,7 @@ struct Window
 
     ~Window() = default;
 
-    [[nodiscard]] auto is_open() -> bool;
+    [[nodiscard]] auto is_open() const -> bool;
 
     void close();
 
@@ -75,8 +76,6 @@ struct Window
     void display();
 
     [[nodiscard]] auto is_key_pressed(Key key) const -> bool;
-
-    [[nodiscard]] auto dims() const -> Dimensions;
 
     [[nodiscard]] auto aspect_ratio() const -> f64;
 
@@ -95,7 +94,7 @@ struct Window
 
 namespace sm
 {
-SM_INLINE Window::Window(Dimensions dims, const std::string& title)
+SM_INLINE Window::Window(Dimensions dims_, const std::string& title) : dims{dims_}
 {
     if (glfwInit() == 0) { throw std::runtime_error("Error: failed to initialize glfw"); }
 
@@ -129,7 +128,7 @@ SM_INLINE Window::Window(Dimensions dims, const std::string& title)
     keymap.push_back(keyboard::OnKeyPress{*handle, {Key::Escape}, [this] { this->close(); }});
 }
 
-SM_INLINE auto Window::is_open() -> bool { return !glfwWindowShouldClose(handle.get()); }
+SM_INLINE auto Window::is_open() const -> bool { return glfwWindowShouldClose(handle.get()) == 0; }
 
 SM_INLINE void Window::close() { glfwSetWindowShouldClose(handle.get(), true); }
 
@@ -153,7 +152,13 @@ SM_INLINE void Window::display()
     resized = false;
     glfwSwapBuffers(handle.get());
     get_inputs();
-    view.scale.y = view.scale.x * aspect_ratio();
+
+    auto width  = 0;
+    auto height = 0;
+
+    glfwGetWindowSize(handle.get(), &width, &height);
+    dims = {static_cast<u64>(width), static_cast<u64>(height)};
+    // view.scale.y = view.scale.x * aspect_ratio();
 }
 
 SM_INLINE auto Window::is_key_pressed(Key key) const -> bool
@@ -161,26 +166,16 @@ SM_INLINE auto Window::is_key_pressed(Key key) const -> bool
     return glfwGetKey(handle.get(), static_cast<i32>(key)) == GLFW_PRESS;
 }
 
-SM_INLINE auto Window::dims() const -> Dimensions
-{
-    auto width  = 0;
-    auto height = 0;
-
-    glfwGetWindowSize(handle.get(), &width, &height);
-    return {static_cast<u64>(width), static_cast<u64>(height)};
-}
-
 SM_INLINE auto Window::aspect_ratio() const -> f64
 {
-    const auto current_dims = dims().as<f64>();
+    const auto current_dims = dims.as<f64>();
     return current_dims.x / current_dims.y;
 }
 
 SM_INLINE auto Window::get_image() const -> Image
 {
-    const auto current_dims = this->dims();
-    auto image              = Image{current_dims};
-    glReadPixels(0, 0, static_cast<i32>(current_dims.x), static_cast<i32>(current_dims.y), GL_RGBA,
+    auto image              = Image{dims};
+    glReadPixels(0, 0, static_cast<i32>(dims.x), static_cast<i32>(dims.y), GL_RGBA,
                  GL_UNSIGNED_BYTE, static_cast<void*>(&image.front()));
     return image;
 }

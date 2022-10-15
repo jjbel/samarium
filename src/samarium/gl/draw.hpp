@@ -52,7 +52,7 @@ void polyline_impl(Window& window, std::span<Vector2f> points, Color color, f32 
     const auto& shader = window.context.shaders.at("polyline");
     shader.use();
     shader.set("thickness", thickness);
-    shader.set("screen_dims", window.dims().as<f64>());
+    shader.set("screen_dims", window.dims.as<f64>());
 
     shader.set("view", window.view.as_matrix());
     shader.set("color", color);
