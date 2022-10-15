@@ -17,6 +17,7 @@
                 "CMAKE_EXPORT_COMPILE_COMMANDS": true,
                 "CMAKE_COLOR_DIAGNOSTICS": true,
                 "CMAKE_COMPILE_WARNING_AS_ERROR": false,
+                "SAMARIUM_HEADER_ONLY": true,
                 "BUILD_UNIT_TESTS": false,
                 "BUILD_EXAMPLES": true,
                 "BUILD_BENCHMARKS": false,
