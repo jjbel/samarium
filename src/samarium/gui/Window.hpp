@@ -24,8 +24,8 @@
 #include "samarium/math/Vector2.hpp"   // for Dimensions, Vector2_t, Vector2
 #include "samarium/util/Grid.hpp"      // for Grid
 
-#include "Mouse.hpp"
-#include "keyboard.hpp"
+#include "Mouse.hpp"    // for Mouse
+#include "keyboard.hpp" // for keyboard
 
 namespace sm
 {
@@ -174,7 +174,7 @@ SM_INLINE auto Window::aspect_ratio() const -> f64
 
 SM_INLINE auto Window::get_image() const -> Image
 {
-    auto image              = Image{dims};
+    auto image = Image{dims};
     glReadPixels(0, 0, static_cast<i32>(dims.x), static_cast<i32>(dims.y), GL_RGBA,
                  GL_UNSIGNED_BYTE, static_cast<void*>(&image.front()));
     return image;

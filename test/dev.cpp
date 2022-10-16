@@ -6,6 +6,7 @@
  */
 
 #include "samarium/gl/gl.hpp"
+#include "samarium/graphics/Image.hpp"
 #include "samarium/math/Vector2.hpp"
 #include "samarium/samarium.hpp"
 #include <GLFW/glfw3.h>
@@ -15,7 +16,7 @@ using namespace sm::literals;
 
 int main()
 {
-    auto window = Window{{1024, 1024}};
+    auto window = Window{dimsFHD};
     auto watch  = Stopwatch{};
 
     window.keymap.push_back(keyboard::OnKeyPress(*window.handle, {Key::W}, [] { print("Key"); }));
@@ -23,10 +24,10 @@ int main()
     while (window.is_open())
     {
         draw::fill("#1c151b"_c);
-        draw::circle(window, {{-1.0, -1.0}, 0.1}, {.fill_color = "#fa2844"_c});
-        draw::circle(window, {{-1.0, 1.0}, 0.1}, {.fill_color = "#fa2844"_c});
-        draw::circle(window, {{1.0, 1.0}, 0.1}, {.fill_color = "#fa2844"_c});
-        draw::circle(window, {{1.0, -1.0}, 0.1}, {.fill_color = "#fa2844"_c});
+        draw::circle(window, {{-0.8, -0.8}, 0.1}, {.fill_color = "#fa2844"_c});
+        draw::circle(window, {{-0.8, 0.8}, 0.1}, {.fill_color = "#fa2844"_c});
+        draw::circle(window, {{0.8, 0.8}, 0.1}, {.fill_color = "#fa2844"_c});
+        draw::circle(window, {{0.8, -0.8}, 0.1}, {.fill_color = "#fa2844"_c});
         watch.reset();
 
         // if (Window::resized) { print("Resized"); }
