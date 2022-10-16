@@ -15,7 +15,6 @@
 #include "samarium/math/shapes.hpp"    // for Circle
 #include "samarium/util/Map.hpp"       // for Map
 
-#include "draw.hpp"
 #include "gl.hpp" // for Buffer, VertexArray
 
 namespace sm::draw
