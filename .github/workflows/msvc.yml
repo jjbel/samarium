@@ -46,7 +46,7 @@ jobs:
 
       - name: Check Conan Cache
         if: steps.cache-conan.outputs.cache-hit == 'true'
-        run: ls -R ${{ CONAN_USER_HOME }}
+        run: echo "Cached"
 
       - name: Run Conan
         if: steps.cache-conan.outputs.cache-hit != 'true'
@@ -88,7 +88,7 @@ jobs:
 
       - name: Check Conan Cache
         if: steps.cache-conan.outputs.cache-hit == 'true'
-        run: ls -R ${{ CONAN_USER_HOME }}
+        run: echo "Cached"
 
       - name: Run Conan
         if: steps.cache-conan.outputs.cache-hit != 'true'
