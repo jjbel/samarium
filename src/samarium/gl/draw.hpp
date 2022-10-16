@@ -35,19 +35,21 @@ void circle(Window& window, Circle circle, ShapeColor color, u64 point_count = 6
 
 #if defined(SAMARIUM_HEADER_ONLY) || defined(SAMARIUM_DRAW_IMPL)
 
+#include "samarium/core/inline.hpp"
+
 #include "draw.hpp"
 #include "gl.hpp"
 
 namespace sm::draw
 {
-void fill(Color color)
+SM_INLINE void fill(Color color)
 {
     glClearColor(static_cast<f32>(color.r) / 255.0f, static_cast<f32>(color.g) / 255.0f,
                  static_cast<f32>(color.b) / 255.0f, static_cast<f32>(color.a) / 255.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void polyline_impl(Window& window, std::span<Vector2f> points, Color color, f32 thickness)
+SM_INLINE void polyline_impl(Window& window, std::span<Vector2f> points, Color color, f32 thickness)
 {
     const auto& shader = window.context.shaders.at("polyline");
     shader.use();
@@ -64,7 +66,7 @@ void polyline_impl(Window& window, std::span<Vector2f> points, Color color, f32 
     glDrawArrays(GL_TRIANGLES, 0, 6 * (static_cast<i32>(points.size()) - 3));
 }
 
-void polyline(Window& window, std::span<Vector2f> points, Color color, f32 thickness)
+SM_INLINE void polyline(Window& window, std::span<Vector2f> points, Color color, f32 thickness)
 {
     auto new_points = std::vector<Vector2f>{points.begin(), points.end()};
     new_points.insert(new_points.begin(), 2.0f * new_points[0] - new_points[1]);
@@ -73,7 +75,7 @@ void polyline(Window& window, std::span<Vector2f> points, Color color, f32 thick
     polyline_impl(window, {new_points}, color, thickness);
 }
 
-void polygon(Window& window, std::span<Vector2f> points, ShapeColor color)
+SM_INLINE void polygon(Window& window, std::span<Vector2f> points, ShapeColor color)
 {
     if (color.fill_color.a != 0)
     {
@@ -100,8 +102,8 @@ void polygon(Window& window, std::span<Vector2f> points, ShapeColor color)
     }
 }
 
-void regular_polygon(
-    Window& window, Vector2_t<f32> pos, f32 radius, u64 point_count, ShapeColor color)
+SM_INLINE void
+regular_polygon(Window& window, Vector2_t<f32> pos, f32 radius, u64 point_count, ShapeColor color)
 {
     auto points = std::vector<Vector2_t<f32>>{};
     points.reserve(point_count);
@@ -113,7 +115,7 @@ void regular_polygon(
     polygon(window, points, color);
 }
 
-void circle(Window& window, Circle circle, ShapeColor color, u64 point_count)
+SM_INLINE void circle(Window& window, Circle circle, ShapeColor color, u64 point_count)
 {
     regular_polygon(window, circle.centre.as<f32>(), static_cast<f32>(circle.radius), point_count,
                     color);
