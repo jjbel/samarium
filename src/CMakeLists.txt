@@ -11,8 +11,6 @@ project(
     LANGUAGES CXX
 )
 
-option(SAMARIUM_HEADER_ONLY "Use Samarium using only header files" OFF)
-
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
