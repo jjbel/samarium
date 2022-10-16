@@ -35,7 +35,6 @@ jobs:
         uses: seanmiddleditch/gha-setup-ninja@master
 
       - name: Cache .conan directory
-        if: matrix.os == 'windows-latest'
         id: cache-conan
         uses: actions/cache@v1
         env:
