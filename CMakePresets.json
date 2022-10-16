@@ -17,7 +17,7 @@
                 "CMAKE_EXPORT_COMPILE_COMMANDS": true,
                 "CMAKE_COLOR_DIAGNOSTICS": true,
                 "CMAKE_COMPILE_WARNING_AS_ERROR": false,
-                "SAMARIUM_HEADER_ONLY": true,
+                "SAMARIUM_HEADER_ONLY": false,
                 "BUILD_UNIT_TESTS": false,
                 "BUILD_EXAMPLES": true,
                 "BUILD_BENCHMARKS": false,
@@ -62,6 +62,7 @@
             "inherits": "clang",
             "cacheVariables": {
                 "CMAKE_UNITY_BUILD": false,
+                "SAMARIUM_HEADER_ONLY": true,
                 "USE_UBSAN": false,
                 "USE_LINKER": "mold",
                 "BUILD_UNIT_TESTS": false,
