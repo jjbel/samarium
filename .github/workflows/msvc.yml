@@ -32,12 +32,12 @@ jobs:
       - name: Install Ninja
         uses: seanmiddleditch/gha-setup-ninja@master
 
+      - name: Run Conan
+        run: conan install . -b missing -if build -pr:b=default -o samarium:build_tests=True
+
       - name: CMake Configure
         run: |
-          conan install . -b missing -if build -pr:b=default -o samarium:build_tests=True
           cmake --preset=ci
-          conan config set tools.system.package_manager:mode=install
-          conan config get tools.system.package_manager
 
       - name: CMake Build
         run: cmake --build --preset=default
