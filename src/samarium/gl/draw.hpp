@@ -19,7 +19,7 @@
 
 namespace sm::draw
 {
-void fill(Color color);
+void background(Color color);
 
 void polyline(Window& window, std::span<Vector2f> points, Color color, f32 thickness);
 
@@ -41,7 +41,7 @@ void circle(Window& window, Circle circle, ShapeColor color, u64 point_count = 6
 
 namespace sm::draw
 {
-SM_INLINE void fill(Color color)
+SM_INLINE void background(Color color)
 {
     glClearColor(static_cast<f32>(color.r) / 255.0f, static_cast<f32>(color.g) / 255.0f,
                  static_cast<f32>(color.b) / 255.0f, static_cast<f32>(color.a) / 255.0f);
@@ -51,7 +51,7 @@ SM_INLINE void fill(Color color)
 SM_INLINE void polyline_impl(Window& window, std::span<Vector2f> points, Color color, f32 thickness)
 {
     const auto& shader = window.context.shaders.at("polyline");
-    shader.use();
+    shader.bind();
     shader.set("thickness", thickness);
     shader.set("screen_dims", window.dims.as<f64>());
 
@@ -79,7 +79,7 @@ SM_INLINE void polygon(Window& window, std::span<Vector2f> points, ShapeColor co
     if (color.fill_color.a != 0)
     {
         auto& shader = window.context.shaders.at("Pos");
-        shader.use();
+        window.context.set_active(shader);
         shader.set("view", window.view.as_matrix());
         shader.set("color", color.fill_color);
         auto& buffer = window.context.vertex_buffers.at("default");
