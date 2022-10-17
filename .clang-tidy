@@ -7,6 +7,7 @@ Checks: "*,\
   -google-readability-todo,\
   -altera-unroll-loops,\
   -altera-struct-pack-align,\
+  -altera-id-dependent-backward-branch,\
   -fuchsia-*,\
   -llvm-header-guard,\
   -llvm-include-order,\
