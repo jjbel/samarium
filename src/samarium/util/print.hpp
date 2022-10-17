@@ -24,15 +24,15 @@
 
 namespace sm
 {
-template <typename... Args> void print(Args&&... args)
+template <typename... Args> auto print(Args&&... args)
 {
     (fmt::print("{} ", std::forward<Args>(args)), ...);
     fmt::print("\n");
 }
 
-template <typename T> void print_single(T&& arg) { print(std::forward<T>(arg)); }
+template <typename T> auto print_single(T&& arg) { print(std::forward<T>(arg)); }
 
-void error(const auto&... args)
+auto error(const auto&... args)
 {
     fmt::print(stderr, fg(fmt::color::red) | fmt::emphasis::bold, "Error: ");
     (fmt::print(stderr, fg(fmt::color::red) | fmt::emphasis::bold, "{}", args), ...);
@@ -40,7 +40,7 @@ void error(const auto&... args)
 }
 
 #ifdef __cpp_lib_source_location
-inline void log(const std::string_view message)
+inline auto log(const std::string_view message)
 {
     const std::source_location location = std::source_location::current();
     fmt::print(fg(fmt::color::steel_blue) | fmt::emphasis::bold,
