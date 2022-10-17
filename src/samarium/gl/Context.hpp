@@ -36,6 +36,11 @@ struct Context
     Context() = default;
 
     void init();
+
+    void set_active(const Shader& shader);
+
+  private:
+    u32 active_shader_handle{};
 };
 } // namespace sm::gl
 
@@ -96,6 +101,8 @@ void Context::init()
     shaders.emplace("PosColorTex", Shader{VertexShader{vert_sources.at("PosColorTex")},
                                           FragmentShader{frag_sources.at("PosColorTex")}});
 
+    shaders.at("PosColor").bind();
+
     vert_sources.emplace("polyline",
 #include "shaders/polyline.vert.glsl"
     );
@@ -110,5 +117,15 @@ void Context::init()
 
     textures.emplace("default", Texture{});
 }
+
+void Context::set_active(const Shader& shader)
+{
+    if (shader.handle != active_shader_handle)
+    {
+        shader.bind();
+        active_shader_handle = shader.handle;
+    }
+}
 } // namespace sm::gl
+
 #endif
