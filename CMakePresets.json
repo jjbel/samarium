@@ -81,17 +81,6 @@
             }
         },
         {
-            "name": "ubsan",
-            "description": "Use clang, address sanitizer, Ninja, and skip extra tests",
-            "inherits": "clang",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
-                "USE_UBSAN": true,
-                "BUILD_UNIT_TESTS": false,
-                "BUILD_EXAMPLES": false
-            }
-        },
-        {
             "name": "iwyu",
             "description": "Run Include What You Use",
             "inherits": "debug",
