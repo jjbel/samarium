@@ -14,6 +14,7 @@ Checks: "*,\
   -llvmlibc-*,\
   -readability-identifier-naming,\
   -cppcoreguidelines-avoid-magic-numbers,\
+  -misc-definitions-in-headers,\
   -misc-non-private-member-variables-in-classes"
 WarningsAsErrors: ""
 CheckOptions:
