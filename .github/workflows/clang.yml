@@ -35,6 +35,9 @@ jobs:
         id: conan
         uses: turtlebrowser/get-conan@main
 
+      - name: Install libudev
+        run: sudo apt-get install libudev-dev
+
       - name: Check Tool Versions
         run: |
           printf "#include <ciso646>\nint main () {}" | clang -E -stdlib=libc++ -x c++ -dM - | grep _LIBCPP_VERSION
@@ -46,15 +49,6 @@ jobs:
           printf "gcc:   $(which g++)\n\n"
           printf "libc++:$(ldconfig -p | grep libc++)\n\n"
           printf "libstdc++:$(ldconfig -p | grep libstdc++)\n\n"
-
-      - name: Configure Conan
-        run: |
-          conan profile new default --detect
-          conan profile update settings.compiler.libcxx=libstdc++11 default
-          conan config set tools.system.package_manager:mode=install
-          conan config get tools.system.package_manager
-          conan profile update settings.compiler=clang default
-          conan profile update settings.compiler.version=10 default
 
       - name: Cache .conan directory
         id: cache-conan
@@ -68,7 +62,14 @@ jobs:
 
       - name: Run Conan
         if: steps.cache-conan.outputs.cache-hit != 'true'
-        run: conan install . -b missing -if build -pr:b=default -o samarium:build_tests=True -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=True
+        run: |
+          conan profile new default --detect
+          conan profile update settings.compiler.libcxx=libstdc++11 default
+          conan config set tools.system.package_manager:mode=install
+          conan config get tools.system.package_manager
+          conan profile update settings.compiler=clang default
+          conan profile update settings.compiler.version=10 default
+          conan install . -b missing -if build -pr:b=default -o samarium:build_tests=True -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=True
 
       - name: Install mold
         uses: rui314/setup-mold@v1

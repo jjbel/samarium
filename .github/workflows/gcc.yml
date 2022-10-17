@@ -82,14 +82,12 @@ jobs:
           key: ${{ runner.os }}-builder-${{ env.cache-name }}-${{ hashFiles('**/conanfile.py') }}
           restore-keys: ${{ runner.os }}-builder-${{ env.cache-name }}-
 
-      - name: Configure Conan
+      - name: Run Conan
+        if: steps.cache-conan.outputs.cache-hit != 'true'
         run: |
           conan profile new default --detect
           conan profile update settings.compiler.libcxx=libstdc++11 default
-
-      - name: Run Conan
-        if: steps.cache-conan.outputs.cache-hit != 'true'
-        run: conan install . -b missing -if build -pr:b=default -o samarium:build_tests=True -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=True
+          conan install . -b missing -if build -pr:b=default -o samarium:build_tests=True -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=True
 
       - name: CMake Configure
         run: |
@@ -143,17 +141,15 @@ jobs:
           key: ${{ runner.os }}-builder-${{ env.cache-name }}-${{ hashFiles('**/conanfile.py') }}
           restore-keys: ${{ runner.os }}-builder-${{ env.cache-name }}-
 
-      - name: Configure Conan
-        run: |
-          conan profile new default --detect
-          conan profile update settings.compiler.libcxx=libstdc++11 default
-
       - name: Git Clone
         run: git clone --depth 1 https://github.com/strangeQuark1041/samarium.git
 
       - name: Conan Install
         if: steps.cache-conan.outputs.cache-hit != 'true'
-        run: conan install samarium -b missing -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=True
+        run: |
+          conan profile new default --detect
+          conan profile update settings.compiler.libcxx=libstdc++11 default
+          conan install samarium -b missing -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=True
 
       - name: Conan Create
         run: conan create samarium -b missing -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=True
