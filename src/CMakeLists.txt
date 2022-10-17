@@ -95,6 +95,13 @@ install(
     PATTERN "*.hpp" # select header files
 )
 
+install(
+    DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/samarium" # source directory
+    DESTINATION "include" # target directory
+    FILES_MATCHING # install only matched files
+    PATTERN "*.glsl" # select header files
+)
+
 function(link_deps target)
     foreach(
         DEPENDENCY
