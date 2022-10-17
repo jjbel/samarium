@@ -35,8 +35,8 @@ jobs:
         id: conan
         uses: turtlebrowser/get-conan@main
 
-      - name: Install libudev
-        run: sudo apt-get install libudev-dev
+      - name: Install system deps
+        run: sudo apt-get install libudev-dev libgl-dev
 
       - name: Check Tool Versions
         run: |

@@ -72,6 +72,9 @@ jobs:
           cmake    --version
           g++      --version
 
+      - name: Install system deps
+        run: sudo apt-get install libudev-dev libgl-dev
+
       - name: Cache .conan directory
         id: cache-conan
         uses: actions/cache@v3
@@ -122,8 +125,8 @@ jobs:
         id: conan
         uses: turtlebrowser/get-conan@main
 
-      - name: Install other deps
-        run: sudo apt-get update && sudo apt-get install libtbb-dev
+      - name: Install system deps
+        run: sudo apt-get install libudev-dev
 
       - name: Check Tool Versions
         run: |
