@@ -52,6 +52,9 @@ jobs:
 
       - name: Install GCC
         uses: egor-tensin/setup-gcc@v1
+        with:
+          version: latest
+          platform: x64
 
       - name: Install Ninja
         uses: seanmiddleditch/gha-setup-ninja@master
@@ -110,6 +113,9 @@ jobs:
     steps:
       - name: Set up GCC
         uses: egor-tensin/setup-gcc@v1
+        with:
+          version: latest
+          platform: x64
 
       - name: Install CMake
         uses: jwlawson/actions-setup-cmake@v1.12
