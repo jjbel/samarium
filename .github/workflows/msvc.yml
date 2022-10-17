@@ -19,7 +19,7 @@ jobs:
   windows-test:
     runs-on: windows-2022
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
@@ -43,10 +43,6 @@ jobs:
           path: ${{ env.CONAN_USER_HOME }}
           key: ${{ runner.os }}-builder-${{ env.cache-name }}-${{ hashFiles('**/conanfile.py') }}
           restore-keys: ${{ runner.os }}-builder-${{ env.cache-name }}-
-
-      - name: Check Conan Cache
-        if: steps.cache-conan.outputs.cache-hit == 'true'
-        run: echo "Cached"
 
       - name: Run Conan
         if: steps.cache-conan.outputs.cache-hit != 'true'
@@ -74,7 +70,7 @@ jobs:
           conan profile new default --detect
 
       - name: Git Clone
-        run: git clone https://github.com/strangeQuark1041/samarium.git
+        run: git clone --depth 1 https://github.com/strangeQuark1041/samarium.git
 
       - name: Cache .conan directory
         id: cache-conan

@@ -12,6 +12,7 @@ env:
   # Path to the CMake build directory.
   build: "${{ github.workspace }}/build"
   CONAN_SYSREQUIRES_MODE: "enabled"
+  CONAN_USER_HOME: "${{ github.workspace }}/release/"
 
 jobs:
   test:
@@ -23,7 +24,7 @@ jobs:
       BUILD_WRAPPER_OUT_DIR: build_wrapper_output_directory # Directory where build-wrapper output will be placed
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
@@ -51,9 +52,6 @@ jobs:
 
       - name: Install GCC
         uses: egor-tensin/setup-gcc@v1
-        with:
-          version: 11
-          platform: x64
 
       - name: Install Ninja
         uses: seanmiddleditch/gha-setup-ninja@master
@@ -71,12 +69,23 @@ jobs:
           cmake    --version
           g++      --version
 
+      - name: Cache .conan directory
+        id: cache-conan
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-conan-modules
+        with:
+          path: ${{ env.CONAN_USER_HOME }}
+          key: ${{ runner.os }}-builder-${{ env.cache-name }}-${{ hashFiles('**/conanfile.py') }}
+          restore-keys: ${{ runner.os }}-builder-${{ env.cache-name }}-
+
       - name: Configure Conan
         run: |
           conan profile new default --detect
           conan profile update settings.compiler.libcxx=libstdc++11 default
 
       - name: Run Conan
+        if: steps.cache-conan.outputs.cache-hit != 'true'
         run: conan install . -b missing -if build -pr:b=default -o samarium:build_tests=True -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=True
 
       - name: CMake Configure
@@ -101,9 +110,6 @@ jobs:
     steps:
       - name: Set up GCC
         uses: egor-tensin/setup-gcc@v1
-        with:
-          version: 11
-          platform: x64
 
       - name: Install CMake
         uses: jwlawson/actions-setup-cmake@v1.12
@@ -121,13 +127,27 @@ jobs:
           cmake    --version
           c++      --version
 
+      - name: Cache .conan directory
+        id: cache-conan
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-conan-modules
+        with:
+          path: ${{ env.CONAN_USER_HOME }}
+          key: ${{ runner.os }}-builder-${{ env.cache-name }}-${{ hashFiles('**/conanfile.py') }}
+          restore-keys: ${{ runner.os }}-builder-${{ env.cache-name }}-
+
       - name: Configure Conan
         run: |
           conan profile new default --detect
           conan profile update settings.compiler.libcxx=libstdc++11 default
 
       - name: Git Clone
-        run: git clone https://github.com/strangeQuark1041/samarium.git
+        run: git clone --depth 1 https://github.com/strangeQuark1041/samarium.git
+
+      - name: Conan Install
+        if: steps.cache-conan.outputs.cache-hit != 'true'
+        run: conan install samarium -b missing -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=True
 
       - name: Conan Create
         run: conan create samarium -b missing -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=True
