@@ -35,9 +35,6 @@ jobs:
         id: conan
         uses: turtlebrowser/get-conan@main
 
-      - name: Install system deps
-        run: sudo apt-get install libudev-dev libgl-dev
-
       - name: Check Tool Versions
         run: |
           printf "#include <ciso646>\nint main () {}" | clang -E -stdlib=libc++ -x c++ -dM - | grep _LIBCPP_VERSION
@@ -50,20 +47,9 @@ jobs:
           printf "libc++:$(ldconfig -p | grep libc++)\n\n"
           printf "libstdc++:$(ldconfig -p | grep libstdc++)\n\n"
 
-      - name: Cache .conan directory
-        id: cache-conan
-        uses: actions/cache@v3
-        env:
-          cache-name: cache-conan-modules
-        with:
-          path: ${{ env.CONAN_USER_HOME }}
-          key: ${{ runner.os }}-builder-${{ env.cache-name }}-${{ hashFiles('**/conanfile.py') }}
-          restore-keys: ${{ runner.os }}-builder-${{ env.cache-name }}-
-
       - name: Run Conan
-        if: steps.cache-conan.outputs.cache-hit != 'true'
         run: |
-          test -f ./release/.conan/profiles/default || conan profile new default --detect
+          conan profile new default --detect
           conan profile update settings.compiler.libcxx=libstdc++11 default
           conan config set tools.system.package_manager:mode=install
           conan config get tools.system.package_manager
