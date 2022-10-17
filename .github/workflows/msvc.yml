@@ -36,12 +36,12 @@ jobs:
 
       - name: Cache .conan directory
         id: cache-conan
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         env:
           cache-name: cache-conan-modules
         with:
           path: ${{ env.CONAN_USER_HOME }}
-          key: ${{ runner.os }}-builder-${{ env.cache-name }}-${{ hashFiles('conanfile.py') }}
+          key: ${{ runner.os }}-builder-${{ env.cache-name }}-${{ hashFiles('**/conanfile.py') }}
           restore-keys: ${{ runner.os }}-builder-${{ env.cache-name }}-
 
       - name: Check Conan Cache
@@ -78,12 +78,12 @@ jobs:
 
       - name: Cache .conan directory
         id: cache-conan
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         env:
           cache-name: cache-conan-modules
         with:
           path: ${{ env.CONAN_USER_HOME }}
-          key: ${{ runner.os }}-builder-${{ env.cache-name }}-${{ hashFiles('conanfile.py') }}
+          key: ${{ runner.os }}-builder-${{ env.cache-name }}-${{ hashFiles('**/conanfile.py') }}
           restore-keys: ${{ runner.os }}-builder-${{ env.cache-name }}-
 
       - name: Check Conan Cache
