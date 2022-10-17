@@ -98,7 +98,6 @@ install(
 function(link_deps target)
     foreach(
         DEPENDENCY
-        SFML
         fmt
         range-v3
         stb
@@ -120,7 +119,6 @@ function(link_deps target)
         DEPENDENCY
         fmt::fmt
         range-v3::range-v3
-        sfml::sfml
         stb::stb
         tl::expected
         tl::function-ref
