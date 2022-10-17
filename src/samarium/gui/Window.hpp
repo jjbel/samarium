@@ -16,19 +16,26 @@
 #include "GLFW/glfw3.h"                // for glfwWindowHint, glfwGetMous...
 #include "glm/ext/matrix_float4x4.hpp" // for mat4
 
-#include "samarium/core/types.hpp"     // for f64, i32, u64, f32
-#include "samarium/gl/Context.hpp"     // for Context
-#include "samarium/gl/gl.hpp"          // for enable_debug_output, versio...
-#include "samarium/graphics/Image.hpp" // for Image
-#include "samarium/math/Transform.hpp" // for Transform
-#include "samarium/math/Vector2.hpp"   // for Dimensions, Vector2_t, Vector2
-#include "samarium/util/Grid.hpp"      // for Grid
+#include "samarium/core/types.hpp"       // for f64, i32, u64, f32
+#include "samarium/gl/Context.hpp"       // for Context
+#include "samarium/gl/gl.hpp"            // for enable_debug_output, versio...
+#include "samarium/graphics/Image.hpp"   // for Image
+#include "samarium/math/BoundingBox.hpp" // for BoundingBox
+#include "samarium/math/Transform.hpp"   // for Transform
+#include "samarium/math/Vector2.hpp"     // for Dimensions, Vector2_t, Vector2
+#include "samarium/util/Grid.hpp"        // for Grid
 
 #include "Mouse.hpp"    // for Mouse
 #include "keyboard.hpp" // for keyboard
 
 namespace sm
 {
+enum class Space
+{
+    World,
+    Screen
+};
+
 struct Window
 {
     struct Deleter
@@ -77,7 +84,27 @@ struct Window
 
     [[nodiscard]] auto is_key_pressed(Key key) const -> bool;
 
+    /**
+     * @brief               The aspect ratio of the window given by width / height
+     *
+     * @return f64
+     */
     [[nodiscard]] auto aspect_ratio() const -> f64;
+
+    /**
+     * @brief               The bounds of the visible region of the window
+     *
+     * @tparam space
+     * @return BoundingBox<f64>
+     */
+    template <Space space = Space::World> [[nodiscard]] auto viewport() const -> BoundingBox<f64>
+    {
+        if constexpr (space == Space::World)
+        {
+            const auto ratio = aspect_ratio();
+            return {{-ratio, -1.0}, {ratio, 1.0}};
+        }
+    }
 
     [[nodiscard]] auto get_image() const -> Image;
 };
