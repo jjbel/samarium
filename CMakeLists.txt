@@ -33,7 +33,7 @@ include(include_what_you_use)
 
 add_subdirectory(src)
 add_subdirectory(test)
-add_subdirectory(examples)
+# add_subdirectory(examples)
 add_subdirectory(benchmarks)
 
 iwyu(samarium)
