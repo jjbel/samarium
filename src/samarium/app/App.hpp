@@ -80,7 +80,7 @@ class App
               sf::Style::Titlebar | sf::Style::Close,
               sf::ContextSettings{0, 0, /* antialiasing factor */ 8}),
           target_framerate{settings.framerate}, image{settings.dims},
-          transform{.pos   = image.dims.as<f64>() / 2.,
+          transform{.pos   = image.dims.cast<f64>() / 2.,
                     .scale = Vector2::combine(10) * Vector2{1.0, -1.0}}
     {
         texture.create(static_cast<u32>(settings.dims.x), static_cast<u32>(settings.dims.y));
@@ -332,7 +332,7 @@ void App::get_input()
 
 auto App::dims() const -> Dimensions { return image.dims; }
 
-auto App::transformed_dims() const -> Vector2 { return this->dims().as<f64>() / transform.scale; }
+auto App::transformed_dims() const -> Vector2 { return this->dims().cast<f64>() / transform.scale; }
 
 auto App::bounding_box() const -> BoundingBox<u64> { return this->image.bounding_box(); }
 
@@ -340,15 +340,15 @@ auto App::transformed_bounding_box() const -> BoundingBox<f64>
 {
     const auto box = this->image.bounding_box();
     return this->transform.apply_inverse(BoundingBox<f64>{
-        box.min.as<f64>(),
-        box.max.as<f64>() +
+        box.min.cast<f64>(),
+        box.max.cast<f64>() +
             Vector2{1.0,
                     1.0}}); // add 1 to compensate for inclusive-exclusive from Image::bounding_box
 }
 
 auto App::viewport_box() const -> std::array<LineSegment, 4>
 {
-    const auto f64_dims = this->image.dims.as<f64>();
+    const auto f64_dims = this->image.dims.cast<f64>();
 
     return std::array{
         this->transform.apply_inverse(LineSegment{{}, {0.0, f64_dims.y}}),
@@ -367,7 +367,7 @@ void App::draw(Circle circle, ShapeColor color, u64 vertex_count)
 {
     const auto border_width = static_cast<f32>(color.border_width * transform.scale.x);
     const auto radius       = static_cast<f32>(circle.radius * transform.scale.x);
-    const auto pos          = transform.apply(circle.centre).as<f32>();
+    const auto pos          = transform.apply(circle.centre).cast<f32>();
 
     auto shape = sf::CircleShape{radius, vertex_count};
     shape.setFillColor(sfml(color.fill_color));
@@ -382,8 +382,8 @@ void App::draw(Circle circle, ShapeColor color, u64 vertex_count)
 void App::draw(BoundingBox<f64> box, ShapeColor color)
 {
     const auto border_width = static_cast<f32>(color.border_width * transform.scale.x);
-    const auto pos          = transform.apply(box.centre()).as<f32>();
-    const auto displacement = sfml((box.displacement() * transform.scale.x).as<f32>().abs());
+    const auto pos          = transform.apply(box.centre()).cast<f32>();
+    const auto displacement = sfml((box.displacement() * transform.scale.x).cast<f32>().abs());
 
     auto shape = sf::RectangleShape{displacement};
     shape.setFillColor(sfml(color.fill_color));
@@ -407,10 +407,10 @@ void App::draw_line_segment(const LineSegment& ls, Color color, f64 thickness)
 
     auto vertices = std::array<sf::Vertex, 4>{};
 
-    vertices[0].position = sfml(transform.apply(ls.p1 - thickness_vector).as<f32>());
-    vertices[1].position = sfml(transform.apply(ls.p1 + thickness_vector).as<f32>());
-    vertices[2].position = sfml(transform.apply(ls.p2 + thickness_vector).as<f32>());
-    vertices[3].position = sfml(transform.apply(ls.p2 - thickness_vector).as<f32>());
+    vertices[0].position = sfml(transform.apply(ls.p1 - thickness_vector).cast<f32>());
+    vertices[1].position = sfml(transform.apply(ls.p1 + thickness_vector).cast<f32>());
+    vertices[2].position = sfml(transform.apply(ls.p2 + thickness_vector).cast<f32>());
+    vertices[3].position = sfml(transform.apply(ls.p2 - thickness_vector).cast<f32>());
 
     vertices[0].color = sfml_color;
     vertices[1].color = sfml_color;
@@ -425,7 +425,7 @@ void App::draw_world_space(FunctionRef<Color(Vector2)> callable)
     const auto bounding_box    = image.bounding_box();
     const auto transformed_box = transform.apply_inverse(BoundingBox<u64>{
         .min = bounding_box.min,
-        .max = bounding_box.max + Indices{1, 1}}.template as<f64>());
+        .max = bounding_box.max + Indices{1, 1}}.template cast<f64>());
 
     this->draw_world_space(callable, transformed_box);
 }
@@ -436,8 +436,8 @@ void App::draw_world_space(FunctionRef<Color(Vector2)> callable,
     load_pixels();
 
     const auto box = this->transform.apply(bounding_box)
-                         .clamped_to(image.bounding_box().template as<f64>())
-                         .template as<u64>();
+                         .clamped_to(image.bounding_box().template cast<f64>())
+                         .template cast<u64>();
 
     if (math::area(box) == 0UL) { return; }
 
@@ -451,7 +451,7 @@ void App::draw_world_space(FunctionRef<Color(Vector2)> callable,
             for (auto x : x_range)
             {
                 const auto coords = Indices{x, y};
-                const auto col    = callable(transform.apply_inverse(coords.template as<f64>()));
+                const auto col    = callable(transform.apply_inverse(coords.template cast<f64>()));
 
                 image[coords].add_alpha_over(col);
             }
@@ -525,7 +525,7 @@ void App::draw_vertices(std::span<const Vector2> vertices, VertexMode mode)
 {
     if (vertices.empty()) { return; }
     auto converted = sf::VertexArray(static_cast<sf::PrimitiveType>(mode), vertices.size());
-    for (auto i : range(vertices.size())) { converted[i].position = sfml(vertices[i].as<f32>()); }
+    for (auto i : range(vertices.size())) { converted[i].position = sfml(vertices[i].cast<f32>()); }
     sf_render_window.draw(converted);
 }
 

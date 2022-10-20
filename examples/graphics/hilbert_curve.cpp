@@ -38,14 +38,8 @@ auto point_at(i32 index, i32 level)
         const auto len = static_cast<i32>(std::pow(2, j));
 
         if (thingy == 0) { std::swap(v.x, v.y); }
-        else if (thingy == 1)
-        {
-            v.y += len;
-        }
-        else if (thingy == 2)
-        {
-            v += IntegerPair::combine(len);
-        }
+        else if (thingy == 1) { v.y += len; }
+        else if (thingy == 2) { v += IntegerPair::combine(len); }
         else
         {
             const auto temp = len - 1 - v.x;
@@ -65,7 +59,7 @@ auto points_f64(u64 level)
     auto vec = Path(point_count(level));
     for (auto i : range(vec.size()))
     {
-        const auto point = point_at(i32(i), i32(level)).as<f64>();
+        const auto point = point_at(i32(i), i32(level)).cast<f64>();
         vec[i]           = (point + Vector2::combine(0.5)) /
                  std::pow(2.0, static_cast<f64>(level)); // rescale to [{0, 0}, {1, 1}]
     }

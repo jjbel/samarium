@@ -40,12 +40,13 @@ struct Window
 {
     struct Deleter
     {
-        auto operator()(GLFWwindow* ptr) const
+        auto operator()(GLFWwindow* ptr)
         {
             glfwDestroyWindow(ptr);
             glfwTerminate();
         }
     };
+
     using Handle = std::unique_ptr<GLFWwindow, Deleter>;
 
     Handle handle{};
@@ -195,7 +196,7 @@ SM_INLINE auto Window::is_key_pressed(Key key) const -> bool
 
 SM_INLINE auto Window::aspect_ratio() const -> f64
 {
-    const auto current_dims = dims.as<f64>();
+    const auto current_dims = dims.cast<f64>();
     return current_dims.x / current_dims.y;
 }
 

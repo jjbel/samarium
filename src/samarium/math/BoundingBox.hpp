@@ -22,8 +22,7 @@ template <concepts::Number T = f64> struct BoundingBox
 
     template <concepts::Number U> [[nodiscard]] constexpr auto as() const
     {
-        // very weird: https://stackoverflow.com/a/3505738/17100530
-        return BoundingBox<U>{min.template as<U>(), max.template as<U>()};
+        return BoundingBox<U>{min.template cast<U>(), max.template cast<U>()};
     }
 
     [[nodiscard]] static constexpr auto square(T width) noexcept requires std::is_signed_v<T>

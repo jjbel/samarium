@@ -27,14 +27,14 @@ int main()
 
     for (auto& particle : ps)
     {
-        particle.pos    = rand.vector({.min = Vector2{0.0, 0.0}, .max = dims.as<f64>()});
+        particle.pos    = rand.vector({.min = Vector2{0.0, 0.0}, .max = dims.cast<f64>()});
         particle.radius = 0.18;
     }
 
     for (auto [pos, force] : forces.enumerate_2d())
     {
         const auto noisy_angle =
-            noise::perlin_2d(pos.as<f64>() +
+            noise::perlin_2d(pos.cast<f64>() +
                                  Vector2::combine(10) * static_cast<f64>(app.frame_counter),
                              {.scale = scale}) *
             math::two_pi;
@@ -45,7 +45,7 @@ int main()
     {
         for (auto [i, particle] : ranges::views::enumerate(ps))
         {
-            const auto pos   = particle.pos.as<u64>();
+            const auto pos   = particle.pos.cast<u64>();
             const auto force = forces.at_or(pos, Vector2{0.0, 0.0});
 
             particle.apply_force(force);
@@ -67,8 +67,8 @@ int main()
         {
             const auto color = "#ff1745"_c.with_multiplied_alpha(0.05);
 
-            const auto pos =
-                app.transform.apply_inverse(particle.pos * app.dims().as<f64>() / dims.as<f64>());
+            const auto pos = app.transform.apply_inverse(particle.pos * app.dims().cast<f64>() /
+                                                         dims.cast<f64>());
             app.draw(Circle{pos, particle.radius}, {.fill_color = color});
         }
     };

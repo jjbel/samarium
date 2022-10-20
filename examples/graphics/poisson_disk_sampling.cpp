@@ -26,10 +26,10 @@ int main()
 
     auto points = sm::random.poisson_disc_points(radius, region, samples);
 
-    auto box = app.transform.apply_inverse(app.bounding_box().template as<f64>());
+    auto box = app.transform.apply_inverse(app.bounding_box().template cast<f64>());
 
     auto mapper =
-        interp::make_mapper<Vector2>({{}, region}, {box.min.as<f64>(), box.max.as<f64>()});
+        interp::make_mapper<Vector2>({{}, region}, {box.min.cast<f64>(), box.max.cast<f64>()});
 
     app.run(
         [&]
