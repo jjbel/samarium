@@ -152,7 +152,7 @@ struct VertexArray
     ~VertexArray();
 };
 
-enum class Format
+enum class Layout
 {
     Pos,        ///< Each vertex only has a position, all vertices have the same color
     PosColor,   ///< Each vertex has a position and a color
@@ -160,24 +160,24 @@ enum class Format
     PosColorTex ///< Each vertex has a position, color and a texture coordinate
 };
 
-template <Format mode> struct Vertex
+template <Layout mode> struct Vertex
 {
     Vector2_t<f32> pos{};
 };
 
-template <> struct Vertex<Format::PosColor>
+template <> struct Vertex<Layout::PosColor>
 {
     Vector2_t<f32> pos{};
     Color color{};
 };
 
-template <> struct Vertex<Format::PosTex>
+template <> struct Vertex<Layout::PosTex>
 {
     Vector2_t<f32> pos{};
     Vector2_t<f32> tex_coord{};
 };
 
-template <> struct Vertex<Format::PosColorTex>
+template <> struct Vertex<Layout::PosColorTex>
 {
     Vector2_t<f32> pos{};
     Color color{};
