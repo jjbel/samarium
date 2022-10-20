@@ -22,7 +22,6 @@ extensions = [
     "sphinx_copybutton",
     "sphinxext.opengraph",
     "sphinx.ext.extlinks",
-    "sphinx_substitution_extensions",
     "sphinxcontrib.asciinema",
 ]
 
@@ -85,7 +84,5 @@ highlight_language = "cpp"
 
 ogp_site_url = "https://strangequark1041.github.io/samarium/"
 ogp_site_name = "Samarium Docs"
-
-rst_prolog = f".. |version| replace:: {version}"
 
 run(["doxygen", "Doxyfile.cfg"], check=True)
