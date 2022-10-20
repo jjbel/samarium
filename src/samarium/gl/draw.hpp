@@ -3,7 +3,6 @@
 #include <span>   // for span
 #include <vector> // for vector, allocator
 
-#include "glad/glad.h" // for glDrawArrays, GL_COLOR_BUFFER...
 
 #include "samarium/core/types.hpp"     // for f32, f64, u64, i32
 #include "samarium/gl/Context.hpp"     // for Context
