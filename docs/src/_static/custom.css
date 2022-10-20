@@ -24,7 +24,13 @@ h1 {
 }
 
 section,
-.function {
+.function,
+.struct,
+.type {
     margin-top: 3em;
     margin-bottom: 3em;
+}
+.function {
+    margin-top: 1.8em;
+    margin-bottom: 1.8em;
 }
