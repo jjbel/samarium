@@ -6,7 +6,13 @@
         {
             "label": "Build",
             "type": "shell",
-            "command": "mold -run cmake --build --preset=default",
+            "command": "cmake --build --preset=default",
+            "group": "build"
+        },
+        {
+            "label": "Run",
+            "type": "shell",
+            "command": "cmake --build --preset=default && ./build/test/samarium_tests",
             "group": "build"
         },
         {
