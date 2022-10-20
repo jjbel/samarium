@@ -82,7 +82,7 @@ function(set_compiler_options)
         # https://docs.microsoft.com/en-us/cpp/sanitizers/asan?view=msvc-170
     endif()
 
-    set(CLANG_OPTIONS ${COMMON_OPTIONS} -Wno-header-guard)
+    set(CLANG_OPTIONS ${COMMON_OPTIONS} -Wno-header-guard -Wno-double-promotion)
 
     if(USE_LINKER)
         message(STATUS "samarium: using linker: ${USE_LINKER}")
