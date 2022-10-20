@@ -1,41 +1,11 @@
-#include <glad/glad.h> // for glCreateVertexArrays, glBindVer...
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2022 Jai Bellare
+ * See <https://opensource.org/licenses/MIT/> or LICENSE.md
+ * Project homepage: https://github.com/strangeQuark1041/samarium
+ */
 
-#include "samarium/math/Extents.hpp" // for Extents, Extents<>::Iterator
-
+#ifndef SAMARIUM_HEADER_ONLY
+#define SAMARIUM_GL_IMPL
 #include "gl.hpp"
-
-namespace sm::gl
-{
-VertexArray::VertexArray() { glCreateVertexArrays(1, &handle); }
-
-VertexArray::VertexArray(const std::vector<VertexAttribute>& attributes)
-{
-    glCreateVertexArrays(1, &handle);
-    for (auto i : range(attributes.size())) { make_attribute(static_cast<u32>(i), attributes[i]); }
-}
-
-void VertexArray::bind()
-{
-    glBindVertexArray(handle); // make active, creating if necessary
-}
-
-void VertexArray::make_attribute(u32 index, const VertexAttribute& attribute)
-{
-    glEnableVertexArrayAttrib(handle, index);
-    glVertexArrayAttribBinding(handle, index, 0);
-    glVertexArrayAttribFormat(handle, index, attribute.size, attribute.type, attribute.normalized,
-                              attribute.offset);
-}
-
-void VertexArray::bind(const VertexBuffer& buffer, i32 stride)
-{
-    glVertexArrayVertexBuffer(handle, 0, buffer.handle, 0, stride);
-}
-
-void VertexArray::bind(const ElementBuffer& buffer)
-{
-    glVertexArrayElementBuffer(handle, buffer.handle);
-}
-
-VertexArray::~VertexArray() { glDeleteVertexArrays(1, &handle); }
-} // namespace sm::gl
+#endif // !SAMARIUM_HEADER_ONLY

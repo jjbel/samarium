@@ -3,8 +3,9 @@
 #include <stdexcept> // for logic_error
 #include <vector>    // for vector
 
-#include "fmt/core.h"  // for print
-#include "glad/glad.h" // for GLenum, GL_SHADER_STORAGE_BUFFER
+#include "fmt/core.h"                  // for print
+#include "glad/glad.h"                 // for GLenum, GL_SHADER_STORAGE_BUFFER
+#include "range/v3/range/concepts.hpp" // for range
 
 #include "samarium/core/types.hpp"     // for f32, i64, u32, i32
 #include "samarium/graphics/Color.hpp" // for Color
@@ -52,11 +53,11 @@ template <BufferType type> struct Buffer
         glCreateBuffers(1, &handle); // generate a name
     }
 
-    explicit Buffer(const std::ranges::range auto& array, Usage usage = Usage::StaticDraw)
+    explicit Buffer(const ranges::range auto& array, Usage usage = Usage::StaticDraw)
     {
         glCreateBuffers(1, &handle); // generate a name
 
-        glNamedBufferData(handle, detail::array_byte_size(array), array.data(),
+        glNamedBufferData(handle, detail::array_byte_size(array), std::data(array),
                           static_cast<GLenum>(usage)); // copy data
     }
 
@@ -77,19 +78,7 @@ template <BufferType type> struct Buffer
         return *this;
     }
 
-    void bind() const
-    {
-        if constexpr (type == BufferType::ShaderStorage)
-        {
-            glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, handle);
-        }
-        else
-        {
-            glBindBuffer(static_cast<GLenum>(type), handle); // make active, creating if necessary
-        }
-    }
-
-    void bind(u32 index) const
+    void bind(u32 index = 0) const
     {
         if constexpr (type == BufferType::ShaderStorage)
         {
@@ -101,26 +90,16 @@ template <BufferType type> struct Buffer
         }
     }
 
-    void set_data(const std::ranges::range auto& array, Usage usage = Usage::StaticDraw) const
+    void set_data(const ranges::range auto& array, Usage usage = Usage::StaticDraw) const
     {
-        glNamedBufferData(handle, static_cast<i64>(detail::array_byte_size(array)), array.data(),
+        glNamedBufferData(handle, static_cast<i64>(detail::array_byte_size(array)),
+                          std::data(array),
                           static_cast<GLenum>(usage)); // copy data
     }
 
-    void set_raw_data(const void* data, i64 byte_size, Usage usage = Usage::StaticDraw) const
+    void set_sub_data(const ranges::range auto& array, i64 offset = 0) const
     {
-        glNamedBufferData(handle, byte_size, data,
-                          static_cast<GLenum>(usage)); // copy data
-    }
-
-    void set_sub_data(const std::ranges::range auto& array, i64 offset = 0) const
-    {
-        glNamedBufferSubData(handle, offset, detail::array_byte_size(array), array.data());
-    }
-
-    void set_sub_raw_data(const void* data, i64 byte_size, i64 offset = 0) const
-    {
-        glNamedBufferSubData(handle, offset, byte_size, data);
+        glNamedBufferSubData(handle, offset, detail::array_byte_size(array), std::data(array));
     }
 
     ~Buffer() { glDeleteBuffers(1, &handle); }
@@ -162,7 +141,7 @@ struct VertexArray
         return *this;
     }
 
-    void bind();
+    void bind() const;
 
     void bind(const VertexBuffer& buffer, i32 stride);
 
@@ -175,10 +154,10 @@ struct VertexArray
 
 enum class Format
 {
-    Pos,
-    PosColor,
-    PosTex,
-    PosColorTex
+    Pos,        ///< Each vertex only has a position, all vertices have the same color
+    PosColor,   ///< Each vertex has a position and a color
+    PosTex,     ///< Each vertex has a position and a texture coordinate
+    PosColorTex ///< Each vertex has a position, color and a texture coordinate
 };
 
 template <Format mode> struct Vertex
@@ -272,3 +251,51 @@ inline auto enable_debug_output()
                           GL_FALSE);
 }
 } // namespace sm::gl
+
+
+#if defined(SAMARIUM_HEADER_ONLY) || defined(SAMARIUM_GL_IMPL)
+
+#include "glad/glad.h" // for glCreateVertexArrays, glBindVer...
+
+#include "samarium/core/inline.hpp"
+#include "samarium/math/Extents.hpp" // for Extents, Extents<>::Iterator
+
+#include "gl.hpp"
+
+namespace sm::gl
+{
+SM_INLINE VertexArray::VertexArray() { glCreateVertexArrays(1, &handle); }
+
+SM_INLINE VertexArray::VertexArray(const std::vector<VertexAttribute>& attributes)
+{
+    glCreateVertexArrays(1, &handle);
+    for (auto i : range(attributes.size())) { make_attribute(static_cast<u32>(i), attributes[i]); }
+}
+
+SM_INLINE void VertexArray::bind() const
+{
+    glBindVertexArray(handle); // make active, creating if necessary
+}
+
+SM_INLINE void VertexArray::make_attribute(u32 index, const VertexAttribute& attribute)
+{
+    glEnableVertexArrayAttrib(handle, index);
+    glVertexArrayAttribBinding(handle, index, 0);
+    glVertexArrayAttribFormat(handle, index, attribute.size, attribute.type, attribute.normalized,
+                              attribute.offset);
+}
+
+SM_INLINE void VertexArray::bind(const VertexBuffer& buffer, i32 stride)
+{
+    glVertexArrayVertexBuffer(handle, 0, buffer.handle, 0, stride);
+}
+
+SM_INLINE void VertexArray::bind(const ElementBuffer& buffer)
+{
+    glVertexArrayElementBuffer(handle, buffer.handle);
+}
+
+SM_INLINE VertexArray::~VertexArray() { glDeleteVertexArrays(1, &handle); }
+} // namespace sm::gl
+
+#endif
