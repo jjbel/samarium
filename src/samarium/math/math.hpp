@@ -19,6 +19,7 @@ constexpr inline auto pi            = std::numbers::pi;
 constexpr inline auto two_thirds_pi = 2.0 * pi / 3.0;
 constexpr inline auto two_pi        = 2.0 * pi;
 constexpr inline auto e             = std::numbers::e;
+constexpr inline auto sqrt2         = std::numbers::sqrt2;
 
 /**
  * @brief               Check if 2 floating point values are equal
