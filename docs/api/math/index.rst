@@ -1,7 +1,7 @@
 Math
 ====
 
-File: :src:`math.hpp`
+Directory: :src:`math`
 
 Core math utilities
 

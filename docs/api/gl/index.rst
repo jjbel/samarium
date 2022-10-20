@@ -1,7 +1,7 @@
 Gl
 ====
 
-File: :src:`gl.hpp`
+Directory: :src:`gl`
 
 An interface to OpenGL
 

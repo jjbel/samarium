@@ -1,7 +1,7 @@
 Util
 ====
 
-File: :src:`util.hpp`
+Directory: :src:`util`
 
 Various utilities
 
