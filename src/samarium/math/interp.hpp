@@ -402,7 +402,7 @@ clamped_lerp_rotate(Vector2 from, Vector2 to, Vector2 center, f64 factor)
  * @param  value
  * @param  range_
  */
-template <typename T> [[nodiscard]] constexpr auto lerp_inverse(f64 value, Extents<T> range_)
+template <typename T> [[nodiscard]] constexpr auto lerp_inverse(T value, Extents<T> range_)
 {
     return range_.lerp_inverse(value);
 }
