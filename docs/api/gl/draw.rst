@@ -5,4 +5,4 @@ File: :src:`gl/draw.hpp`
 
 Draw stuff
 
-.. doxygennamespace:: sm::draw
+.. doxygenfile:: draw.hpp
