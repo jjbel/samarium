@@ -1,5 +1,5 @@
-Gl
-====
+gl
+==
 
 Directory: :src:`gl`
 

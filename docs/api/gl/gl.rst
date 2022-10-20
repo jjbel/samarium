@@ -1,5 +1,5 @@
-Gl
-====
+gl
+==
 
 File: :src:`gl/gl.hpp`
 
