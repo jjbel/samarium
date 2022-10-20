@@ -6,7 +6,7 @@
 Samarium Docs
 ====================================
 
-.. include:: build_status.rst
+.. include:: build-status.rst
 
 Contents
 --------
@@ -15,10 +15,16 @@ Contents
     :maxdepth: 2
     :caption: About
 
-    examples
-    installation
     changelog
     license
+
+..  toctree::
+    :maxdepth: 2
+    :caption: Usage
+
+    installation
+    usage/basics.rst
+    examples
 
 ..  toctree::
     :maxdepth: 2

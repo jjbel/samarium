@@ -66,7 +66,7 @@ html_theme_options = {
     },
 }
 
-pygments_dark_style = "one-dark"
+# pygments_dark_style = "one-dark"
 
 source_suffix = [".rst", ".md"]
 
