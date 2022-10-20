@@ -23,6 +23,7 @@ extensions = [
     "sphinxext.opengraph",
     "sphinx.ext.extlinks",
     "sphinx_substitution_extensions",
+    "sphinxcontrib.asciinema",
 ]
 
 HEAD_REF = run(
