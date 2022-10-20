@@ -81,25 +81,25 @@ template <typename T> struct Vector2_t
         return vec;
     }
 
-    constexpr auto set_length(f64 new_length) noexcept
+    constexpr auto set_length(T new_length) noexcept
     {
         const auto factor = new_length / this->length();
         x *= factor;
         y *= factor;
     }
 
-    constexpr auto set_angle(f64 new_angle) noexcept
+    constexpr auto set_angle(T new_angle) noexcept
     {
         *this = from_polar({.length = this->length(), .angle = new_angle});
     }
 
-    [[nodiscard]] constexpr auto with_length(f64 new_length) const noexcept
+    [[nodiscard]] constexpr auto with_length(T new_length) const noexcept
     {
         const auto factor = new_length / this->length();
         return Vector2_t<T>{x * factor, y * factor};
     }
 
-    [[nodiscard]] constexpr auto with_angle(f64 new_angle) const noexcept
+    [[nodiscard]] constexpr auto with_angle(T new_angle) const noexcept
     {
         return from_polar({.length = this->length(), .angle = new_angle});
     }
@@ -148,7 +148,7 @@ template <typename T> struct Vector2_t
         return *this;
     }
 
-    template <typename U> constexpr auto as() const noexcept
+    template <typename U> constexpr auto cast() const noexcept
     {
         return Vector2_t<U>{static_cast<U>(this->x), static_cast<U>(this->y)};
     }
@@ -173,7 +173,7 @@ template <typename T> struct Vector2_t
         return to.angle() - from.angle();
     }
 
-    constexpr void rotate(f64 angle) noexcept { *this = this->with_angle(this->angle() + angle); }
+    constexpr void rotate(T angle) noexcept { *this = this->with_angle(this->angle() + angle); }
 
     [[nodiscard]] constexpr auto rotated(f64 angle) const noexcept
     {
