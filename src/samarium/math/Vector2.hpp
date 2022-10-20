@@ -275,7 +275,7 @@ using Dimensions = Vector2_t<u64>;
 
 namespace literals
 {
-consteval auto operator"" _x(f80 x) noexcept { return Vector2{static_cast<f64>(x), 0.0}; }
-consteval auto operator"" _y(f80 y) noexcept { return Vector2{0.0, static_cast<f64>(y)}; }
+consteval auto operator"" _x(long double x) noexcept { return Vector2{static_cast<f64>(x), 0.0}; }
+consteval auto operator"" _y(long double y) noexcept { return Vector2{0.0, static_cast<f64>(y)}; }
 } // namespace literals
 } // namespace sm

@@ -232,10 +232,10 @@ template <typename T> constexpr auto floor_to_nearest(T value, T target)
 
 namespace sm::literals
 {
-consteval auto operator"" _degrees(f80 angle) noexcept
+consteval auto operator"" _degrees(long double angle) noexcept
 {
     return math::to_radians(static_cast<f64>(angle));
 }
 
-consteval auto operator"" _radians(f80 angle) noexcept { return static_cast<f64>(angle); }
+consteval auto operator"" _radians(long double angle) noexcept { return static_cast<f64>(angle); }
 } // namespace sm::literals
