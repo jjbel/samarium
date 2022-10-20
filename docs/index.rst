@@ -25,6 +25,7 @@ Contents
     :caption: API Reference
 
     api/math/index
+    api/gl/index
     api/util/index
 
 Useful Links
