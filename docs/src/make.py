@@ -12,9 +12,10 @@ SPHINXOPTS = []
 SPHINXBUILD = "sphinx-build"
 TARGET = argv[1] if len(argv) == 2 else "html"
 
+start = time.time()
+
 Path(BUILDDIR).mkdir(parents=True, exist_ok=True)
 
-start = time.time()
 run(
     [SPHINXBUILD, "-c", "src", "-Tqb", TARGET, "-j", "auto", SOURCEDIR, BUILDDIR]
     + SPHINXOPTS,
