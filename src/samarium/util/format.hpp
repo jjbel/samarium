@@ -41,7 +41,7 @@ template <sm::concepts::FloatingPoint T> class formatter<sm::Vector2_t<T>>
   public:
     constexpr auto parse(const format_parse_context& ctx) { return ctx.begin(); }
 
-    constexpr auto format(sm::Vector2_t<T> p, auto& ctx)
+    constexpr auto format(sm::Vector2_t<T> p, auto& ctx) const
     {
         return fmt::format_to(ctx.out(), "{}({:6.3f}, {:6.3f})",
                               fmt::styled("Vec", fmt::emphasis::bold), p.x, p.y);
