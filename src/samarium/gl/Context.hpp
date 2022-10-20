@@ -39,18 +39,23 @@ struct Context
 
     void set_active(const Shader& shader);
 
+    void set_active(const VertexArray& vertex_array);
+
   private:
     u32 active_shader_handle{};
+    u32 active_vertex_array_handle{};
 };
 } // namespace sm::gl
 
 #if defined(SAMARIUM_HEADER_ONLY) || defined(SAMARIUM_CONTEXT_IMPL)
 
+#include "samarium/core/inline.hpp"
+
 #include "Context.hpp"
 
 namespace sm::gl
 {
-void Context::init()
+SM_INLINE void Context::init()
 {
     vertex_arrays.reserve(5);
     vertex_arrays.emplace("empty", VertexArray{});
@@ -101,8 +106,6 @@ void Context::init()
     shaders.emplace("PosColorTex", Shader{VertexShader{vert_sources.at("PosColorTex")},
                                           FragmentShader{frag_sources.at("PosColorTex")}});
 
-    shaders.at("PosColor").bind();
-
     vert_sources.emplace("polyline",
 #include "shaders/polyline.vert.glsl"
     );
@@ -116,14 +119,26 @@ void Context::init()
     element_buffers.emplace("default", Buffer<BufferType::Element>{});
 
     textures.emplace("default", Texture{});
+
+    shaders.at("Pos").bind();
+    vertex_arrays.at("Pos").bind();
 }
 
-void Context::set_active(const Shader& shader)
+SM_INLINE void Context::set_active(const Shader& shader)
 {
     if (shader.handle != active_shader_handle)
     {
         shader.bind();
         active_shader_handle = shader.handle;
+    }
+}
+
+SM_INLINE void Context::set_active(const VertexArray& vertex_array)
+{
+    if (vertex_array.handle != active_vertex_array_handle)
+    {
+        vertex_array.bind();
+        active_vertex_array_handle = vertex_array.handle;
     }
 }
 } // namespace sm::gl
