@@ -22,6 +22,17 @@ constexpr auto element_size(const auto& array) { return sizeof(array[0]); }
 constexpr auto array_byte_size(const auto& array) { return array.size() * element_size(array); }
 } // namespace detail
 
+enum class Primitive
+{
+    Points        = GL_POINTS,
+    Lines         = GL_LINES,
+    LineLoop      = GL_LINE_LOOP,
+    LineStrip     = GL_LINE_STRIP,
+    Triangles     = GL_TRIANGLES,
+    TriangleStrip = GL_TRIANGLE_STRIP,
+    TriangleFan   = GL_TRIANGLE_FAN
+};
+
 enum class BufferType
 {
     Vertex        = GL_ARRAY_BUFFER,
