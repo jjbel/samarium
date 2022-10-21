@@ -8,6 +8,7 @@
 #pragma once
 
 #include "samarium/gl/Context.hpp"
+#include "samarium/gl/Framebuffer.hpp"
 #include "samarium/gl/Shader.hpp"
 #include "samarium/gl/Texture.hpp"
 #include "samarium/gl/draw.hpp"

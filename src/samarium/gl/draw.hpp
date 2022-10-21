@@ -58,7 +58,7 @@ void vertices(Window& window,
 
 void circle(Window& window, Circle circle, ShapeColor color, u64 point_count = 64);
 
-void background(Color color);
+void background(Window& window, Color color);
 
 /**
  * @brief               Fill the background with a gradient

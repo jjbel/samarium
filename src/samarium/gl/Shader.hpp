@@ -30,18 +30,16 @@ struct VertexShader
 {
     u32 handle{};
 
-    explicit VertexShader(const std::string& source);
-
     VertexShader(const VertexShader&) = delete;
 
     auto operator=(const VertexShader&) -> VertexShader& = delete;
 
-    static auto from_file(const std::filesystem::path& path)
+    [[nodiscard]] static auto from_file(const std::filesystem::path& path)
     {
-        return VertexShader(expect(file::read(path)));
+        return expect(make(expect(file::read(path))));
     }
 
-    static inline auto make(const std::string& source) -> Expected<VertexShader, std::string>
+    [[nodiscard]] static auto make(const std::string& source) -> Expected<VertexShader, std::string>
     {
         auto program_handle = glCreateShader(GL_VERTEX_SHADER);
         const auto src      = source.c_str();
@@ -254,6 +252,8 @@ struct ComputeShader
 
 #if defined(SAMARIUM_HEADER_ONLY) || defined(SAMARIUM_SHADER_IMPL)
 
+#include <stdexcept>
+
 #include "fmt/format.h"         // for buffer::append
 #include "glad/glad.h"          // for GL_COMPILE_STATUS, glCompileS...
 #include "glm/gtc/type_ptr.hpp" //for value_ptr
@@ -265,43 +265,6 @@ struct ComputeShader
 
 namespace sm::gl
 {
-VertexShader::VertexShader(const std::string& source) : handle(glCreateShader(GL_VERTEX_SHADER))
-{
-    const auto str = source.c_str();
-    glShaderSource(handle, 1, &str, nullptr);
-    glCompileShader(handle);
-
-    auto success = 0;
-    glGetShaderiv(handle, GL_COMPILE_STATUS, &success);
-
-    if (!success)
-    {
-        auto log_size = 0;
-        char info_log[1024];
-        glGetShaderInfoLog(handle, 1024, &log_size, info_log);
-        sm::error("vertex shader compilation failed: ", info_log);
-    }
-}
-
-FragmentShader::FragmentShader(const std::string& source)
-    : handle(glCreateShader(GL_FRAGMENT_SHADER))
-{
-    const auto str = source.c_str();
-    glShaderSource(handle, 1, &str, nullptr);
-    glCompileShader(handle);
-
-    auto success = 0;
-    glGetShaderiv(handle, GL_COMPILE_STATUS, &success);
-
-    if (!success)
-    {
-        auto log_size = 0;
-        char info_log[1024];
-        glGetShaderInfoLog(handle, 1024, &log_size, info_log);
-        error("fragment shader compilation failed: ", info_log);
-    }
-}
-
 auto Shader::get_uniform_location(const std::string& name) const -> i32
 {
     return glGetUniformLocation(handle, name.c_str());

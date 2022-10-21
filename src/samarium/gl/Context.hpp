@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <memory> // for unique_ptr
 #include <string> // for allocator, string
 
 #include "glad/glad.h" // for GL_FLOAT, GL_TRUE, GL_UNSIGNED_BYTE
@@ -15,14 +16,17 @@
 #include "samarium/gl/Context.hpp"
 #include "samarium/util/Map.hpp" // for Map
 
-#include "Shader.hpp"  // for Shader, FragmentShader, VertexShader
-#include "Texture.hpp" // for Texture
-#include "gl.hpp"      // for VertexArray, VertexAttribute, Buf...
+#include "Framebuffer.hpp" // for Framebuffer
+#include "Shader.hpp"      // for Shader, FragmentShader, VertexShader
+#include "Texture.hpp"     // for Texture
+#include "gl.hpp"          // for VertexArray, VertexAttribute, Buf...
 
 namespace sm::gl
 {
 struct Context
 {
+    std::unique_ptr<Framebuffer> framebuffer{};
+
     Map<std::string, VertexAttribute> attributes{
         {"position", {.size = 2, .type = GL_FLOAT, .offset = 0}},
         {"color",
@@ -64,6 +68,8 @@ namespace sm::gl
 {
 SM_INLINE void Context::init()
 {
+    framebuffer = std::make_unique<Framebuffer>(expect(Framebuffer::make()));
+
     vertex_arrays.reserve(5);
     vertex_arrays.emplace("empty", VertexArray{});
     vertex_arrays.emplace("Pos", VertexArray{{attributes.at("position")}});
@@ -101,24 +107,25 @@ SM_INLINE void Context::init()
 #include "shaders/PosColorTex.frag.glsl"
     );
 
-    shaders.emplace("Pos", Shader{VertexShader{vert_sources.at("Pos")},
-                                  FragmentShader{frag_sources.at("Pos")}});
+    shaders.emplace("Pos", Shader{expect(VertexShader::make(vert_sources.at("Pos"))),
+                                  expect(FragmentShader::make(frag_sources.at("Pos")))});
 
-    shaders.emplace("PosColor", Shader{VertexShader{vert_sources.at("PosColor")},
-                                       FragmentShader{frag_sources.at("PosColor")}});
+    shaders.emplace("PosColor", Shader{expect(VertexShader::make(vert_sources.at("PosColor"))),
+                                       expect(FragmentShader::make(frag_sources.at("PosColor")))});
 
-    shaders.emplace("PosTex", Shader{VertexShader{vert_sources.at("PosTex")},
-                                     FragmentShader{frag_sources.at("PosTex")}});
+    shaders.emplace("PosTex", Shader{expect(VertexShader::make(vert_sources.at("PosTex"))),
+                                     expect(FragmentShader::make(frag_sources.at("PosTex")))});
 
-    shaders.emplace("PosColorTex", Shader{VertexShader{vert_sources.at("PosColorTex")},
-                                          FragmentShader{frag_sources.at("PosColorTex")}});
+    shaders.emplace("PosColorTex",
+                    Shader{expect(VertexShader::make(vert_sources.at("PosColorTex"))),
+                           expect(FragmentShader::make(frag_sources.at("PosColorTex")))});
 
     vert_sources.emplace("polyline",
 #include "shaders/polyline.vert.glsl"
     );
 
-    shaders.emplace("polyline", Shader{VertexShader{vert_sources.at("polyline")},
-                                       FragmentShader{frag_sources.at("Pos")}});
+    shaders.emplace("polyline", Shader{expect(VertexShader::make(vert_sources.at("polyline"))),
+                                       expect(FragmentShader::make(frag_sources.at("Pos")))});
 
     shader_storage_buffers.emplace("default", Buffer<BufferType::ShaderStorage>{});
 
