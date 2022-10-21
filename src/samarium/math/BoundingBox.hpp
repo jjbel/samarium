@@ -9,6 +9,8 @@
 
 #include <array>
 
+#include "range/v3/algorithm/minmax.hpp" // for minmax
+
 #include "Extents.hpp"
 #include "Vector2.hpp"
 #include "shapes.hpp"
@@ -17,8 +19,21 @@ namespace sm
 {
 template <concepts::Number T = f64> struct BoundingBox
 {
-    Vector2_t<T> min;
-    Vector2_t<T> max;
+    using VecType = Vector2_t<T>;
+    VecType min;
+    VecType max;
+
+    /**
+     * @brief               Make a BoundingBox which fits a range of points
+     *
+     * @param  points       points to fit around
+     */
+    [[nodiscard]] static constexpr auto fit(const auto& points)
+    {
+        auto [x_min, x_max] = ranges::minmax(points, {}, &VecType::x);
+        auto [y_min, y_max] = ranges::minmax(points, {}, &VecType::y);
+        return BoundingBox{{x_min.x, y_min.y}, {x_max.x, y_max.y}};
+    }
 
     template <concepts::Number U> [[nodiscard]] constexpr auto as() const
     {
@@ -31,7 +46,7 @@ template <concepts::Number T = f64> struct BoundingBox
         return BoundingBox{.min{-width, -width}, .max{width, width}};
     }
 
-    [[nodiscard]] static constexpr auto find_min_max(Vector2_t<T> p1, Vector2_t<T> p2)
+    [[nodiscard]] static constexpr auto find_min_max(VecType p1, VecType p2)
     {
         return BoundingBox<T>{{math::min(p1.x, p2.x), math::min(p1.y, p2.y)},
                               {math::max(p1.x, p2.x), math::max(p1.y, p2.y)}};
@@ -47,24 +62,23 @@ template <concepts::Number T = f64> struct BoundingBox
     }
 
     [[nodiscard]] static constexpr auto
-    from_centre_width_height(Vector2_t<T> centre, T width, T height) noexcept
+    from_centre_width_height(VecType centre, T width, T height) noexcept
     {
-        const auto vec =
-            Vector2_t<T>{.x = width / static_cast<T>(2), .y = height / static_cast<T>(2)};
+        const auto vec = VecType{.x = width / static_cast<T>(2), .y = height / static_cast<T>(2)};
         return BoundingBox{centre - vec, centre + vec};
     }
 
-    [[nodiscard]] constexpr auto contains(Vector2_t<T> vec) const noexcept
+    [[nodiscard]] constexpr auto contains(VecType vec) const noexcept
     {
         return vec.x >= min.x && vec.x <= max.x && vec.y >= min.y && vec.y <= max.y;
     }
 
     [[nodiscard]] constexpr auto displacement() const noexcept { return max - min; }
 
-    [[nodiscard]] constexpr auto clamp(Vector2_t<T> vec) const
+    [[nodiscard]] constexpr auto clamp(VecType vec) const
     {
-        return Vector2_t<T>{Extents<T>{min.x, max.x}.clamp(vec.x),
-                            Extents<T>{min.y, max.y}.clamp(vec.y)};
+        return VecType{Extents<T>{min.x, max.x}.clamp(vec.x),
+                       Extents<T>{min.y, max.y}.clamp(vec.y)};
     }
 
     [[nodiscard]] constexpr auto clamped_to(BoundingBox<T> bounds) const
@@ -86,7 +100,7 @@ template <concepts::Number T = f64> struct BoundingBox
 
     [[nodiscard]] constexpr auto centre() const noexcept { return (min + max) / static_cast<T>(2); }
 
-    constexpr auto set_centre(Vector2_t<T> new_centre) noexcept
+    constexpr auto set_centre(VecType new_centre) noexcept
     {
         const auto shift = new_centre - centre();
         min += shift;
@@ -115,6 +129,11 @@ template <concepts::Number T = f64> struct BoundingBox
         const auto bottom_left = Vector2{min.x, max.y};
         return std::array<LineSegment, 4>{
             {{min, top_right}, {top_right, max}, {max, bottom_left}, {bottom_left, min}}};
+    }
+
+    [[nodiscard]] constexpr auto points() const noexcept
+    {
+        return std::to_array<VecType>({min, {min.x, max.y}, max, {max.x, min.y}});
     }
 };
 } // namespace sm
