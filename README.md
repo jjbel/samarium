@@ -34,11 +34,17 @@ Samarium is a 2d physics simulation library written in modern C++20.
 ## Quickstart
 
 ```sh
-pip install conan
+pip install conan --upgrade --quiet
+
+conan profile new default --detect
+conan profile update settings.compiler.libcxx=libstdc++11 default # if using gcc
+
+git clone --depth 1 https://github.com/strangeQuark1041/samarium.git
+conan create samarium -b missing -pr default -pr:b=default
+
 git clone --depth 1 https://github.com/strangeQuark1041/samarium_example.git .
-conan install . -b missing -if ./build # Install deps in build folder
-cmake -B ./build
-cmake --build ./build
+cmake --preset default
+cmake --build --preset default
 ./build/example
 ```
 
@@ -73,9 +79,8 @@ For a fully-featured and self-contained example, run:
 
 ```sh
 git clone --depth 1 https://github.com/strangeQuark1041/samarium_example.git .
-conan install . -b missing --install-folder build # Install deps in build folder
-cmake -B build
-cmake --build build
+cmake --preset default
+cmake --build --preset default
 ./build/example
 ```
 

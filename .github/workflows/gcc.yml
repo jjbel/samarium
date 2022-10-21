@@ -86,7 +86,7 @@ jobs:
         run: build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} cmake --build --preset=default
 
       - name: CTest
-        run: ./build/example
+        run: ctest --preset default
 
       - name: Run sonar-scanner
         env:
