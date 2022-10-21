@@ -219,6 +219,8 @@ template <typename T> struct Vector2_t
 
     [[nodiscard]] constexpr auto negated() const noexcept { return Vector2_t<T>{-x, -y}; }
 
+    [[nodiscard]] constexpr auto xy_swapped() const noexcept { return Vector2_t<T>{y, x}; }
+
     [[nodiscard]] constexpr auto operator<=>(const Vector2_t<T>&) const = default;
 };
 
