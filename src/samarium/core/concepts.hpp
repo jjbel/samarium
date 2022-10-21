@@ -9,6 +9,8 @@
 #include <concepts>
 #include <iterator>
 
+#include "range/v3/range/concepts.hpp"
+
 #include "types.hpp"
 
 namespace sm::concepts
@@ -41,31 +43,12 @@ concept Arithmetic = requires(T a, T b)
 template <typename T, typename... U>
 concept AnyOf = (std::same_as<T, U> || ...);
 
-template <class T>
-concept Range = requires(T&& t)
-{
-    std::begin(t);
-    std::end(t);
-    std::cbegin(t);
-    std::cend(t);
-    std::size(t);
-};
-
-/* template <class Container, class Value>
-concept Iterable = requires(Container&& t)
-{
-    {
-        *std::begin(t)
-        } -> std::convertible_to<Value>;
-    {
-        *std::end(t)
-        } -> std::convertible_to<Value>;
-    {
-        *std::cbegin(t)
-        } -> std::convertible_to<Value>;
-    {
-        *std::cend(t)
-        } -> std::convertible_to<Value>;
-    std::size(t);
-}; */
+/**
+ * @brief               Is T a range of V's
+ *
+ * @tparam T
+ * @tparam V
+ */
+template <class T, class V>
+concept Iterable = std::ranges::range<T> && std::same_as<V, std::ranges::range_value_t<T>>;
 } // namespace sm::concepts
