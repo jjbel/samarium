@@ -33,6 +33,6 @@ if(BUILD_DOCS_TARGET)
 
     message(
         STATUS
-            "samarium: duild the docs target, view 'docs/src/build/html/index.html' after building"
+            "samarium: build the docs target, view 'docs/src/build/html/index.html' after building"
     )
 endif()
