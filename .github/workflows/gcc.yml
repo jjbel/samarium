@@ -86,7 +86,7 @@ jobs:
         run: build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} cmake --build --preset=default
 
       - name: CTest
-        run: ctest --preset=default
+        run: ./build/example
 
       - name: Run sonar-scanner
         env:
@@ -136,4 +136,4 @@ jobs:
           git clone --depth 1 https://github.com/strangeQuark1041/samarium_example.git .
           cmake --preset=default
           cmake --build --preset=default
-          ./build/bin/example
+          ./build/example

@@ -56,7 +56,7 @@ jobs:
         run: cmake --build --preset=default
 
       - name: CTest
-        run: ctest --preset=default
+        run: ./build/example
 
   windows-install:
     runs-on: windows-2022
