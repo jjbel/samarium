@@ -94,14 +94,14 @@ struct Window
     [[nodiscard]] auto aspect_ratio() const -> f64;
 
     /**
-     * @brief               A Vector2 given by [width, height]  / min(width, height)
+     * @brief               A Vector2 given by [width, height]  / max(width, height)
      *
      * @return Vector2
      */
     [[nodiscard]] auto aspect_vector_min() const -> Vector2;
 
     /**
-     * @brief               A Vector2 given by [width, height]  / max(width, height)
+     * @brief               A Vector2 given by [width, height]  / min(width, height)
      *
      * @return Vector2
      */
@@ -201,7 +201,7 @@ SM_INLINE void Window::display()
 
     glfwGetWindowSize(handle.get(), &width, &height);
     dims = {static_cast<u64>(width), static_cast<u64>(height)};
-    // view.scale.y = view.scale.x * aspect_ratio();
+    view.scale.y = view.scale.x * aspect_ratio();
 }
 
 SM_INLINE auto Window::is_key_pressed(Key key) const -> bool
@@ -217,12 +217,12 @@ SM_INLINE auto Window::aspect_ratio() const -> f64
 
 SM_INLINE auto Window::aspect_vector_min() const -> Vector2
 {
-    return dims.cast<f64>() / static_cast<f64>(math::min(dims.x, dims.y));
+    return dims.cast<f64>() / static_cast<f64>(math::max(dims.x, dims.y));
 }
-
+ 
 SM_INLINE auto Window::aspect_vector_max() const -> Vector2
 {
-    return dims.cast<f64>() / static_cast<f64>(math::max(dims.x, dims.y));
+    return dims.cast<f64>() / static_cast<f64>(math::min(dims.x, dims.y));
 }
 
 SM_INLINE auto Window::get_image() const -> Image
