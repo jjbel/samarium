@@ -91,8 +91,7 @@ jobs:
         run: conan create samarium -b missing
 
       - run: mkdir -p example
-      - run: cd example
-      - run: git clone --depth 1 https://github.com/strangeQuark1041/samarium_example.git .
-      - run: cmake --preset=default
-      - run: cmake --build --preset=default
-      - run: ./build/example
+      - run: cd example && git clone --depth 1 https://github.com/strangeQuark1041/samarium_example.git .
+      - run: cd example && cmake --preset=default
+      - run: cd example && cmake --build --preset=default
+      - run: ./samarium_example/build/example
