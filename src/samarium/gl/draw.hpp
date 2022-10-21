@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array> // for array,to_array
+#include <cmath>
 #include <numbers>
 #include <span>   // for span
 #include <vector> // for vector, allocator
@@ -8,7 +9,8 @@
 #include "glad/glad.h"                     // for glDrawArrays, GL_COLOR_BUFFER...
 #include "glm/mat4x4.hpp"                  // for mat4
 #include "range/v3/algorithm/for_each.hpp" // for for_each
-#include "range/v3/algorithm/minmax.hpp"   //for minmax
+#include "range/v3/algorithm/minmax.hpp"   // for minmax
+#include "range/v3/to_container.hpp"       // for to
 
 #include "samarium/core/types.hpp"        // for f32, f64, u64, i32
 #include "samarium/gl/Context.hpp"        // for Context
@@ -16,7 +18,9 @@
 #include "samarium/graphics/Color.hpp"    // for Color, ShapeColor
 #include "samarium/graphics/Gradient.hpp" // for Gradient
 #include "samarium/gui/Window.hpp"        // for Window
+#include "samarium/math/BoundingBox.hpp"  // for BoundingBox
 #include "samarium/math/Extents.hpp"      // for range
+#include "samarium/math/Transform.hpp"    //for Transform
 #include "samarium/math/Vector2.hpp"      // for Vector2f, Vector2_t, operator*
 #include "samarium/math/interp.hpp"       // for lerp, lerp_inverse
 #include "samarium/math/math.hpp"         // for two_pi
@@ -28,6 +32,23 @@
 
 namespace sm::draw
 {
+void vertices(Window& window,
+              std::span<gl::Vertex<gl::Layout::Pos>> vertices,
+              Color color,
+              gl::Primitive primitive = gl::Primitive::Triangles,
+              Transform transform     = {});
+
+void vertices(Window& window,
+              std::span<Vector2f> vertices,
+              Color color,
+              gl::Primitive primitive = gl::Primitive::Triangles,
+              Transform transform     = {});
+
+void vertices(Window& window,
+              std::span<gl::Vertex<gl::Layout::PosColor>> vertices,
+              gl::Primitive primitive = gl::Primitive::Triangles,
+              Transform transform     = {});
+
 void circle(Window& window, Circle circle, ShapeColor color, u64 point_count = 64);
 
 void background(Color color);
@@ -42,41 +63,44 @@ void background(Color color);
  */
 template <u64 size> void background(Window& window, const Gradient<size>& gradient, f32 angle = 0.0)
 {
-    using Vertex = gl::Vertex<gl::Layout::PosColor>;
+    /*
+    The technique is to rotate a box to just cover the diagonal of the screen,
+    and then fill the box with a gradient by putting vertices on its edges
 
-    auto vertices    = std::array<Vertex, 2 * size>{};
-    const auto ratio = static_cast<f32>(window.aspect_ratio());
+    This is done in screenspace coordinates which distort with the screen aspect ratio, so adjust
+    the angle
+    */
+
+    // use Vector2f to preserve obtuse angles (atan2)
+    angle = (Vector2f::from_polar({.length = 1.0, .angle = angle}) *
+             window.aspect_vector_max().cast<f32>())
+                .angle();
+
+    const auto transformed_angle = angle + std::numbers::pi_v<f32> / 4;
+    const auto max =
+        std::numbers::sqrt2_v<f32> *
+        ranges::max(math::abs(std::sin(transformed_angle)), math::abs(std::cos(transformed_angle)));
+
+    auto verts = std::array<gl::Vertex<gl::Layout::PosColor>, size * 2>();
 
     for (auto i : range(size))
     {
         const auto factor =
             interp::lerp_inverse<f32>(static_cast<f64>(i), {0.0F, static_cast<f32>(size - 1)});
-        vertices[2 * i].pos =
-            Vector2f{static_cast<f32>(interp::clamped_lerp<f32>(factor, {-1.0F, 1.0F})), 1.0}
-                .rotated(angle) *
-            Vector2f{1.0, ratio};
 
-        vertices[2 * i + 1].pos =
-            Vector2f{static_cast<f32>(interp::clamped_lerp<f32>(factor, {-1.0F, 1.0F})), -1.0}
-                .rotated(angle) *
-            Vector2f{1.0, ratio};
+        verts[2 * i].pos =
+            Vector2f{static_cast<f32>(interp::clamped_lerp<f32>(factor, {-max, max})), max}.rotated(
+                angle);
 
-        vertices[2 * i].color     = gradient.colors[i];
-        vertices[2 * i + 1].color = gradient.colors[i];
+        verts[2 * i + 1].pos =
+            Vector2f{static_cast<f32>(interp::clamped_lerp<f32>(factor, {-max, max})), -max}
+                .rotated(angle);
+
+        verts[2 * i].color     = gradient.colors[i];
+        verts[2 * i + 1].color = gradient.colors[i];
     }
 
-    const auto& shader = window.context.shaders.at("PosColor");
-    window.context.set_active(shader);
-    shader.set("view", glm::mat4{1.0});
-
-    auto& vao = window.context.vertex_arrays.at("PosColor");
-    window.context.set_active(vao);
-
-    const auto& buffer = window.context.vertex_buffers.at("default");
-    buffer.set_data(vertices);
-    vao.bind(buffer, sizeof(Vertex));
-
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, static_cast<i32>(vertices.size()));
+    vertices(window, verts, gl::Primitive::TriangleStrip);
 }
 
 void polyline(Window& window, std::span<Vector2f> points, Color color, f32 thickness);
@@ -97,6 +121,67 @@ void regular_polygon(
 
 namespace sm::draw
 {
+SM_INLINE void vertices(Window& window,
+                        std::span<gl::Vertex<gl::Layout::Pos>> vertices,
+                        Color color,
+                        gl::Primitive primitive,
+                        Transform transform)
+{
+    const auto& shader = window.context.shaders.at("Pos");
+    window.context.set_active(shader);
+    shader.set("view", transform.as_matrix());
+    shader.set("color", color);
+
+    auto& vao = window.context.vertex_arrays.at("Pos");
+    window.context.set_active(vao);
+
+    const auto& buffer = window.context.vertex_buffers.at("default");
+    buffer.set_data(vertices);
+    vao.bind(buffer, sizeof(vertices[0]));
+
+    glDrawArrays(static_cast<i32>(primitive), 0, static_cast<i32>(vertices.size()));
+}
+
+SM_INLINE void vertices(Window& window,
+                        std::span<Vector2f> vertices,
+                        Color color,
+                        gl::Primitive primitive,
+                        Transform transform)
+{
+    const auto& shader = window.context.shaders.at("Pos");
+    window.context.set_active(shader);
+    shader.set("view", transform.as_matrix());
+    shader.set("color", color);
+
+    auto& vao = window.context.vertex_arrays.at("Pos");
+    window.context.set_active(vao);
+
+    const auto& buffer = window.context.vertex_buffers.at("default");
+    buffer.set_data(vertices);
+    vao.bind(buffer, sizeof(vertices[0]));
+
+    glDrawArrays(static_cast<i32>(primitive), 0, static_cast<i32>(vertices.size()));
+}
+
+SM_INLINE void vertices(Window& window,
+                        std::span<gl::Vertex<gl::Layout::PosColor>> vertices,
+                        gl::Primitive primitive,
+                        Transform transform)
+{
+    const auto& shader = window.context.shaders.at("PosColor");
+    window.context.set_active(shader);
+    shader.set("view", transform.as_matrix());
+
+    auto& vao = window.context.vertex_arrays.at("PosColor");
+    window.context.set_active(vao);
+
+    const auto& buffer = window.context.vertex_buffers.at("default");
+    buffer.set_data(vertices);
+    vao.bind(buffer, sizeof(vertices[0]));
+
+    glDrawArrays(static_cast<i32>(primitive), 0, static_cast<i32>(vertices.size()));
+}
+
 SM_INLINE void background(Color color)
 {
     glClearColor(static_cast<f32>(color.r) / 255.0f, static_cast<f32>(color.g) / 255.0f,
