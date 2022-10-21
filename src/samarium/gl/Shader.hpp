@@ -317,9 +317,9 @@ void Shader::set(const std::string& name, f32 value) const
 
 void Shader::set(const std::string& name, Color value) const
 {
-    glUniform4f(get_uniform_location(name), static_cast<f32>(value.r) / 255.0f,
-                static_cast<f32>(value.g) / 255.0f, static_cast<f32>(value.b) / 255.0f,
-                static_cast<f32>(value.a) / 255.0f);
+    glUniform4f(get_uniform_location(name), static_cast<f32>(value.r) / 255.0F,
+                static_cast<f32>(value.g) / 255.0F, static_cast<f32>(value.b) / 255.0F,
+                static_cast<f32>(value.a) / 255.0F);
 }
 
 void Shader::set(const std::string& name, Vector2 value) const
