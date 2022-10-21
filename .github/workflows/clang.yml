@@ -47,15 +47,13 @@ jobs:
           printf "libc++:$(ldconfig -p | grep libc++)\n\n"
           printf "libstdc++:$(ldconfig -p | grep libstdc++)\n\n"
 
-      - name: Run Conan
-        run: |
-          conan profile new default --detect
-          conan profile update settings.compiler.libcxx=libstdc++11 default
-          conan config set tools.system.package_manager:mode=install
-          conan config get tools.system.package_manager
-          conan profile update settings.compiler=clang default
-          conan profile update settings.compiler.version=10 default
-          conan install . -b missing -if build -pr:b=default -o samarium:build_tests=True -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=True
+      - run: conan profile new default --detect
+      - run: conan profile update settings.compiler.libcxx=libstdc++11 default
+      - run: conan config set tools.system.package_manager:mode=install
+      - run: conan config get tools.system.package_manager
+      - run: conan profile update settings.compiler=clang default
+      - run: conan profile update settings.compiler.version=14 default
+      - run: conan install . -b missing -if build -pr:b=default -o samarium:build_tests=True -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=True
 
       - name: Install mold
         uses: rui314/setup-mold@v1
