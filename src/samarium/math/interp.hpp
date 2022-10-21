@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <cmath>       // for pow, tan, cos
 #include <type_traits> // for std::is_invocable_v
 
 #include "samarium/graphics/Color.hpp"
@@ -31,17 +32,33 @@ namespace sm::interp
     return value * value * value * (value * (value * 6.0 - 15.0) + 10.0);
 }
 
-// credit: https://gist.github.com/Bleuje/0917441d809d5eccf4ddcfc6a5b787d9
-
 /**
  * @brief               Smooth a value with arbitrary smoothing
  *
  * @param  value        Input value in the range [0, 1]
- * @param  factor       Strength of smoothing: 1.0 is linear, higher values are smoother, values in
- * [0, 1) are inverse smoothing
+ * @param  factor       Strength of smoothing: 0 is linear, higher values are smoother, lower values
+ * are inverse smoothing
+ *
+ * https://desmos.com/calculator/kk2minrhsu
  */
 [[nodiscard]] inline auto ease(f64 value, f64 factor = 2.0)
 {
+    return 0.5 + std::atan(std::pow(2.0, factor) * std::tan(math::pi * (value + 0.5)));
+}
+
+/**
+ * @brief               Smooth a value with arbitrary smoothing. Sharper endpoints than ease()
+ *
+ * @param  value        Input value in the range [0, 1]
+ * @param  factor       Strength of smoothing: 0 is linear, higher values are smoother, lower values
+ * are inverse smoothing
+ *
+ * https://gist.github.com/Bleuje/0917441d809d5eccf4ddcfc6a5b787d9
+ * https://desmos.com/calculator/kk2minrhsu
+ */
+[[nodiscard]] inline auto ease2(f64 value, f64 factor = 2.0)
+{
+    factor = std::pow(2.0, factor); // make the factor behave intuitively
     if (value < 0.5) { return 0.5 * std::pow(2.0 * value, factor); }
     else { return 1.0 - 0.5 * std::pow(2.0 * (1.0 - value), factor); }
 }
