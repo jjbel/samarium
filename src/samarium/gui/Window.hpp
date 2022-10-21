@@ -23,6 +23,7 @@
 #include "samarium/math/BoundingBox.hpp" // for BoundingBox
 #include "samarium/math/Transform.hpp"   // for Transform
 #include "samarium/math/Vector2.hpp"     // for Dimensions, Vector2_t, Vector2
+#include "samarium/math/math.hpp"        // for min, max
 #include "samarium/util/Grid.hpp"        // for Grid
 
 #include "Mouse.hpp"    // for Mouse
@@ -91,6 +92,20 @@ struct Window
      * @return f64
      */
     [[nodiscard]] auto aspect_ratio() const -> f64;
+
+    /**
+     * @brief               A Vector2 given by [width, height]  / min(width, height)
+     *
+     * @return Vector2
+     */
+    [[nodiscard]] auto aspect_vector_min() const -> Vector2;
+
+    /**
+     * @brief               A Vector2 given by [width, height]  / max(width, height)
+     *
+     * @return Vector2
+     */
+    [[nodiscard]] auto aspect_vector_max() const -> Vector2;
 
     /**
      * @brief               The bounds of the visible region of the window
@@ -198,6 +213,16 @@ SM_INLINE auto Window::aspect_ratio() const -> f64
 {
     const auto current_dims = dims.cast<f64>();
     return current_dims.x / current_dims.y;
+}
+
+SM_INLINE auto Window::aspect_vector_min() const -> Vector2
+{
+    return dims.cast<f64>() / static_cast<f64>(math::min(dims.x, dims.y));
+}
+
+SM_INLINE auto Window::aspect_vector_max() const -> Vector2
+{
+    return dims.cast<f64>() / static_cast<f64>(math::max(dims.x, dims.y));
 }
 
 SM_INLINE auto Window::get_image() const -> Image
