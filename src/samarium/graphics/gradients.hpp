@@ -15,8 +15,7 @@ constexpr inline auto blue       = Gradient{Color{101, 199, 247}, Color{0, 82, 2
 constexpr inline auto purple     = Gradient{Color{142, 45, 226}, Color{74, 0, 224}};
 constexpr inline auto blue_green = Gradient{Color{0, 242, 96}, Color{5, 117, 230}};
 constexpr inline auto horizon    = Gradient{Color{18, 194, 233}, Color{246, 79, 89}};
-constexpr inline auto heat = Gradient{Color{27, 9, 128}, Color{107, 21, 21}, Color{255, 126, 40},
-                                      Color{255, 0, 255}, Color{0, 255, 255}};
+constexpr inline auto heat = Gradient{Color{21, 11, 76}, Color{178, 31, 31}, Color{253, 187, 45}};
 constexpr inline auto rainbow =
     Gradient{Color{148, 0, 211}, Color{75, 0, 130},  Color{0, 0, 255}, Color{0, 255, 0},
              Color{255, 255, 0}, Color{255, 127, 0}, Color{255, 0, 0}};

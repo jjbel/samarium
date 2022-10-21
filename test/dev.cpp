@@ -33,7 +33,7 @@ int main()
         draw::circle(window, {{-0.8, 0.8}, 0.1}, {.fill_color = "#fa2844"_c});
 
         watch.reset();
-        draw::background(window, gradients::viridis, angle);
+        draw::background(window, gradients::heat, angle);
         const auto throughput = static_cast<i32>(watch.current_fps());
         // print(fmt::format(std::locale("en_US.UTF-8"), "\n", throughput));
         if (window.is_key_pressed(Key::Space)) angle += 0.5_degrees;
