@@ -13,8 +13,9 @@
 #include "glad/glad.h"
 #include "tl/expected.hpp"
 
-#include "samarium/core/types.hpp"    // for u32
-#include "samarium/util/Expected.hpp" // for Expected
+#include "samarium/core/types.hpp"     // for u32
+#include "samarium/graphics/Color.hpp" // for Color
+#include "samarium/util/Expected.hpp"  // for Expected
 
 namespace sm::gl
 {
@@ -44,17 +45,15 @@ struct Framebuffer
         auto handle = u32{};
         glCreateFramebuffers(1, &handle);
 
-        // if (auto status = glCheckNamedFramebufferStatus(handle, GL_FRAMEBUFFER);
-        //     status != GL_FRAMEBUFFER_COMPLETE)
-        // {
-        //     return tl::make_unexpected(fmt::format("Framebuffer error: {}", status));
-        // }
-
         auto framebuffer = Framebuffer{handle};
         return {std::move(framebuffer)};
     }
 
+    [[nodiscard]] auto status() const -> u32;
+
     void bind() const;
+
+    void clear(Color color) const;
 
     ~Framebuffer();
 
@@ -76,7 +75,17 @@ struct Framebuffer
 
 namespace sm::gl
 {
+[[nodiscard]] auto Framebuffer::status() const -> u32
+{
+    return glCheckNamedFramebufferStatus(handle, GL_FRAMEBUFFER);
+}
+
 SM_INLINE void Framebuffer::bind() const { glBindFramebuffer(GL_FRAMEBUFFER, handle); }
+
+SM_INLINE void Framebuffer::clear(Color color) const
+{
+    glClearNamedFramebufferfv(handle, GL_COLOR, 0, color.to_float_array().data());
+}
 
 SM_INLINE Framebuffer::~Framebuffer() { glDeleteFramebuffers(1, &handle); }
 } // namespace sm::gl
