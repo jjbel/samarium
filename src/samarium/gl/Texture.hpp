@@ -24,7 +24,7 @@ enum class Access
 
 struct Texture
 {
-    enum class WrapMode
+    enum class Wrap
     {
         Repeat      = GL_REPEAT,
         Mirror      = GL_MIRRORED_REPEAT,
@@ -32,7 +32,7 @@ struct Texture
         ClampBorder = GL_CLAMP_TO_BORDER
     };
 
-    enum class FilterMode
+    enum class Filter
     {
         Linear               = GL_LINEAR,
         Nearest              = GL_NEAREST,
@@ -44,22 +44,21 @@ struct Texture
 
     u32 handle;
 
-    explicit Texture(WrapMode mode         = WrapMode::Repeat,
-                     FilterMode min_filter = FilterMode::LinearMipmapLinear,
-                     FilterMode mag_filter = FilterMode::Linear);
+    explicit Texture(Wrap mode         = Wrap::Repeat,
+                     Filter min_filter = Filter::LinearMipmapLinear,
+                     Filter mag_filter = Filter::Linear);
 
     explicit Texture(const Image& image,
-                     WrapMode mode         = WrapMode::Repeat,
-                     FilterMode min_filter = FilterMode::LinearMipmapLinear,
-                     FilterMode mag_filter = FilterMode::Linear);
+                     Wrap mode         = Wrap::Repeat,
+                     Filter min_filter = Filter::LinearMipmapLinear,
+                     Filter mag_filter = Filter::Linear);
 
     explicit Texture(Dimensions dims,
-                     GLenum type,
-                     WrapMode mode         = WrapMode::Repeat,
-                     FilterMode min_filter = FilterMode::LinearMipmapLinear,
-                     FilterMode mag_filter = FilterMode::Linear);
+                     Wrap mode         = Wrap::Repeat,
+                     Filter min_filter = Filter::LinearMipmapLinear,
+                     Filter mag_filter = Filter::Linear);
 
-    void create(Dimensions dims, GLenum type = GL_RGBA8);
+    void create(Dimensions dims);
 
     void set_data(const Image& image);
 
@@ -69,6 +68,8 @@ struct Texture
                     i32 level              = 0,
                     Access access          = Access::ReadWrite,
                     GLenum format          = GL_RGBA8);
+
+    void make_mipmaps();
 
     Texture(const Texture&) = delete;
 
@@ -100,7 +101,7 @@ struct Texture
 
 namespace sm::gl
 {
-SM_INLINE Texture::Texture(WrapMode mode, FilterMode min_filter, FilterMode mag_filter)
+SM_INLINE Texture::Texture(Wrap mode, Filter min_filter, Filter mag_filter)
 {
     glCreateTextures(GL_TEXTURE_2D, 1, &handle);
 
@@ -114,36 +115,35 @@ SM_INLINE Texture::Texture(WrapMode mode, FilterMode min_filter, FilterMode mag_
 }
 
 SM_INLINE
-Texture::Texture(const Image& image, WrapMode mode, FilterMode min_filter, FilterMode mag_filter)
+Texture::Texture(const Image& image, Wrap mode, Filter min_filter, Filter mag_filter)
     : Texture(mode, min_filter, mag_filter)
 {
     set_data(image);
 }
 
-SM_INLINE Texture::Texture(
-    Dimensions dims, GLenum type, WrapMode mode, FilterMode min_filter, FilterMode mag_filter)
+SM_INLINE
+Texture::Texture(Dimensions dims, Wrap mode, Filter min_filter, Filter mag_filter)
     : Texture(mode, min_filter, mag_filter)
 {
-    create(dims, type);
+    create(dims);
 }
 
-SM_INLINE void Texture::create(Dimensions dims, GLenum type)
+SM_INLINE void Texture::make_mipmaps() { glGenerateTextureMipmap(handle); }
+
+SM_INLINE void Texture::create(Dimensions dims)
 {
-    const auto width  = static_cast<i32>(dims.x);
-    const auto height = static_cast<i32>(dims.y);
-    glTextureStorage2D(handle, 1, type, width, height);
+    glTextureStorage2D(handle, 1, GL_RGBA8, static_cast<i32>(dims.x), static_cast<i32>(dims.y));
 }
 
 SM_INLINE void Texture::set_data(const Image& image)
 {
     const auto width  = static_cast<i32>(image.dims.x);
     const auto height = static_cast<i32>(image.dims.y);
-    create(image.dims, GL_RGBA8);
+    create(image.dims);
     // load the image data
     glTextureSubImage2D(handle, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE,
-                        static_cast<const void*>(&image.front()));
-
-    glGenerateTextureMipmap(handle);
+                        static_cast<const void*>(image.data.data()));
+    make_mipmaps();
 }
 
 SM_INLINE void Texture::bind(u32 texture_unit_index)
