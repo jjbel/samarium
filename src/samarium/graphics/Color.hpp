@@ -65,6 +65,16 @@ struct Color
                      static_cast<u8>(colors[2] * 255), static_cast<u8>(colors[3] * 255)};
     }
 
+    /**
+     * @brief               std::array of floats normalized to [0, 1]
+     *
+     * @return std::array<f32, 4>
+     */
+    [[nodiscard]] constexpr auto to_float_array() const
+    {
+        return std::to_array<f32>({r / 255.0F, b / 255.0F, g / 255.0F, a / 255.0F});
+    }
+
     [[nodiscard]] static consteval auto from_hex(const char* str)
     {
         const auto length = util::strlen(str);
