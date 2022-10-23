@@ -55,14 +55,14 @@ html_css_files = [
 
 html_theme_options = {
     "light_css_variables": {
-        "font-stack": "Raleway, sans-serif",
-        "font-stack--monospace": "Roboto Mono, monospace",
+        "font-stack": "'IBM Plex Mono', monospace",
+        "font-stack--monospace": "'IBM Plex Mono', monospace",
     },
     "dark_css_variables": {
-        "color-background-primary": "#101018",
-        "color-background-secondary": "#0c0d13",
-        "color-brand-primary": "#00a6ff",
-        "color-brand-content": "#00a6ff",
+        "color-background-primary": "#111214",
+        "color-background-secondary": "#0e0f11",
+        "color-sidebar-background-border": "#090a0b",
+        "color-sidebar-search-border": "#1c1e21",
     },
 }
 
