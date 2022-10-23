@@ -17,17 +17,12 @@
 #include "samarium/core/types.hpp"     // for f32, i64, u32, i32
 #include "samarium/graphics/Color.hpp" // for Color
 #include "samarium/math/Vector2.hpp"   // for Vector2_t
+#include "samarium/util/byte_size.hpp" // for byte_size
 
 namespace sm::gl
 {
 inline constexpr auto version_major = 4;
 inline constexpr auto version_minor = 6;
-
-namespace detail
-{
-constexpr auto element_size(const auto& array) { return sizeof(array[0]); }
-constexpr auto array_byte_size(const auto& array) { return array.size() * element_size(array); }
-} // namespace detail
 
 enum class Primitive
 {
@@ -75,7 +70,7 @@ template <BufferType type> struct Buffer
     {
         glCreateBuffers(1, &handle); // generate a name
 
-        glNamedBufferData(handle, detail::array_byte_size(array), std::data(array),
+        glNamedBufferData(handle, util::range_byte_size(array), std::data(array),
                           static_cast<GLenum>(usage)); // copy data
     }
 
@@ -110,14 +105,13 @@ template <BufferType type> struct Buffer
 
     void set_data(const ranges::range auto& array, Usage usage = Usage::StaticDraw) const
     {
-        glNamedBufferData(handle, static_cast<i64>(detail::array_byte_size(array)),
-                          std::data(array),
+        glNamedBufferData(handle, static_cast<i64>(util::range_byte_size(array)), std::data(array),
                           static_cast<GLenum>(usage)); // copy data
     }
 
     void set_sub_data(const ranges::range auto& array, i64 offset = 0) const
     {
-        glNamedBufferSubData(handle, offset, detail::array_byte_size(array), std::data(array));
+        glNamedBufferSubData(handle, offset, util::range_byte_size(array), std::data(array));
     }
 
     ~Buffer() { glDeleteBuffers(1, &handle); }

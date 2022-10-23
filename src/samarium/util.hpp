@@ -16,6 +16,7 @@
 #include "samarium/util/SmallVector.hpp"
 #include "samarium/util/StaticVector.hpp"
 #include "samarium/util/Stopwatch.hpp"
+#include "samarium/util/byte_size.hpp"
 #include "samarium/util/file.hpp"
 #include "samarium/util/format.hpp"
 #include "samarium/util/noise.hpp"
