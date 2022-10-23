@@ -95,7 +95,7 @@
             "name": "default",
             "configurePreset": "default",
             "configuration": "Release",
-            "jobs": 6
+            "jobs": 16
         },
         {
             "name": "iwyu",
