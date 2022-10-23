@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include <cstddef>
-#include <cstdint>
+#include <cstddef> // for size_t
+#include <cstdint> // for {u}int*_t
 
 namespace sm
 {
