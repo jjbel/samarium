@@ -39,7 +39,7 @@ namespace sm::interp
  * @param  factor       Strength of smoothing: 0 is linear, higher values are smoother, lower values
  * are inverse smoothing
  *
- * https://desmos.com/calculator/kk2minrhsu
+ * https://www.desmos.com/calculator/zeslvu9rap
  */
 [[nodiscard]] inline auto ease(f64 value, f64 factor = 2.0)
 {
@@ -54,7 +54,7 @@ namespace sm::interp
  * are inverse smoothing
  *
  * https://gist.github.com/Bleuje/0917441d809d5eccf4ddcfc6a5b787d9
- * https://desmos.com/calculator/kk2minrhsu
+ * https://www.desmos.com/calculator/zeslvu9rap
  */
 [[nodiscard]] inline auto ease2(f64 value, f64 factor = 2.0)
 {
