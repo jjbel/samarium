@@ -55,8 +55,8 @@ html_css_files = [
 
 html_theme_options = {
     "light_css_variables": {
-        "font-stack": "'IBM Plex Sans', monospace",
-        "font-stack--monospace": "'IBM Plex Mono', monospace",
+        "font-stack": "'Noto Sans', monospace",
+        "font-stack--monospace": "'Noto Sans Mono', monospace",
     },
     "dark_css_variables": {
         "color-background-primary": "#111214",
