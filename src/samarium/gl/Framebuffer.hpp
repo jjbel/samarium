@@ -7,21 +7,24 @@
 
 #pragma once
 
-#include <stdexcept>
+#include <stdexcept> // for runtime_error
 
-#include "fmt/format.h"
+#include "fmt/core.h" // for format
 #include "glad/glad.h"
-#include "tl/expected.hpp"
 
 #include "samarium/core/types.hpp"     // for u32
 #include "samarium/graphics/Color.hpp" // for Color
 #include "samarium/util/Expected.hpp"  // for Expected
+
+#include "Texture.hpp" // for Texture
 
 namespace sm::gl
 {
 struct Framebuffer
 {
     u32 handle{};
+
+    explicit Framebuffer(const Texture& texture);
 
     Framebuffer(const Framebuffer&) = delete;
 
@@ -40,27 +43,15 @@ struct Framebuffer
         return *this;
     }
 
-    [[nodiscard]] static auto make() -> Expected<Framebuffer, std::string>
-    {
-        auto handle = u32{};
-        glCreateFramebuffers(1, &handle);
-
-        auto framebuffer = Framebuffer{handle};
-        return {std::move(framebuffer)};
-    }
-
-    [[nodiscard]] auto status() const -> u32;
-
     void bind() const;
+
+    void bind_texture(const Texture& texture) const;
+
+    void unbind() const;
 
     void clear(Color color) const;
 
     ~Framebuffer();
-
-  private:
-    Framebuffer() = default;
-
-    explicit Framebuffer(u32 handle_) : handle{handle_} {}
 };
 } // namespace sm::gl
 
@@ -75,12 +66,27 @@ struct Framebuffer
 
 namespace sm::gl
 {
-[[nodiscard]] auto Framebuffer::status() const -> u32
+SM_INLINE Framebuffer::Framebuffer(const Texture& texture)
 {
-    return glCheckNamedFramebufferStatus(handle, GL_FRAMEBUFFER);
+    glCreateFramebuffers(1, &handle);
+    bind_texture(texture);
 }
 
 SM_INLINE void Framebuffer::bind() const { glBindFramebuffer(GL_FRAMEBUFFER, handle); }
+
+SM_INLINE void Framebuffer::unbind() const { glBindFramebuffer(GL_FRAMEBUFFER, 0); }
+
+SM_INLINE void Framebuffer::bind_texture(const Texture& texture) const
+{
+
+    glNamedFramebufferTexture(handle, GL_COLOR_ATTACHMENT0, texture.handle, 0);
+
+    const auto status = glCheckNamedFramebufferStatus(handle, GL_FRAMEBUFFER);
+    if (status != GL_FRAMEBUFFER_COMPLETE)
+    {
+        throw std::runtime_error{fmt::format("Framebuffer intialization error: {}", status)};
+    }
+}
 
 SM_INLINE void Framebuffer::clear(Color color) const
 {

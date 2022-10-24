@@ -7,31 +7,31 @@
 
 #pragma once
 
-#include <memory> // for unique_ptr
+#include <array>
 #include <string> // for allocator, string
 
 #include "glad/glad.h" // for GL_FLOAT, GL_TRUE, GL_UNSIGNED_BYTE
 
-#include "samarium/core/types.hpp" // for f32
-#include "samarium/gl/Context.hpp"
-#include "samarium/util/Map.hpp" // for Map
+#include "samarium/core/types.hpp"       // for f32
+#include "samarium/math/BoundingBox.hpp" // for BoundingBox
+#include "samarium/util/Map.hpp"         // for Map
 
 #include "Framebuffer.hpp" // for Framebuffer
 #include "Shader.hpp"      // for Shader, FragmentShader, VertexShader
 #include "Texture.hpp"     // for Texture
+#include "Vertex.hpp"      // for Vertex
 #include "gl.hpp"          // for VertexArray, VertexAttribute, Buf...
 
 namespace sm::gl
 {
 struct Context
 {
-    std::unique_ptr<Framebuffer> framebuffer{};
-
     Map<std::string, VertexAttribute> attributes{
         {"position", {.size = 2, .type = GL_FLOAT, .offset = 0}},
         {"color",
          {.size = 4, .type = GL_UNSIGNED_BYTE, .offset = 2 * sizeof(f32), .normalized = GL_TRUE}},
-        {"tex_coord", {.size = 2, .type = GL_FLOAT, .offset = 3 * sizeof(f32)}}};
+        {"PosTex.tex_coord", {.size = 2, .type = GL_FLOAT, .offset = 2 * sizeof(f32)}},
+        {"PosColorTex.tex_coord", {.size = 2, .type = GL_FLOAT, .offset = 3 * sizeof(f32)}}};
 
     Map<std::string, VertexArray> vertex_arrays{};
 
@@ -39,18 +39,21 @@ struct Context
     Map<std::string, std::string> frag_sources{};
     Map<std::string, Shader> shaders{};
 
-    Map<std::string, Buffer<BufferType::Vertex>> vertex_buffers{};
-    Map<std::string, Buffer<BufferType::Element>> element_buffers{};
-    Map<std::string, Buffer<BufferType::ShaderStorage>> shader_storage_buffers{};
+    Map<std::string, VertexBuffer> vertex_buffers{};
+    Map<std::string, ElementBuffer> element_buffers{};
+    Map<std::string, ShaderStorageBuffer> shader_storage_buffers{};
     Map<std::string, Texture> textures{};
 
-    Context() = default;
+    Texture frame_texture;
+    Framebuffer framebuffer;
 
-    void init();
+    explicit Context(Dimensions dims);
 
     void set_active(const Shader& shader);
 
     void set_active(const VertexArray& vertex_array);
+
+    void draw_frame();
 
   private:
     u32 active_shader_handle{};
@@ -66,20 +69,21 @@ struct Context
 
 namespace sm::gl
 {
-SM_INLINE void Context::init()
+SM_INLINE Context::Context(Dimensions dims)
+    : frame_texture{dims, Texture::Wrap::ClampEdge, Texture::Filter::Nearest,
+                    Texture::Filter::Nearest},
+      framebuffer(frame_texture)
 {
-    framebuffer = std::make_unique<Framebuffer>(expect(Framebuffer::make()));
-
     vertex_arrays.reserve(5);
     vertex_arrays.emplace("empty", VertexArray{});
     vertex_arrays.emplace("Pos", VertexArray{{attributes.at("position")}});
     vertex_arrays.emplace("PosColor",
                           VertexArray{{attributes.at("position"), attributes.at("color")}});
-    vertex_arrays.emplace("PosTex",
-                          VertexArray{{attributes.at("position"), attributes.at("tex_coord")}});
+    vertex_arrays.emplace(
+        "PosTex", VertexArray{{attributes.at("position"), attributes.at("PosTex.tex_coord")}});
     vertex_arrays.emplace("PosColorTex",
                           VertexArray{{attributes.at("position"), attributes.at("color"),
-                                       attributes.at("tex_coord")}});
+                                       attributes.at("PosColorTex.tex_coord")}});
 
     vert_sources.emplace("Pos",
 #include "shaders/Pos.vert.glsl"
@@ -129,13 +133,14 @@ SM_INLINE void Context::init()
 
     shader_storage_buffers.emplace("default", Buffer<BufferType::ShaderStorage>{});
 
-    vertex_buffers.emplace("default", Buffer<BufferType::Vertex>{});
-    element_buffers.emplace("default", Buffer<BufferType::Element>{});
+    vertex_buffers.emplace("default", VertexBuffer{});
+    element_buffers.emplace("default", ElementBuffer{});
 
     textures.emplace("default", Texture{});
 
     shaders.at("Pos").bind();
     vertex_arrays.at("Pos").bind();
+    framebuffer.bind();
 }
 
 SM_INLINE void Context::set_active(const Shader& shader)
@@ -154,6 +159,36 @@ SM_INLINE void Context::set_active(const VertexArray& vertex_array)
         vertex_array.bind();
         active_vertex_array_handle = vertex_array.handle;
     }
+}
+
+SM_INLINE void Context::draw_frame()
+{
+    using Vert                        = Vertex<Layout::PosTex>;
+    static constexpr auto buffer_data = std::to_array<Vert>({{{-1, -1}, {0, 0}},
+                                                             {{1, 1}, {1, 1}},
+                                                             {{-1, 1}, {0, 1}},
+
+                                                             {{-1, -1}, {0, 0}},
+                                                             {{1, -1}, {1, 0}},
+                                                             {{1, 1}, {1, 1}}});
+
+    framebuffer.unbind();
+    const auto& shader = shaders.at("PosTex");
+    set_active(shader);
+    shader.set("view", glm::mat4{1.0F});
+
+    frame_texture.bind();
+
+    auto& vao = vertex_arrays.at("PosTex");
+    set_active(vao);
+
+    const auto& buffer = vertex_buffers.at("default");
+    buffer.set_data(buffer_data);
+    vao.bind(buffer, sizeof(Vert));
+
+    glDrawArrays(GL_TRIANGLES, 0, static_cast<i32>(buffer_data.size()));
+
+    framebuffer.bind();
 }
 } // namespace sm::gl
 

@@ -189,7 +189,7 @@ SM_INLINE void vertices(Window& window,
     glDrawArrays(static_cast<i32>(primitive), 0, static_cast<i32>(vertices.size()));
 }
 
-SM_INLINE void background(Color color)
+SM_INLINE void background(Window& window, Color color)
 {
     glClearColor(static_cast<f32>(color.r) / 255.0f, static_cast<f32>(color.g) / 255.0f,
                  static_cast<f32>(color.b) / 255.0f, static_cast<f32>(color.a) / 255.0f);
@@ -236,7 +236,6 @@ SM_INLINE void polygon(Window& window, std::span<Vector2f> points, ShapeColor co
         auto& vao = window.context.vertex_arrays.at("Pos");
         window.context.set_active(vao);
         buffer.set_data(points);
-        vao.bind();
         vao.bind(buffer, sizeof(Vector2_t<f32>));
 
         glDrawArrays(GL_TRIANGLE_FAN, 0, static_cast<i32>(points.size()));
