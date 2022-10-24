@@ -146,9 +146,9 @@ struct FragmentShader
 
 struct Shader
 {
-    u32 handle;
+    u32 handle{glCreateProgram()};
 
-    Shader(const VertexShader& vertex, const FragmentShader& fragment) : handle(glCreateProgram())
+    Shader(const VertexShader& vertex, const FragmentShader& fragment)
     {
         glAttachShader(handle, vertex.handle);
         glAttachShader(handle, fragment.handle);
@@ -222,7 +222,7 @@ struct ComputeShader
         auto success = 0;
         glGetShaderiv(program_handle, GL_COMPILE_STATUS, &success);
 
-        if (success)
+        if (success != 0)
         {
             auto shader   = ComputeShader{};
             shader.handle = glCreateProgram();
@@ -300,30 +300,6 @@ void Shader::set(const std::string& name, Vector2 value) const
 void Shader::set(const std::string& name, const glm::mat4& value) const
 {
     glUniformMatrix4fv(get_uniform_location(name), 1, GL_FALSE, glm::value_ptr(value));
-}
-
-ComputeShader::ComputeShader(const std::string& source)
-{
-    auto shader_handle = glCreateShader(GL_COMPUTE_SHADER);
-    const auto src     = source.c_str();
-    glShaderSource(shader_handle, 1, &src, nullptr);
-    glCompileShader(shader_handle);
-
-    auto success = 0;
-    glGetShaderiv(shader_handle, GL_COMPILE_STATUS, &success);
-
-    if (!success)
-    {
-        auto log_size = 0;
-        char info_log[1024];
-        glGetShaderInfoLog(shader_handle, 1024, &log_size, info_log);
-        error("compute shader compilation failed:\n",
-              std::string_view{info_log, static_cast<u64>(log_size)});
-    }
-
-    handle = glCreateProgram();
-    glAttachShader(handle, shader_handle);
-    glLinkProgram(handle);
 }
 
 void ComputeShader::bind(u32 x, u32 y, u32 z) const
