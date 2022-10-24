@@ -53,8 +53,6 @@ struct Texture
                      Filter min_filter = Filter::LinearMipmapLinear,
                      Filter mag_filter = Filter::Linear);
 
-    void create(Dimensions dims);
-
     void set_data(const Image& image);
 
     void bind(u32 texture_unit_index = 0U);
@@ -82,6 +80,9 @@ struct Texture
     }
 
     ~Texture() { glDeleteTextures(1, &handle); }
+
+  private:
+    void create(Dimensions dims);
 };
 } // namespace sm::gl
 
