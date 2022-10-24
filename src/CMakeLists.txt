@@ -22,6 +22,7 @@ set(SAMARIUM_SOURCES
     samarium/gl/Context.cpp
     samarium/gl/draw.cpp
     samarium/gl/Framebuffer.cpp
+    samarium/gl/Vertex.cpp
     samarium/gl/gl.cpp
     samarium/gl/Shader.cpp
     samarium/gl/Texture.cpp
