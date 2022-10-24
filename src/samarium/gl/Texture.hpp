@@ -13,15 +13,10 @@
 #include "samarium/graphics/Image.hpp" // for Image
 #include "samarium/math/Vector2.hpp"   // for Dimensions
 
+#include "gl.hpp" // for Access
+
 namespace sm::gl
 {
-enum class Access
-{
-    Read      = GL_READ_ONLY,
-    Write     = GL_WRITE_ONLY,
-    ReadWrite = GL_READ_WRITE
-};
-
 struct Texture
 {
     enum class Wrap
