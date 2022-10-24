@@ -42,7 +42,7 @@ struct Window
 {
     struct Deleter
     {
-        auto operator()(GLFWwindow* ptr) { glfwDestroyWindow(ptr); }
+        auto operator()(GLFWwindow* ptr) const { glfwDestroyWindow(ptr); }
     };
 
     using Handle = std::unique_ptr<GLFWwindow, Deleter>;
@@ -157,6 +157,11 @@ struct Window
         }
     }
 
+    /**
+     * @brief               Get the pixels currently rendered
+     *
+     * @return Image
+     */
     [[nodiscard]] auto get_image() const -> Image;
 };
 } // namespace sm
