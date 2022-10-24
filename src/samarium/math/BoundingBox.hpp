@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <array>
+#include <array> // for array
 
 #include "range/v3/algorithm/minmax.hpp" // for minmax
 
@@ -42,7 +42,7 @@ template <concepts::Number T = f64> struct BoundingBox
 
     [[nodiscard]] static constexpr auto square(T width) noexcept requires std::is_signed_v<T>
     {
-        width = std::abs(width / 2.0); // recenter, make +ve
+        width = std::abs(width / 2); // recenter, make +ve
         return BoundingBox{.min{-width, -width}, .max{width, width}};
     }
 
