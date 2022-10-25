@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 Samarium Docs
-====================================
+=============
 
 .. include:: build-status.rst
 
@@ -35,7 +35,7 @@ Contents
     api/util/index
 
 Useful Links
-==================
+============
 
 * :ref:`genindex`
 * :ref:`search`
