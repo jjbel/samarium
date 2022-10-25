@@ -56,7 +56,7 @@ struct Window
             glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, gl::version_major);
             glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, gl::version_minor);
             glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-            glfwWindowHint(GLFW_SAMPLES, 4);
+            // glfwWindowHint(GLFW_SAMPLES, 4);
 
             handle = Handle(glfwCreateWindow(static_cast<i32>(dims.x), static_cast<i32>(dims.y),
                                              title.c_str(), nullptr, nullptr));
@@ -184,8 +184,8 @@ SM_INLINE Window::Window(Dimensions dims_, const std::string& title)
 
     // glEnable(GL_MULTISAMPLE);
 
-    // glEnable(GL_BLEND); // enable blending function
-    // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND); // enable blending function
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     keymap.push_back(keyboard::OnKeyPress{
         *handle, {Key::Escape}, [this] { this->close(); }}); // by default, exit on escape
