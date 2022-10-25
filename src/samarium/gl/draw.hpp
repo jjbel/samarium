@@ -226,7 +226,7 @@ SM_INLINE void polygon(Window& window, std::span<Vector2f> points, ShapeColor co
 {
     if (color.fill_color.a != 0)
     {
-        auto& shader = window.context.shaders.at("Pos");
+        const auto& shader = window.context.shaders.at("Pos");
         window.context.set_active(shader);
         shader.set("view", window.view.as_matrix());
         shader.set("color", color.fill_color);
@@ -253,22 +253,23 @@ SM_INLINE void polygon(Window& window, std::span<Vector2f> points, ShapeColor co
 }
 
 SM_INLINE void
-regular_polygon(Window& window, Vector2_t<f32> pos, f32 radius, u64 point_count, ShapeColor color)
+regular_polygon(Window& window, Circle border_circle, u64 point_count, ShapeColor color)
 {
     auto points = std::vector<Vector2_t<f32>>{};
     points.reserve(point_count);
+
     for (auto i = 0.0f; i < static_cast<f32>(math::two_pi);
          i += static_cast<f32>(math::two_pi) / static_cast<f32>(point_count))
     {
-        points.push_back(Vector2_t<f32>::from_polar({radius, i}) + pos);
+        points.push_back(Vector2_t<f32>::from_polar({static_cast<f32>(border_circle.radius), i}) +
+                         border_circle.centre.cast<f32>());
     }
     polygon(window, points, color);
 }
 
 SM_INLINE void circle(Window& window, Circle circle, ShapeColor color, u64 point_count)
 {
-    regular_polygon(window, circle.centre.cast<f32>(), static_cast<f32>(circle.radius), point_count,
-                    color);
+    regular_polygon(window, circle, point_count, color);
 }
 } // namespace sm::draw
 
