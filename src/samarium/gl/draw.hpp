@@ -191,8 +191,8 @@ SM_INLINE void vertices(Window& window,
 
 SM_INLINE void background(Window& window, Color color)
 {
-    glClearColor(static_cast<f32>(color.r) / 255.0f, static_cast<f32>(color.g) / 255.0f,
-                 static_cast<f32>(color.b) / 255.0f, static_cast<f32>(color.a) / 255.0f);
+    glClearColor(static_cast<f32>(color.r) / 255.0F, static_cast<f32>(color.g) / 255.0F,
+                 static_cast<f32>(color.b) / 255.0F, static_cast<f32>(color.a) / 255.0F);
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
@@ -216,9 +216,9 @@ SM_INLINE void polyline_impl(Window& window, std::span<Vector2f> points, Color c
 SM_INLINE void polyline(Window& window, std::span<Vector2f> points, Color color, f32 thickness)
 {
     auto new_points = std::vector<Vector2f>{points.begin(), points.end()};
-    new_points.insert(new_points.begin(), 2.0f * new_points[0] - new_points[1]);
+    new_points.insert(new_points.begin(), 2.0F * new_points[0] - new_points[1]);
     const auto last = points.back();
-    new_points.push_back(2.0f * last - new_points[new_points.size() - 2]);
+    new_points.push_back(2.0F * last - new_points[new_points.size() - 2]);
     polyline_impl(window, {new_points}, color, thickness);
 }
 
@@ -258,7 +258,7 @@ regular_polygon(Window& window, Circle border_circle, u64 point_count, ShapeColo
     auto points = std::vector<Vector2_t<f32>>{};
     points.reserve(point_count);
 
-    for (auto i = 0.0f; i < static_cast<f32>(math::two_pi);
+    for (auto i = 0.0F; i < static_cast<f32>(math::two_pi);
          i += static_cast<f32>(math::two_pi) / static_cast<f32>(point_count))
     {
         points.push_back(Vector2_t<f32>::from_polar({static_cast<f32>(border_circle.radius), i}) +
