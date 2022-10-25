@@ -98,8 +98,6 @@ For the optimal developing experience, use [VSCode](https://code.visualstudio.co
 
 Documentation is located at [Github Pages](https://strangequark1041.github.io/samarium/)
 
-For development, see [BUILDING.md](BUILDING.md)
-
 ## License
 
 Samarium is distributed under the [MIT License](LICENSE.md).
