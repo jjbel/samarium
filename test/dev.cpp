@@ -5,6 +5,8 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
+#include "samarium/gl/draw.hpp"
+#include "samarium/graphics/gradients.hpp"
 #include "samarium/samarium.hpp"
 
 using namespace sm;
@@ -23,10 +25,12 @@ int main()
         draw::background(Color{.a = 0});
         draw::circle(window, {{-0.8, -0.8}, 0.1}, {.fill_color = Color{0, 0, 255, 255}});
         draw::circle(window, {{-0.8, 0.8}, 0.1}, {.fill_color = Color{0, 0, 255, 255}});
+        draw::background(window, gradients::heat);
 
         draw::circle(window, {{0.8, 0.8}, 0.1}, {.fill_color = Color{0, 0, 255, 255}});
         draw::circle(window, {{0.8, -0.8}, 0.1}, {.fill_color = Color{0, 0, 255, 25}});
 
         window.display();
     }
+    print(sizeof(glm::mat4), sizeof(f32), sizeof(Transform));
 }
