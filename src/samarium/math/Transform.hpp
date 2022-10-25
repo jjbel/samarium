@@ -56,5 +56,7 @@ class Transform
                                           static_cast<f32>(rotation), glm::vec3{0.0F, 0.0F, 1.0F}),
                               glm::vec3{static_cast<f32>(pos.x), static_cast<f32>(pos.y), 0.0F});
     }
+
+    [[nodiscard]] operator glm::mat4() const noexcept { return as_matrix(); }
 };
 } // namespace sm
