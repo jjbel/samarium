@@ -256,7 +256,7 @@ struct ComputeShader
 
 #include "fmt/format.h"         // for buffer::append
 #include "glad/glad.h"          // for GL_COMPILE_STATUS, glCompileS...
-#include "glm/gtc/type_ptr.hpp" //for value_ptr
+#include "glm/gtc/type_ptr.hpp" // forvalue_ptr
 
 #include "samarium/graphics/Color.hpp" // for Color
 #include "samarium/util/print.hpp"     // for error

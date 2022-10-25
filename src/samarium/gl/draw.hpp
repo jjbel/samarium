@@ -27,7 +27,7 @@
 #include "samarium/gui/Window.hpp"        // for Window
 #include "samarium/math/BoundingBox.hpp"  // for BoundingBox
 #include "samarium/math/Extents.hpp"      // for range
-#include "samarium/math/Transform.hpp"    //for Transform
+#include "samarium/math/Transform.hpp"    // forTransform
 #include "samarium/math/Vector2.hpp"      // for Vector2f, Vector2_t, operator*
 #include "samarium/math/interp.hpp"       // for lerp, lerp_inverse
 #include "samarium/math/math.hpp"         // for two_pi
