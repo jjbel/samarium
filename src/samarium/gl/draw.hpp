@@ -189,7 +189,7 @@ SM_INLINE void vertices(Window& window,
     glDrawArrays(static_cast<i32>(primitive), 0, static_cast<i32>(vertices.size()));
 }
 
-SM_INLINE void background(Window& window, Color color)
+SM_INLINE void background(Color color)
 {
     glClearColor(static_cast<f32>(color.r) / 255.0F, static_cast<f32>(color.g) / 255.0F,
                  static_cast<f32>(color.b) / 255.0F, static_cast<f32>(color.a) / 255.0F);
