@@ -9,6 +9,7 @@
 
 #include <array> // for array,to_array
 #include <cmath>
+#include <glm/ext/matrix_float4x4.hpp>
 #include <numbers>
 #include <span>   // for span
 #include <vector> // for vector, allocator
@@ -40,25 +41,34 @@
 namespace sm::draw
 {
 void vertices(Window& window,
-              std::span<gl::Vertex<gl::Layout::Pos>> vertices,
+              std::span<gl::Vertex<gl::Layout::Pos>> verts,
               Color color,
-              gl::Primitive primitive = gl::Primitive::Triangles,
-              Transform transform     = {});
+              gl::Primitive primitive,
+              const glm::mat4& transform);
+void vertices(Window& window,
+              std::span<gl::Vertex<gl::Layout::Pos>> verts,
+              Color color,
+              gl::Primitive primitive);
 
 void vertices(Window& window,
-              std::span<Vector2f> vertices,
+              std::span<Vector2f> verts,
               Color color,
-              gl::Primitive primitive = gl::Primitive::Triangles,
-              Transform transform     = {});
+              gl::Primitive primitive,
+              const glm::mat4& transform);
+void vertices(Window& window, std::span<Vector2f> verts, Color color, gl::Primitive primitive);
 
 void vertices(Window& window,
-              std::span<gl::Vertex<gl::Layout::PosColor>> vertices,
-              gl::Primitive primitive = gl::Primitive::Triangles,
-              Transform transform     = {});
+              std::span<gl::Vertex<gl::Layout::PosColor>> verts,
+              gl::Primitive primitive,
+              const glm::mat4& transform);
+void vertices(Window& window,
+              std::span<gl::Vertex<gl::Layout::PosColor>> verts,
+              gl::Primitive primitive);
 
-void circle(Window& window, Circle circle, ShapeColor color, u64 point_count = 64);
+void circle(Window& window, Circle circle, ShapeColor color, const glm::mat4& transform);
+void circle(Window& window, Circle circle_, ShapeColor color);
 
-void background(Window& window, Color color);
+void background(Color color);
 
 /**
  * @brief               Fill the background with a gradient
@@ -107,13 +117,28 @@ template <u64 size> void background(Window& window, const Gradient<size>& gradie
         verts[2 * i + 1].color = gradient.colors[i];
     }
 
-    vertices(window, verts, gl::Primitive::TriangleStrip);
+    vertices(window, verts, gl::Primitive::TriangleStrip, glm::mat4{1.0F});
 }
 
+void polyline(Window& window,
+              std::span<Vector2f> points,
+              Color color,
+              f32 thickness,
+              const glm::mat4& transform);
 void polyline(Window& window, std::span<Vector2f> points, Color color, f32 thickness);
 
+void polygon(Window& window,
+             std::span<Vector2f> points,
+             ShapeColor color,
+             const glm::mat4& transform);
 void polygon(Window& window, std::span<Vector2f> points, ShapeColor color);
 
+void regular_polygon(Window& window,
+                     Vector2_t<f32> pos,
+                     f32 radius,
+                     u64 point_count,
+                     ShapeColor color,
+                     const glm::mat4& transform);
 void regular_polygon(
     Window& window, Vector2_t<f32> pos, f32 radius, u64 point_count, ShapeColor color);
 } // namespace sm::draw
@@ -129,64 +154,84 @@ void regular_polygon(
 namespace sm::draw
 {
 SM_INLINE void vertices(Window& window,
-                        std::span<gl::Vertex<gl::Layout::Pos>> vertices,
+                        std::span<gl::Vertex<gl::Layout::Pos>> verts,
                         Color color,
                         gl::Primitive primitive,
-                        Transform transform)
+                        const glm::mat4& transform)
 {
     const auto& shader = window.context.shaders.at("Pos");
     window.context.set_active(shader);
-    shader.set("view", transform.as_matrix());
+    shader.set("view", transform);
     shader.set("color", color);
 
     auto& vao = window.context.vertex_arrays.at("Pos");
     window.context.set_active(vao);
 
     const auto& buffer = window.context.vertex_buffers.at("default");
-    buffer.set_data(vertices);
-    vao.bind(buffer, sizeof(vertices[0]));
+    buffer.set_data(verts);
+    vao.bind(buffer, sizeof(verts[0]));
 
-    glDrawArrays(static_cast<i32>(primitive), 0, static_cast<i32>(vertices.size()));
+    glDrawArrays(static_cast<i32>(primitive), 0, static_cast<i32>(verts.size()));
 }
 
 SM_INLINE void vertices(Window& window,
-                        std::span<Vector2f> vertices,
+                        std::span<gl::Vertex<gl::Layout::Pos>> verts,
+                        Color color,
+                        gl::Primitive primitive)
+{
+    vertices(window, verts, color, primitive, window.view);
+}
+
+SM_INLINE void vertices(Window& window,
+                        std::span<Vector2f> verts,
                         Color color,
                         gl::Primitive primitive,
-                        Transform transform)
+                        const glm::mat4& transform)
 {
     const auto& shader = window.context.shaders.at("Pos");
     window.context.set_active(shader);
-    shader.set("view", transform.as_matrix());
+    shader.set("view", transform);
     shader.set("color", color);
 
     auto& vao = window.context.vertex_arrays.at("Pos");
     window.context.set_active(vao);
 
     const auto& buffer = window.context.vertex_buffers.at("default");
-    buffer.set_data(vertices);
-    vao.bind(buffer, sizeof(vertices[0]));
+    buffer.set_data(verts);
+    vao.bind(buffer, sizeof(verts[0]));
 
-    glDrawArrays(static_cast<i32>(primitive), 0, static_cast<i32>(vertices.size()));
+    glDrawArrays(static_cast<i32>(primitive), 0, static_cast<i32>(verts.size()));
+}
+
+SM_INLINE void
+vertices(Window& window, std::span<Vector2f> verts, Color color, gl::Primitive primitive)
+{
+    vertices(window, verts, color, primitive, window.view);
 }
 
 SM_INLINE void vertices(Window& window,
-                        std::span<gl::Vertex<gl::Layout::PosColor>> vertices,
+                        std::span<gl::Vertex<gl::Layout::PosColor>> verts,
                         gl::Primitive primitive,
-                        Transform transform)
+                        const glm::mat4& transform)
 {
     const auto& shader = window.context.shaders.at("PosColor");
     window.context.set_active(shader);
-    shader.set("view", transform.as_matrix());
+    shader.set("view", transform);
 
     auto& vao = window.context.vertex_arrays.at("PosColor");
     window.context.set_active(vao);
 
     const auto& buffer = window.context.vertex_buffers.at("default");
-    buffer.set_data(vertices);
-    vao.bind(buffer, sizeof(vertices[0]));
+    buffer.set_data(verts);
+    vao.bind(buffer, sizeof(verts[0]));
 
-    glDrawArrays(static_cast<i32>(primitive), 0, static_cast<i32>(vertices.size()));
+    glDrawArrays(static_cast<i32>(primitive), 0, static_cast<i32>(verts.size()));
+}
+
+SM_INLINE void
+vertices(Window& window, std::span<gl::Vertex<gl::Layout::PosColor>> verts, gl::Primitive primitive)
+{
+    vertices(window, verts, primitive, window.view);
 }
 
 SM_INLINE void background(Color color)
@@ -196,7 +241,11 @@ SM_INLINE void background(Color color)
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
-SM_INLINE void polyline_impl(Window& window, std::span<Vector2f> points, Color color, f32 thickness)
+SM_INLINE void polyline_impl(Window& window,
+                             std::span<Vector2f> points,
+                             Color color,
+                             f32 thickness,
+                             const glm::mat4& transform)
 {
     const auto& shader = window.context.shaders.at("polyline");
     shader.bind();
@@ -213,22 +262,32 @@ SM_INLINE void polyline_impl(Window& window, std::span<Vector2f> points, Color c
     glDrawArrays(GL_TRIANGLES, 0, 6 * (static_cast<i32>(points.size()) - 3));
 }
 
-SM_INLINE void polyline(Window& window, std::span<Vector2f> points, Color color, f32 thickness)
+SM_INLINE void polyline(Window& window,
+                        std::span<Vector2f> points,
+                        Color color,
+                        f32 thickness,
+                        const glm::mat4& transform)
 {
     auto new_points = std::vector<Vector2f>{points.begin(), points.end()};
     new_points.insert(new_points.begin(), 2.0F * new_points[0] - new_points[1]);
     const auto last = points.back();
     new_points.push_back(2.0F * last - new_points[new_points.size() - 2]);
-    polyline_impl(window, {new_points}, color, thickness);
+    polyline_impl(window, {new_points}, color, thickness, transform);
 }
 
-SM_INLINE void polygon(Window& window, std::span<Vector2f> points, ShapeColor color)
+SM_INLINE void polyline(Window& window, std::span<Vector2f> points, Color color, f32 thickness)
+{
+    polyline(window, points, color, thickness, window.view);
+}
+
+SM_INLINE void
+polygon(Window& window, std::span<Vector2f> points, ShapeColor color, const glm::mat4& transform)
 {
     if (color.fill_color.a != 0)
     {
         const auto& shader = window.context.shaders.at("Pos");
         window.context.set_active(shader);
-        shader.set("view", window.view.as_matrix());
+        shader.set("view", transform);
         shader.set("color", color.fill_color);
 
         const auto& buffer = window.context.vertex_buffers.at("default");
@@ -248,12 +307,20 @@ SM_INLINE void polygon(Window& window, std::span<Vector2f> points, ShapeColor co
         new_points.push_back(new_points[1]);
         new_points.push_back(new_points[2]);
         polyline_impl(window, {new_points}, color.border_color,
-                      static_cast<f32>(color.border_width));
+                      static_cast<f32>(color.border_width), transform);
     }
 }
 
-SM_INLINE void
-regular_polygon(Window& window, Circle border_circle, u64 point_count, ShapeColor color)
+SM_INLINE void polygon(Window& window, std::span<Vector2f> points, ShapeColor color)
+{
+    polygon(window, points, color, window.view);
+}
+
+SM_INLINE void regular_polygon(Window& window,
+                               Circle border_circle,
+                               u64 point_count,
+                               ShapeColor color,
+                               const glm::mat4& transform)
 {
     auto points = std::vector<Vector2_t<f32>>{};
     points.reserve(point_count);
@@ -267,9 +334,20 @@ regular_polygon(Window& window, Circle border_circle, u64 point_count, ShapeColo
     polygon(window, points, color);
 }
 
-SM_INLINE void circle(Window& window, Circle circle, ShapeColor color, u64 point_count)
+SM_INLINE void
+regular_polygon(Window& window, Circle border_circle, u64 point_count, ShapeColor color)
 {
-    regular_polygon(window, circle, point_count, color);
+    regular_polygon(window, border_circle, point_count, color, window.view);
+}
+
+SM_INLINE void circle(Window& window, Circle circle, ShapeColor color, const glm::mat4& transform)
+{
+    regular_polygon(window, circle, 32, color, transform);
+}
+
+SM_INLINE void circle(Window& window, Circle circle_, ShapeColor color)
+{
+    circle(window, circle_, color, window.view);
 }
 } // namespace sm::draw
 
