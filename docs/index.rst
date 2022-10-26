@@ -12,14 +12,6 @@ Contents
 --------
 
 ..  toctree::
-    :maxdepth: 2
-    :caption: About
-
-    changelog
-    license
-
-..  toctree::
-    :maxdepth: 2
     :caption: Usage
 
     installation
@@ -27,12 +19,17 @@ Contents
     examples
 
 ..  toctree::
-    :maxdepth: 2
     :caption: API Reference
 
     api/math/index
     api/gl/index
     api/util/index
+
+..  toctree::
+    :caption: About
+
+    changelog
+    license
 
 Useful Links
 ============
