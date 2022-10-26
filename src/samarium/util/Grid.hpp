@@ -7,10 +7,10 @@
 
 #pragma once
 
-#include <compare>
 #include <functional>
-#include <iterator>
-#include <span>
+#include <span>      // for span
+#include <stdexcept> // for out_of_range
+#include <vector>    // for vector
 
 #include "fmt/format.h"
 
@@ -188,6 +188,8 @@ template <typename T> class Grid
 
         return output;
     }
+
+    [[nodiscard]] auto span() { return std::span{data}; }
 
     [[nodiscard]] auto upscale(u64 upscale_factor) const
     {
