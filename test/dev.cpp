@@ -14,11 +14,7 @@ using namespace sm::literals;
 
 int main()
 {
-    if (glfwInit() == 0) { throw std::runtime_error("Error: failed to initialize glfw"); }
-
-    glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE);
     auto window = Window{{720, 720}};
-    glfwSetWindowAttrib(window.handle.get(), GLFW_DECORATED, GLFW_FALSE);
 
     while (window.is_open())
     {
