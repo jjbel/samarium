@@ -48,12 +48,19 @@ struct Texture
                      Filter min_filter = Filter::LinearMipmapLinear,
                      Filter mag_filter = Filter::Linear);
 
+    explicit Texture(std::span<Color> image,
+                     Wrap mode         = Wrap::Repeat,
+                     Filter min_filter = Filter::LinearMipmapLinear,
+                     Filter mag_filter = Filter::Linear);
+
     explicit Texture(Dimensions dims,
                      Wrap mode         = Wrap::Repeat,
                      Filter min_filter = Filter::LinearMipmapLinear,
                      Filter mag_filter = Filter::Linear);
 
-    void set_data(const Image& image);
+    void set_data(std::span<Color> image, Dimensions dims, bool mipmaps = true);
+
+    void set_data(const Image& image, bool mipmaps = true);
 
     void bind(u32 texture_unit_index = 0U);
 
@@ -131,15 +138,21 @@ SM_INLINE void Texture::create(Dimensions dims)
     glTextureStorage2D(handle, 1, GL_RGBA8, static_cast<i32>(dims.x), static_cast<i32>(dims.y));
 }
 
-SM_INLINE void Texture::set_data(const Image& image)
+SM_INLINE void Texture::set_data(std::span<Color> image, Dimensions dims, bool mipmaps)
 {
-    const auto width  = static_cast<i32>(image.dims.x);
-    const auto height = static_cast<i32>(image.dims.y);
+    create(dims);
+    glTextureSubImage2D(handle, 0, 0, 0, static_cast<i32>(dims.x), static_cast<i32>(dims.y),
+                        GL_RGBA, GL_UNSIGNED_BYTE, static_cast<const void*>(image.data()));
+    if (mipmaps) { make_mipmaps(); }
+}
+
+SM_INLINE void Texture::set_data(const Image& image, bool mipmaps)
+{
     create(image.dims);
-    // load the image data
-    glTextureSubImage2D(handle, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE,
-                        static_cast<const void*>(image.data.data()));
-    make_mipmaps();
+    glTextureSubImage2D(handle, 0, 0, 0, static_cast<i32>(image.dims.x),
+                        static_cast<i32>(image.dims.y), GL_RGBA, GL_UNSIGNED_BYTE,
+                        static_cast<const void*>(image.data()));
+    if (mipmaps) { make_mipmaps(); }
 }
 
 SM_INLINE void Texture::bind(u32 texture_unit_index)
