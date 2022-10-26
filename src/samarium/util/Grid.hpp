@@ -49,29 +49,23 @@ template <typename T> class Grid
     using value_type      = T;
     using reference       = T&;
     using const_reference = const T&;
-    using interator       = T*;
+    using iterator        = T*;
     using const_iterator  = T const*;
     using difference_type = std::ptrdiff_t;
     using size_type       = u64;
 
-    std::vector<T> data;
+    std::vector<T> elements;
     const Dimensions dims;
 
     // Constructors
-    explicit Grid(Dimensions dims_) : data(dims_.x * dims_.y), dims{dims_} {}
+    explicit Grid(Dimensions dims_) : elements(dims_.x * dims_.y), dims{dims_} {}
 
-    Grid(Dimensions dims_, T init_value) : data(dims_.x * dims_.y, init_value), dims{dims_} {}
+    Grid(Dimensions dims_, T init_value) : elements(dims_.x * dims_.y, init_value), dims{dims_} {}
 
-    explicit Grid(std::span<T> span, Dimensions dims_) : data(span.begin(), span.end()), dims{dims_}
+    explicit Grid(std::span<T> span, Dimensions dims_)
+        : elements(span.begin(), span.end()), dims{dims_}
     {
     }
-
-    // explicit Grid(const void* pixels, Dimensions dims_)
-    //     : data(reinterpret_cast<const_iterator>(pixels),
-    //            reinterpret_cast<const_iterator>(pixels) + dims_.x * dims_.y),
-    //       dims{dims_}
-    // {
-    // }
 
     template <typename Fn> static auto generate(Dimensions dims, Fn&& fn)
     {
@@ -91,15 +85,15 @@ template <typename T> class Grid
 
     auto operator[](Indices indices) -> reference
     {
-        return this->data[indices.y * this->dims.x + indices.x];
+        return this->elements[indices.y * this->dims.x + indices.x];
     }
     auto operator[](Indices indices) const -> const_reference
     {
-        return this->data[indices.y * this->dims.x + indices.x];
+        return this->elements[indices.y * this->dims.x + indices.x];
     }
 
-    auto operator[](u64 index) noexcept -> T& { return this->data[index]; }
-    auto operator[](u64 index) const noexcept -> const_reference { return this->data[index]; }
+    auto operator[](u64 index) noexcept -> T& { return this->elements[index]; }
+    auto operator[](u64 index) const noexcept -> const_reference { return this->elements[index]; }
 
     auto at(Indices indices) -> T&
     {
@@ -130,7 +124,7 @@ template <typename T> class Grid
             throw std::out_of_range(
                 fmt::format("sm::Grid: index {} out of range for size {}", index, this->size()));
         }
-        else [[likely]] { return this->data[index]; }
+        else [[likely]] { return this->elements[index]; }
     }
 
     auto at(u64 index) const -> const_reference
@@ -140,7 +134,7 @@ template <typename T> class Grid
             throw std::out_of_range(
                 fmt::format("sm::Grid: index {} out of range for size {}", index, this->size()));
         }
-        else [[likely]] { return this->data[index]; }
+        else [[likely]] { return this->elements[index]; }
     }
 
     auto at_or(Indices indices, T default_value) const -> T
@@ -152,30 +146,30 @@ template <typename T> class Grid
     auto at_or(u64 index, T default_value) const -> T
     {
         if (index >= this->size()) [[unlikely]] { return default_value; }
-        else [[likely]] { return this->data[index]; }
+        else [[likely]] { return this->elements[index]; }
     }
 
-    auto begin() { return this->data.begin(); }
-    auto end() { return this->data.end(); }
+    auto begin() { return this->elements.begin(); }
+    auto end() { return this->elements.end(); }
 
-    auto begin() const { return this->data.cbegin(); }
-    auto end() const { return this->data.cend(); }
+    auto begin() const { return this->elements.cbegin(); }
+    auto end() const { return this->elements.cend(); }
 
-    auto cbegin() const { return this->data.cbegin(); }
-    auto cend() const { return this->data.cend(); }
+    auto cbegin() const { return this->elements.cbegin(); }
+    auto cend() const { return this->elements.cend(); }
 
-    auto front() const -> const_reference { return data.front(); }
-    auto front() -> reference { return data.front(); }
+    auto front() const -> const_reference { return elements.front(); }
+    auto front() -> reference { return elements.front(); }
 
-    auto back() const -> const_reference { return data.back(); }
-    auto back() -> reference { return data.back(); }
+    auto back() const -> const_reference { return elements.back(); }
+    auto back() -> reference { return elements.back(); }
 
-    auto size() const { return this->data.size(); }
-    auto empty() const { return this->data.size() == 0; }
+    auto size() const { return this->elements.size(); }
+    auto empty() const { return this->elements.size() == 0; }
 
     auto bounding_box() const { return BoundingBox<u64>{Indices{}, dims - Indices{1, 1}}; }
 
-    auto fill(const T& value) { this->data.fill(value); }
+    auto fill(const T& value) { this->elements.fill(value); }
 
     template <concepts::ColorFormat Format> [[nodiscard]] auto formatted_data(Format format) const
     {
@@ -183,13 +177,17 @@ template <typename T> class Grid
         auto output              = std::vector<std::array<u8, format_length>>(this->size());
         const auto converter     = [format](auto color) { return color.get_formatted(format); };
 
-        ranges::copy(ranges::views::transform(this->data, converter), output.begin());
+        ranges::copy(ranges::views::transform(this->elements, converter), output.begin());
         // std::transform(this->data.cbegin(), this->data.cend(), output.begin(), converter);
 
         return output;
     }
 
-    [[nodiscard]] auto span() { return std::span{data}; }
+    [[nodiscard]] auto span() { return std::span{elements}; }
+
+    [[nodiscard]] iterator data() { return elements.data(); }
+
+    [[nodiscard]] const_iterator data() const { return elements.data(); }
 
     [[nodiscard]] auto upscale(u64 upscale_factor) const
     {
