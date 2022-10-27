@@ -63,7 +63,7 @@ struct Text
         // load font as face
         auto* face = FT_Face{};
 
-        if (FT_New_Face(ft, font_path.string().c_str(), 0, &face))
+        if (FT_New_Face(ft, font_path.string().c_str(), 0, &face) != 0)
         {
             return tl::make_unexpected(fmt::format("Could not create font: {}", font_path));
         }
