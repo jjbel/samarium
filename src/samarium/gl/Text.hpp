@@ -149,7 +149,11 @@ SM_INLINE void Text::operator()(gl::Context& context,
     for (auto c : text)
     {
         auto& ch = characters.at(c);
-        if (ch.size.x * ch.size.y == 0) { continue; }
+        if (ch.size.x * ch.size.y == 0)
+        {
+            pos.x += (ch.advance >> 6) * scale;
+            continue;
+        }
 
         const f32 xpos = pos.x + static_cast<f32>(ch.bearing.x) * scale;
         const f32 ypos = pos.y - (ch.size.y - ch.bearing.y) * scale;
