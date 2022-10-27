@@ -100,6 +100,9 @@ auto find(const std::string& file_name, std::initializer_list<std::filesystem::p
 #include "fmt/os.h"
 #include "range/v3/algorithm/copy.hpp"
 #include "samarium/util/Stopwatch.hpp"
+
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb.h"
 #include "stb_image.h"
 #include "stb_image_write.h"
 
