@@ -7,7 +7,8 @@
 
 #pragma once
 
-#include "glad/glad.h" // for GLenum, GL_RGBA8, glDeleteTex...
+#include "glad/glad.h"                   // for GLenum, GL_RGBA8, glDeleteTex...
+#include "range/v3/range/primitives.hpp" // for data
 
 #include "samarium/core/types.hpp"     // for u32, i32
 #include "samarium/graphics/Image.hpp" // for Image
@@ -58,9 +59,19 @@ struct Texture
                      Filter min_filter = Filter::LinearMipmapLinear,
                      Filter mag_filter = Filter::Linear);
 
-    void set_data(std::span<Color> image, Dimensions dims, bool mipmaps = true);
-
     void set_data(const Image& image, bool mipmaps = true);
+
+    void set_data(const ranges::range auto& data,
+                  Dimensions dims,
+                  GLenum internal_format,
+                  GLenum format,
+                  GLenum datatype)
+    {
+        create(dims, internal_format);
+
+        glTextureSubImage2D(handle, 0, 0, 0, static_cast<i32>(dims.x), static_cast<i32>(dims.y),
+                            format, datatype, static_cast<const void*>(ranges::data(data)));
+    }
 
     void bind(u32 texture_unit_index = 0U);
 
@@ -89,7 +100,7 @@ struct Texture
     ~Texture() { glDeleteTextures(1, &handle); }
 
   private:
-    void create(Dimensions dims);
+    void create(Dimensions dims, GLenum internal_format = GL_RGBA8);
 };
 } // namespace sm::gl
 
@@ -133,17 +144,10 @@ Texture::Texture(Dimensions dims, Wrap mode, Filter min_filter, Filter mag_filte
 
 SM_INLINE void Texture::make_mipmaps() { glGenerateTextureMipmap(handle); }
 
-SM_INLINE void Texture::create(Dimensions dims)
+SM_INLINE void Texture::create(Dimensions dims, GLenum internal_format)
 {
-    glTextureStorage2D(handle, 1, GL_RGBA8, static_cast<i32>(dims.x), static_cast<i32>(dims.y));
-}
-
-SM_INLINE void Texture::set_data(std::span<Color> image, Dimensions dims, bool mipmaps)
-{
-    create(dims);
-    glTextureSubImage2D(handle, 0, 0, 0, static_cast<i32>(dims.x), static_cast<i32>(dims.y),
-                        GL_RGBA, GL_UNSIGNED_BYTE, static_cast<const void*>(image.data()));
-    if (mipmaps) { make_mipmaps(); }
+    glTextureStorage2D(handle, 1, internal_format, static_cast<i32>(dims.x),
+                       static_cast<i32>(dims.y));
 }
 
 SM_INLINE void Texture::set_data(const Image& image, bool mipmaps)
