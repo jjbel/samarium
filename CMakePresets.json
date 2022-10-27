@@ -62,7 +62,7 @@
             "inherits": "clang",
             "cacheVariables": {
                 "CMAKE_UNITY_BUILD": false,
-                "SAMARIUM_HEADER_ONLY": false,
+                "SAMARIUM_HEADER_ONLY": true,
                 "USE_UBSAN": false,
                 "USE_LINKER": "mold",
                 "BUILD_UNIT_TESTS": false,

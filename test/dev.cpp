@@ -1,12 +1,4 @@
-/*
- * SPDX-License-Identifier: MIT
- * Copyright (c) 2022 Jai Bellare
- * See <https://opensource.org/licenses/MIT/> or LICENSE.md
- * Project homepage: https://github.com/strangeQuark1041/samarium
- */
-
-#include "samarium/gl/draw.hpp"
-#include "samarium/graphics/gradients.hpp"
+#include "samarium/graphics/colors.hpp"
 #include "samarium/samarium.hpp"
 
 using namespace sm;
@@ -14,19 +6,17 @@ using namespace sm::literals;
 
 int main()
 {
-    auto window = Window{{720, 720}};
+    auto window = Window{{1280, 720}};
+    auto text   = expect(
+        draw::Text::make("/usr/share/fonts/TTF/Fira Code Regular Nerd Font Complete Mono.ttf"));
 
     while (window.is_open())
     {
-        draw::background(Color{.a = 0});
-        draw::circle(window, {{-0.8, -0.8}, 0.1}, {.fill_color = Color{0, 0, 255, 255}});
-        draw::circle(window, {{-0.8, 0.8}, 0.1}, {.fill_color = Color{0, 0, 255, 255}});
-        draw::background(window, gradients::heat);
-
-        draw::circle(window, {{0.8, 0.8}, 0.1}, {.fill_color = Color{0, 0, 255, 255}});
-        draw::circle(window, {{0.8, -0.8}, 0.1}, {.fill_color = Color{0, 0, 255, 25}});
-
+        draw::background("#141414"_c);
+        draw::circle(window, {.centre = {}, .radius = .3}, {.fill_color = colors::red});
+        // text(window, "Bezier Curves", {200.0F, 300.0F}, 1.0F, colors::ivory);
+        text(window, "libsamarium", {}, 1.0F, colors::ivory);
         window.display();
     }
-    print(sizeof(glm::mat4), sizeof(f32), sizeof(Transform));
+    print("DoNnnnn");
 }

@@ -110,6 +110,9 @@ SM_INLINE Context::Context(Dimensions dims)
     frag_sources.emplace("PosColorTex",
 #include "shaders/PosColorTex.frag.glsl"
     );
+    frag_sources.emplace("text",
+#include "shaders/text.frag.glsl"
+    );
 
     shaders.emplace("Pos", Shader{expect(VertexShader::make(vert_sources.at("Pos"))),
                                   expect(FragmentShader::make(frag_sources.at("Pos")))});
@@ -123,6 +126,9 @@ SM_INLINE Context::Context(Dimensions dims)
     shaders.emplace("PosColorTex",
                     Shader{expect(VertexShader::make(vert_sources.at("PosColorTex"))),
                            expect(FragmentShader::make(frag_sources.at("PosColorTex")))});
+
+    shaders.emplace("text", Shader{expect(VertexShader::make(vert_sources.at("PosTex"))),
+                                   expect(FragmentShader::make(frag_sources.at("text")))});
 
     vert_sources.emplace("polyline",
 #include "shaders/polyline.vert.glsl"

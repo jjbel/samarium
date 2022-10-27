@@ -43,6 +43,7 @@ class SamariumConan(ConanFile):
             "glfw/3.3.8",
             "glm/cci.20220420",
             "glad/0.1.36",
+            "freetype/2.12.1",
         ]
 
         if self.options.build_tests:
@@ -57,6 +58,11 @@ class SamariumConan(ConanFile):
 
         self.options["glad"].gl_profile = "core"
         self.options["glad"].gl_version = "4.6"
+
+        self.options["freetype"].with_png = False
+        self.options["freetype"].with_zlib = False
+        self.options["freetype"].with_bzip2 = False
+        self.options["freetype"].with_brotli = False
 
     def config_options(self):
         if self.settings.os == "Windows":

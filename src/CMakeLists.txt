@@ -118,6 +118,7 @@ function(link_deps target)
         glm
         glad
         glfw3
+        Freetype
     )
         if(NOT ${DEPENDENCY}_FOUND)
             find_package(${DEPENDENCY} CONFIG REQUIRED)
@@ -137,7 +138,9 @@ function(link_deps target)
         glad::glad
         glfw
         glm::glm
+        freetype
     )
+        message(STATUS "Linking ${DEPENDENCY}")
         target_link_libraries(${target} PUBLIC ${DEPENDENCY})
     endforeach()
 
