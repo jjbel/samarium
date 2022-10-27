@@ -1,12 +1,10 @@
 #include "samarium/graphics/colors.hpp"
 #include "samarium/samarium.hpp"
-#include "samarium/util/Stopwatch.hpp"
-#include <fmt/format.h>
 
 using namespace sm;
 using namespace sm::literals;
 
-int main()
+auto main() -> i32
 {
     auto window = Window{{1280, 720}};
     auto text   = expect(
@@ -22,6 +20,4 @@ int main()
         text(window, fmt::format("{:3.2} ms", watch.seconds() * 1000), {}, 1.0F, colors::ivory);
         window.display();
     }
-
-    print("DoNnnnn");
 }
