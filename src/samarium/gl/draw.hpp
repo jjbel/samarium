@@ -40,7 +40,7 @@
 
 namespace sm::draw
 {
-void vertices(Window& window,
+void vertices(gl::Context& context,
               std::span<gl::Vertex<gl::Layout::Pos>> verts,
               Color color,
               gl::Primitive primitive,
@@ -50,14 +50,14 @@ void vertices(Window& window,
               Color color,
               gl::Primitive primitive);
 
-void vertices(Window& window,
+void vertices(gl::Context& context,
               std::span<Vector2f> verts,
               Color color,
               gl::Primitive primitive,
               const glm::mat4& transform);
 void vertices(Window& window, std::span<Vector2f> verts, Color color, gl::Primitive primitive);
 
-void vertices(Window& window,
+void vertices(gl::Context& context,
               std::span<gl::Vertex<gl::Layout::PosColor>> verts,
               gl::Primitive primitive,
               const glm::mat4& transform);
@@ -153,21 +153,21 @@ void regular_polygon(
 
 namespace sm::draw
 {
-SM_INLINE void vertices(Window& window,
+SM_INLINE void vertices(gl::Context& context,
                         std::span<gl::Vertex<gl::Layout::Pos>> verts,
                         Color color,
                         gl::Primitive primitive,
                         const glm::mat4& transform)
 {
-    const auto& shader = window.context.shaders.at("Pos");
-    window.context.set_active(shader);
+    const auto& shader = context.shaders.at("Pos");
+    context.set_active(shader);
     shader.set("view", transform);
     shader.set("color", color);
 
-    auto& vao = window.context.vertex_arrays.at("Pos");
-    window.context.set_active(vao);
+    auto& vao = context.vertex_arrays.at("Pos");
+    context.set_active(vao);
 
-    const auto& buffer = window.context.vertex_buffers.at("default");
+    const auto& buffer = context.vertex_buffers.at("default");
     buffer.set_data(verts);
     vao.bind(buffer, sizeof(verts[0]));
 
@@ -179,24 +179,24 @@ SM_INLINE void vertices(Window& window,
                         Color color,
                         gl::Primitive primitive)
 {
-    vertices(window, verts, color, primitive, window.view);
+    vertices(window.context, verts, color, primitive, window.view);
 }
 
-SM_INLINE void vertices(Window& window,
+SM_INLINE void vertices(gl::Context& context,
                         std::span<Vector2f> verts,
                         Color color,
                         gl::Primitive primitive,
                         const glm::mat4& transform)
 {
-    const auto& shader = window.context.shaders.at("Pos");
-    window.context.set_active(shader);
+    const auto& shader = context.shaders.at("Pos");
+    context.set_active(shader);
     shader.set("view", transform);
     shader.set("color", color);
 
-    auto& vao = window.context.vertex_arrays.at("Pos");
-    window.context.set_active(vao);
+    auto& vao = context.vertex_arrays.at("Pos");
+    context.set_active(vao);
 
-    const auto& buffer = window.context.vertex_buffers.at("default");
+    const auto& buffer = context.vertex_buffers.at("default");
     buffer.set_data(verts);
     vao.bind(buffer, sizeof(verts[0]));
 
@@ -206,22 +206,22 @@ SM_INLINE void vertices(Window& window,
 SM_INLINE void
 vertices(Window& window, std::span<Vector2f> verts, Color color, gl::Primitive primitive)
 {
-    vertices(window, verts, color, primitive, window.view);
+    vertices(window.context, verts, color, primitive, window.view);
 }
 
-SM_INLINE void vertices(Window& window,
+SM_INLINE void vertices(gl::Context& context,
                         std::span<gl::Vertex<gl::Layout::PosColor>> verts,
                         gl::Primitive primitive,
                         const glm::mat4& transform)
 {
-    const auto& shader = window.context.shaders.at("PosColor");
-    window.context.set_active(shader);
+    const auto& shader = context.shaders.at("PosColor");
+    context.set_active(shader);
     shader.set("view", transform);
 
-    auto& vao = window.context.vertex_arrays.at("PosColor");
-    window.context.set_active(vao);
+    auto& vao = context.vertex_arrays.at("PosColor");
+    context.set_active(vao);
 
-    const auto& buffer = window.context.vertex_buffers.at("default");
+    const auto& buffer = context.vertex_buffers.at("default");
     buffer.set_data(verts);
     vao.bind(buffer, sizeof(verts[0]));
 
@@ -231,7 +231,7 @@ SM_INLINE void vertices(Window& window,
 SM_INLINE void
 vertices(Window& window, std::span<gl::Vertex<gl::Layout::PosColor>> verts, gl::Primitive primitive)
 {
-    vertices(window, verts, primitive, window.view);
+    vertices(window.context, verts, primitive, window.view);
 }
 
 SM_INLINE void background(Color color)
@@ -252,7 +252,7 @@ SM_INLINE void polyline_impl(Window& window,
     shader.set("thickness", thickness);
     shader.set("screen_dims", window.dims.cast<f64>());
 
-    shader.set("view", window.view.as_matrix());
+    shader.set("view", transform);
     shader.set("color", color);
 
     auto& buffer = window.context.shader_storage_buffers.at("default");
@@ -331,7 +331,7 @@ SM_INLINE void regular_polygon(Window& window,
         points.push_back(Vector2_t<f32>::from_polar({static_cast<f32>(border_circle.radius), i}) +
                          border_circle.centre.cast<f32>());
     }
-    polygon(window, points, color);
+    polygon(window, points, color, transform);
 }
 
 SM_INLINE void
@@ -342,7 +342,7 @@ regular_polygon(Window& window, Circle border_circle, u64 point_count, ShapeColo
 
 SM_INLINE void circle(Window& window, Circle circle, ShapeColor color, const glm::mat4& transform)
 {
-    regular_polygon(window, circle, 32, color, transform);
+    regular_polygon(window, circle, 64, color, transform);
 }
 
 SM_INLINE void circle(Window& window, Circle circle_, ShapeColor color)
