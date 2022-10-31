@@ -63,10 +63,9 @@ html_theme_options = {
         "color-background-secondary": "#0e0f11",
         "color-sidebar-background-border": "#090a0b",
         "color-sidebar-search-border": "#1c1e21",
+        "color-sidebar-item-background--hover": "#212227"
     },
 }
-
-# pygments_dark_style = "one-dark"
 
 source_suffix = [".rst", ".md"]
 

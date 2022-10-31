@@ -8,6 +8,8 @@ Samarium Docs
 
 .. include:: build-status.rst
 
+Samarium is a 2d physics and rendering engine, written in modern C++20
+
 Contents
 --------
 

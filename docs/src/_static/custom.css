@@ -30,3 +30,19 @@ section,
 .headerlink {
     font-family: 'IBM Plex Mono', monospace;
 }
+
+.sidebar-tree a {
+    border-radius: 0.6em;
+}
+
+.sidebar-tree label {
+    border-radius: 0.6em;
+}
+
+a:hover {
+    color: #f50056;
+}
+
+.toc-tree a:hover {
+    color: aliceblue;
+}
