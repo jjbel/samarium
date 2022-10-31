@@ -7,8 +7,7 @@
 
 #pragma once
 
-#include <array>
-#include <string> // for allocator, string
+#include <string> // for string
 
 #include "glad/glad.h" // for GL_FLOAT, GL_TRUE, GL_UNSIGNED_BYTE
 
