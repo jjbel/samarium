@@ -86,7 +86,8 @@
             "inherits": "debug",
             "generator": "Unix Makefiles",
             "cacheVariables": {
-                "USE_IWYU": "TRUE"
+                "USE_IWYU": true,
+                "SAMARIUM_HEADER_ONLY": false
             }
         }
     ],
