@@ -9,7 +9,6 @@
 
 #include <array> // for array,to_array
 #include <cmath>
-#include <glm/ext/matrix_float4x4.hpp>
 #include <numbers>
 #include <span>   // for span
 #include <vector> // for vector, allocator
@@ -32,7 +31,7 @@
 #include "samarium/math/Vector2.hpp"      // for Vector2f, Vector2_t, operator*
 #include "samarium/math/interp.hpp"       // for lerp, lerp_inverse
 #include "samarium/math/math.hpp"         // for two_pi
-#include "samarium/math/shapes.hpp"       // for Circle
+#include "samarium/math/shapes.hpp"       // for Circle, LineSegment
 #include "samarium/util/Map.hpp"          // for Map
 #include "samarium/util/format.hpp"       // for format
 
@@ -67,6 +66,10 @@ void vertices(Window& window,
 
 void circle(Window& window, Circle circle, ShapeColor color, const glm::mat4& transform);
 void circle(Window& window, Circle circle_, ShapeColor color);
+
+void line_segment(
+    Window& window, LineSegment line, Color color, f32 thickness, const glm::mat4& transform);
+void line_segment(Window& window, LineSegment line, Color color, f32 thickness = 0.01F);
 
 void background(Color color);
 
@@ -348,6 +351,26 @@ SM_INLINE void circle(Window& window, Circle circle, ShapeColor color, const glm
 SM_INLINE void circle(Window& window, Circle circle_, ShapeColor color)
 {
     circle(window, circle_, color, window.view);
+}
+
+SM_INLINE void line_segment(
+    Window& window, LineSegment line, Color color, f32 thickness, const glm::mat4& transform)
+{
+    const auto thickness_vector =
+        Vector2::from_polar(
+            {.length = thickness / 2., .angle = line.vector().angle() + math::pi / 2.0})
+            .cast<f32>();
+
+    const auto first = line.p1.cast<f32>();
+    const auto last  = line.p2.cast<f32>();
+    auto points      = std::to_array<Vector2f>({first - thickness_vector, first + thickness_vector,
+                                                last + thickness_vector, last - thickness_vector});
+    polygon(window, points, {.fill_color = color});
+}
+
+SM_INLINE void line_segment(Window& window, LineSegment line, Color color, f32 thickness)
+{
+    line_segment(window, line, color, thickness, window.view);
 }
 } // namespace sm::draw
 
