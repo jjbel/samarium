@@ -11,9 +11,9 @@
 
 #include "range/v3/algorithm/minmax.hpp" // for minmax
 
-#include "Extents.hpp"
-#include "Vector2.hpp"
-#include "shapes.hpp"
+#include "Extents.hpp" // for Extents
+#include "Vector2.hpp" // for Vector2
+#include "shapes.hpp"  // for LineSegment
 
 namespace sm
 {
@@ -40,7 +40,8 @@ template <concepts::Number T = f64> struct BoundingBox
         return BoundingBox<U>{min.template cast<U>(), max.template cast<U>()};
     }
 
-    [[nodiscard]] static constexpr auto square(T width) noexcept requires std::is_signed_v<T>
+    [[nodiscard]] static constexpr auto square(T width) noexcept
+        requires std::is_signed_v<T>
     {
         width = std::abs(width / 2); // recenter, make +ve
         return BoundingBox{.min{-width, -width}, .max{width, width}};
@@ -123,7 +124,8 @@ template <concepts::Number T = f64> struct BoundingBox
         max.y                     = current_centre.y + half_height;
     }
 
-    [[nodiscard]] constexpr auto line_segments() const noexcept requires concepts::FloatingPoint<T>
+    [[nodiscard]] constexpr auto line_segments() const noexcept
+        requires concepts::FloatingPoint<T>
     {
         const auto top_right   = Vector2{max.x, min.y};
         const auto bottom_left = Vector2{min.x, max.y};
