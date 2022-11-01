@@ -87,20 +87,23 @@ namespace sm::math
     const auto denom1_is_0 = almost_equal(denom1, 0.0);
     const auto denom2_is_0 = almost_equal(denom2, 0.0);
 
-    if (denom1_is_0 && denom2_is_0) return std::nullopt;
+    if (denom1_is_0 && denom2_is_0) { return std::nullopt; }
 
     if (denom1_is_0)
-        return std::optional{Vector2{l1.p1.x, l2.slope() * (l1.p1.x - l2.p1.x) + l2.p1.y}};
-    else if (denom2_is_0)
-        return std::optional{Vector2{l2.p1.x, l1.slope() * (l2.p1.x - l1.p1.x) + l1.p1.y}};
-    else
     {
-        const auto m1 = l1.slope();
-        const auto m2 = l2.slope();
-
-        const auto x = (m2 * l2.p1.x - m1 * l1.p1.x + l1.p1.y - l2.p1.y) / (m2 - m1);
-        return std::optional{Vector2{x, m1 * (x - l1.p1.x) + l1.p1.y}};
+        return std::optional{Vector2{l1.p1.x, l2.slope() * (l1.p1.x - l2.p1.x) + l2.p1.y}};
     }
+
+    if (denom2_is_0)
+    {
+        return std::optional{Vector2{l2.p1.x, l1.slope() * (l2.p1.x - l1.p1.x) + l1.p1.y}};
+    }
+
+    const auto m1 = l1.slope();
+    const auto m2 = l2.slope();
+
+    const auto x = (m2 * l2.p1.x - m1 * l1.p1.x + l1.p1.y - l2.p1.y) / (m2 - m1);
+    return std::optional{Vector2{x, m1 * (x - l1.p1.x) + l1.p1.y}};
 }
 
 [[nodiscard]] inline auto clamped_intersection(const LineSegment& l1,
@@ -110,10 +113,7 @@ namespace sm::math
     const auto point = intersection(l1, l2);
     if (!point) { return std::nullopt; }
     if (lies_in_segment(*point, l1) && lies_in_segment(*point, l2)) { return point; }
-    else
-    {
-        return std::nullopt;
-    }
+    return std::nullopt;
 }
 
 template <typename T> [[nodiscard]] constexpr auto area(BoundingBox<T> bounding_box) noexcept
