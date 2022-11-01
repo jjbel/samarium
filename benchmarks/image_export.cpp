@@ -44,7 +44,7 @@ static void bm_file_export_Png(benchmark::State& state)
 }
 
 BENCHMARK(bm_file_export_Pam)
-    ->Name("file::write(file::Pam)")
+    ->Name("Pam")
     ->Unit(benchmark::kMillisecond)
     ->Arg(200)
     ->Arg(800)
@@ -52,7 +52,7 @@ BENCHMARK(bm_file_export_Pam)
     ->Arg(3200);
 
 BENCHMARK(bm_file_export_Targa)
-    ->Name("file::write(file::Targa)")
+    ->Name("Targa")
     ->Unit(benchmark::kMillisecond)
     ->Arg(200)
     ->Arg(800)
@@ -60,7 +60,7 @@ BENCHMARK(bm_file_export_Targa)
     ->Arg(3200);
 
 BENCHMARK(bm_file_export_Bmp)
-    ->Name("file::write(file::Bmp)")
+    ->Name("Bmp")
     ->Unit(benchmark::kMillisecond)
     ->Arg(200)
     ->Arg(800)
@@ -68,7 +68,7 @@ BENCHMARK(bm_file_export_Bmp)
     ->Arg(3200);
 
 BENCHMARK(bm_file_export_Png)
-    ->Name("file::write(file::Png)")
+    ->Name("Png")
     ->Unit(benchmark::kMillisecond)
     ->Arg(200)
     ->Arg(800)
