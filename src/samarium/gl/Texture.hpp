@@ -10,9 +10,9 @@
 #include "glad/glad.h"                   // for GLenum, GL_RGBA8, glDeleteTex...
 #include "range/v3/range/primitives.hpp" // for data
 
-#include "samarium/core/types.hpp"     // for u32, i32
-#include "samarium/graphics/Image.hpp" // for Image
-#include "samarium/math/Vector2.hpp"   // for Dimensions
+#include "samarium/core/types.hpp"   // for u32, i32
+#include "samarium/math/Vector2.hpp" // for Dimensions
+#include "samarium/util/Grid.hpp"    // for Image
 
 #include "gl.hpp" // for Access
 

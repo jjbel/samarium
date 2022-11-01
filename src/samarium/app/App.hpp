@@ -20,13 +20,13 @@
 
 #include "samarium/core/types.hpp"       // for f64, u32, u64
 #include "samarium/graphics/Color.hpp"   // for Color, ShapeColor
-#include "samarium/graphics/Image.hpp"   // for Image, dimsFHD
 #include "samarium/gui/Keyboard.hpp"     // for Keyboard, Keyboard::Key
 #include "samarium/gui/Mouse.hpp"        // for Mouse
 #include "samarium/math/BoundingBox.hpp" // for BoundingBox
 #include "samarium/math/Transform.hpp"   // for Transform
 #include "samarium/math/Vector2.hpp"     // for Vector2, Dimensions
 #include "samarium/util/FunctionRef.hpp" // for ThreadPool
+#include "samarium/util/Grid.hpp"        // for Image, dimsFHD
 #include "samarium/util/Stopwatch.hpp"   // for Stopwatch
 #include "samarium/util/ThreadPool.hpp"  // for ThreadPool
 
@@ -260,7 +260,7 @@ class App
 
 #include "SFML/Graphics/CircleShape.hpp"   // for CircleShape
 #include "SFML/Graphics/Color.hpp"         // for Color
-#include "SFML/Graphics/Image.hpp"         // for Image
+#include "SFML/Graphics/Grid.hpp"          // for Image
 #include "SFML/Graphics/PrimitiveType.hpp" // for PrimitiveType, Quads
 #include "SFML/Graphics/RenderWindow.hpp"  // for RenderWindow
 #include "SFML/Graphics/Sprite.hpp"        // for Sprite

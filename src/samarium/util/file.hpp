@@ -11,9 +11,9 @@
 #include <initializer_list> // for initializer_list
 #include <string>           // for string, operator+
 
-#include "samarium/graphics/Image.hpp" // for Image
-#include "samarium/math/Vector2.hpp"   // for Dimensions
-#include "samarium/util/format.hpp"    // for date_time_str
+#include "samarium/math/Vector2.hpp" // for Dimensions
+#include "samarium/util/Grid.hpp"    // for Image
+#include "samarium/util/format.hpp"  // for date_time_str
 
 #include "Expected.hpp"  // for Expected
 #include "fpng/fpng.hpp" // for fpng_encode_image_to_file
@@ -67,9 +67,10 @@ void write([[maybe_unused]] Targa tag,
 /**
  * @brief               Write image to file_path in the NetBPM PAM format
  *
+ * @param  tag          Use the PAM format (tag dispatch)
  * @param  image
  * @param  file_path
- * @details See https://en.wikipedia.org/wiki/Netpbm#PAM_graphics_format
+ * @details See https://wikipedia.org/wiki/Netpbm#PAM_graphics_format
  */
 void write([[maybe_unused]] Pam tag,
            const Image& image,
@@ -121,9 +122,9 @@ auto find(const std::string& file_name, std::initializer_list<std::filesystem::p
 #include "samarium/core/inline.hpp"    // for SM_INLINE
 #include "samarium/core/types.hpp"     // for u8
 #include "samarium/graphics/Color.hpp" // for BGR_t, bgr
-#include "samarium/graphics/Image.hpp" // for Image
 #include "samarium/math/Extents.hpp"   // for range
 #include "samarium/math/Vector2.hpp"   // for Dimensions
+#include "samarium/util/Grid.hpp"      // for Image
 
 #include "fpng/fpng.hpp"
 

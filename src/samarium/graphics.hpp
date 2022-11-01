@@ -9,7 +9,7 @@
 
 #include "samarium/graphics/Color.hpp"
 #include "samarium/graphics/Gradient.hpp"
-#include "samarium/graphics/Image.hpp"
 #include "samarium/graphics/Trail.hpp"
+#include "samarium/util/Grid.hpp"
 // #include "samarium/graphics/colors.hpp"
 // #include "samarium/graphics/gradients.hpp"

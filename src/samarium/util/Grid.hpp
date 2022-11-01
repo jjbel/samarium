@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include <functional>
 #include <span>      // for span
 #include <stdexcept> // for out_of_range
 #include <vector>    // for vector
@@ -20,9 +19,9 @@
 #include "range/v3/view/transform.hpp"
 #include "range/v3/view/zip.hpp"
 
-#include "samarium/graphics/Color.hpp"
-#include "samarium/math/BoundingBox.hpp"
-#include "samarium/math/Extents.hpp"
+#include "samarium/graphics/Color.hpp"   // for Color
+#include "samarium/math/BoundingBox.hpp" // for BoundingBox
+#include "samarium/math/Extents.hpp"     // for Extents
 
 namespace sm
 {
@@ -209,4 +208,14 @@ template <typename T> class Grid
 
     auto byte_size() const { return size() * sizeof(T); }
 };
+
+using Image       = Grid<Color>;
+using ScalarField = Grid<f64>;
+using VectorField = Grid<Vector2>;
+
+constexpr static auto dims4K  = Dimensions{3840UL, 2160UL};
+constexpr static auto dimsFHD = Dimensions{1920UL, 1080UL};
+constexpr static auto dims720 = Dimensions{1280UL, 720UL};
+constexpr static auto dims480 = Dimensions{640UL, 480UL};
+constexpr static auto dimsP2  = Dimensions{2048UL, 1024UL};
 } // namespace sm

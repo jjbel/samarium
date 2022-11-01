@@ -20,11 +20,11 @@
 #include "samarium/gl/Context.hpp" // for Context
 #include "samarium/gl/Texture.hpp"
 #include "samarium/gl/gl.hpp"            // for enable_debug_output, versio...
-#include "samarium/graphics/Image.hpp"   // for Image
 #include "samarium/math/BoundingBox.hpp" // for BoundingBox
 #include "samarium/math/Transform.hpp"   // for Transform
 #include "samarium/math/Vector2.hpp"     // for Dimensions, Vector2_t, Vector2
 #include "samarium/math/math.hpp"        // for min, max
+#include "samarium/util/Grid.hpp"        // for Image
 #include "samarium/util/Grid.hpp"        // for Grid
 
 #include "Mouse.hpp"    // for Mouse
