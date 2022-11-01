@@ -24,32 +24,43 @@ struct Text
 {
 };
 
+static constexpr auto text = Text{};
+
 struct Targa
 {
 };
+
+static constexpr auto targa = Targa{};
 
 struct Pam
 {
 };
 
+static constexpr auto pam = Pam{};
+
 struct Png
 {
 };
+
+static constexpr auto png = Png{};
 
 struct Bmp
 {
 };
 
+static constexpr auto bmp = Bmp{};
+
 template <typename T> using ExpectedFile = Expected<T, std::string>;
 
-auto read(Text, const std::filesystem::path& file_path) -> ExpectedFile<std::string>;
+auto read([[maybe_unused]] Text tag, const std::filesystem::path& file_path)
+    -> ExpectedFile<std::string>;
 
 auto read(const std::filesystem::path& file_path) -> ExpectedFile<std::string>;
 
 auto read_image(const std::filesystem::path& file_path) -> ExpectedFile<Image>;
 
 
-void write(Targa,
+void write([[maybe_unused]] Targa tag,
            const Image& image,
            const std::filesystem::path& file_path = date_time_str() + ".tga");
 
@@ -60,7 +71,7 @@ void write(Targa,
  * @param  file_path
  * @details See https://en.wikipedia.org/wiki/Netpbm#PAM_graphics_format
  */
-void write(Pam,
+void write([[maybe_unused]] Pam tag,
            const Image& image,
            const std::filesystem::path& file_path = date_time_str() + ".pam");
 
@@ -72,7 +83,7 @@ write(Png, const Image& image, const std::filesystem::path& file_path = date_tim
         static_cast<u32>(image.dims.x), static_cast<u32>(image.dims.y), 4U);
 }
 
-void write(Bmp,
+void write([[maybe_unused]] Bmp tag,
            const Image& image,
            const std::filesystem::path& file_path = date_time_str() + ".bmp");
 
@@ -118,7 +129,8 @@ auto find(const std::string& file_name, std::initializer_list<std::filesystem::p
 
 namespace sm::file
 {
-SM_INLINE auto read(Text, const std::filesystem::path& file_path) -> ExpectedFile<std::string>
+SM_INLINE auto read([[maybe_unused]] Text tag, const std::filesystem::path& file_path)
+    -> ExpectedFile<std::string>
 {
     if (!std::filesystem::exists(file_path))
     {
@@ -201,7 +213,8 @@ SM_INLINE auto read_image(const std::filesystem::path& file_path) -> ExpectedFil
     return {image};
 }
 
-SM_INLINE void write(Targa, const Image& image, const std::filesystem::path& file_path)
+SM_INLINE void
+write([[maybe_unused]] Targa tag, const Image& image, const std::filesystem::path& file_path)
 {
     const auto header = std::to_array<u8>(
         {0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, static_cast<u8>(255 & image.dims.x),
@@ -234,7 +247,8 @@ ENDHDR
                static_cast<std::streamsize>(image.byte_size()));
 }
 
-SM_INLINE void write(Bmp, const Image& image, const std::filesystem::path& file_path)
+SM_INLINE void
+write([[maybe_unused]] Bmp tag, const Image& image, const std::filesystem::path& file_path)
 {
     stbi_write_bmp(file_path.string().c_str(), static_cast<i32>(image.dims.x),
                    static_cast<i32>(image.dims.y), 4 /* RGBA */,
