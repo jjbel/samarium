@@ -7,7 +7,9 @@
 
 #pragma once
 
-#include "Vector2.hpp"
+#include "samarium/core/types.hpp" // for f64
+
+#include "Vector2.hpp" // for Vector2
 
 namespace sm
 {
@@ -33,6 +35,13 @@ struct LineSegment
     Vector2 p1{};
     Vector2 p2{};
 
+    struct StandardForm
+    {
+        f64 a{}; // coefficient of x
+        f64 b{}; // coefficient of y
+        f64 c{}; // constant term
+    };
+
     [[nodiscard]] constexpr auto vector() const noexcept { return p2 - p1; }
 
     [[nodiscard]] constexpr auto length() const noexcept { return vector().length(); }
@@ -41,10 +50,24 @@ struct LineSegment
 
     [[nodiscard]] constexpr auto slope() const noexcept { return vector().slope(); }
 
+    [[nodiscard]] constexpr auto standard_form() const noexcept
+    {
+        const auto a = p1.y - p2.y;
+        const auto b = p2.x - p1.x;
+        const auto c = -a * p1.x - b * p1.y;
+        return StandardForm{.a = a, .b = b, .c = c};
+    }
+
     constexpr auto translate(Vector2 amount) noexcept
     {
         this->p1 += amount;
         this->p2 += amount;
+    }
+
+    constexpr auto for_each(auto&& function)
+    {
+        function(p1);
+        function(p2);
     }
 };
 
