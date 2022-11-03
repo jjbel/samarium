@@ -26,6 +26,7 @@ Contents
     api/math/index
     api/gl/index
     api/util/index
+    includes
 
 ..  toctree::
     :caption: About

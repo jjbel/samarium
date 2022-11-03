@@ -7,6 +7,8 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 from subprocess import run
+from pathlib import Path
+from os import chdir
 
 project = "Samarium"
 copyright = "2022, Jai Bellare"
@@ -23,6 +25,7 @@ extensions = [
     "sphinxext.opengraph",
     "sphinx.ext.extlinks",
     "sphinxcontrib.asciinema",
+    "sphinx.ext.graphviz"
 ]
 
 HEAD_REF = run(
@@ -85,3 +88,7 @@ ogp_site_url = "https://strangequark1041.github.io/samarium/"
 ogp_site_name = "Samarium Docs"
 
 run(["doxygen", "Doxyfile.cfg"], check=True)
+
+chdir(Path('../..'))
+run(['python3', Path('scripts/includes.py')], check=True)
+chdir('docs/src')
