@@ -92,6 +92,7 @@ jobs:
 
       - run: mkdir -p example
       - run: cd example && git clone --depth 1 https://github.com/strangeQuark1041/samarium_example.git .
+      - run: cd example && echo '{"version":4}' > ./CMakeUserPresets.json
       - run: cd example && cmake --preset=default
       - run: cd example && cmake --build --preset=default
       - run: ./samarium_example/build/example
