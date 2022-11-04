@@ -42,7 +42,7 @@ jobs:
 
       - name: Install Doxygen
         run: |
-          sudo apt-get install doxygen
+          sudo apt-get install doxygen graphviz
 
       - name: Upgrade pip
         run: |
