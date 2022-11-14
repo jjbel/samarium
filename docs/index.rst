@@ -20,6 +20,11 @@ Contents
     usage/basics.rst
     examples
 
+.. toctree::
+    :caption: Physics
+
+    physics/two-particle-collision
+
 ..  toctree::
     :caption: API Reference
 
