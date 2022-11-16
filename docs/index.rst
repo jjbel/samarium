@@ -44,3 +44,5 @@ Useful Links
 
 * :ref:`genindex`
 * :ref:`search`
+* `Github <https://github.com/strangeQuark1041/samarium>`_
+* `Releases <https://github.com/strangeQuark1041/samarium/releases>`_
