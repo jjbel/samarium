@@ -25,7 +25,6 @@
 #include "samarium/math/Vector2.hpp"     // for Dimensions, Vector2_t, Vector2
 #include "samarium/math/math.hpp"        // for min, max
 #include "samarium/util/Grid.hpp"        // for Image
-#include "samarium/util/Grid.hpp"        // for Grid
 
 #include "Mouse.hpp"    // for Mouse
 #include "keyboard.hpp" // for keyboard
@@ -66,7 +65,7 @@ struct Window
             glfwMakeContextCurrent(handle.get());
             glfwSetFramebufferSizeCallback(handle.get(), framebuffer_size_callback);
 
-            if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+            if (gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)) == 0)
             {
                 throw std::runtime_error("Error: failed to initialize GLAD");
             }
