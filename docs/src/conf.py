@@ -25,7 +25,8 @@ extensions = [
     "sphinxext.opengraph",
     "sphinx.ext.extlinks",
     "sphinxcontrib.asciinema",
-    "sphinx.ext.graphviz"
+    "sphinx.ext.graphviz",
+    "sphinx_inline_tabs"
 ]
 
 HEAD_REF = run(
@@ -83,6 +84,15 @@ breathe_show_include = False
 
 primary_domain = "cpp"
 highlight_language = "cpp"
+
+mathjax3_config = {
+    "chtml": {
+        "scale": 1.1
+    },
+    "svg": {
+        "scale": 1.1
+    }
+}
 
 ogp_site_url = "https://strangequark1041.github.io/samarium/"
 ogp_site_name = "Samarium Docs"
