@@ -6,4 +6,3 @@ myst-parser
 sphinx-mathjax-offline
 sphinxext-opengraph
 sphinxcontrib.asciinema
-sphinx-inline-tabs
