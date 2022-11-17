@@ -25,8 +25,7 @@ extensions = [
     "sphinxext.opengraph",
     "sphinx.ext.extlinks",
     "sphinxcontrib.asciinema",
-    "sphinx.ext.graphviz",
-    "sphinx_inline_tabs"
+    "sphinx.ext.graphviz"
 ]
 
 HEAD_REF = run(
@@ -51,6 +50,8 @@ exclude_patterns = ["build", "Thumbs.db", ".DS_Store"]
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = "furo"
+html_title = "samarium docs"
+
 html_static_path = ["_static"]
 
 html_css_files = [
@@ -69,6 +70,14 @@ html_theme_options = {
         "color-sidebar-search-border": "#1c1e21",
         "color-sidebar-item-background--hover": "#212227"
     },
+    "footer_icons": [
+        {
+            "name": "GitHub",
+            "url": "https://github.com/strangeQuark1041/samarium",
+            "html": Path('_static/github-logo.svg').read_text(),
+            "class": "",
+        },
+    ],
 }
 
 source_suffix = [".rst", ".md"]
