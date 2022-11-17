@@ -3,7 +3,7 @@
 import sys
 import os
 import subprocess
-from time import sleep, time
+from time import sleep
 import json
 import pathlib
 
