@@ -67,9 +67,19 @@ void vertices(Window& window,
 void circle(Window& window, Circle circle, ShapeColor color, const glm::mat4& transform);
 void circle(Window& window, Circle circle_, ShapeColor color);
 
-void line_segment(
-    Window& window, LineSegment line, Color color, f32 thickness, const glm::mat4& transform);
-void line_segment(Window& window, LineSegment line, Color color, f32 thickness = 0.01F);
+void line_segment(Window& window,
+                  const LineSegment& line,
+                  Color color,
+                  f32 thickness,
+                  const glm::mat4& transform);
+void line_segment(Window& window, const LineSegment& line, Color color, f32 thickness = 0.01F);
+
+void line(Window& window,
+          const LineSegment& line,
+          Color color,
+          f32 thickness,
+          const glm::mat4& transform);
+void line(Window& window, const LineSegment& line_, Color color, f32 thickness = 0.01F);
 
 void background(Color color);
 
@@ -354,7 +364,7 @@ SM_INLINE void circle(Window& window, Circle circle_, ShapeColor color)
 }
 
 SM_INLINE void line_segment(
-    Window& window, LineSegment line, Color color, f32 thickness, const glm::mat4& transform)
+    Window& window, const LineSegment& line, Color color, f32 thickness, const glm::mat4& transform)
 {
     const auto thickness_vector =
         Vector2::from_polar(
@@ -365,12 +375,29 @@ SM_INLINE void line_segment(
     const auto last  = line.p2.cast<f32>();
     auto points      = std::to_array<Vector2f>({first - thickness_vector, first + thickness_vector,
                                                 last + thickness_vector, last - thickness_vector});
-    polygon(window, points, {.fill_color = color});
+    polygon(window, points, {.fill_color = color}, transform);
 }
 
-SM_INLINE void line_segment(Window& window, LineSegment line, Color color, f32 thickness)
+SM_INLINE void line_segment(Window& window, const LineSegment& line, Color color, f32 thickness)
 {
     line_segment(window, line, color, thickness, window.view);
+}
+
+SM_INLINE void line(
+    Window& window, const LineSegment& line, Color color, f32 thickness, const glm::mat4& transform)
+{
+    const auto midpoint      = (line.p1 + line.p2) / 2.0;
+    // const auto scale         = window.aspect_vector_max().length() * window.view.scale.length();
+    // TODO calculate proper scale
+    const auto scale = 1000.0;
+    const auto extended_line = LineSegment{(line.p1 - midpoint) * scale + midpoint,
+                                           (line.p2 - midpoint) * scale + midpoint};
+    line_segment(window, extended_line, color, thickness, transform);
+}
+
+SM_INLINE void line(Window& window, const LineSegment& line_, Color color, f32 thickness)
+{
+    line(window, line_, color, thickness, window.view);
 }
 } // namespace sm::draw
 
