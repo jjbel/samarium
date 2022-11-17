@@ -1,4 +1,13 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2022 Jai Bellare
+ * See <https://opensource.org/licenses/MIT/> or LICENSE.md
+ * Project homepage: https://github.com/strangeQuark1041/samarium
+ */
+
+#include "samarium/gl/draw.hpp"
 #include "samarium/graphics/colors.hpp"
+#include "samarium/math/interp.hpp"
 #include "samarium/samarium.hpp"
 
 using namespace sm;
@@ -7,17 +16,23 @@ using namespace sm::literals;
 auto main() -> i32
 {
     auto window = Window{{1280, 720}};
-    auto text   = expect(
-        draw::Text::make("/usr/share/fonts/TTF/Fira Code Regular Nerd Font Complete Mono.ttf"));
-    auto watch = Stopwatch{};
+    window.view.scale *= 0.3;
+    auto watch       = Stopwatch{};
+    const auto scale = window.aspect_vector_min().length() * window.view.scale.length();
+    print(scale, window.aspect_vector_max(), window.view.scale);
 
     while (window.is_open())
     {
         watch.reset();
         draw::background("#141414"_c);
         draw::circle(window, {.centre = {}, .radius = .3}, {.fill_color = colors::red});
-        text(window, "Bezier Curves", {0.2000F, 0.3000F}, 1.0F, colors::ivory);
-        text(window, fmt::format("{:3.2} ms", watch.seconds() * 1000), {}, 1.0F, colors::ivory);
+        const auto vec =
+            window.view.apply_inverse(interp::map_range<Vector2>(
+                window.mouse.pos, {{0, 0}, window.dims.cast<f64>()}, {{-1, -1}, {1, 1}})) *
+            Vector2{1, -1};
+
+
+        draw::line(window, {vec, {2.0, 1.0}}, colors::goldenrod, 0.1);
         window.display();
     }
 }
