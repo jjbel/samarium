@@ -147,13 +147,28 @@ void polygon(Window& window,
 void polygon(Window& window, std::span<Vector2f> points, ShapeColor color);
 
 void regular_polygon(Window& window,
-                     Vector2_t<f32> pos,
-                     f32 radius,
+                     Circle border_circle,
                      u64 point_count,
                      ShapeColor color,
                      const glm::mat4& transform);
-void regular_polygon(
-    Window& window, Vector2_t<f32> pos, f32 radius, u64 point_count, ShapeColor color);
+void regular_polygon(Window& window, Circle border_circle, u64 point_count, ShapeColor color);
+
+struct GridLines
+{
+    f64 spacing   = 1.0;
+    Color color   = Color{200, 200, 200, 50};
+    f32 thickness = 0.02F;
+};
+void grid_lines(Window& window, const GridLines& config = {});
+
+struct GridDots
+{
+    f64 spacing     = 1.0;
+    Color color     = Color{200, 200, 200, 50};
+    f32 thickness   = 0.03F;
+    u64 point_count = 4;
+};
+void grid_dots(Window& window, const GridDots& config = {});
 } // namespace sm::draw
 
 
@@ -386,10 +401,10 @@ SM_INLINE void line_segment(Window& window, const LineSegment& line, Color color
 SM_INLINE void line(
     Window& window, const LineSegment& line, Color color, f32 thickness, const glm::mat4& transform)
 {
-    const auto midpoint      = (line.p1 + line.p2) / 2.0;
+    const auto midpoint = (line.p1 + line.p2) / 2.0;
     // const auto scale         = window.aspect_vector_max().length() * window.view.scale.length();
     // TODO calculate proper scale
-    const auto scale = 1000.0;
+    const auto scale         = 1000.0;
     const auto extended_line = LineSegment{(line.p1 - midpoint) * scale + midpoint,
                                            (line.p2 - midpoint) * scale + midpoint};
     line_segment(window, extended_line, color, thickness, transform);
@@ -399,6 +414,41 @@ SM_INLINE void line(Window& window, const LineSegment& line_, Color color, f32 t
 {
     line(window, line_, color, thickness, window.view);
 }
+
+SM_INLINE void grid_lines(Window& window, const GridLines& config)
+{
+    const auto [x_max, y_max] = window.view.apply_inverse(Vector2{1.0, 1.0});
+    const auto [x_min, y_min] = window.view.apply_inverse(Vector2{-1.0, -1.0});
+
+    for (auto i = math::floor_to_nearest(x_min, config.spacing);
+         i <= math::ceil_to_nearest(x_max, config.spacing); i += config.spacing)
+    {
+        draw::line(window, {{i, 0.0}, {i, 1.0}}, config.color, config.thickness);
+    }
+
+    for (auto i = math::floor_to_nearest(y_min, config.spacing);
+         i <= math::ceil_to_nearest(y_max, config.spacing); i += config.spacing)
+    {
+        draw::line(window, {{0.0, i}, {1.0, i}}, config.color, config.thickness);
+    }
+};
+
+SM_INLINE void grid_dots(Window& window, const GridDots& config)
+{
+    const auto [x_max, y_max] = window.view.apply_inverse(Vector2{1.0, 1.0});
+    const auto [x_min, y_min] = window.view.apply_inverse(Vector2{-1.0, -1.0});
+
+    for (auto i = math::floor_to_nearest(x_min, config.spacing);
+         i <= math::ceil_to_nearest(x_max, config.spacing); i += config.spacing)
+    {
+        for (auto j = math::floor_to_nearest(y_min, config.spacing);
+             j <= math::ceil_to_nearest(y_max, config.spacing); j += config.spacing)
+        {
+            draw::regular_polygon(window, {{i, j}, config.thickness}, config.point_count,
+                                  {.fill_color = config.color});
+        }
+    }
+};
 } // namespace sm::draw
 
 #endif
