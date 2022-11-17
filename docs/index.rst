@@ -14,6 +14,14 @@ Contents
 --------
 
 ..  toctree::
+    :caption: Links
+
+    Symbol Index <https://strangequark1041.github.io/samarium/genindex>
+    Search <https://strangequark1041.github.io/samarium/search>
+    Github <https://github.com/strangeQuark1041/samarium>
+    Releases <https://github.com/strangeQuark1041/samarium/releases>
+
+..  toctree::
     :caption: Usage
 
     installation
@@ -38,11 +46,3 @@ Contents
 
     changelog
     license
-
-Useful Links
-============
-
-* :ref:`genindex`
-* :ref:`search`
-* `Github <https://github.com/strangeQuark1041/samarium>`_
-* `Releases <https://github.com/strangeQuark1041/samarium/releases>`_
