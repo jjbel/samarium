@@ -8,6 +8,7 @@
 #pragma once
 
 #include "samarium/core.hpp"
+#include "samarium/gl.hpp"
 #include "samarium/graphics.hpp"
 #include "samarium/gui.hpp"
 #include "samarium/math.hpp"
