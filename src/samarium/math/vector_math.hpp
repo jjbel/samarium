@@ -9,6 +9,8 @@
 
 #include <optional>
 
+#include "samarium/util/StaticVector.hpp"
+
 #include "BoundingBox.hpp"
 #include "interp.hpp"
 #include "shapes.hpp"
@@ -78,8 +80,8 @@ namespace sm::math
     return interp::in_range(Vector2::dot(point - l.p1, l.vector()) / l.length_sq(), {0., 1.});
 }
 
-[[nodiscard]] constexpr std::optional<Vector2> intersection(const LineSegment& l1,
-                                                            const LineSegment& l2) noexcept
+[[nodiscard]] constexpr auto intersection(const LineSegment& l1, const LineSegment& l2) noexcept
+    -> std::optional<Vector2>
 {
     const auto denom1 = l1.p2.x - l1.p1.x;
     const auto denom2 = l2.p2.x - l2.p1.x;
@@ -89,21 +91,15 @@ namespace sm::math
 
     if (denom1_is_0 && denom2_is_0) { return std::nullopt; }
 
-    if (denom1_is_0)
-    {
-        return std::optional{Vector2{l1.p1.x, l2.slope() * (l1.p1.x - l2.p1.x) + l2.p1.y}};
-    }
+    if (denom1_is_0) { return {Vector2{l1.p1.x, l2.slope() * (l1.p1.x - l2.p1.x) + l2.p1.y}}; }
 
-    if (denom2_is_0)
-    {
-        return std::optional{Vector2{l2.p1.x, l1.slope() * (l2.p1.x - l1.p1.x) + l1.p1.y}};
-    }
+    if (denom2_is_0) { return {Vector2{l2.p1.x, l1.slope() * (l2.p1.x - l1.p1.x) + l1.p1.y}}; }
 
     const auto m1 = l1.slope();
     const auto m2 = l2.slope();
 
     const auto x = (m2 * l2.p1.x - m1 * l1.p1.x + l1.p1.y - l2.p1.y) / (m2 - m1);
-    return std::optional{Vector2{x, m1 * (x - l1.p1.x) + l1.p1.y}};
+    return {Vector2{x, m1 * (x - l1.p1.x) + l1.p1.y}};
 }
 
 [[nodiscard]] inline auto clamped_intersection(const LineSegment& l1,
@@ -114,6 +110,21 @@ namespace sm::math
     if (!point) { return std::nullopt; }
     if (lies_in_segment(*point, l1) && lies_in_segment(*point, l2)) { return point; }
     return std::nullopt;
+}
+
+[[nodiscard]] inline auto intersection(const LineSegment& line_segment, const BoundingBox<f64>& box)
+{
+    // TODO check if point is vertex of box
+    auto points = StaticVector<Vector2, 4>{};
+    for (const auto& line : box.line_segments())
+    {
+        if (const auto result = clamped_intersection(line_segment, line))
+        {
+            points.push_back(result.value());
+        }
+    }
+
+    return points;
 }
 
 template <typename T> [[nodiscard]] constexpr auto area(BoundingBox<T> bounding_box) noexcept
