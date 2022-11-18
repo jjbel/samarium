@@ -10,7 +10,7 @@ def base_name(path):
 
 chdir(Path('src'))
 files = list(Path('samarium').glob("**/*.hpp"))
-skip = ['app', 'inline', 'sfml']
+skip = ['inline']
 output = ""
 
 for file in files:

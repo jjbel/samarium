@@ -15,15 +15,16 @@ Samarium is a 2d physics simulation library written in modern C++20.
 
 ## Contents
 
-- [Contents](#contents)
-- [Samples](#samples)
-- [Quickstart](#quickstart)
-- [Prerequistes](#prerequistes)
-- [Installation](#installation)
-- [Example](#example)
-- [Tools](#tools)
-- [Documentation](#documentation)
-- [License](#license)
+- [Samarium](#samarium)
+  - [Contents](#contents)
+  - [Samples](#samples)
+  - [Quickstart](#quickstart)
+  - [Prerequistes](#prerequistes)
+  - [Installation](#installation)
+  - [Example](#example)
+  - [Tools](#tools)
+  - [Documentation](#documentation)
+  - [License](#license)
 
 ## Samples
 
@@ -105,8 +106,7 @@ Samarium is distributed under the [MIT License](LICENSE.md).
 Libraries used:
 
 1. [fmtlib](https://github.com/fmtlib/fmt)
-2. [SFML](https://www.sfml-dev.org/)
-3. [range-v3](https://github.com/ericniebler/range-v3)
-4. [BS::thread_pool](https://github.com/bshoshany/thread-pool)
-5. [PCG RNG](https://www.pcg-random.org/)
-6. [tl::function_ref](https://github.com/TartanLlama/function_ref)
+2. [range-v3](https://github.com/ericniebler/range-v3)
+3. [BS::thread_pool](https://github.com/bshoshany/thread-pool)
+4. [PCG RNG](https://www.pcg-random.org/)
+5. [tl::function_ref](https://github.com/TartanLlama/function_ref)
