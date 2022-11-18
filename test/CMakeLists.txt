@@ -23,6 +23,7 @@ if(BUILD_UNIT_TESTS)
     catch_discover_tests(samarium_tests)
 else()
     target_sources(samarium_tests PUBLIC dev.cpp)
+    add_test(NAME samarium_tests COMMAND samarium_tests)
 endif()
 
 target_link_libraries(samarium_tests PUBLIC samarium::samarium)
