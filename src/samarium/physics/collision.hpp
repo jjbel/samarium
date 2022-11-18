@@ -18,9 +18,9 @@
 
 namespace sm::phys
 {
-[[nodiscard]] auto did_collide(const Particle& p1, const Particle& p2) -> std::optional<Vector2>;
+[[nodiscard]] auto did_collide(const Particle& p1, const Particle& p2) -> bool;
 
-[[maybe_unused]] bool collide(Particle& p1, Particle& p2, f64 damping = 1.0);
+[[maybe_unused]] auto collide(Particle& p1, Particle& p2, f64 damping = 1.0) -> bool;
 
 void collide(f64 distance_threshold, Particle& p1, Particle& p2, f64 damping = 1.0);
 
@@ -37,60 +37,38 @@ void collide(
 
 namespace sm::phys
 {
-[[nodiscard]] auto did_collide(const Particle& p1, const Particle& p2) -> std::optional<Vector2>
+[[nodiscard]] auto did_collide(const Particle& p1, const Particle& p2) -> bool
 {
-    if (math::distance(p1.pos, p2.pos) <= p1.radius + p2.radius)
-    {
-        return std::optional((p1.pos + p2.pos) / 2.0);
-    }
-    else { return std::nullopt; }
+    return math::distance(p1.pos, p2.pos) <= p1.radius + p2.radius;
 }
 
-[[maybe_unused]] bool collide(Particle& p1, Particle& p2, f64 damping)
+[[maybe_unused]] auto collide(Particle& p1, Particle& p2, f64 damping) -> bool
 {
-    /*
-        https://courses.lumenlearning.com/boundless-physics/chapter/collisions/#:~:text=particles%20are%20involved%20in%20an-,elastic%20collision,-%2C%20the%20velocity%20of%20the%20first
+    // https://strangequark1041.github.io/samarium/physics/two-particle-collision
 
-        https://www.khanacademy.org/science/physics/linear-momentum/elastic-and-inelastic-collisions/a/what-are-elastic-and-inelastic-collisions
-    */
+    if (!did_collide(p1, p2)) { return false; }
 
-    // if (&p1 == &p2) { return; } // prevent self-intersection
+    const auto angle_of_impact = (p2.pos - p1.pos).angle();
 
-    if (const auto point = did_collide(p1, p2))
-    {
-        // position changes
-        const auto shift  = (p1.radius + (math::distance(p1.pos, p2.pos) - p2.radius)) / 2;
-        const auto centre = p1.pos + (p2.pos - p1.pos).with_length(shift);
-        p1.pos            = centre + (p1.pos - centre).with_length(p1.radius);
-        p2.pos            = centre + (p2.pos - centre).with_length(p2.radius);
+    p1.pos.rotate(-angle_of_impact);
+    p1.vel.rotate(-angle_of_impact);
+    p2.pos.rotate(-angle_of_impact);
+    p2.vel.rotate(-angle_of_impact);
 
-        // velocity changes
-        const auto line      = p1.pos - p2.pos;
-        const auto length_sq = line.length_sq();
-        const auto factor    = 2.0 / (p1.mass + p2.mass);
-        const auto dot       = Vector2::dot(p1.vel - p2.vel, line);
+    const auto swap_left_right = p1.pos.x > p2.pos.x;
+    if (swap_left_right) { std::swap(p1, p2); }
 
-        const auto vel1 = line * (p2.mass * factor * dot / length_sq);
-        const auto vel2 = line * (-p1.mass * factor * dot / length_sq);
-        // const auto dv              = p2.vel - p1.vel;
-        // const auto factor_mass     = 1.0 / (p1.mass + p2.mass);
-        // const auto factor_momentum = p1.mass * p1.vel + p2.mass * p2.vel;
-        // const auto factor_damping  = damping * dv;
-        // const auto vel1            = factor_mass * (factor_momentum + p2.mass * factor_damping);
-        // const auto vel2            = factor_mass * (factor_momentum + p1.mass *
-        // (-factor_damping));
-        // const auto vel1 =
-        //     (p1.mass * p1.vel + p2.mass * p2.vel + p2.mass * damping * (p2.vel - p1.vel)) /
-        //     (p1.mass + p2.mass);
-        // const auto vel2 =
-        //     (p1.mass * p1.vel + p2.mass * p2.vel + p1.mass * damping * (p1.vel - p2.vel)) /
-        //     (p1.mass + p2.mass);
+    const auto delta = damping * (p1.vel.x - p2.vel.x);
+    p1.vel.x         = (p1.mass * p1.vel.x + p2.mass * p2.vel.x - delta) / (p1.mass + p2.mass);
+    p2.vel.x         = p1.vel.x + delta;
 
-        p1.vel -= vel1 * damping;
-        p2.vel -= vel2 * damping;
-        return true;
-    }
-    return false;
+    if (swap_left_right) { std::swap(p1, p2); }
+    p1.pos.rotate(angle_of_impact);
+    p1.vel.rotate(angle_of_impact);
+    p2.pos.rotate(angle_of_impact);
+    p2.vel.rotate(angle_of_impact);
+
+    return true;
 }
 
 void collide(Particle& current, const LineSegment& l, f64 dt, f64 damping, f64 friction)
