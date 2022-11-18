@@ -17,20 +17,25 @@ auto main() -> i32
 {
     auto window = Window{{1800, 900}};
     window.view.scale /= 10.0;
-    auto watch       = Stopwatch{};
-    const auto scale = window.aspect_vector_min().length() * window.view.scale.length();
-    print(scale, window.aspect_vector_max(), window.view.scale);
+    auto watch = Stopwatch{};
 
     const auto circle = [&](Vector2 pos)
-    { draw::circle(window, {.centre = pos, .radius = .15}, {.fill_color = colors::red}); };
+    { draw::circle(window, {.centre = pos, .radius = .5}, {.fill_color = colors::red}); };
+
+    auto counter = 0;
+    auto total   = 0.0;
 
     while (window.is_open())
     {
-        watch.reset();
         draw::background("#101113"_c);
 
         circle({});
+
+        watch.reset();
         draw::grid_dots(window);
+        total += watch.seconds();
+        counter++;
+
 
         const auto vec =
             window.view.apply_inverse(interp::map_range<Vector2>(
@@ -40,5 +45,9 @@ auto main() -> i32
 
         draw::line(window, {vec, {2.0, 1.0}}, colors::goldenrod, 0.1);
         window.display();
+
+        if (counter > 400) { break; }
     }
+
+    fmt::print("Average: {:3.3f}ms\n", total / counter * 1000.0);
 }
