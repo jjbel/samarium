@@ -1,5 +1,5 @@
 {
-    "version": 3,
+    "version": 6,
     "cmakeMinimumRequired": {
         "major": 3,
         "minor": 20,
@@ -95,6 +95,11 @@
         {
             "name": "default",
             "configurePreset": "default",
+            "configuration": "Release"
+        },
+        {
+            "name": "dev",
+            "configurePreset": "dev",
             "configuration": "Release",
             "jobs": 16
         },
@@ -109,8 +114,31 @@
         {
             "name": "default",
             "configurePreset": "default",
-            "configuration": "Release",
-            "output": { "outputOnFailure": true, "verbosity": "default" }
+            "configuration": "Release"
+        },
+        {
+            "name": "dev",
+            "configurePreset": "dev",
+            "configuration": "Release"
+        }
+    ],
+    "workflowPresets": [
+        {
+            "name": "run",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "dev"
+                },
+                {
+                    "type": "build",
+                    "name": "dev"
+                },
+                {
+                    "type": "test",
+                    "name": "dev"
+                }
+            ]
         }
     ]
 }
