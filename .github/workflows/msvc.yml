@@ -34,6 +34,9 @@ jobs:
       - name: Install Ninja
         uses: seanmiddleditch/gha-setup-ninja@master
 
+      - name: Install CMake
+        uses: jwlawson/actions-setup-cmake@v1.13
+
       - name: Cache .conan directory
         id: cache-conan
         uses: actions/cache@v3
@@ -64,6 +67,9 @@ jobs:
       - name: Install Conan
         id: conan
         uses: turtlebrowser/get-conan@main
+
+      - name: Install CMake
+        uses: jwlawson/actions-setup-cmake@v1.13
 
       - name: Configure Conan
         run: |

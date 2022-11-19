@@ -29,7 +29,7 @@ jobs:
         uses: seanmiddleditch/gha-setup-ninja@master
 
       - name: Install CMake
-        uses: jwlawson/actions-setup-cmake@v1.12
+        uses: jwlawson/actions-setup-cmake@v1.13
 
       - name: Install Conan
         id: conan
