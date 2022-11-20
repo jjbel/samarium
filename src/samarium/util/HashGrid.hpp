@@ -9,12 +9,12 @@
 
 #include <array>
 
+#include "range/v3/algorithm/copy.hpp"
+
 #include "samarium/core/types.hpp"
 #include "samarium/math/Extents.hpp"
 #include "samarium/math/Vector2.hpp"
 #include "samarium/math/math.hpp"
-
-#include "range/v3/algorithm/copy.hpp"
 
 #include "Map.hpp"
 #include "StaticVector.hpp"
@@ -32,10 +32,10 @@ template <> struct ankerl::unordered_dense::hash<sm::Vector2_t<sm::i32>>
 
 namespace sm
 {
-template <typename T, usize Count = 32> struct HashGrid
+template <typename T, usize CellCapacity = 32> struct HashGrid
 {
     using Key       = Vector2_t<i32>;
-    using Container = Map<Key, StaticVector<T, Count>>;
+    using Container = Map<Key, StaticVector<T, CellCapacity>>;
 
     Container map{};
     const f64 spacing;
@@ -56,15 +56,14 @@ template <typename T, usize Count = 32> struct HashGrid
 
     auto neighbors(Vector2 pos) const
     {
-        constexpr auto offsets = std::to_array<Key>(
+        constexpr auto offsets = std::to_array<Vector2>(
             {{0, 0}, {-1, -1}, {-1, 0}, {-1, 1}, {0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}});
 
-        const auto coords = to_coords(pos);
-        auto out          = StaticVector<T, Count * 9>();
+        auto out = StaticVector<T, CellCapacity * offsets.size()>();
 
         for (auto offset : offsets)
         {
-            const auto& iter = map.find(coords + offset);
+            const auto& iter = map.find(to_coords(pos + offset * spacing));
             if (iter == map.end()) { continue; }
             for (const auto& i : iter->second) { out.push_back(i); }
         }
