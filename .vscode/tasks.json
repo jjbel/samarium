@@ -12,8 +12,12 @@
         {
             "label": "Run",
             "type": "shell",
-            "command": "cmake --build --preset=default && ./build/test/samarium_tests",
-            "group": "build"
+            "command": "cmake --workflow --preset=run",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
         },
         {
             "label": "Setup Debug",
