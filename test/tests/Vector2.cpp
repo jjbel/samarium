@@ -69,40 +69,43 @@ TEST_CASE("geometry")
     {
         SECTION("free")
         {
-            const auto a = math::intersection({{-1.0, 0.0}, {1.0, 0.0}}, {{0.0, 1.0}, {0.0, -1.0}});
+            const auto a = math::intersection(LineSegment{{-1.0, 0.0}, {1.0, 0.0}},
+                                              LineSegment{{0.0, 1.0}, {0.0, -1.0}});
             REQUIRE(a.has_value());
             REQUIRE(*a == Vector2{});
 
-            const auto b =
-                math::intersection({{-1.0, -1.0}, {1.0, 1.0}}, {{1.0, -1.0}, {-1.0, 1.0}});
+            const auto b = math::intersection(LineSegment{{-1.0, -1.0}, {1.0, 1.0}},
+                                              LineSegment{{1.0, -1.0}, {-1.0, 1.0}});
             REQUIRE(b.has_value());
             REQUIRE(*b == Vector2{});
 
-            const auto c = math::intersection({{}, {0.0, 1.0}}, {{1.0, 0.0}, {1.0, 1.0}});
+            const auto c = math::intersection(LineSegment{{}, {0.0, 1.0}},
+                                              LineSegment{{1.0, 0.0}, {1.0, 1.0}});
             REQUIRE(!c.has_value());
         }
 
         SECTION("clamped")
         {
-            const auto a =
-                math::clamped_intersection({{-1.0, 0.0}, {1.0, 0.0}}, {{0.0, 1.0}, {0.0, -1.0}});
+            const auto a = math::clamped_intersection(LineSegment{{-1.0, 0.0}, {1.0, 0.0}},
+                                                      LineSegment{{0.0, 1.0}, {0.0, -1.0}});
             REQUIRE(a.has_value());
             REQUIRE(*a == Vector2{});
 
-            const auto b =
-                math::clamped_intersection({{-1.0, -1.0}, {1.0, 1.0}}, {{1.0, -1.0}, {-1.0, 1.0}});
+            const auto b = math::clamped_intersection(LineSegment{{-1.0, -1.0}, {1.0, 1.0}},
+                                                      LineSegment{{1.0, -1.0}, {-1.0, 1.0}});
             REQUIRE(b.has_value());
             REQUIRE(*b == Vector2{});
 
-            const auto c = math::clamped_intersection({{-1.0, -1.0}, {-0.5, -0.5}},
-                                                      {{1.0, -1.0}, {0.5, -0.5}});
+            const auto c = math::clamped_intersection(LineSegment{{-1.0, -1.0}, {-0.5, -0.5}},
+                                                      LineSegment{{1.0, -1.0}, {0.5, -0.5}});
             REQUIRE(!c.has_value());
 
-            const auto d =
-                math::clamped_intersection({{-1.0, 0.0}, {-0.5, 0.0}}, {{0.0, 1.0}, {0.0, 0.5}});
+            const auto d = math::clamped_intersection(LineSegment{{-1.0, 0.0}, {-0.5, 0.0}},
+                                                      {{0.0, 1.0}, {0.0, 0.5}});
             REQUIRE(!d.has_value());
 
-            const auto e = math::clamped_intersection({{}, {0.0, 1.0}}, {{1.0, 0.0}, {1.0, 1.0}});
+            const auto e =
+                math::clamped_intersection(LineSegment{{}, {0.0, 1.0}}, {{1.0, 0.0}, {1.0, 1.0}});
             REQUIRE(!e.has_value());
         }
     }
