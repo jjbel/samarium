@@ -84,7 +84,7 @@ struct Window
 
     Handle handle{};
     Dimensions dims{};
-    Transform view{};
+    Transform view{.scale = Vector2::combine(1.0 / 20.0)};
     Mouse mouse{};
     keyboard::Keymap keymap{};
 
@@ -149,10 +149,15 @@ struct Window
      */
     template <Space space = Space::World> [[nodiscard]] auto viewport() const -> BoundingBox<f64>
     {
+        const auto ratio = aspect_ratio();
+        const auto box   = BoundingBox<f64>{{-ratio, -1.0}, {ratio, 1.0}};
+
         if constexpr (space == Space::World)
         {
-            const auto ratio = aspect_ratio();
-            return {{-ratio, -1.0}, {ratio, 1.0}};
+            auto transform = view;
+            transform.scale *= 2.0;
+            // TODO whothout dividing by 2 stuff is off
+            return transform.apply_inverse(box);
         }
     }
 
