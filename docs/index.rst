@@ -38,6 +38,7 @@ Contents
 
     api/math/index
     api/gl/index
+    api/physics/index
     api/util/index
     includes
 
