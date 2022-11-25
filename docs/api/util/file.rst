@@ -1,5 +1,5 @@
-File
-============
+file
+====
 
 File: :src:`util/file.hpp`
 
