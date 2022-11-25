@@ -32,10 +32,10 @@ template <> struct ankerl::unordered_dense::hash<sm::Vector2_t<sm::i32>>
 
 namespace sm
 {
-template <typename T, usize CellCapacity = 32> struct HashGrid
+template <typename T, usize CellInlineCapacity = 32> struct HashGrid
 {
     using Key       = Vector2_t<i32>;
-    using Container = Map<Key, StaticVector<T, CellCapacity>>;
+    using Container = Map<Key, StaticVector<T, CellInlineCapacity>>;
 
     Container map{};
     const f64 spacing;
@@ -44,22 +44,26 @@ template <typename T, usize CellCapacity = 32> struct HashGrid
 
     auto to_coords(Vector2 pos) const
     {
-        return Key::make(math::floor_to_nearest(pos.x, spacing),
-                         math::floor_to_nearest(pos.y, spacing));
+        // return Key::make(math::floor_to_nearest(pos.x, spacing),
+        //                  math::floor_to_nearest(pos.y, spacing));
+        return (pos / spacing).cast<i32>();
     }
 
     auto insert(Vector2 pos, T value) { map[to_coords(pos)].push_back(value); }
 
-    typename Container::iterator find(Vector2 pos) { return map.find(to_coords(pos)); }
+    auto find(Vector2 pos) -> typename Container::iterator { return map.find(to_coords(pos)); }
 
-    typename Container::const_iterator find(Vector2 pos) const { return map.find(to_coords(pos)); }
+    auto find(Vector2 pos) const -> typename Container::const_iterator
+    {
+        return map.find(to_coords(pos));
+    }
 
     auto neighbors(Vector2 pos) const
     {
         constexpr auto offsets = std::to_array<Vector2>(
             {{0, 0}, {-1, -1}, {-1, 0}, {-1, 1}, {0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}});
 
-        auto out = StaticVector<T, CellCapacity * offsets.size()>();
+        auto out = StaticVector<T, CellInlineCapacity * offsets.size()>();
 
         for (auto offset : offsets)
         {
