@@ -55,8 +55,8 @@ template <typename T> struct Vector2_t
         return Vector2_t<T>{static_cast<T>(x), static_cast<T>(y)};
     }
 
-    [[nodiscard]] static constexpr auto
-    from_polar(Polar polar) noexcept requires concepts::FloatingPoint<T>
+    [[nodiscard]] static constexpr auto from_polar(Polar polar) noexcept
+        requires concepts::FloatingPoint<T>
     {
         return Vector2_t<T>{polar.length * std::cos(polar.angle),
                             polar.length * std::sin(polar.angle)};
