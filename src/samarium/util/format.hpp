@@ -31,8 +31,7 @@ template <sm::concepts::Integral T> class formatter<sm::Vector2_t<T>>
 
     constexpr auto format(sm::Vector2_t<T> p, auto& ctx)
     {
-        return fmt::format_to(ctx.out(), "{}({:>3}, {:>3})",
-                              fmt::styled("Vec", fmt::emphasis::bold), p.x, p.y);
+        return fmt::format_to(ctx.out(), "({:>3}, {:>3})", p.x, p.y);
     }
 };
 
@@ -43,8 +42,7 @@ template <sm::concepts::FloatingPoint T> class formatter<sm::Vector2_t<T>>
 
     constexpr auto format(sm::Vector2_t<T> p, auto& ctx) const
     {
-        return fmt::format_to(ctx.out(), "{}({:6.3f}, {:6.3f})",
-                              fmt::styled("Vec", fmt::emphasis::bold), p.x, p.y);
+        return fmt::format_to(ctx.out(), "({:6.3f}, {:6.3f})", p.x, p.y);
     }
 };
 
