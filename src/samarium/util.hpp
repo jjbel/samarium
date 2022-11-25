@@ -22,6 +22,7 @@
 #include "samarium/util/noise.hpp"
 #include "samarium/util/print.hpp"
 #include "samarium/util/random.hpp"
+#include "samarium/util/run.hpp"
 #include "samarium/util/util.hpp"
 // #include "samarium/util/ostream.hpp"
 // #include "samarium/util/terminal_dims.hpp"
