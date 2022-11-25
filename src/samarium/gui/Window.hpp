@@ -37,6 +37,10 @@ enum class Space
     Screen
 };
 
+/**
+ * @brief               An RAII wrapper around GLFWwindow
+ *
+ */
 struct Window
 {
     struct Deleter
@@ -46,6 +50,10 @@ struct Window
 
     using Handle = std::unique_ptr<GLFWwindow, Deleter>;
 
+    /**
+     * @brief               An RAII helper which creates and cleans up the GLFWwindow
+     *
+     */
     struct Init
     {
         Init(Dimensions dims, const std::string& title, Handle& handle)
