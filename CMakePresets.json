@@ -80,7 +80,8 @@
             "inherits": "dev",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
-                "USE_UBSAN": true
+                "SAMARIUM_HEADER_ONLY": true,
+                "USE_UBSAN": false
             }
         },
         {
