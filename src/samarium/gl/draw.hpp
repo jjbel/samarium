@@ -72,14 +72,14 @@ void line_segment(Window& window,
                   Color color,
                   f32 thickness,
                   const glm::mat4& transform);
-void line_segment(Window& window, const LineSegment& line, Color color, f32 thickness = 0.01F);
+void line_segment(Window& window, const LineSegment& line, Color color, f32 thickness = 0.02F);
 
 void line(Window& window,
           const LineSegment& line,
           Color color,
           f32 thickness,
           const glm::mat4& transform);
-void line(Window& window, const LineSegment& line_, Color color, f32 thickness = 0.01F);
+void line(Window& window, const LineSegment& line_, Color color, f32 thickness = 0.02F);
 
 void background(Color color);
 
