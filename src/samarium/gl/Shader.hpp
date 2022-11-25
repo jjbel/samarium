@@ -21,7 +21,7 @@
 #include "samarium/core/types.hpp"     // for u32, u64, i32, f32
 #include "samarium/graphics/Color.hpp" // for Color
 #include "samarium/math/Vector2.hpp"   // for Vector2
-#include "samarium/util/Expected.hpp"  // for Expected, expect
+#include "samarium/util/Result.hpp"    // for Result
 #include "samarium/util/file.hpp"      // for read
 
 namespace sm::gl
@@ -36,10 +36,10 @@ struct VertexShader
 
     [[nodiscard]] static auto from_file(const std::filesystem::path& path)
     {
-        return expect(make(expect(file::read(path))));
+        return *make(*file::read(path));
     }
 
-    [[nodiscard]] static auto make(const std::string& source) -> Expected<VertexShader, std::string>
+    [[nodiscard]] static auto make(const std::string& source) -> Result<VertexShader>
     {
         auto program_handle = glCreateShader(GL_VERTEX_SHADER);
         const auto src      = source.c_str();
@@ -96,10 +96,10 @@ struct FragmentShader
 
     static auto from_file(const std::filesystem::path& path)
     {
-        return FragmentShader(expect(file::read(path)));
+        return FragmentShader(*file::read(path));
     }
 
-    static inline auto make(const std::string& source) -> Expected<FragmentShader, std::string>
+    static inline auto make(const std::string& source) -> Result<FragmentShader>
     {
         auto program_handle = glCreateShader(GL_FRAGMENT_SHADER);
         const auto src      = source.c_str();
@@ -113,7 +113,7 @@ struct FragmentShader
         {
             auto shader   = FragmentShader{};
             shader.handle = program_handle;
-            return Expected<FragmentShader, std::string>{std::move(shader)};
+            return Result<FragmentShader>{std::move(shader)};
         }
 
         auto log_size = 0;
@@ -212,7 +212,7 @@ struct ComputeShader
         return *this;
     }
 
-    static inline auto make(const std::string& source) -> Expected<ComputeShader, std::string>
+    static inline auto make(const std::string& source) -> Result<ComputeShader>
     {
         auto program_handle = glCreateShader(GL_COMPUTE_SHADER);
         const auto src      = source.c_str();
@@ -252,14 +252,8 @@ struct ComputeShader
 
 #if defined(SAMARIUM_HEADER_ONLY) || defined(SAMARIUM_SHADER_IMPL)
 
-#include <stdexcept>
-
-#include "fmt/format.h"         // for buffer::append
 #include "glad/glad.h"          // for GL_COMPILE_STATUS, glCompileS...
 #include "glm/gtc/type_ptr.hpp" // forvalue_ptr
-
-#include "samarium/graphics/Color.hpp" // for Color
-#include "samarium/util/print.hpp"     // for error
 
 #include "Shader.hpp"
 

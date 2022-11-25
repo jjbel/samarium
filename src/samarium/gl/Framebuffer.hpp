@@ -14,7 +14,7 @@
 
 #include "samarium/core/types.hpp"     // for u32
 #include "samarium/graphics/Color.hpp" // for Color
-#include "samarium/util/Expected.hpp"  // for Expected
+#include "samarium/util/Result.hpp"    // for Result
 
 #include "Texture.hpp" // for Texture
 

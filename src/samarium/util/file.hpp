@@ -15,7 +15,7 @@
 #include "samarium/util/Grid.hpp"    // for Image
 #include "samarium/util/format.hpp"  // for date_time_str
 
-#include "Expected.hpp"  // for Expected
+#include "Result.hpp"    // for Result
 #include "fpng/fpng.hpp" // for fpng_encode_image_to_file
 
 namespace sm::file
@@ -50,14 +50,11 @@ struct Bmp
 
 static constexpr auto bmp = Bmp{};
 
-template <typename T> using ExpectedFile = Expected<T, std::string>;
+auto read([[maybe_unused]] Text tag, const std::filesystem::path& file_path) -> Result<std::string>;
 
-auto read([[maybe_unused]] Text tag, const std::filesystem::path& file_path)
-    -> ExpectedFile<std::string>;
+auto read(const std::filesystem::path& file_path) -> Result<std::string>;
 
-auto read(const std::filesystem::path& file_path) -> ExpectedFile<std::string>;
-
-auto read_image(const std::filesystem::path& file_path) -> ExpectedFile<Image>;
+auto read_image(const std::filesystem::path& file_path) -> Result<Image>;
 
 
 void write([[maybe_unused]] Targa tag,
@@ -90,13 +87,13 @@ void write([[maybe_unused]] Bmp tag,
 
 auto find(const std::string& file_name,
           const std::filesystem::path& directory = std::filesystem::current_path())
-    -> Expected<std::filesystem::path, std::string>;
+    -> Result<std::filesystem::path>;
 
 auto find(const std::string& file_name, std::span<std::filesystem::path> search_paths)
-    -> Expected<std::filesystem::path, std::string>;
+    -> Result<std::filesystem::path>;
 
 auto find(const std::string& file_name, std::initializer_list<std::filesystem::path> search_paths)
-    -> Expected<std::filesystem::path, std::string>;
+    -> Result<std::filesystem::path>;
 } // namespace sm::file
 
 
@@ -131,15 +128,15 @@ auto find(const std::string& file_name, std::initializer_list<std::filesystem::p
 namespace sm::file
 {
 SM_INLINE auto read([[maybe_unused]] Text tag, const std::filesystem::path& file_path)
-    -> ExpectedFile<std::string>
+    -> Result<std::string>
 {
     if (!std::filesystem::exists(file_path))
     {
-        return tl::make_unexpected(fmt::format("{} does not exist", file_path));
+        return tl::make_unexpected(fmt::format("Error: {} does not exist", file_path));
     }
     else if (!std::filesystem::is_regular_file(file_path))
     {
-        return tl::make_unexpected(fmt::format("{} is not a file", file_path));
+        return tl::make_unexpected(fmt::format("Error: {} is not a file", file_path));
     }
     else
     {
@@ -148,20 +145,20 @@ SM_INLINE auto read([[maybe_unused]] Text tag, const std::filesystem::path& file
     }
 }
 
-SM_INLINE auto read(const std::filesystem::path& file_path) -> ExpectedFile<std::string>
+SM_INLINE auto read(const std::filesystem::path& file_path) -> Result<std::string>
 {
     return read(Text{}, file_path);
 }
 
-SM_INLINE auto read_image(const std::filesystem::path& file_path) -> ExpectedFile<Image>
+SM_INLINE auto read_image(const std::filesystem::path& file_path) -> Result<Image>
 {
     if (!std::filesystem::exists(file_path))
     {
-        return tl::make_unexpected(fmt::format("{} does not exist", file_path));
+        return tl::make_unexpected(fmt::format("Error: {} does not exist", file_path));
     }
     if (!std::filesystem::is_regular_file(file_path))
     {
-        return tl::make_unexpected(fmt::format("{} is not a file", file_path));
+        return tl::make_unexpected(fmt::format("Error: {} is not a file", file_path));
     }
 
     auto width         = 0;
@@ -208,7 +205,7 @@ SM_INLINE auto read_image(const std::filesystem::path& file_path) -> ExpectedFil
     else
     {
         return tl::make_unexpected(
-            fmt::format("{} has unknown channel count: {}", file_path, channel_count));
+            fmt::format("Error: {} has unknown channel count: {}", file_path, channel_count));
     }
 
     return {image};
@@ -258,7 +255,7 @@ write([[maybe_unused]] Bmp tag, const Image& image, const std::filesystem::path&
 
 
 SM_INLINE auto find(const std::string& file_name, const std::filesystem::path& directory)
-    -> Expected<std::filesystem::path, std::string>
+    -> Result<std::filesystem::path>
 {
     for (const auto& dir_entry : std::filesystem::recursive_directory_iterator(directory))
     {
@@ -268,11 +265,11 @@ SM_INLINE auto find(const std::string& file_name, const std::filesystem::path& d
         }
     }
 
-    return tl::make_unexpected(fmt::format("File not found: {}", file_name));
+    return tl::make_unexpected(fmt::format("Error: File not found: {}", file_name));
 }
 
 SM_INLINE auto find(const std::string& file_name, std::span<std::filesystem::path> search_paths)
-    -> Expected<std::filesystem::path, std::string>
+    -> Result<std::filesystem::path>
 {
     for (const auto& path : search_paths)
     {
@@ -286,12 +283,12 @@ SM_INLINE auto find(const std::string& file_name, std::span<std::filesystem::pat
         }
     }
 
-    return tl::make_unexpected(fmt::format("File not found: {}", file_name));
+    return tl::make_unexpected(fmt::format("Error: File not found: {}", file_name));
 }
 
 SM_INLINE auto find(const std::string& file_name,
                     std::initializer_list<std::filesystem::path> search_paths)
-    -> Expected<std::filesystem::path, std::string>
+    -> Result<std::filesystem::path>
 {
     for (const auto& path : search_paths)
     {
@@ -305,7 +302,7 @@ SM_INLINE auto find(const std::string& file_name,
         }
     }
 
-    return tl::make_unexpected(fmt::format("File not found: {}", file_name));
+    return tl::make_unexpected(fmt::format("Error: File not found: {}", file_name));
 }
 } // namespace sm::file
 

@@ -7,12 +7,12 @@
 
 #pragma once
 
-#include "samarium/util/Expected.hpp"
 #include "samarium/util/FunctionRef.hpp"
 #include "samarium/util/Grid.hpp"
 #include "samarium/util/HashGrid.hpp"
 #include "samarium/util/Map.hpp"
 #include "samarium/util/RandomGenerator.hpp"
+#include "samarium/util/Result.hpp"
 #include "samarium/util/SmallVector.hpp"
 #include "samarium/util/StaticVector.hpp"
 #include "samarium/util/Stopwatch.hpp"
