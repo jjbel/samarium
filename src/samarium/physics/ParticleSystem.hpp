@@ -36,9 +36,10 @@
 
 namespace sm
 {
-struct ParticleSystem
+template <u64 CellCapacity = 32> struct ParticleSystem
 {
     std::vector<Particle> particles;
+    HashGrid<u32, CellCapacity> hash_grid;
 
     /**
      * @brief               Create `size` particles
@@ -46,8 +47,10 @@ struct ParticleSystem
      * @param  size
      * @param  default_particle
      */
-    explicit ParticleSystem(u64 size = 100UL, const Particle& default_particle = {})
-        : particles(size, default_particle)
+    explicit ParticleSystem(u64 size                         = 100UL,
+                            const Particle& default_particle = {},
+                            f64 cell_size                    = 0.5)
+        : particles(size, default_particle), hash_grid{cell_size}
     {
     }
 
@@ -99,10 +102,9 @@ struct ParticleSystem
      * @param  cell_size    Size of cell of hash grid
      * @return Dimensions   [collisions, pairs checked]
      */
-    template <u64 CellCapacity = 32>
-    [[maybe_unused]] auto self_collision(f64 damping = 1.0, f64 cell_size = 0.5)
+    [[maybe_unused]] auto self_collision(f64 damping = 1.0)
     {
-        HashGrid<u32, CellCapacity> hash_grid{cell_size};
+        hash_grid.map.clear();
         hash_grid.map.reserve(particles.size());
         for (auto i : range(particles.size())) { hash_grid.insert(particles[i].pos, i); }
 
