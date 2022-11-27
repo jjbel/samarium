@@ -29,7 +29,7 @@ auto main() -> i32
         {
             return Particle<f64>{.pos    = random.vector(viewport) * 0.95,
                                  .vel    = random.polar_vector({0.0, 2.0}),
-                                 .radius = .1,
+                                 .radius = .2,
                                  .mass   = 1.0};
         });
 
@@ -44,7 +44,7 @@ auto main() -> i32
         ps.for_each(
             [&](Particle<f64>& particle)
             {
-                particle.acc = Vector2{0, -1};
+                // particle.acc = Vector2{0, -1};
                 for (const auto& wall : viewport.line_segments())
                 {
                     phys::collide(particle, wall, dt, 0.97);
@@ -70,18 +70,22 @@ auto main() -> i32
 
         draw::bounding_box(window, viewport, "#eeeeee"_c, 0.2);
 
-        for (auto i : range(ps.particles.size()))
+        const auto draw_bonds = [&]
         {
-            for (auto j : ps.hash_grid.neighbors(ps.particles[i].pos))
+            for (auto i : range(ps.particles.size()))
             {
-                if (i < j)
+                for (auto j : ps.hash_grid.neighbors(ps.particles[i].pos))
                 {
-                    draw::line_segment(window,
-                                       LineSegment{ps.particles[i].pos, ps.particles[j].pos},
-                                       "#5640ff"_c.with_multiplied_alpha(0.3), 0.2);
+                    if (i < j)
+                    {
+                        draw::line_segment(window,
+                                           LineSegment{ps.particles[i].pos, ps.particles[j].pos},
+                                           "#5640ff"_c.with_multiplied_alpha(0.3), 0.2);
+                    }
                 }
             }
-        }
+        };
+        // draw_bonds();
 
         for (const auto& i : ps)
         {
@@ -91,7 +95,7 @@ auto main() -> i32
             //               .border_color = {255, 30, 30, 255},
             //               .border_width = 1});
             draw::circle(window, {i.pos, i.radius},
-                         {.fill_color = "#ff0842"_c.with_multiplied_alpha(1.0)});
+                         {.fill_color = "#ff0842"_c.with_multiplied_alpha(0.2)});
         }
     };
 
