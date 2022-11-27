@@ -214,7 +214,8 @@ template <typename T> struct Vector2_t
 
     [[nodiscard]] constexpr auto is_zero() const noexcept
     {
-        return math::almost_equal(this->length_sq(), 0.0);
+        if (concepts::FloatingPoint<T>) { return math::almost_equal(this->length_sq(), 0.0); }
+        return x == 0 && y == 0;
     }
 
     [[nodiscard]] constexpr auto negated() const noexcept { return Vector2_t<T>{-x, -y}; }
