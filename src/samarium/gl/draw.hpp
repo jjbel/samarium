@@ -81,6 +81,13 @@ void line(Window& window,
           const glm::mat4& transform);
 void line(Window& window, const LineSegment& line_, Color color, f32 thickness = 0.02F);
 
+void bounding_box(Window& window,
+                  const BoundingBox<f64>& box,
+                  Color color,
+                  f32 thickness,
+                  const glm::mat4& transform);
+void bounding_box(Window& window, const BoundingBox<f64>& box, Color color, f32 thickness = 0.02F);
+
 void background(Color color);
 
 /**
@@ -396,6 +403,23 @@ SM_INLINE void line_segment(
 SM_INLINE void line_segment(Window& window, const LineSegment& line, Color color, f32 thickness)
 {
     line_segment(window, line, color, thickness, window.view);
+}
+
+void bounding_box(Window& window,
+                  const BoundingBox<f64>& box,
+                  Color color,
+                  f32 thickness,
+                  const glm::mat4& transform)
+{
+    for (const auto& line : box.line_segments())
+    {
+        line_segment(window, line, color, thickness, transform);
+    }
+}
+
+void bounding_box(Window& window, const BoundingBox<f64>& box, Color color, f32 thickness)
+{
+    bounding_box(window, box, color, thickness, window.view);
 }
 
 SM_INLINE void line(
