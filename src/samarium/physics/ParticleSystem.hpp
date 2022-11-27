@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <concepts>
 #include <memory> // for allocator_trai...
 #include <span>   // for span
 #include <vector> // for vector
@@ -27,7 +28,6 @@
 #include "samarium/math/Extents.hpp"     // for Extents, range
 #include "samarium/math/Vector2.hpp"     // for Vector2
 #include "samarium/physics/Particle.hpp" // for Particle
-#include "samarium/util/FunctionRef.hpp" // for FunctionRef
 #include "samarium/util/HashGrid.hpp"    // for HashGrid
 #include "samarium/util/ThreadPool.hpp"  // for ThreadPool
 #include "samarium/util/util.hpp"        // for project_view
@@ -36,9 +36,9 @@
 
 namespace sm
 {
-template <u64 CellCapacity = 32> struct ParticleSystem
+template <typename Particle_t = Particle<f64>, u64 CellCapacity = 32> struct ParticleSystem
 {
-    std::vector<Particle> particles;
+    std::vector<Particle_t> particles;
     HashGrid<u32, CellCapacity> hash_grid;
 
     /**
@@ -47,28 +47,28 @@ template <u64 CellCapacity = 32> struct ParticleSystem
      * @param  size
      * @param  default_particle
      */
-    explicit ParticleSystem(u64 size                         = 100UL,
-                            const Particle& default_particle = {},
-                            f64 cell_size                    = 0.5)
+    explicit ParticleSystem(u64 size                           = 100UL,
+                            const Particle_t& default_particle = {},
+                            f64 cell_size                      = 0.5)
         : particles(size, default_particle), hash_grid{cell_size}
     {
     }
 
-    static auto generate(u64 size, FunctionRef<Particle(u64)> function)
+    static auto generate(u64 size, const auto& callable)
     {
         auto output = ParticleSystem(size);
+        // https://stackoverflow.com/a/70808634/17100530
         for (auto [i, particle] : ranges::views::enumerate(output.particles))
         {
-            particle = function(i);
+            particle = callable(i);
         }
         return output;
-        // https://stackoverflow.com/a/70808634/17100530
     }
 
     void update(f64 time_delta = 1.0) noexcept
     {
         ranges::for_each(particles,
-                         [time_delta](Particle& particle) { particle.update(time_delta); });
+                         [time_delta](Particle_t& particle) { particle.update(time_delta); });
     }
 
     void update(ThreadPool& thread_pool, f64 time_delta = 1.0) noexcept
@@ -84,7 +84,7 @@ template <u64 CellCapacity = 32> struct ParticleSystem
 
     void apply_force(Vector2 force) noexcept
     {
-        ranges::for_each(particles, [force](Particle& particle) { particle.apply_force(force); });
+        ranges::for_each(particles, [force](Particle_t& particle) { particle.apply_force(force); });
     }
 
     void apply_forces(std::span<Vector2> forces) noexcept
@@ -92,7 +92,7 @@ template <u64 CellCapacity = 32> struct ParticleSystem
         for (auto i : range(particles.size())) { particles[i].apply_force(forces[i]); }
     }
 
-    void for_each(FunctionRef<void(Particle&)> function) { ranges::for_each(particles, function); }
+    void for_each(const auto& callable) { ranges::for_each(particles, callable); }
 
     /**
      * @brief               Collide the particles with themselves

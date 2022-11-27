@@ -13,25 +13,25 @@
 
 namespace sm
 {
-struct Particle
+template <typename Float = f64> struct Particle
 {
-    Vector2 pos{};
-    Vector2 vel{};
-    Vector2 acc{};
+    Vector2_t<Float> pos{};
+    Vector2_t<Float> vel{};
+    Vector2_t<Float> acc{};
     f64 radius{1};
     f64 mass{1};
 
-    [[nodiscard]] auto as_circle() const noexcept { return Circle{pos, radius}; }
+    [[nodiscard]] constexpr auto as_circle() const noexcept { return Circle{pos, radius}; }
 
-    void apply_force(Vector2 force) noexcept { acc += force / mass; }
+    constexpr auto apply_force(Vector2_t<Float> force) noexcept { acc += force / mass; }
 
-    void update(f64 time_delta = 1.0 / 64) noexcept
+    constexpr auto update(f64 time_delta = 1.0 / 64) noexcept
     {
         vel += acc * time_delta;
         pos += vel * time_delta;
-        acc = Vector2{}; // reset acceleration
+        acc = Vector2_t<Float>{}; // reset acceleration
     }
 
-    [[nodiscard]] auto operator==(const Particle&) const -> bool = default;
+    [[nodiscard]] constexpr auto operator==(const Particle&) const -> bool = default;
 };
 } // namespace sm

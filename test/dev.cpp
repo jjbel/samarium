@@ -5,6 +5,7 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
+#include "samarium/gl/draw.hpp"
 #include "samarium/math/Vector2.hpp"
 #include "samarium/math/shapes.hpp"
 #include "samarium/samarium.hpp"
@@ -21,15 +22,17 @@ auto main() -> i32
 
     auto random   = RandomGenerator{1024, RandomMode::NonDeterministic};
     auto viewport = window.viewport();
-    auto ps =
-        ParticleSystem<32>::generate(particle_count,
-                                     [&](u64 /* index */)
-                                     {
-                                         return Particle{.pos    = random.vector(viewport) * 0.95,
-                                                         .vel    = random.polar_vector({0.0, 2.0}),
-                                                         .radius = .1,
-                                                         .mass   = 1.0};
-                                     });
+
+    auto ps = ParticleSystem<Particle<f64>, 32>::generate(
+        particle_count,
+        [&](u64 /* index */)
+        {
+            return Particle<f64>{.pos    = random.vector(viewport) * 0.95,
+                                 .vel    = random.polar_vector({0.0, 2.0}),
+                                 .radius = .1,
+                                 .mass   = 1.0};
+        });
+
     // auto ps         = ParticleSystem{2};
     // ps.particles[0] = Particle{.pos = {-8, 0}, .vel = {8, 0}, .radius = 1.4, .mass = 1.0};
     // ps.particles[1] = Particle{.pos = {8, 0}, .vel = {0, 0}, .radius = 1.8, .mass = 1.0};
@@ -39,7 +42,7 @@ auto main() -> i32
         const auto dt = 1.0 / 60.0;
 
         ps.for_each(
-            [&](Particle& particle)
+            [&](Particle<f64>& particle)
             {
                 particle.acc = Vector2{0, -1};
                 for (const auto& wall : viewport.line_segments())
@@ -65,10 +68,7 @@ auto main() -> i32
                                   .color     = "#eeeeee"_c.with_multiplied_alpha(0.1),
                                   .thickness = 0.04});
 
-        for (const auto& i : viewport.line_segments())
-        {
-            draw::line_segment(window, i, "#eeeeee"_c, 0.2);
-        }
+        draw::bounding_box(window, viewport, "#eeeeee"_c, 0.2);
 
         for (auto i : range(ps.particles.size()))
         {

@@ -16,30 +16,10 @@
 
 #include "Particle.hpp" // for Particle
 
-#include "samarium/util/print.hpp"
-
 namespace sm::phys
 {
-[[nodiscard]] auto did_collide(const Particle& p1, const Particle& p2) -> bool;
-
-[[maybe_unused]] auto collide(Particle& p1, Particle& p2, f64 damping = 1.0) -> bool;
-
-void collide(f64 distance_threshold, Particle& p1, Particle& p2, f64 damping = 1.0);
-
-void collide(
-    Particle& current, const LineSegment& l, f64 dt, f64 damping = 1.0, f64 friction = 1.0);
-} // namespace sm::phys
-
-
-#if defined(SAMARIUM_HEADER_ONLY) || defined(SAMARIUM_COLLISION_IMPL)
-
-#include "samarium/math/Vector2.hpp"     // for Vector2
-#include "samarium/math/shapes.hpp"      // for LineSegment
-#include "samarium/math/vector_math.hpp" // for distance, clamped_intersection
-
-namespace sm::phys
-{
-[[nodiscard]] auto did_collide(const Particle& p1, const Particle& p2) -> bool
+template <typename Float = f64>
+[[nodiscard]] auto did_collide(const Particle<Float>& p1, const Particle<Float>& p2) -> bool
 {
     return math::distance(p1.pos, p2.pos) < p1.radius + p2.radius;
 }
@@ -55,9 +35,10 @@ solve_collision(f64& vel_left, f64& vel_right, f64 mass_left, f64 mass_right, f6
 }
 } // namespace detail
 
-[[maybe_unused]] auto collide(Particle& p1, Particle& p2, f64 damping) -> bool
+template <typename Float = f64>
+[[maybe_unused]] auto collide(Particle<Float>& p1, Particle<Float>& p2, f64 damping = 1.0) -> bool
 {
-    // https://strangequark1041.github.io/samarium/physics/two-particle-collision
+    // https://strangequark1041.github.io/samarium/physics/two-Particle<Float>-collision
     if (!did_collide(p1, p2)) { return false; }
 
     const auto angle_of_impact = Vector2::angle_between(p1.pos, p2.pos);
@@ -82,7 +63,9 @@ solve_collision(f64& vel_left, f64& vel_right, f64 mass_left, f64 mass_right, f6
     return did_collide;
 }
 
-void collide(Particle& current, const LineSegment& l, f64 dt, f64 damping, f64 friction)
+template <typename Float = f64>
+void collide(
+    Particle<Float>& current, const LineSegment& l, f64 dt, f64 damping = 1.0, f64 friction = 1.0)
 {
     const auto old_pos       = current.pos - current.vel * dt;
     const auto vec           = l.vector();
@@ -112,5 +95,3 @@ void collide(Particle& current, const LineSegment& l, f64 dt, f64 damping, f64 f
     current.vel.rotate(vec.angle());
 }
 } // namespace sm::phys
-
-#endif // defined

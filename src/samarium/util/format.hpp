@@ -62,12 +62,12 @@ template <> class formatter<sm::Version>
     }
 };
 
-template <> class formatter<sm::Particle>
+template <typename Float> class formatter<sm::Particle<Float>>
 {
   public:
     constexpr auto parse(const format_parse_context& ctx) { return ctx.begin(); }
 
-    auto format(const sm::Particle& p, auto& ctx)
+    auto format(const sm::Particle<Float>& p, auto& ctx)
     {
         return fmt::format_to(ctx.out(), "Particle(pos: {}, vel: {}, acc: {})", p.pos, p.acc,
                               p.vel);
