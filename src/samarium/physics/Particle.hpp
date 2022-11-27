@@ -21,36 +21,17 @@ struct Particle
     f64 radius{1};
     f64 mass{1};
 
-    [[nodiscard]] auto as_circle() const noexcept -> Circle;
+    [[nodiscard]] auto as_circle() const noexcept { return Circle{pos, radius}; }
 
-    void apply_force(Vector2 force) noexcept;
+    void apply_force(Vector2 force) noexcept { acc += force / mass; }
 
-    void update(f64 time_delta = 1.0 / 64) noexcept;
+    void update(f64 time_delta = 1.0 / 64) noexcept
+    {
+        vel += acc * time_delta;
+        pos += vel * time_delta;
+        acc = Vector2{}; // reset acceleration
+    }
 
     [[nodiscard]] auto operator==(const Particle&) const -> bool = default;
 };
 } // namespace sm
-
-
-#if defined(SAMARIUM_HEADER_ONLY) || defined(SAMARIUM_PARTICLE_IMPL)
-
-#include "samarium/core/inline.hpp" // for SM_INLINE
-#include "samarium/math/shapes.hpp" // for Circle
-
-namespace sm
-{
-[[nodiscard]] SM_INLINE auto Particle::as_circle() const noexcept -> Circle
-{
-    return Circle{pos, radius};
-}
-
-SM_INLINE void Particle::apply_force(Vector2 force) noexcept { acc += force / mass; }
-
-SM_INLINE void Particle::update(f64 time_delta) noexcept
-{
-    vel += acc * time_delta;
-    pos += vel * time_delta;
-    acc = Vector2{}; // reset acceleration
-}
-}; // namespace sm
-#endif
