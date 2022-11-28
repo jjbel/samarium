@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "samarium/util/Error.hpp"
 #include "samarium/util/FunctionRef.hpp"
 #include "samarium/util/Grid.hpp"
 #include "samarium/util/HashGrid.hpp"
@@ -14,6 +15,7 @@
 #include "samarium/util/RandomGenerator.hpp"
 #include "samarium/util/Result.hpp"
 #include "samarium/util/SmallVector.hpp"
+#include "samarium/util/SourceLocation.hpp"
 #include "samarium/util/StaticVector.hpp"
 #include "samarium/util/Stopwatch.hpp"
 #include "samarium/util/byte_size.hpp"
