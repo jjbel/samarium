@@ -21,16 +21,16 @@ struct SourceLocation
                                   u32 lineNumber           = __builtin_LINE(),
                                   u32 columnOffset = __builtin_COLUMN()) noexcept -> SourceLocation
 #elif defined(__GNUC__)
-    static constexpr SourceLocation current(const char* fileName     = __builtin_FILE(),
-                                            const char* functionName = __builtin_FUNCTION(),
-                                            const u32 lineNumber     = __builtin_LINE(),
-                                            const u32 columnOffset   = 0) noexcept
+    static constexpr auto current(const char* fileName     = __builtin_FILE(),
+                                  const char* functionName = __builtin_FUNCTION(),
+                                  const u32 lineNumber     = __builtin_LINE(),
+                                  const u32 columnOffset   = 0) noexcept -> SourceLocation
 #else
     // TODO MSVC?
-    static constexpr SourceLocation current(const char* fileName     = "?",
-                                            const char* functionName = "?",
-                                            u32 lineNumber           = 0,
-                                            u32 columnOffset         = 0) noexcept
+    static constexpr auto current(const char* fileName     = "?",
+                                  const char* functionName = "?",
+                                  u32 lineNumber           = 0,
+                                  u32 columnOffset         = 0) noexcept -> SourceLocation
 #endif
     {
         return {fileName, functionName, lineNumber, columnOffset};
