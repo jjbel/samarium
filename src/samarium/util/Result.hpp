@@ -7,29 +7,30 @@
 
 #pragma once
 
-#include <stdexcept> // for runtime_error
-#include <string>    // for string
+#include <string> // for string
 
 #include "tl/expected.hpp"
+
+#include "Error.hpp"
 
 namespace sm
 {
 template <typename T> using Result = tl::expected<T, std::string>;
 
-struct BadResultAccess : public std::runtime_error
+struct BadResultAccess : Error
 {
-    using std::runtime_error::runtime_error;
+    explicit BadResultAccess(const std::string& message,
+                             const SourceLocation& source_location = SourceLocation::current())
+        : Error{message, source_location, "Bad Result Access"}
+    {
+    }
 };
 
-template <typename T> [[nodiscard]] inline auto expect(Result<T>&& value)
+template <typename T>
+[[nodiscard]] inline auto expect(Result<T>&& value,
+                                 const SourceLocation& source_location = SourceLocation::current())
 {
     if (value) { return std::move(value.value()); }
-    throw BadResultAccess{value.error()};
-}
-
-template <typename T> [[nodiscard]] inline auto operator*(Result<T>&& value)
-{
-    if (value) { return std::move(value.value()); }
-    throw BadResultAccess{value.error()};
+    throw BadResultAccess{value.error(), source_location};
 }
 } // namespace sm
