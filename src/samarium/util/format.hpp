@@ -21,6 +21,7 @@
 #include "samarium/math/complex.hpp"
 #include "samarium/math/shapes.hpp"
 #include "samarium/physics/Particle.hpp"
+#include "samarium/util/SourceLocation.hpp"
 
 namespace fmt
 {
@@ -133,6 +134,18 @@ template <> class formatter<std::complex<sm::f64>>
     auto format(const std::complex<sm::f64>& p, auto& ctx)
     {
         return fmt::format_to(ctx.out(), "complex({:.4}, {:.4})", p.real(), p.imag());
+    }
+};
+
+template <> class formatter<sm::SourceLocation>
+{
+  public:
+    constexpr auto parse(const format_parse_context& ctx) const { return ctx.begin(); }
+
+    auto format(const sm::SourceLocation& p, auto& ctx)
+    {
+        return fmt::format_to(ctx.out(), "[{}:{}:{} in {}()]", p.file_name(), p.line(), p.column(),
+                              p.function_name());
     }
 };
 } // namespace fmt
