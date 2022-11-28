@@ -29,6 +29,7 @@ else()
             run ALL
             COMMAND ${CMAKE_CURRENT_BINARY_DIR}/samarium_tests
             DEPENDS samarium_tests
+            USES_TERMINAL
         )
     endif()
 endif()
