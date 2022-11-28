@@ -20,6 +20,8 @@
 
 namespace sm::file
 {
+using Path = std::filesystem::path;
+
 struct Text
 {
 };
@@ -50,16 +52,16 @@ struct Bmp
 
 static constexpr auto bmp = Bmp{};
 
-auto read([[maybe_unused]] Text tag, const std::filesystem::path& file_path) -> Result<std::string>;
+auto read([[maybe_unused]] Text tag, const Path& file_path) -> Result<std::string>;
 
-auto read(const std::filesystem::path& file_path) -> Result<std::string>;
+auto read(const Path& file_path) -> Result<std::string>;
 
-auto read_image(const std::filesystem::path& file_path) -> Result<Image>;
+auto read_image(const Path& file_path) -> Result<Image>;
 
 
 void write([[maybe_unused]] Targa tag,
            const Image& image,
-           const std::filesystem::path& file_path = date_time_str() + ".tga");
+           const Path& file_path = date_time_str() + ".tga");
 
 /**
  * @brief               Write image to file_path in the NetBPM PAM format
@@ -71,10 +73,9 @@ void write([[maybe_unused]] Targa tag,
  */
 void write([[maybe_unused]] Pam tag,
            const Image& image,
-           const std::filesystem::path& file_path = date_time_str() + ".pam");
+           const Path& file_path = date_time_str() + ".pam");
 
-inline void
-write(Png, const Image& image, const std::filesystem::path& file_path = date_time_str() + ".png")
+inline void write(Png, const Image& image, const Path& file_path = date_time_str() + ".png")
 {
     fpng::fpng_encode_image_to_file(
         file_path.string().c_str(), static_cast<const void*>(&image.front()),
@@ -83,17 +84,14 @@ write(Png, const Image& image, const std::filesystem::path& file_path = date_tim
 
 void write([[maybe_unused]] Bmp tag,
            const Image& image,
-           const std::filesystem::path& file_path = date_time_str() + ".bmp");
+           const Path& file_path = date_time_str() + ".bmp");
 
-auto find(const std::string& file_name,
-          const std::filesystem::path& directory = std::filesystem::current_path())
-    -> Result<std::filesystem::path>;
+auto find(const std::string& file_name, const Path& directory = std::filesystem::current_path())
+    -> Result<Path>;
 
-auto find(const std::string& file_name, std::span<std::filesystem::path> search_paths)
-    -> Result<std::filesystem::path>;
+auto find(const std::string& file_name, std::span<Path> search_paths) -> Result<Path>;
 
-auto find(const std::string& file_name, std::initializer_list<std::filesystem::path> search_paths)
-    -> Result<std::filesystem::path>;
+auto find(const std::string& file_name, std::initializer_list<Path> search_paths) -> Result<Path>;
 } // namespace sm::file
 
 
@@ -127,8 +125,7 @@ auto find(const std::string& file_name, std::initializer_list<std::filesystem::p
 
 namespace sm::file
 {
-SM_INLINE auto read([[maybe_unused]] Text tag, const std::filesystem::path& file_path)
-    -> Result<std::string>
+SM_INLINE auto read([[maybe_unused]] Text tag, const Path& file_path) -> Result<std::string>
 {
     if (!std::filesystem::exists(file_path))
     {
@@ -143,12 +140,12 @@ SM_INLINE auto read([[maybe_unused]] Text tag, const std::filesystem::path& file
     return {std::string(std::istreambuf_iterator<char>{ifs}, {})};
 }
 
-SM_INLINE auto read(const std::filesystem::path& file_path) -> Result<std::string>
+SM_INLINE auto read(const Path& file_path) -> Result<std::string>
 {
     return read(Text{}, file_path);
 }
 
-SM_INLINE auto read_image(const std::filesystem::path& file_path) -> Result<Image>
+SM_INLINE auto read_image(const Path& file_path) -> Result<Image>
 {
     if (!std::filesystem::exists(file_path))
     {
@@ -212,8 +209,7 @@ SM_INLINE auto read_image(const std::filesystem::path& file_path) -> Result<Imag
     return {image};
 }
 
-SM_INLINE void
-write([[maybe_unused]] Targa tag, const Image& image, const std::filesystem::path& file_path)
+SM_INLINE void write([[maybe_unused]] Targa tag, const Image& image, const Path& file_path)
 {
     const auto header = std::to_array<u8>(
         {0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, static_cast<u8>(255 & image.dims.x),
@@ -228,7 +224,7 @@ write([[maybe_unused]] Targa tag, const Image& image, const std::filesystem::pat
                static_cast<std::streamsize>(data.size() * data[0].size()));
 }
 
-SM_INLINE void write(Pam, const Image& image, const std::filesystem::path& file_path)
+SM_INLINE void write([[maybe_unused]] Pam tag, const Image& image, const Path& file_path)
 {
     const auto header = fmt::format(R"(P7
 WIDTH {}
@@ -246,8 +242,7 @@ ENDHDR
                static_cast<std::streamsize>(image.byte_size()));
 }
 
-SM_INLINE void
-write([[maybe_unused]] Bmp tag, const Image& image, const std::filesystem::path& file_path)
+SM_INLINE void write([[maybe_unused]] Bmp tag, const Image& image, const Path& file_path)
 {
     stbi_write_bmp(file_path.string().c_str(), static_cast<i32>(image.dims.x),
                    static_cast<i32>(image.dims.y), 4 /* RGBA */,
@@ -255,8 +250,7 @@ write([[maybe_unused]] Bmp tag, const Image& image, const std::filesystem::path&
 }
 
 
-SM_INLINE auto find(const std::string& file_name, const std::filesystem::path& directory)
-    -> Result<std::filesystem::path>
+SM_INLINE auto find(const std::string& file_name, const Path& directory) -> Result<Path>
 {
     for (const auto& dir_entry : std::filesystem::recursive_directory_iterator(directory))
     {
@@ -266,44 +260,44 @@ SM_INLINE auto find(const std::string& file_name, const std::filesystem::path& d
         }
     }
 
-    return {tl::make_unexpected(fmt::format("File not found: {}", file_name))};
+    return {tl::make_unexpected(fmt::format("File not found: '{}'", file_name))};
 }
 
-SM_INLINE auto find(const std::string& file_name, std::span<std::filesystem::path> search_paths)
-    -> Result<std::filesystem::path>
+SM_INLINE auto find(const std::string& file_name, std::span<Path> search_paths) -> Result<Path>
 {
     for (const auto& path : search_paths)
     {
+        if (!std::filesystem::exists(path)) { continue; }
         if (std::filesystem::is_directory(path))
         {
-            if (const auto found_path = find(file_name, path)) { return {found_path}; }
+            if (auto found_path = find(file_name, path)) { return {found_path}; }
         }
-        else if (std::filesystem::is_regular_file(path))
+        else if (std::filesystem::is_regular_file(path) && path.filename() == file_name)
         {
-            if (std::filesystem::exists(path)) { return {std::filesystem::canonical(path)}; }
+            return {std::filesystem::canonical(path)};
         }
     }
 
-    return tl::make_unexpected(fmt::format("File not found: {}", file_name));
+    return tl::make_unexpected(fmt::format("File not found: '{}'", file_name));
 }
 
-SM_INLINE auto find(const std::string& file_name,
-                    std::initializer_list<std::filesystem::path> search_paths)
-    -> Result<std::filesystem::path>
+SM_INLINE auto find(const std::string& file_name, std::initializer_list<Path> search_paths)
+    -> Result<Path>
 {
     for (const auto& path : search_paths)
     {
+        if (!std::filesystem::exists(path)) { continue; }
         if (std::filesystem::is_directory(path))
         {
-            if (const auto found_path = find(file_name, path)) { return {found_path}; }
+            if (auto found_path = find(file_name, path)) { return {found_path}; }
         }
-        else if (std::filesystem::is_regular_file(path))
+        else if (std::filesystem::is_regular_file(path) && path.filename() == file_name)
         {
-            if (std::filesystem::exists(path)) { return {std::filesystem::canonical(path)}; }
+            return {std::filesystem::canonical(path)};
         }
     }
 
-    return tl::make_unexpected(fmt::format("File not found: {}", file_name));
+    return tl::make_unexpected(fmt::format("File not found: '{}'", file_name));
 }
 } // namespace sm::file
 
