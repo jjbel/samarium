@@ -10,11 +10,13 @@
 #include "samarium/samarium.hpp"
 #include "samarium/util/Result.hpp"
 #include "samarium/util/file.hpp"
+#include <vector>
 
 using namespace sm;
 
 auto main() -> i32
 {
     print("Hello");
-    auto x = expect(file::read("/usr/nonexistent"));
+    auto search_paths = std::vector<file::Path>{"/home/jb/sm_", "/home/jb/sm"};
+    print("Found:", expect(file::find("file.hpp", {"/home/jb", "/home/jb/sm"})));
 }
