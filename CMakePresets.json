@@ -68,7 +68,8 @@
                 "BUILD_UNIT_TESTS": false,
                 "BUILD_EXAMPLES": false,
                 "BUILD_DOCS": false,
-                "BUILD_BENCHMARKS": false
+                "BUILD_BENCHMARKS": false,
+                "RUN_AFTER_BUILD": true
             },
             "environment": {
                 "PATH": "$env{HOME}/anaconda3/bin:$penv{PATH}"

@@ -8,17 +8,5 @@ if [ ! -d "./build" ]; then
     echo "Done"
 fi
 
-PROGRAM=./build/test/samarium_tests
-# PROGRAM=./build/benchmarks/samarium_benchmarks
-
-rm -f ${PROGRAM}
-
-echo "Compiling..."
+echo "Building..."
 ./scripts/build.sh
-echo "Done"
-
-if test -f ${PROGRAM}
-then
-    ${PROGRAM}
-fi
-

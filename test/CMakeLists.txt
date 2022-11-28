@@ -24,6 +24,13 @@ if(BUILD_UNIT_TESTS)
 else()
     target_sources(samarium_tests PUBLIC dev.cpp)
     add_test(NAME samarium_tests COMMAND samarium_tests)
+    if(RUN_AFTER_BUILD)
+        add_custom_target(
+            run ALL
+            COMMAND ${CMAKE_CURRENT_BINARY_DIR}/samarium_tests
+            DEPENDS samarium_tests
+        )
+    endif()
 endif()
 
 target_link_libraries(samarium_tests PUBLIC samarium::samarium)
