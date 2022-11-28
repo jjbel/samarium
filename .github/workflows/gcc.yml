@@ -45,6 +45,9 @@ jobs:
           cmake    --version
           g++      --version
 
+      - name: List Files
+        run: ls -AlhR -I .git
+
       - name: Run Conan
         run: |
           conan profile new default --detect
@@ -52,11 +55,10 @@ jobs:
           conan install . -b missing -if build -pr:b=default -o samarium:build_tests=True -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=True
 
       - name: CMake Configure
-        run: |
-          cmake --preset=ci
+        run: cmake --preset=ci
 
       - name: CMake Build
-        run: build-wrapper-linux-x86-64 --out-dir build_wrapper_output -- cmake --build --preset=default
+        run: build-wrapper-linux-x86-64 --out-dir "build_wrapper_output" cmake --build --preset=default
 
       - name: CTest
         run: ctest --preset default
