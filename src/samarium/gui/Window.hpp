@@ -58,7 +58,7 @@ struct Window
     {
         Init(Dimensions dims, const std::string& title, Handle& handle)
         {
-            if (glfwInit() == 0) { throw std::runtime_error("Error: failed to initialize glfw"); }
+            if (glfwInit() == 0) { throw Error{"failed to initialize glfw"}; }
 
             glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, gl::version_major);
             glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, gl::version_minor);
@@ -68,14 +68,14 @@ struct Window
             handle = Handle(glfwCreateWindow(static_cast<i32>(dims.x), static_cast<i32>(dims.y),
                                              title.c_str(), nullptr, nullptr));
 
-            if (!handle) { throw std::runtime_error("Error: failed to create window"); }
+            if (!handle) { throw Error{"failed to create window"}; }
 
             glfwMakeContextCurrent(handle.get());
             glfwSetFramebufferSizeCallback(handle.get(), framebuffer_size_callback);
 
             if (gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)) == 0)
             {
-                throw std::runtime_error("Error: failed to initialize GLAD");
+                throw Error{"failed to initialize GLAD"};
             }
 
             glViewport(0, 0, static_cast<i32>(dims.x), static_cast<i32>(dims.y));

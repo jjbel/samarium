@@ -44,12 +44,12 @@ struct Text
     {
         if (!std::filesystem::exists(font_path))
         {
-            return tl::make_unexpected(fmt::format("Error: {} does not exist", font_path));
+            return tl::make_unexpected(fmt::format("{} does not exist", font_path));
         }
 
         if (!std::filesystem::is_regular_file(font_path))
         {
-            return tl::make_unexpected(fmt::format("Error: {} is not a file", font_path));
+            return tl::make_unexpected(fmt::format("{} is not a file", font_path));
         }
 
         auto ft = FT_Library{};
@@ -65,7 +65,7 @@ struct Text
 
         if (FT_New_Face(ft, font_path.string().c_str(), 0, &face) != 0)
         {
-            return tl::make_unexpected(fmt::format("Error: Could not create font: {}", font_path));
+            return tl::make_unexpected(fmt::format("Could not create font: {}", font_path));
         }
 
         // set size to load glyphs as
@@ -83,7 +83,7 @@ struct Text
             if (FT_Load_Char(face, c, FT_LOAD_RENDER) != 0)
             {
                 return tl::make_unexpected(
-                    fmt::format("Error: Could not create glyph for {} for font: {}", c, font_path));
+                    fmt::format("Could not create glyph for {} for font: {}", c, font_path));
             }
 
             const auto& bitmap = face->glyph->bitmap;

@@ -14,6 +14,7 @@
 
 #include "samarium/core/types.hpp"     // for u32
 #include "samarium/math/Vector2.hpp"   // for Vector2f
+#include "samarium/util/Error.hpp"     // for Error
 #include "samarium/util/byte_size.hpp" // for byte_size
 
 #include "gl.hpp"
@@ -60,10 +61,7 @@ template <BufferType type> struct Buffer
         {
             glBindBufferBase(GL_SHADER_STORAGE_BUFFER, index, handle);
         }
-        else
-        {
-            throw std::logic_error{"Binding points can only be used for ShaderStorage objects"};
-        }
+        else { throw Error{"Binding points can only be used for ShaderStorage objects"}; }
     }
 
     void set_data(const ranges::range auto& array, Usage usage = Usage::StaticDraw) const
@@ -80,8 +78,8 @@ template <BufferType type> struct Buffer
     ~Buffer() { glDeleteBuffers(1, &handle); }
 };
 
-using VertexBuffer  = Buffer<BufferType::Vertex>;
-using ElementBuffer = Buffer<BufferType::Element>;
+using VertexBuffer        = Buffer<BufferType::Vertex>;
+using ElementBuffer       = Buffer<BufferType::Element>;
 using ShaderStorageBuffer = Buffer<BufferType::ShaderStorage>;
 
 struct VertexAttribute

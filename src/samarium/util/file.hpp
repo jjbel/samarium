@@ -132,17 +132,15 @@ SM_INLINE auto read([[maybe_unused]] Text tag, const std::filesystem::path& file
 {
     if (!std::filesystem::exists(file_path))
     {
-        return tl::make_unexpected(fmt::format("Error: {} does not exist", file_path));
+        return tl::make_unexpected(fmt::format("{} does not exist", file_path));
     }
-    else if (!std::filesystem::is_regular_file(file_path))
+    if (!std::filesystem::is_regular_file(file_path))
     {
-        return tl::make_unexpected(fmt::format("Error: {} is not a file", file_path));
+        return tl::make_unexpected(fmt::format("{} is not a file", file_path));
     }
-    else
-    {
-        auto ifs = std::ifstream{file_path};
-        return {std::string(std::istreambuf_iterator<char>{ifs}, {})};
-    }
+
+    auto ifs = std::ifstream{file_path};
+    return {std::string(std::istreambuf_iterator<char>{ifs}, {})};
 }
 
 SM_INLINE auto read(const std::filesystem::path& file_path) -> Result<std::string>
@@ -154,11 +152,11 @@ SM_INLINE auto read_image(const std::filesystem::path& file_path) -> Result<Imag
 {
     if (!std::filesystem::exists(file_path))
     {
-        return tl::make_unexpected(fmt::format("Error: {} does not exist", file_path));
+        return {tl::make_unexpected(fmt::format("{} does not exist", file_path))};
     }
     if (!std::filesystem::is_regular_file(file_path))
     {
-        return tl::make_unexpected(fmt::format("Error: {} is not a file", file_path));
+        return {tl::make_unexpected(fmt::format("{} is not a file", file_path))};
     }
 
     auto width         = 0;
@@ -167,7 +165,10 @@ SM_INLINE auto read_image(const std::filesystem::path& file_path) -> Result<Imag
 
     const auto data = stbi_load(file_path.string().c_str(), &width, &height, &channel_count, 0);
 
-    if (!data) { return tl::make_unexpected(fmt::format("Error while reading {}", file_path)); }
+    if (data == nullptr)
+    {
+        return {tl::make_unexpected(fmt::format("stb_load failed while reading {}", file_path))};
+    }
 
     auto image = Image{{static_cast<u64>(width), static_cast<u64>(height)}};
 
@@ -205,7 +206,7 @@ SM_INLINE auto read_image(const std::filesystem::path& file_path) -> Result<Imag
     else
     {
         return tl::make_unexpected(
-            fmt::format("Error: {} has unknown channel count: {}", file_path, channel_count));
+            fmt::format("{} has unknown channel count: {}", file_path, channel_count));
     }
 
     return {image};
@@ -265,7 +266,7 @@ SM_INLINE auto find(const std::string& file_name, const std::filesystem::path& d
         }
     }
 
-    return tl::make_unexpected(fmt::format("Error: File not found: {}", file_name));
+    return {tl::make_unexpected(fmt::format("File not found: {}", file_name))};
 }
 
 SM_INLINE auto find(const std::string& file_name, std::span<std::filesystem::path> search_paths)
@@ -283,7 +284,7 @@ SM_INLINE auto find(const std::string& file_name, std::span<std::filesystem::pat
         }
     }
 
-    return tl::make_unexpected(fmt::format("Error: File not found: {}", file_name));
+    return tl::make_unexpected(fmt::format("File not found: {}", file_name));
 }
 
 SM_INLINE auto find(const std::string& file_name,
@@ -302,7 +303,7 @@ SM_INLINE auto find(const std::string& file_name,
         }
     }
 
-    return tl::make_unexpected(fmt::format("Error: File not found: {}", file_name));
+    return tl::make_unexpected(fmt::format("File not found: {}", file_name));
 }
 } // namespace sm::file
 

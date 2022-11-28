@@ -14,6 +14,7 @@
 
 #include "samarium/core/types.hpp"     // for u32
 #include "samarium/graphics/Color.hpp" // for Color
+#include "samarium/util/Error.hpp"     // for Error
 #include "samarium/util/Result.hpp"    // for Result
 
 #include "Texture.hpp" // for Texture
@@ -84,7 +85,7 @@ SM_INLINE void Framebuffer::bind_texture(const Texture& texture) const
     const auto status = glCheckNamedFramebufferStatus(handle, GL_FRAMEBUFFER);
     if (status != GL_FRAMEBUFFER_COMPLETE)
     {
-        throw std::runtime_error{fmt::format("Framebuffer intialization error: {}", status)};
+        throw Error{fmt::format("Framebuffer intialization error: {}", status)};
     }
 }
 
