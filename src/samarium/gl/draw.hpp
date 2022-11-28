@@ -13,11 +13,12 @@
 #include <span>   // for span
 #include <vector> // for vector, allocator
 
-#include "glad/glad.h"                     // for glDrawArrays, GL_COLOR_BUFFER...
-#include "glm/mat4x4.hpp"                  // for mat4
-#include "range/v3/algorithm/for_each.hpp" // for for_each
-#include "range/v3/algorithm/minmax.hpp"   // for minmax
-#include "range/v3/to_container.hpp"       // for to
+#include "glad/glad.h"                         // for glDrawArrays, GL_COLOR_BUFFER...
+#include "glm/mat4x4.hpp"                      // for mat4
+#include "range/v3/algorithm/for_each.hpp"     // for for_each
+#include "range/v3/algorithm/minmax.hpp"       // for minmax
+#include "range/v3/to_container.hpp"           // for to
+#include "range/v3/view/linear_distribute.hpp" // for linear_distribute
 
 #include "samarium/core/types.hpp"        // for f32, f64, u64, i32
 #include "samarium/gl/Context.hpp"        // for Context
@@ -290,7 +291,7 @@ SM_INLINE void polyline_impl(Window& window,
     shader.set("view", transform);
     shader.set("color", color);
 
-    auto& buffer = window.context.shader_storage_buffers.at("default");
+    const auto& buffer = window.context.shader_storage_buffers.at("default");
     buffer.set_data(points);
     buffer.bind();
     window.context.vertex_arrays.at("empty").bind();
@@ -359,9 +360,8 @@ SM_INLINE void regular_polygon(Window& window,
 {
     auto points = std::vector<Vector2_t<f32>>{};
     points.reserve(point_count);
-
-    for (auto i = 0.0F; i < static_cast<f32>(math::two_pi);
-         i += static_cast<f32>(math::two_pi) / static_cast<f32>(point_count))
+    for (auto i : ranges::views::linear_distribute(0.0F, static_cast<f32>(math::two_pi),
+                                                   static_cast<i64>(point_count)))
     {
         points.push_back(Vector2_t<f32>::from_polar({static_cast<f32>(border_circle.radius), i}) +
                          border_circle.centre.cast<f32>());
@@ -441,17 +441,21 @@ SM_INLINE void line(Window& window, const LineSegment& line_, Color color, f32 t
 
 SM_INLINE void grid_lines(Window& window, const GridLines& config)
 {
-    const auto [x_max, y_max] = window.view.apply_inverse(Vector2{1.0, 1.0});
-    const auto [x_min, y_min] = window.view.apply_inverse(Vector2{-1.0, -1.0});
+    auto [x_max, y_max] = window.view.apply_inverse(Vector2{1.0, 1.0});
+    auto [x_min, y_min] = window.view.apply_inverse(Vector2{-1.0, -1.0});
+    x_min               = math::floor_to_nearest(x_min, config.spacing);
+    y_min               = math::floor_to_nearest(y_min, config.spacing);
+    x_max               = math::ceil_to_nearest(x_max, config.spacing);
+    y_max               = math::ceil_to_nearest(y_max, config.spacing);
 
-    for (auto i = math::floor_to_nearest(x_min, config.spacing);
-         i <= math::ceil_to_nearest(x_max, config.spacing); i += config.spacing)
+    for (auto i : ranges::views::linear_distribute(
+             x_min, x_max, static_cast<i64>((x_max - x_min) / config.spacing)))
     {
         draw::line(window, {{i, 0.0}, {i, 1.0}}, config.color, config.thickness);
     }
 
-    for (auto i = math::floor_to_nearest(y_min, config.spacing);
-         i <= math::ceil_to_nearest(y_max, config.spacing); i += config.spacing)
+    for (auto i : ranges::views::linear_distribute(
+             y_min, y_max, static_cast<i64>((y_max - y_min) / config.spacing)))
     {
         draw::line(window, {{0.0, i}, {1.0, i}}, config.color, config.thickness);
     }
@@ -459,14 +463,18 @@ SM_INLINE void grid_lines(Window& window, const GridLines& config)
 
 SM_INLINE void grid_dots(Window& window, const GridDots& config)
 {
-    const auto [x_max, y_max] = window.view.apply_inverse(Vector2{1.0, 1.0});
-    const auto [x_min, y_min] = window.view.apply_inverse(Vector2{-1.0, -1.0});
+    auto [x_max, y_max] = window.view.apply_inverse(Vector2{1.0, 1.0});
+    auto [x_min, y_min] = window.view.apply_inverse(Vector2{-1.0, -1.0});
+    x_min               = math::floor_to_nearest(x_min, config.spacing);
+    y_min               = math::floor_to_nearest(y_min, config.spacing);
+    x_max               = math::ceil_to_nearest(x_max, config.spacing);
+    y_max               = math::ceil_to_nearest(y_max, config.spacing);
 
-    for (auto i = math::floor_to_nearest(x_min, config.spacing);
-         i <= math::ceil_to_nearest(x_max, config.spacing); i += config.spacing)
+    for (auto i : ranges::views::linear_distribute(
+             x_min, x_max, static_cast<i64>((x_max - x_min) / config.spacing)))
     {
-        for (auto j = math::floor_to_nearest(y_min, config.spacing);
-             j <= math::ceil_to_nearest(y_max, config.spacing); j += config.spacing)
+        for (auto j : ranges::views::linear_distribute(
+                 y_min, y_max, static_cast<i64>((y_max - y_min) / config.spacing)))
         {
             draw::regular_polygon(window, {{i, j}, config.thickness}, config.point_count,
                                   {.fill_color = config.color});
