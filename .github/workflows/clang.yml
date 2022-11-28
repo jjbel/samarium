@@ -1,3 +1,5 @@
+# Github Action: Linux Clang build
+
 name: Clang
 
 on:

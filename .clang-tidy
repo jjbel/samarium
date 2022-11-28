@@ -1,6 +1,6 @@
 ---
+# Clang linter: https://clang.llvm.org/extra/clang-tidy/
 # From: cmake-init
-
 # Enable ALL the things! Except not really
 # misc-non-private-member-variables-in-classes: the options don't do anything
 Checks: "*,\

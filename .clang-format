@@ -1,4 +1,5 @@
 ---
+# Clang format https://clang.llvm.org/docs/ClangFormat.html
 Language: Cpp
 AlignEscapedNewlines: Left
 AlignConsecutiveAssignments: 'true'

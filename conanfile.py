@@ -1,7 +1,9 @@
+# conan package manager https://conan.io/
+
 from conan import ConanFile
 from conan.tools.cmake import CMake, cmake_layout
 
-required_conan_version = ">=1.47.0"
+required_conan_version = ">=1.53.0"
 
 
 class SamariumConan(ConanFile):

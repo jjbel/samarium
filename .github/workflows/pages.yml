@@ -1,3 +1,5 @@
+# Github Action to build docs
+
 name: Deploy Pages
 
 on:
