@@ -133,19 +133,3 @@ inline auto enable_debug_output()
                           GL_FALSE);
 }
 } // namespace sm::gl
-
-
-#if defined(SAMARIUM_HEADER_ONLY) || defined(SAMARIUM_GL_IMPL)
-
-#include "glad/glad.h" // for glCreateVertexArrays, glBindVer...
-
-#include "samarium/core/inline.hpp"
-#include "samarium/math/Extents.hpp" // for Extents, Extents<>::Iterator
-
-#include "gl.hpp"
-
-namespace sm::gl
-{
-} // namespace sm::gl
-
-#endif
