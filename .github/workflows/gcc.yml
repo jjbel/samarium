@@ -110,4 +110,3 @@ jobs:
           git clone --depth 1 https://github.com/strangeQuark1041/samarium_example.git .
           cmake --preset=default
           cmake --build --preset=default
-          ./build/example

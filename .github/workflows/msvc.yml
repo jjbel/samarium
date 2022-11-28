@@ -103,4 +103,3 @@ jobs:
       - run: cd example && echo '{"version":4}' > ./CMakeUserPresets.json
       - run: cd example && cmake --preset=default
       - run: cd example && cmake --build --preset=default
-      - run: ./example/build/example
