@@ -7,9 +7,7 @@
 
 #pragma once
 
-#include <array> // for array,to_array
-#include <cmath>
-#include <numbers>
+#include <array>  // for array,to_array
 #include <span>   // for span
 #include <vector> // for vector, allocator
 
@@ -33,36 +31,40 @@
 #include "samarium/math/interp.hpp"       // for lerp, lerp_inverse
 #include "samarium/math/math.hpp"         // for two_pi
 #include "samarium/math/shapes.hpp"       // for Circle, LineSegment
-#include "samarium/util/Map.hpp"          // for Map
-#include "samarium/util/format.hpp"       // for format
+#include "samarium/math/vector_math.hpp"
+#include "samarium/util/Map.hpp"    // for Map
+#include "samarium/util/format.hpp" // for format
 
 #include "gl.hpp" // for Buffer, VertexArray
 
 namespace sm::draw
 {
 void vertices(gl::Context& context,
-              std::span<gl::Vertex<gl::Layout::Pos>> verts,
+              std::span<const gl::Vertex<gl::Layout::Pos>> verts,
               Color color,
               gl::Primitive primitive,
               const glm::mat4& transform);
 void vertices(Window& window,
-              std::span<gl::Vertex<gl::Layout::Pos>> verts,
+              std::span<const gl::Vertex<gl::Layout::Pos>> verts,
               Color color,
               gl::Primitive primitive);
 
 void vertices(gl::Context& context,
-              std::span<Vector2f> verts,
+              std::span<const Vector2f> verts,
               Color color,
               gl::Primitive primitive,
               const glm::mat4& transform);
-void vertices(Window& window, std::span<Vector2f> verts, Color color, gl::Primitive primitive);
+void vertices(Window& window,
+              std::span<const Vector2f> verts,
+              Color color,
+              gl::Primitive primitive);
 
 void vertices(gl::Context& context,
-              std::span<gl::Vertex<gl::Layout::PosColor>> verts,
+              std::span<const gl::Vertex<gl::Layout::PosColor>> verts,
               gl::Primitive primitive,
               const glm::mat4& transform);
 void vertices(Window& window,
-              std::span<gl::Vertex<gl::Layout::PosColor>> verts,
+              std::span<const gl::Vertex<gl::Layout::PosColor>> verts,
               gl::Primitive primitive);
 
 void circle(Window& window, Circle circle, ShapeColor color, const glm::mat4& transform);
@@ -142,24 +144,24 @@ template <u64 size> void background(Window& window, const Gradient<size>& gradie
 }
 
 void polyline(Window& window,
-              std::span<Vector2f> points,
+              std::span<const Vector2f> points,
               Color color,
               f32 thickness,
               const glm::mat4& transform);
-void polyline(Window& window, std::span<Vector2f> points, Color color, f32 thickness);
+void polyline(Window& window, std::span<const Vector2f> points, Color color, f32 thickness);
 
 void polygon(Window& window,
-             std::span<Vector2f> points,
+             std::span<const Vector2f> points,
              ShapeColor color,
              const glm::mat4& transform);
-void polygon(Window& window, std::span<Vector2f> points, ShapeColor color);
+void polygon(Window& window, std::span<const Vector2f> points, ShapeColor color);
 
 void regular_polygon(Window& window,
                      Circle border_circle,
-                     u64 point_count,
+                     u32 point_count,
                      ShapeColor color,
                      const glm::mat4& transform);
-void regular_polygon(Window& window, Circle border_circle, u64 point_count, ShapeColor color);
+void regular_polygon(Window& window, Circle border_circle, u32 point_count, ShapeColor color);
 
 struct GridLines
 {
@@ -174,7 +176,7 @@ struct GridDots
     f64 spacing     = 1.0;
     Color color     = Color{200, 200, 200, 50};
     f32 thickness   = 0.03F;
-    u64 point_count = 4;
+    u32 point_count = 4;
 };
 void grid_dots(Window& window, const GridDots& config = {});
 } // namespace sm::draw
@@ -190,7 +192,7 @@ void grid_dots(Window& window, const GridDots& config = {});
 namespace sm::draw
 {
 SM_INLINE void vertices(gl::Context& context,
-                        std::span<gl::Vertex<gl::Layout::Pos>> verts,
+                        std::span<const gl::Vertex<gl::Layout::Pos>> verts,
                         Color color,
                         gl::Primitive primitive,
                         const glm::mat4& transform)
@@ -211,7 +213,7 @@ SM_INLINE void vertices(gl::Context& context,
 }
 
 SM_INLINE void vertices(Window& window,
-                        std::span<gl::Vertex<gl::Layout::Pos>> verts,
+                        std::span<const gl::Vertex<gl::Layout::Pos>> verts,
                         Color color,
                         gl::Primitive primitive)
 {
@@ -219,7 +221,7 @@ SM_INLINE void vertices(Window& window,
 }
 
 SM_INLINE void vertices(gl::Context& context,
-                        std::span<Vector2f> verts,
+                        std::span<const Vector2f> verts,
                         Color color,
                         gl::Primitive primitive,
                         const glm::mat4& transform)
@@ -240,13 +242,13 @@ SM_INLINE void vertices(gl::Context& context,
 }
 
 SM_INLINE void
-vertices(Window& window, std::span<Vector2f> verts, Color color, gl::Primitive primitive)
+vertices(Window& window, std::span<const Vector2f> verts, Color color, gl::Primitive primitive)
 {
     vertices(window.context, verts, color, primitive, window.view);
 }
 
 SM_INLINE void vertices(gl::Context& context,
-                        std::span<gl::Vertex<gl::Layout::PosColor>> verts,
+                        std::span<const gl::Vertex<gl::Layout::PosColor>> verts,
                         gl::Primitive primitive,
                         const glm::mat4& transform)
 {
@@ -264,8 +266,9 @@ SM_INLINE void vertices(gl::Context& context,
     glDrawArrays(static_cast<i32>(primitive), 0, static_cast<i32>(verts.size()));
 }
 
-SM_INLINE void
-vertices(Window& window, std::span<gl::Vertex<gl::Layout::PosColor>> verts, gl::Primitive primitive)
+SM_INLINE void vertices(Window& window,
+                        std::span<const gl::Vertex<gl::Layout::PosColor>> verts,
+                        gl::Primitive primitive)
 {
     vertices(window.context, verts, primitive, window.view);
 }
@@ -278,7 +281,7 @@ SM_INLINE void background(Color color)
 }
 
 SM_INLINE void polyline_impl(Window& window,
-                             std::span<Vector2f> points,
+                             std::span<const Vector2f> points,
                              Color color,
                              f32 thickness,
                              const glm::mat4& transform)
@@ -299,7 +302,7 @@ SM_INLINE void polyline_impl(Window& window,
 }
 
 SM_INLINE void polyline(Window& window,
-                        std::span<Vector2f> points,
+                        std::span<const Vector2f> points,
                         Color color,
                         f32 thickness,
                         const glm::mat4& transform)
@@ -311,13 +314,16 @@ SM_INLINE void polyline(Window& window,
     polyline_impl(window, {new_points}, color, thickness, transform);
 }
 
-SM_INLINE void polyline(Window& window, std::span<Vector2f> points, Color color, f32 thickness)
+SM_INLINE void
+polyline(Window& window, std::span<const Vector2f> points, Color color, f32 thickness)
 {
     polyline(window, points, color, thickness, window.view);
 }
 
-SM_INLINE void
-polygon(Window& window, std::span<Vector2f> points, ShapeColor color, const glm::mat4& transform)
+SM_INLINE void polygon(Window& window,
+                       std::span<const Vector2f> points,
+                       ShapeColor color,
+                       const glm::mat4& transform)
 {
     if (color.fill_color.a != 0)
     {
@@ -347,30 +353,23 @@ polygon(Window& window, std::span<Vector2f> points, ShapeColor color, const glm:
     }
 }
 
-SM_INLINE void polygon(Window& window, std::span<Vector2f> points, ShapeColor color)
+SM_INLINE void polygon(Window& window, std::span<const Vector2f> points, ShapeColor color)
 {
     polygon(window, points, color, window.view);
 }
 
 SM_INLINE void regular_polygon(Window& window,
                                Circle border_circle,
-                               u64 point_count,
+                               u32 point_count,
                                ShapeColor color,
                                const glm::mat4& transform)
 {
-    auto points = std::vector<Vector2_t<f32>>{};
-    points.reserve(point_count);
-    for (auto i : ranges::views::linear_distribute(0.0F, static_cast<f32>(math::two_pi),
-                                                   static_cast<i64>(point_count)))
-    {
-        points.push_back(Vector2_t<f32>::from_polar({static_cast<f32>(border_circle.radius), i}) +
-                         border_circle.centre.cast<f32>());
-    }
-    polygon(window, points, color, transform);
+    const auto points = math::regular_polygon_points<f32>(point_count, border_circle);
+    polygon(window, {points.begin(), point_count}, color, transform);
 }
 
 SM_INLINE void
-regular_polygon(Window& window, Circle border_circle, u64 point_count, ShapeColor color)
+regular_polygon(Window& window, Circle border_circle, u32 point_count, ShapeColor color)
 {
     regular_polygon(window, border_circle, point_count, color, window.view);
 }
