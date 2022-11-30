@@ -9,7 +9,10 @@
 
 #include <optional>
 
-#include "samarium/util/StaticVector.hpp"
+#include "samarium/core/concepts.hpp"     // for FloatingPoint
+#include "samarium/math/Vector2.hpp"      // for Vector2_t
+#include "samarium/util/SmallVector.hpp"  // for SmallVector
+#include "samarium/util/StaticVector.hpp" // for StaticVector
 
 #include "BoundingBox.hpp"
 #include "interp.hpp"
@@ -143,4 +146,51 @@ template <typename T> [[nodiscard]] constexpr auto abs_area(BoundingBox<T> bound
 }
 
 [[nodiscard]] constexpr auto abs_area(Circle circle) noexcept { return math::abs(area(circle)); }
+
+template <u32 point_count, concepts::FloatingPoint Float = f64>
+[[nodiscard]] constexpr auto regular_polygon_points() noexcept
+{
+    auto points           = std::array<Vector2_t<Float>, point_count>{};
+    points[0].x           = 1; // first vertex is always (1, 0)
+    const auto base_angle = static_cast<Float>(math::two_pi) / static_cast<Float>(point_count);
+    for (auto i : range(1, point_count))
+    {
+        const auto angle = static_cast<Float>(i) * base_angle;
+        points[i]        = Vector2_t<Float>::from_polar({1.0, angle});
+    }
+    return points;
+}
+
+template <u32 point_count, concepts::FloatingPoint Float = f64>
+[[nodiscard]] constexpr auto regular_polygon_points(Circle circumcircle) noexcept
+{
+    const auto centre = circumcircle.centre.cast<Float>();
+    auto points       = regular_polygon<point_count, Float>();
+    for (auto& point : points) { point = point * circumcircle.radius + centre; }
+    return points;
+}
+
+template <concepts::FloatingPoint Float = f64>
+[[nodiscard]] constexpr auto regular_polygon_points(u32 point_count) noexcept
+{
+    auto points           = SmallVector<Vector2_t<Float>, 64>(point_count);
+    points[0].x           = 1; // first vertex is always (1, 0)
+    const auto base_angle = static_cast<Float>(math::two_pi) / static_cast<Float>(point_count);
+    for (auto i : range(1, point_count))
+    {
+        const auto angle = static_cast<Float>(i) * base_angle;
+        points[i]        = Vector2_t<Float>::from_polar({1.0, angle});
+    }
+    return points;
+}
+
+template <concepts::FloatingPoint Float = f64>
+[[nodiscard]] constexpr auto regular_polygon_points(u32 point_count, Circle circumcircle) noexcept
+{
+    const auto centre = circumcircle.centre.cast<Float>();
+    const auto radius = static_cast<Float>(circumcircle.radius);
+    auto points       = regular_polygon_points<Float>(point_count);
+    for (auto& point : points) { point = point * radius + centre; }
+    return points;
+}
 } // namespace sm::math
