@@ -4,7 +4,7 @@ name: MSVC
 
 on:
   push:
-    branches: [main, gl]
+    branches: [main]
   pull_request:
     branches: [main]
   schedule:
