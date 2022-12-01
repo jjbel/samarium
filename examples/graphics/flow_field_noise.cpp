@@ -13,7 +13,7 @@
 using namespace sm;
 using namespace sm::literals;
 
-int main()
+auto main() -> i32
 {
     auto app   = App{{.dims{1800, 900}}};
     auto watch = Stopwatch{};

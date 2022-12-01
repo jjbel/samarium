@@ -24,7 +24,7 @@ auto is_prime(i32 n)
     return true;
 }
 
-int main()
+auto main() -> i32
 {
     auto app = App{{.dims = {1000, 1000}}};
     app.transform.scale /= scale; // zoom out

@@ -11,7 +11,7 @@
 
 using namespace sm;
 
-int main()
+auto main() -> i32
 {
     auto iterations = 40UL;
 
@@ -37,10 +37,7 @@ int main()
             return gradient(interp::map_range_clamp(
                 static_cast<f64>(*iter), {0.0, static_cast<f64>(max_iterations)}, {0.0, 1.0}));
         }
-        else
-        {
-            return Color{9, 5, 26};
-        }
+        else { return Color{9, 5, 26}; }
     };
 
     const auto draw = [&](Vector2 pos)

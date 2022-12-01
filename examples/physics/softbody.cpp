@@ -29,7 +29,7 @@ struct Params
     Vector2 softbody_area{25, 25};
 };
 
-int main()
+auto main() -> i32
 {
     const auto params = Params{};
 

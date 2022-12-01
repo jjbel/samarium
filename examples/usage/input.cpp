@@ -10,7 +10,7 @@
 using namespace sm;
 using namespace sm::literals;
 
-int main()
+auto main() -> i32
 {
     auto window = Window{{1024, 1024}};
     auto watch  = Stopwatch{};

@@ -12,7 +12,7 @@
 using namespace sm;
 using namespace sm::literals;
 
-int main()
+auto main() -> i32
 {
     auto app = App{{.dims = dims720}};
 

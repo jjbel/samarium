@@ -10,7 +10,7 @@
 using namespace sm;
 using namespace sm::literals;
 
-int main()
+auto main() -> i32
 {
     if (glfwInit() == 0) { throw Error{"failed to initialize glfw"}; }
 

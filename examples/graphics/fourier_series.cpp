@@ -47,16 +47,13 @@ auto target_shape(f64 t)
 
 auto raise_to_power(complex x) { return std::pow(math::e, math::two_pi_i * x); }
 
-int main()
+auto main() -> i32
 {
     auto indices = std::array<i32, count>(); // indices of terms of Foruier series
     for (auto i : range(count))
     {
         if (i % 2 == 0) { indices[i] = i32(i) / 2; }
-        else
-        {
-            indices[i] = -(i32(i) + 1) / 2;
-        }
+        else { indices[i] = -(i32(i) + 1) / 2; }
     }
     // above makes the indices go [0, -1, 1, -2, 2...]
 

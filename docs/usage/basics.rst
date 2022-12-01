@@ -9,7 +9,7 @@ Basics
     // All code is in namespace sm
     using namespace sm;
 
-    int main()
+    auto main() -> i32
     {
         // print calls fmt::format() on each argument
         print("Hello there");

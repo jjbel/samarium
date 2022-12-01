@@ -112,7 +112,7 @@ auto rescaled_levels_till(u64 level)
     return levels;
 }
 
-int main()
+auto main() -> i32
 {
     const auto levels = rescaled_levels_till(order);
     auto path         = levels[0];

@@ -23,7 +23,7 @@ constexpr auto graph_width     = 80.0;
 constexpr auto graph_height    = 40.0;
 constexpr auto graph_centre    = Vector2{-37.5, 0.0};
 
-int main()
+auto main() -> i32
 {
     auto window = Window{{1600, 800}};
     auto rand   = RandomGenerator{count * 2, RandomMode::Stable, 73};
