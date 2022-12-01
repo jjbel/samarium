@@ -1,20 +1,29 @@
-bin/
-dev/
-build/
-.history
-.cache/
+# General ignore
 .ignore/
 .ignore*
-__pycache__/
+
+# build artifacts
+bin/
+build/
+.cache/
+
+# C++
 CMakeUserPresets.json
-**/.conan/data
+.conan/data
 /usr/include/c++
 
+# images
 *.tga
 *.png
 *.bmp
 
+# videos
 *.mp4
 
-# Valgrid files
+# Valgrind files
 vgcore.*
+
+# vscode
+c_cpp_properties.json
+settings.json
+.history/
