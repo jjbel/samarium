@@ -91,11 +91,11 @@ auto main() -> i32
         for (const auto& i : ps)
         {
             // TODO gl error for polygon
-            // draw::circle(window, {i.pos, i.radius},
+            // draw::circle(window, i.as_circle(),
             //              {.fill_color   = "#5640ff"_c.with_multiplied_alpha(0.2),
             //               .border_color = {255, 30, 30, 255},
             //               .border_width = 1});
-            draw::circle(window, {i.pos, i.radius},
+            draw::circle(window, i.as_circle(),
                          {.fill_color = "#ff0842"_c.with_multiplied_alpha(0.8)});
         }
 
