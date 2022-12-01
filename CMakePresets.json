@@ -61,7 +61,6 @@
             "description": "Use gcc, Ninja, and skip extra tests",
             "inherits": "clang",
             "cacheVariables": {
-                "CMAKE_UNITY_BUILD": false,
                 "SAMARIUM_HEADER_ONLY": true,
                 "USE_UBSAN": false,
                 "USE_LINKER": "mold",
@@ -82,7 +81,7 @@
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
                 "SAMARIUM_HEADER_ONLY": true,
-                "USE_UBSAN": false
+                "USE_UBSAN": true
             }
         },
         {
