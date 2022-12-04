@@ -36,11 +36,11 @@ class SamariumConan(ConanFile):
         deps = [
             "fmt/9.1.0",
             "range-v3/0.12.0",
-            "stb/cci.20210910",
+            "stb/cci.20220909",
             "tl-expected/20190710",
             "tl-function-ref/1.0.0",
             "bshoshany-thread-pool/3.3.0",
-            "unordered_dense/1.4.0",
+            "unordered_dense/2.0.1",
             "svector/1.0.2",
             "glfw/3.3.8",
             "glm/cci.20220420",
@@ -49,7 +49,7 @@ class SamariumConan(ConanFile):
         ]
 
         if self.options.build_tests:
-            deps += ["catch2/3.1.0", "benchmark/1.7.0"]
+            deps += ["catch2/3.2.0", "benchmark/1.7.1"]
 
         for dep in deps:
             self.requires(dep)
