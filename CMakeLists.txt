@@ -39,3 +39,5 @@ add_subdirectory(examples)
 add_subdirectory(benchmarks)
 
 iwyu(samarium)
+
+include(run_after_build)
