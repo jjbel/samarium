@@ -3,7 +3,7 @@ if(RUN_AFTER_BUILD)
         run ALL
         COMMAND ${RUN_AFTER_BUILD}
         COMMENT "Running '${RUN_AFTER_BUILD}'"
-        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+        DEPENDS ${RUN_AFTER_BUILD_DEPENDS}
         USES_TERMINAL
     )
 endif()
