@@ -6,6 +6,5 @@ if(RUN_AFTER_BUILD)
         DEPENDS ${RUN_AFTER_BUILD_DEPENDS}
         USES_TERMINAL
     )
+    add_dependencies(run samarium samarium_tests)
 endif()
-
-add_dependencies(run samarium samarium_tests)
