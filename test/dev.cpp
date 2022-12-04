@@ -6,6 +6,7 @@
  */
 
 #include "samarium/gl/draw.hpp"
+#include "samarium/gl/draw/shapes.hpp"
 #include "samarium/graphics/colors.hpp"
 #include "samarium/samarium.hpp"
 
@@ -15,8 +16,8 @@
 using namespace sm;
 using namespace sm::literals;
 
-constexpr auto count           = 2000UL;
-constexpr auto initial_speed   = 20.0;
+constexpr auto count           = 200UL;
+constexpr auto initial_speed   = 2.0;
 constexpr auto class_size      = 4.0;
 constexpr auto max_graph_speed = 60.0;
 constexpr auto graph_width     = 80.0;
@@ -28,7 +29,7 @@ auto main() -> i32
     auto window = Window{{1600, 800}};
     auto rand   = RandomGenerator{count * 2, RandomMode::Stable, 73};
     auto particles =
-        ParticleSystem<Particle<f64>, 64>{count, Particle<f64>{.radius = 0.15, .mass = 0.1}, 0.6};
+        ParticleSystem<Particle<f64>, 64>{count, Particle<f64>{.radius = 0.2, .mass = 0.1}, 0.6};
     auto watch       = Stopwatch{};
     auto speeds      = std::vector<f64>(count);
     auto energy      = 0.0;
@@ -56,8 +57,8 @@ auto main() -> i32
                 for (const auto& wall : walls) { phys::collide(particle, wall, dt, 1.0); }
             });
 
-        // particles.self_collision();
-        // particles.update(dt);
+        particles.self_collision();
+        particles.update(dt);
 
         energy = 0.0;
         for (const auto& [speed, particle] : ranges::views::zip(speeds, particles))
@@ -80,10 +81,14 @@ auto main() -> i32
         }
 
         draw::background("#131417"_c);
-        draw::grid_lines(window);
-        for (const auto& i : particles)
+        draw::grid_lines(window, {.spacing = 1.345, .color{255, 255, 255, 60}, .thickness = 0.04});
+        draw::bounding_box(window, box, colors::antiquewhite, 0.1);
+        for (const auto& particle : particles)
         {
-            draw::circle(window, i.as_circle(), {.fill_color = "#fc0330"_c});
+            if (box.contains(particle.pos))
+            {
+                draw::circle(window, particle.as_circle(), {.fill_color = "#fc0330"_c});
+            }
         }
 
         auto points              = std::vector<Vector2>(frequencies.size());
