@@ -40,28 +40,5 @@ static void bm_ParticleSystem_update_self_collision(benchmark::State& state)
     }
 }
 
-static void bm_ParticleSystem_update_self_collision_with_threshold(benchmark::State& state)
-{
-    auto rand                     = RandomGenerator{};
-    auto ps                       = ParticleSystem{100};
-    const auto width              = 20;
-    const auto distance_threshold = static_cast<f64>(state.range(0));
-    for (auto& p : ps)
-    {
-        p.pos    = rand.vector({{-width, -width}, {width, width}});
-        p.acc    = rand.polar_vector({0.0, 12.0});
-        p.radius = 0.5;
-    }
-
-    for (auto _ : state)
-    {
-        ps.self_collision(1.0, distance_threshold);
-        ps.update();
-    }
-}
-
 BENCHMARK(bm_ParticleSystem_update)->Name("ParticleSystem::update()");
 BENCHMARK(bm_ParticleSystem_update_self_collision)->Name("Particlesystem::self_collision()");
-BENCHMARK(bm_ParticleSystem_update_self_collision_with_threshold)
-    ->Name("Particlesystem::self_collision() with threshold")
-    ->DenseRange(1, 40, 8);

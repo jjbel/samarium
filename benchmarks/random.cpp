@@ -12,6 +12,8 @@
 
 using namespace sm;
 
+static constexpr u64 cache_size = 1'000'000;
+
 static void bm_RandomGenerator_uncached(benchmark::State& state)
 {
     auto rand = RandomGenerator{0};
@@ -22,11 +24,14 @@ static void bm_RandomGenerator_uncached(benchmark::State& state)
 
 static void bm_RandomGenerator_cached(benchmark::State& state)
 {
-    auto rand = RandomGenerator(1024);
-
+    auto rand = RandomGenerator{cache_size};
     for (auto _ : state) { benchmark::DoNotOptimize(rand.random()); }
     state.SetItemsProcessed(state.iterations());
 }
 
-BENCHMARK(bm_RandomGenerator_uncached)->Name("RandomGenerator::random() without cache");
-BENCHMARK(bm_RandomGenerator_cached)->Name("RandomGenerator::random() with cache");
+BENCHMARK(bm_RandomGenerator_uncached)
+    ->Name("RandomGenerator::random() without cache")
+    ->Iterations(cache_size);
+BENCHMARK(bm_RandomGenerator_cached)
+    ->Name("RandomGenerator::random() with cache")
+    ->Iterations(cache_size);
