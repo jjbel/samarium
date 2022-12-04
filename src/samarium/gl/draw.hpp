@@ -12,13 +12,3 @@
 #include "draw/poly.hpp"
 #include "draw/shapes.hpp"
 #include "draw/vertices.hpp"
-
-#if defined(SAMARIUM_HEADER_ONLY) || defined(SAMARIUM_DRAW_IMPL)
-
-#include "draw/background.hpp"
-#include "draw/grid.hpp"
-#include "draw/poly.hpp"
-#include "draw/shapes.hpp"
-#include "draw/vertices.hpp"
-
-#endif
