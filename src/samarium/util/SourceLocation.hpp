@@ -51,12 +51,12 @@ struct SourceLocation
     [[nodiscard]] constexpr auto column() const noexcept -> u32 { return columnOffset; }
 
   private:
-    constexpr SourceLocation(const char* fileName,
-                             const char* functionName,
-                             u32 lineNumber,
-                             u32 columnOffset) noexcept
-        : fileName(fileName), functionName(functionName), lineNumber(lineNumber),
-          columnOffset(columnOffset)
+    constexpr SourceLocation(const char* file_name_,
+                             const char* function_name_,
+                             u32 line_number_,
+                             u32 column_offset_) noexcept
+        : fileName{file_name_}, functionName{function_name_}, lineNumber{line_number_},
+          columnOffset{column_offset_}
     {
     }
 
