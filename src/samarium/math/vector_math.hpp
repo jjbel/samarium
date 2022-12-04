@@ -165,7 +165,7 @@ template <u32 point_count, concepts::FloatingPoint Float = f64>
 [[nodiscard]] constexpr auto regular_polygon_points(Circle circumcircle) noexcept
 {
     const auto centre = circumcircle.centre.cast<Float>();
-    auto points       = regular_polygon<point_count, Float>();
+    auto points       = regular_polygon_points<point_count, Float>();
     for (auto& point : points) { point = point * circumcircle.radius + centre; }
     return points;
 }
