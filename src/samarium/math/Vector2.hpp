@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "samarium/core/concepts.hpp"
-#include "samarium/core/types.hpp"
+#include "samarium/core/concepts.hpp" // for concepts
+#include "samarium/core/types.hpp"    // for u64, f64
 
 #include "Extents.hpp"
 #include "math.hpp"
@@ -21,7 +21,7 @@ namespace sm
  * @tparam T type of x and y, required to be integral or floating point
  *
  * @code
- * auto vec = Vector2{.x = 4.2, .y = -1.4};
+ * auto vec = Vector2{.x = 42, .y = -3.1415};
  * @endcode
  */
 template <typename T> struct Vector2_t
@@ -31,13 +31,13 @@ template <typename T> struct Vector2_t
     T x{};
     T y{};
 
-    [[nodiscard]] constexpr auto length() const noexcept { return std::sqrt(x * x + y * y); }
-
     struct Polar
     {
         T length{};
         T angle{};
     };
+
+    [[nodiscard]] constexpr auto length() const noexcept { return std::sqrt(x * x + y * y); }
 
     [[nodiscard]] constexpr auto length_sq() const noexcept { return x * x + y * y; }
 
@@ -50,16 +50,16 @@ template <typename T> struct Vector2_t
         return Vector2_t{.x = value, .y = value};
     }
 
-    [[nodiscard]] static constexpr auto make(auto x, auto y)
+    [[nodiscard]] static constexpr auto make(auto x_coord, auto y_coord)
     {
-        return Vector2_t<T>{static_cast<T>(x), static_cast<T>(y)};
+        return Vector2_t<T>{static_cast<T>(x_coord), static_cast<T>(y_coord)};
     }
 
     [[nodiscard]] static constexpr auto from_polar(Polar polar) noexcept
         requires concepts::FloatingPoint<T>
     {
-        return Vector2_t<T>{polar.length * std::cos(polar.angle),
-                            polar.length * std::sin(polar.angle)};
+        return Vector2_t{polar.length * std::cos(polar.angle),
+                         polar.length * std::sin(polar.angle)};
     }
 
     [[nodiscard]] constexpr auto to_polar() const noexcept
@@ -148,7 +148,7 @@ template <typename T> struct Vector2_t
         return *this;
     }
 
-    template <typename U> constexpr auto cast() const noexcept
+    template <typename U> [[nodiscard]] constexpr auto cast() const noexcept
     {
         return Vector2_t<U>{static_cast<U>(this->x), static_cast<U>(this->y)};
     }
@@ -165,7 +165,7 @@ template <typename T> struct Vector2_t
 
     [[nodiscard]] constexpr auto abs() const noexcept
     {
-        return Vector2_t<T>{std::abs(x), std::abs(y)};
+        return Vector2_t{std::abs(x), std::abs(y)};
     }
 
     [[nodiscard]] static constexpr auto angle_between(Vector2_t<T> from, Vector2_t<T> to) noexcept
@@ -285,7 +285,13 @@ using Dimensions = Vector2_t<u64>;
 
 namespace literals
 {
-consteval auto operator"" _x(long double x) noexcept { return Vector2{static_cast<f64>(x), 0.0}; }
-consteval auto operator"" _y(long double y) noexcept { return Vector2{0.0, static_cast<f64>(y)}; }
+consteval auto operator"" _x(long double x_coord) noexcept
+{
+    return Vector2{static_cast<f64>(x_coord), 0.0};
+}
+consteval auto operator"" _y(long double y_coord) noexcept
+{
+    return Vector2{0.0, static_cast<f64>(y_coord)};
+}
 } // namespace literals
 } // namespace sm
