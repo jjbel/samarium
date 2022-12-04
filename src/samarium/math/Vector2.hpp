@@ -173,21 +173,28 @@ template <typename T> struct Vector2_t
         return to.angle() - from.angle();
     }
 
-    constexpr void rotate(T angle) noexcept { *this = this->with_angle(this->angle() + angle); }
-
-    [[nodiscard]] constexpr auto rotated(f64 angle) const noexcept
+    constexpr void rotate(T angle) noexcept
+        requires concepts::FloatingPoint<T>
     {
-        auto temp = *this;
-        temp.rotate(angle);
-        return temp;
+        *this = this->rotated(angle);
     }
 
-    constexpr void rotate_about(f64 angle, Vector2_t<T> pivot) noexcept
+    [[nodiscard]] constexpr auto rotated(T angle) const noexcept
+        requires concepts::FloatingPoint<T>
     {
-        *this = (*this - pivot).with_angle(this->angle() + angle) + pivot;
+        const auto cos = std::cos(angle);
+        const auto sin = std::sin(angle);
+        return Vector2_t{x * cos - y * sin, x * sin + y * cos};
     }
 
-    [[nodiscard]] constexpr auto rotated_about(f64 angle, Vector2_t<T> pivot) const noexcept
+    constexpr void rotate_about(T angle, Vector2_t<T> pivot) noexcept
+        requires concepts::FloatingPoint<T>
+    {
+        *this = (*this - pivot).rotated(angle) + pivot;
+    }
+
+    [[nodiscard]] constexpr auto rotated_about(T angle, Vector2_t<T> pivot) const noexcept
+        requires concepts::FloatingPoint<T>
     {
         auto temp = *this;
         temp.rotate_about(angle, pivot);
