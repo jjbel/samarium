@@ -99,7 +99,8 @@ template <sm::concepts::Number T> class formatter<sm::BoundingBox<T>>
         return fmt::format_to(ctx.out(),
                               R"(
 BoundingBox(min = {},
-            max = {}))",
+            max = {})
+)",
                               p.min, p.max);
     }
 };
