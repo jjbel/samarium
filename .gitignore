@@ -27,3 +27,6 @@ vgcore.*
 c_cpp_properties.json
 settings.json
 .history/
+
+# clion
+.idea
