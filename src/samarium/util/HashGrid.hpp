@@ -16,8 +16,8 @@
 #include "samarium/math/Vector2.hpp"
 #include "samarium/math/math.hpp"
 
-#include "Map.hpp"
 #include "StaticVector.hpp"
+#include "unordered.hpp"
 
 template <> struct ankerl::unordered_dense::hash<sm::Vector2_t<sm::i32>>
 {

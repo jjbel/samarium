@@ -16,13 +16,13 @@
 #include "samarium/gl/Vertex.hpp"
 #include FT_FREETYPE_H
 
-#include "samarium/core/types.hpp"   // for i32
-#include "samarium/gl/Context.hpp"   // for Context
-#include "samarium/gl/Texture.hpp"   // for Map
-#include "samarium/gui/Window.hpp"   // for Window
-#include "samarium/math/Vector2.hpp" // for Vector2_t
-#include "samarium/util/Map.hpp"     // for Map
-#include "samarium/util/Result.hpp"  // for Result
+#include "samarium/core/types.hpp"     // for i32
+#include "samarium/gl/Context.hpp"     // for Context
+#include "samarium/gl/Texture.hpp"     // for Texture
+#include "samarium/gui/Window.hpp"     // for Window
+#include "samarium/math/Vector2.hpp"   // for Vector2_t
+#include "samarium/util/Result.hpp"    // for Result
+#include "samarium/util/unordered.hpp" // for Map
 
 namespace sm::draw
 {
