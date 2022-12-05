@@ -1,10 +1,11 @@
 if(RUN_AFTER_BUILD)
-    add_custom_target(
-        run ALL
+    set(RUN_OUTPUT "${CMAKE_BINARY_DIR}/running_${RUN_AFTER_BUILD_DEPENDS}.txt")
+    add_custom_command(
+        OUTPUT ${RUN_OUTPUT}
         COMMAND ${RUN_AFTER_BUILD}
-        COMMENT "Running '${RUN_AFTER_BUILD}'"
         DEPENDS ${RUN_AFTER_BUILD_DEPENDS}
-        USES_TERMINAL
     )
-    add_dependencies(run samarium samarium_tests)
+
+    # Create target which consume the command via DEPENDS.
+    add_custom_target(run ALL DEPENDS ${RUN_OUTPUT})
 endif()
