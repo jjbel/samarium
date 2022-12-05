@@ -1,5 +1,5 @@
 {
-    "version": 6,
+    "version": 3,
     "cmakeMinimumRequired": {
         "major": 3,
         "minor": 20,
@@ -61,14 +61,14 @@
             "description": "Use gcc, Ninja, and skip extra tests",
             "inherits": "clang",
             "cacheVariables": {
-                "SAMARIUM_HEADER_ONLY": true,
+                "SAMARIUM_HEADER_ONLY": false,
                 "USE_UBSAN": false,
                 "USE_LINKER": "mold",
                 "BUILD_UNIT_TESTS": false,
                 "BUILD_EXAMPLES": false,
                 "BUILD_DOCS": false,
                 "BUILD_BENCHMARKS": false,
-                "RUN_AFTER_BUILD": "test/samarium_tests",
+                "RUN_AFTER_BUILD": "",
                 "RUN_AFTER_BUILD_DEPENDS": "samarium_tests"
             },
             "environment": {
@@ -125,25 +125,6 @@
             "name": "dev",
             "configurePreset": "dev",
             "configuration": "Release"
-        }
-    ],
-    "workflowPresets": [
-        {
-            "name": "run",
-            "steps": [
-                {
-                    "type": "configure",
-                    "name": "dev"
-                },
-                {
-                    "type": "build",
-                    "name": "dev"
-                },
-                {
-                    "type": "test",
-                    "name": "dev"
-                }
-            ]
         }
     ]
 }
