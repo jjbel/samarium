@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "samarium/anim.hpp"
 #include "samarium/core.hpp"
 #include "samarium/geometry.hpp"
 #include "samarium/gl.hpp"
