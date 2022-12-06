@@ -16,9 +16,9 @@
 #include "GLFW/glfw3.h"                // for glfwWindowHint, glfwGetMous...
 #include "glm/ext/matrix_float4x4.hpp" // for mat4
 
-#include "samarium/core/types.hpp" // for f64, i32, u64, f32
-#include "samarium/gl/Context.hpp" // for Context
-#include "samarium/gl/Texture.hpp"
+#include "samarium/core/types.hpp"       // for f64, i32, u64, f32
+#include "samarium/gl/Context.hpp"       // for Context
+#include "samarium/gl/Texture.hpp"       // for Texture
 #include "samarium/gl/gl.hpp"            // for enable_debug_output, versio...
 #include "samarium/math/BoundingBox.hpp" // for BoundingBox
 #include "samarium/math/Transform.hpp"   // for Transform
@@ -35,6 +35,13 @@ enum class Space
 {
     World,
     Screen
+};
+
+struct WindowConfig
+{
+    Dimensions dims   = dims720;
+    std::string title = "Samarium Window";
+    bool resizable    = true;
 };
 
 /**
@@ -56,7 +63,7 @@ struct Window
      */
     struct Init
     {
-        Init(Dimensions dims, const std::string& title, Handle& handle)
+        Init(const WindowConfig& config, Handle& handle)
         {
             if (glfwInit() == 0) { throw Error{"failed to initialize glfw"}; }
 
@@ -65,8 +72,9 @@ struct Window
             glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
             // glfwWindowHint(GLFW_SAMPLES, 4);
 
-            handle = Handle(glfwCreateWindow(static_cast<i32>(dims.x), static_cast<i32>(dims.y),
-                                             title.c_str(), nullptr, nullptr));
+            handle = Handle(glfwCreateWindow(static_cast<i32>(config.dims.x),
+                                             static_cast<i32>(config.dims.y), config.title.c_str(),
+                                             nullptr, nullptr));
 
             if (!handle) { throw Error{"failed to create window"}; }
 
@@ -78,26 +86,17 @@ struct Window
                 throw Error{"failed to initialize GLAD"};
             }
 
-            glViewport(0, 0, static_cast<i32>(dims.x), static_cast<i32>(dims.y));
+            glViewport(0, 0, static_cast<i32>(config.dims.x), static_cast<i32>(config.dims.y));
         }
 
-        Init(const Init&)            = delete;
-        Init& operator=(const Init&) = delete;
+        Init(const Init&)                    = delete;
+        auto operator=(const Init&) -> Init& = delete;
 
-        Init(Init&&) noexcept            = default;
-        Init& operator=(Init&&) noexcept = default;
+        Init(Init&&) noexcept                    = default;
+        auto operator=(Init&&) noexcept -> Init& = default;
 
         ~Init() { glfwTerminate(); }
     };
-
-    Handle handle{};
-    Dimensions dims{};
-    Transform view{.scale = Vector2::combine(1.0 / 20.0)};
-    Mouse mouse{};
-    keyboard::Keymap keymap{};
-
-    [[no_unique_address]] Init init;
-    gl::Context context;
 
     static inline bool resized;
 
@@ -108,13 +107,22 @@ struct Window
         Window::resized = true;
     }
 
-    explicit Window(Dimensions dims_, const std::string& title = "Samarium Window");
+    Handle handle{};
+    Dimensions dims{};
+    Transform view{.scale = Vector2::combine(1.0 / 20.0)};
+    Mouse mouse{};
+    keyboard::Keymap keymap{};
 
-    Window(const Window&)            = delete;
-    Window& operator=(const Window&) = delete;
+    [[no_unique_address]] Init init;
+    gl::Context context;
 
-    Window(Window&&) noexcept            = default;
-    Window& operator=(Window&&) noexcept = default;
+    explicit Window(const WindowConfig& config = {});
+
+    Window(const Window&)                    = delete;
+    auto operator=(const Window&) -> Window& = delete;
+
+    Window(Window&&) noexcept                    = default;
+    auto operator=(Window&&) noexcept -> Window& = default;
 
     ~Window() = default;
 
@@ -164,7 +172,7 @@ struct Window
         {
             auto transform = view;
             transform.scale *= 2.0;
-            // TODO whothout dividing by 2 stuff is off
+            // TODO without dividing by 2 stuff is off
             return transform.apply_inverse(box);
         }
     }
@@ -183,14 +191,14 @@ struct Window
 
 #include "glm/gtc/matrix_transform.hpp" // for ortho
 
-#include "samarium/core/inline.hpp"
+#include "samarium/core/inline.hpp" // for SM_INLINE
 
 #include "Window.hpp"
 
 namespace sm
 {
-SM_INLINE Window::Window(Dimensions dims_, const std::string& title)
-    : dims{dims_}, init{dims_, title, handle}, context{dims_}
+SM_INLINE Window::Window(const WindowConfig& config)
+    : dims{config.dims}, init{config, handle}, context{config.dims}
 {
     gl::enable_debug_output();
 
@@ -217,7 +225,8 @@ SM_INLINE void Window::get_inputs()
     auto xpos = 0.0;
     auto ypos = 0.0;
     glfwGetCursorPos(handle.get(), &xpos, &ypos);
-    mouse.pos = {xpos, ypos};
+    mouse.pos = view.apply_inverse(
+        Vector2{xpos, ypos} / dims.cast<f64>() * Vector2{2.0, -2.0} + Vector2{-1.0, 1.0});
 
     keymap.run();
 }
