@@ -219,9 +219,11 @@ struct Keymap
 #include "range/v3/algorithm/all_of.hpp"
 #include "range/v3/view/enumerate.hpp" // for enumerate
 
+#include "samarium/core/inline.hpp" // for SM_INLINE
+
 namespace sm::keyboard
 {
-void OnKeyPress::operator()() const
+SM_INLINE void OnKeyPress::operator()() const
 {
     if (ranges::all_of(key_set, [&](Key key)
                        { return glfwGetKey(&window, static_cast<i32>(key)) == GLFW_PRESS; }))
@@ -230,7 +232,7 @@ void OnKeyPress::operator()() const
     }
 }
 
-void OnKeyDown::operator()()
+SM_INLINE void OnKeyDown::operator()()
 {
     const auto current = ranges::all_of(
         key_set, [&](Key key) { return glfwGetKey(&window, static_cast<i32>(key)) == GLFW_PRESS; });
@@ -238,7 +240,7 @@ void OnKeyDown::operator()()
     previous = current;
 }
 
-void OnKeyUp::operator()()
+SM_INLINE void OnKeyUp::operator()()
 {
     const auto current = ranges::all_of(
         key_set, [&](Key key) { return glfwGetKey(&window, static_cast<i32>(key)) == GLFW_PRESS; });
@@ -246,9 +248,9 @@ void OnKeyUp::operator()()
     previous = current;
 }
 
-void Keymap::clear() { this->actions.clear(); }
+SM_INLINE void Keymap::clear() { this->actions.clear(); }
 
-void Keymap::run() const
+SM_INLINE void Keymap::run() const
 {
     for (const auto& action : actions) { action(); }
 }
