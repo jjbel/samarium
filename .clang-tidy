@@ -15,6 +15,7 @@ Checks: "*,\
   -readability-identifier-naming,\
   -cppcoreguidelines-avoid-magic-numbers,\
   -misc-definitions-in-headers,\
+  -readability-magic-numbers,\
   -misc-non-private-member-variables-in-classes"
 WarningsAsErrors: ""
 CheckOptions:
