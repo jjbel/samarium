@@ -30,3 +30,6 @@ settings.json
 
 # clion
 .idea
+
+# nohup
+nohup.out
