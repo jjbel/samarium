@@ -13,12 +13,12 @@
 #include "glad/glad.h"
 
 #include "ft2build.h"
-#include "samarium/gl/Vertex.hpp"
 #include FT_FREETYPE_H
 
 #include "samarium/core/types.hpp"     // for i32
 #include "samarium/gl/Context.hpp"     // for Context
 #include "samarium/gl/Texture.hpp"     // for Texture
+#include "samarium/gl/Vertex.hpp"      // for Vertex
 #include "samarium/gui/Window.hpp"     // for Window
 #include "samarium/math/Vector2.hpp"   // for Vector2_t
 #include "samarium/util/Result.hpp"    // for Result
@@ -29,10 +29,10 @@ namespace sm::draw
 /// Holds all state information relevant to a character as loaded using FreeType
 struct Character
 {
-    gl::Texture texture;          // glyph texture
-    const Vector2_t<u32> size;    // Size of glyph
-    const Vector2_t<i32> bearing; // Offset from baseline to left/top of glyph
-    const u32 advance;            // Horizontal offset to advance to next glyph
+    gl::Texture texture;    // glyph texture
+    Vector2_t<u32> size;    // Size of glyph
+    Vector2_t<i32> bearing; // Offset from baseline to left/top of glyph
+    u32 advance;            // Horizontal offset to advance to next glyph
 };
 
 struct Text
@@ -52,7 +52,7 @@ struct Text
             return tl::make_unexpected(fmt::format("{} is not a file", font_path));
         }
 
-        auto ft = FT_Library{};
+        auto* ft = FT_Library{};
 
         // All functions return a value different than 0 whenever an error occurred
         if (FT_Init_FreeType(&ft) != 0)
@@ -80,7 +80,7 @@ struct Text
         for (/* unsigned */ char c = ' '; c <= '~'; c++)
         {
             // Load character glyph
-            if (FT_Load_Char(face, c, FT_LOAD_RENDER) != 0)
+            if (FT_Load_Char(face, static_cast<u64>(c), FT_LOAD_RENDER) != 0)
             {
                 return tl::make_unexpected(
                     fmt::format("Could not create glyph for {} for font: {}", c, font_path));
@@ -151,15 +151,15 @@ SM_INLINE void Text::operator()(gl::Context& context,
         auto& ch = characters.at(c);
         if (ch.size.x * ch.size.y == 0)
         {
-            pos.x += (ch.advance >> 6) * scale;
+            pos.x += static_cast<f32>(ch.advance >> 6) * scale;
             continue;
         }
 
-        const f32 xpos = pos.x + static_cast<f32>(ch.bearing.x) * scale;
-        const f32 ypos = pos.y - (ch.size.y - ch.bearing.y) * scale;
+        const auto xpos = pos.x + static_cast<f32>(ch.bearing.x) * scale;
+        const auto ypos = pos.y - static_cast<f32>(ch.size.y - ch.bearing.y) * scale;
 
-        const f32 w = ch.size.x * scale;
-        const f32 h = ch.size.y * scale;
+        const auto w = static_cast<f32>(ch.size.x) * scale;
+        const auto h = static_cast<f32>(ch.size.y) * scale;
         // update VBO for each character
         const f32 vertices[6][4] = {{xpos, ypos + h, 0.0F, 0.0F},    {xpos, ypos, 0.0F, 1.0F},
                                     {xpos + w, ypos, 1.0F, 1.0F},
