@@ -30,8 +30,6 @@ auto run(Window& window,
     auto watch = Stopwatch{};
     while (window.is_open())
     {
-        window.get_inputs();
-
         for (auto i : range(substeps))
         {
             update();
