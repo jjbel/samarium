@@ -1,5 +1,5 @@
 {
     "commands": {
-        "all": ["scripts/run.sh"]
+        "all": ["scripts/pretty_build.py"]
     }
 }
