@@ -22,7 +22,3 @@ struct Mouse
     bool right{};
 };
 } // namespace sm
-
-#if defined(SAMARIUM_HEADER_ONLY) || defined(SAMARIUM_MOUSE_IMPL)
-
-#endif
