@@ -60,7 +60,7 @@ namespace sm::interp
 {
     factor = std::pow(2.0, factor); // make the factor behave intuitively
     if (value < 0.5) { return 0.5 * std::pow(2.0 * value, factor); }
-    else { return 1.0 - 0.5 * std::pow(2.0 * (1.0 - value), factor); }
+    return 1.0 - 0.5 * std::pow(2.0 * (1.0 - value), factor);
 }
 
 /**
