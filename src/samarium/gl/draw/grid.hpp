@@ -42,7 +42,6 @@ void grid_dots(Window& window, const GridDots& config = {});
 
 namespace sm::draw
 {
-
 SM_INLINE void grid_lines(Window& window, const GridLines& config)
 {
     auto [x_max, y_max] = window.view.apply_inverse(Vector2{1.0, 1.0});
@@ -53,13 +52,13 @@ SM_INLINE void grid_lines(Window& window, const GridLines& config)
     y_max               = math::ceil_to_nearest(y_max, config.spacing);
 
     for (auto i : ranges::views::linear_distribute(
-             x_min, x_max, static_cast<i64>((x_max - x_min) / config.spacing)))
+             x_min, x_max, static_cast<i64>((x_max - x_min) / config.spacing) + 1))
     {
         draw::line(window, {{i, 0.0}, {i, 1.0}}, config.color, config.thickness);
     }
 
     for (auto i : ranges::views::linear_distribute(
-             y_min, y_max, static_cast<i64>((y_max - y_min) / config.spacing)))
+             y_min, y_max, static_cast<i64>((y_max - y_min) / config.spacing) + 1))
     {
         draw::line(window, {{0.0, i}, {1.0, i}}, config.color, config.thickness);
     }
@@ -75,10 +74,10 @@ SM_INLINE void grid_dots(Window& window, const GridDots& config)
     y_max               = math::ceil_to_nearest(y_max, config.spacing);
 
     for (auto i : ranges::views::linear_distribute(
-             x_min, x_max, static_cast<i64>((x_max - x_min) / config.spacing)))
+             x_min, x_max, static_cast<i64>((x_max - x_min) / config.spacing) + 1))
     {
         for (auto j : ranges::views::linear_distribute(
-                 y_min, y_max, static_cast<i64>((y_max - y_min) / config.spacing)))
+                 y_min, y_max, static_cast<i64>((y_max - y_min) / config.spacing) + 1))
         {
             draw::regular_polygon(window, {{i, j}, config.thickness}, config.point_count,
                                   {.fill_color = config.color});
