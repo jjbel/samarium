@@ -5,21 +5,22 @@ from os import mkdir
 from sys import argv
 from pathlib import Path
 
+CONFIGURE_COMMAND = 'cmake --preset=dev'
+BUILD_COMMAND = 'cmake --build --preset=dev'
 ROOT = Path(__file__).parent.parent
 PRESET = argv[1] if len(argv) == 2 else 'dev'
 FILTER_LIST = ['FAILED', 'isystem',
                'Building CXX object', 'ninja: build stopped', ' warnings and ']
 
-if not (ROOT/'build').exists():
-    mkdir(ROOT/'build')
+if not (ROOT / 'build').exists():
+    mkdir(ROOT / 'build')
     print('Running CMake...')
-    run('cmake --preset=dev', shell=True)
+    run(CONFIGURE_COMMAND, shell=True)
 
 print('Building...')
-result = run('cmake --build --preset=dev',
+result = run(BUILD_COMMAND,
              shell=True, capture_output=True)
 output = result.stdout.decode().replace(str(ROOT.absolute()), '').splitlines()
-
 
 def is_valid(line: str):
     return not any(string in line for string in FILTER_LIST)
