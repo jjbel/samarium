@@ -191,9 +191,8 @@ struct Window
 
 #include "glm/gtc/matrix_transform.hpp" // for ortho
 
-#include "samarium/core/inline.hpp" // for SM_INLINE
-
 #include "Window.hpp"
+#include "samarium/core/inline.hpp" // for SM_INLINE
 
 namespace sm
 {
@@ -225,8 +224,8 @@ SM_INLINE void Window::get_inputs()
     auto xpos = 0.0;
     auto ypos = 0.0;
     glfwGetCursorPos(handle.get(), &xpos, &ypos);
-    mouse.pos = view.apply_inverse(
-        Vector2{xpos, ypos} / dims.cast<f64>() * Vector2{2.0, -2.0} + Vector2{-1.0, 1.0});
+    mouse.pos = view.apply_inverse(Vector2{xpos, ypos} / dims.cast<f64>() * Vector2{2.0, -2.0} +
+                                   Vector2{-1.0, 1.0});
 
     keymap.run();
 }
