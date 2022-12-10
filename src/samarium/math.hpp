@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "samarium/math/Dual.hpp"
 #include "samarium/math/Polynomial.hpp"
+#include "samarium/math/Range.hpp"
 #include "samarium/math/SecondOrderDynamics.hpp"
 #include "samarium/math/Transform.hpp"
 #include "samarium/math/Vector2.hpp"
