@@ -8,5 +8,6 @@
 #pragma once
 
 #include "samarium/gui/Mouse.hpp"
+#include "samarium/gui/MovablePoint.hpp"
 #include "samarium/gui/Window.hpp"
 #include "samarium/gui/keyboard.hpp"
