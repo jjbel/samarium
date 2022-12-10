@@ -17,10 +17,12 @@ if not (ROOT / 'build').exists():
     print('Running CMake...')
     run(CONFIGURE_COMMAND, shell=True)
 
+root_str = str(ROOT.absolute())
+
 print('Building...')
 result = run(BUILD_COMMAND,
              shell=True, capture_output=True)
-output = result.stdout.decode().replace(str(ROOT.absolute()), '').splitlines()
+output = result.stdout.decode().replace(root_str, 'file://' + root_str).splitlines()
 
 def is_valid(line: str):
     return not any(string in line for string in FILTER_LIST)
