@@ -118,6 +118,7 @@ struct RandomGenerator
 #include "range/v3/algorithm/generate.hpp" // for generate, generate_fn
 
 #include "samarium/math/BoundingBox.hpp" // for BoundingBox
+#include "samarium/math/range.hpp"       // for start_end
 #include "samarium/math/vector_math.hpp" // for within_distance
 #include "samarium/util/Grid.hpp"        // for Grid
 
@@ -148,9 +149,9 @@ namespace detail
     const auto search_end_y =
         static_cast<u64>(math::min<i64>(cell_y + 2L, static_cast<i64>(grid.dims.y)));
 
-    for (auto x : range(search_start_x, search_end_x))
+    for (auto x : range::start_end(search_start_x, search_end_x))
     {
-        for (auto y : range(search_start_y, search_end_y))
+        for (auto y : range::start_end(search_start_y, search_end_y))
         {
             const auto point_index = grid[Indices{x, y}] - 1;
             if (point_index != -1 &&
@@ -225,7 +226,7 @@ void RandomGenerator::reseed(u64 new_seed)
         auto spawn_centre       = spawn_points[spawn_index];
         auto candidate_accepted = false;
 
-        for (auto i : sm::range(sample_count))
+        for (auto i : range::end(sample_count))
         {
             std::ignore          = i;
             const auto candidate = spawn_centre + this->polar_vector({radius, 2 * radius});

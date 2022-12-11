@@ -30,7 +30,7 @@ auto run(Window& window,
     auto watch = Stopwatch{};
     while (window.is_open())
     {
-        for (auto i : range(substeps))
+        for (auto i : range::end(substeps))
         {
             update();
             watch.reset();

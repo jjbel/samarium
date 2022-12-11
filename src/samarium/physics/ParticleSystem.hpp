@@ -75,7 +75,7 @@ template <typename Particle_t = Particle<f64>, u64 CellCapacity = 32> struct Par
     {
         const auto job = [&](auto min, auto max)
         {
-            for (auto i : range(min, max)) { particles[i].update(time_delta); }
+            for (auto i : range::end(min, max)) { particles[i].update(time_delta); }
         };
 
         thread_pool.parallelize_loop(0UL, particles.size(), job, thread_pool.get_thread_count())
@@ -89,7 +89,7 @@ template <typename Particle_t = Particle<f64>, u64 CellCapacity = 32> struct Par
 
     void apply_forces(std::span<Vector2> forces) noexcept
     {
-        for (auto i : range(particles.size())) { particles[i].apply_force(forces[i]); }
+        for (auto i : range::end(particles.size())) { particles[i].apply_force(forces[i]); }
     }
 
     void for_each(const auto& callable) { ranges::for_each(particles, callable); }
@@ -106,13 +106,13 @@ template <typename Particle_t = Particle<f64>, u64 CellCapacity = 32> struct Par
     {
         hash_grid.map.clear();
         hash_grid.map.reserve(particles.size());
-        for (auto i : range(particles.size())) { hash_grid.insert(particles[i].pos, i); }
+        for (auto i : range::end(particles.size())) { hash_grid.insert(particles[i].pos, i); }
 
         auto count1 = u32{};
         auto count2 = u32{};
-        for (auto i : range(particles.size()))
+        for (auto i : range::end(particles.size()))
         {
-            // Slow: for (auto j : range(particles.size()))
+            // Slow: for (auto j : range::end(particles.size()))
             // TODO bottleneck is still here, not in the actual collision
             for (auto j : hash_grid.neighbors(particles[i].pos))
             {

@@ -21,7 +21,7 @@
 
 #include "samarium/graphics/Color.hpp"   // for Color
 #include "samarium/math/BoundingBox.hpp" // for BoundingBox
-#include "samarium/math/Extents.hpp"     // for Extents
+#include "samarium/math/range.hpp"       // for end
 
 namespace sm
 {
@@ -69,9 +69,9 @@ template <typename T> class Grid
     template <typename Fn> static auto generate(Dimensions dims, Fn&& fn)
     {
         auto grid = Grid<T>(dims);
-        for (auto y : range(dims.y))
+        for (auto y : range::end(dims.y))
         {
-            for (auto x : range(dims.x))
+            for (auto x : range::end(dims.x))
             {
                 const auto pos = Indices{x, y};
                 grid[pos]      = fn(pos);
@@ -191,9 +191,9 @@ template <typename T> class Grid
     [[nodiscard]] auto upscale(u64 upscale_factor) const
     {
         auto output = Grid<T>(this->dims * upscale_factor);
-        for (auto y : range(output.dims.y))
+        for (auto y : range::end(output.dims.y))
         {
-            for (auto x : range(output.dims.x))
+            for (auto x : range::end(output.dims.x))
             {
                 output[{x, y}] = this->operator[](Indices{x, y} / upscale_factor);
             }

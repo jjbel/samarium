@@ -36,7 +36,7 @@ struct VertexShader
 
     [[nodiscard]] static auto from_file(const std::filesystem::path& path)
     {
-        return *make(*file::read(path));
+        return expect(make(*file::read(path)));
     }
 
     [[nodiscard]] static auto make(const std::string& source) -> Result<VertexShader>
@@ -193,14 +193,9 @@ struct ComputeShader
 {
     u32 handle;
 
-    explicit ComputeShader(const std::string& source);
-
-    ComputeShader(const ComputeShader&) = delete;
-
+    ComputeShader(const ComputeShader&)                    = delete;
     auto operator=(const ComputeShader&) -> ComputeShader& = delete;
-
     ComputeShader(ComputeShader&& other) noexcept : handle{other.handle} { other.handle = 0; }
-
     auto operator=(ComputeShader&& other) noexcept -> ComputeShader&
     {
         if (this != &other)
@@ -232,12 +227,12 @@ struct ComputeShader
         }
 
         auto log_size = 0;
-        char info_log[1024];
-        glGetShaderInfoLog(program_handle, 1024, &log_size, info_log);
+        auto log_str  = std::string(1024, ' ');
+        glGetShaderInfoLog(program_handle, 1024, &log_size, log_str.data());
 
         return tl::make_unexpected(
-            fmt::format("Compute shader compilation error:\n{}",
-                        std::string_view{info_log, static_cast<u64>(log_size)}));
+            fmt::format("ComputeShader compilation error:\n{}",
+                        std::string_view{log_str.data(), static_cast<u64>(log_size)}));
     }
 
     void bind(u32 x, u32 y, u32 z = 1U) const;

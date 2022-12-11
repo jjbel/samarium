@@ -172,7 +172,7 @@ SM_INLINE auto read_image(const Path& file_path) -> Result<Image>
     if (channel_count == 4) { std::memcpy(&image.front(), data, image.size() * 4); }
     else if (channel_count == 3)
     {
-        for (auto i : range(image.size()))
+        for (auto i : range::end(image.size()))
         {
             image[i].r = data[i * 3];
             image[i].g = data[i * 3 + 1];
@@ -181,7 +181,7 @@ SM_INLINE auto read_image(const Path& file_path) -> Result<Image>
     }
     else if (channel_count == 2)
     {
-        for (auto i : range(image.size()))
+        for (auto i : range::end(image.size()))
         {
             const auto value = data[i * 2];
             image[i].r       = value;
@@ -192,7 +192,7 @@ SM_INLINE auto read_image(const Path& file_path) -> Result<Image>
     }
     else if (channel_count == 1)
     {
-        for (auto i : range(image.size()))
+        for (auto i : range::end(image.size()))
         {
             const auto value = data[i];
             image[i].r       = value;

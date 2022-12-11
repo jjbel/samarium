@@ -72,7 +72,7 @@ auto main() -> i32
 
         const auto draw_bonds = [&]
         {
-            for (auto i : range(ps.particles.size()))
+            for (auto i : range::end(ps.particles.size()))
             {
                 for (auto j : ps.hash_grid.neighbors(ps.particles[i].pos))
                 {

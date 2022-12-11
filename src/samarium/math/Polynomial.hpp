@@ -9,8 +9,8 @@
 #include <span>
 
 #include "samarium/core/types.hpp"   // for usize, f64
-#include "samarium/math/Extents.hpp" // for range
 #include "samarium/math/Vector2.hpp" // for Vector2_t
+#include "samarium/math/range.hpp"   // for start_end
 
 namespace sm
 {
@@ -26,7 +26,7 @@ template <usize degree, typename T = f64> struct Polynomial
         auto sum           = coeffs[0];
         auto current_value = value;
 
-        for (auto i : range(1, degree + 1))
+        for (auto i : range::start_end(u64{1}, degree + 1))
         {
             sum += coeffs[i] * current_value;
             current_value *= value;

@@ -49,13 +49,15 @@ template <typename T> struct Extents
         else { return value; }
     }
 
-    [[nodiscard]] constexpr auto lerp(f64 factor) const noexcept requires concepts::Number<T>
+    [[nodiscard]] constexpr auto lerp(f64 factor) const noexcept
+        requires concepts::Number<T>
     {
         return static_cast<f64>(min) * (1.0 - factor) +
                static_cast<f64>(max) * factor; // prevent conversion warnings
     }
 
-    [[nodiscard]] constexpr auto lerp(f64 factor) const noexcept requires(!concepts::Number<T>)
+    [[nodiscard]] constexpr auto lerp(f64 factor) const noexcept
+        requires(!concepts::Number<T>)
     {
         return min * (1.0 - factor) + max * factor;
     }
@@ -71,58 +73,10 @@ template <typename T> struct Extents
     }
 
     template <typename Function>
-    constexpr auto for_each(Function&& fn) const requires concepts::Integral<T>
+    constexpr auto for_each(Function&& fn) const
+        requires concepts::Integral<T>
     {
         for (auto i = min; i < max; i++) { fn(i); }
-    }
-
-    struct Iterator
-    {
-        using iterator_category = std::contiguous_iterator_tag;
-        using difference_type   = T;
-        using value_type        = T;
-        using pointer           = T*; // or also value_type*
-        using reference         = T;  // or also value_type&
-
-        T index;
-
-        constexpr auto operator<=>(const Iterator&) const noexcept = default;
-
-        constexpr auto operator*() const noexcept -> reference { return index; }
-
-        constexpr auto operator->() noexcept -> pointer { return &index; }
-
-        // Prefix increment
-        constexpr auto operator++() noexcept -> Iterator&
-        {
-            index++;
-            return *this;
-        }
-
-        // Postfix increment
-        constexpr auto operator++(int) noexcept -> Iterator
-        {
-            Iterator tmp = *this;
-            ++(*this);
-            return tmp;
-        }
-    };
-
-    [[nodiscard]] constexpr auto begin() const noexcept requires concepts::Integral<T>
-    {
-        return Iterator{min};
-    }
-
-    [[nodiscard]] constexpr auto end() const noexcept requires concepts::Integral<T>
-    {
-        return Iterator{max};
-        // return Iterator{max + static_cast<T>(1)};
-    }
-
-    [[nodiscard]] constexpr auto
-    operator[](usize index) const noexcept requires concepts::Integral<T>
-    {
-        return min + index;
     }
 
     template <typename U> [[nodiscard]] constexpr auto as() const noexcept
@@ -130,12 +84,4 @@ template <typename T> struct Extents
         return Extents<U>{static_cast<U>(min), static_cast<U>(max)};
     }
 };
-
-[[maybe_unused]] constexpr auto range(usize max) { return Extents<usize>{0UL, max}; }
-
-[[maybe_unused]] constexpr auto range(usize min, usize max) { return Extents<usize>{min, max}; }
-
-[[maybe_unused]] constexpr auto irange(i32 max) { return Extents<i32>{0, max}; }
-
-[[maybe_unused]] constexpr auto irange(i32 min, i32 max) { return Extents<i32>{min, max}; }
 } // namespace sm

@@ -163,7 +163,8 @@ template <> struct Vertex<Layout::PosColorTex>
 
 #include "glad/glad.h" // for glCreateVertexArrays, glBindVer...
 
-#include "samarium/core/inline.hpp"
+#include "samarium/core/inline.hpp" // for SM_INLINE
+#include "samarium/math/range.hpp"  // for end
 
 #include "Vertex.hpp"
 namespace sm::gl
@@ -173,7 +174,10 @@ SM_INLINE VertexArray::VertexArray() { glCreateVertexArrays(1, &handle); }
 SM_INLINE VertexArray::VertexArray(const std::vector<VertexAttribute>& attributes)
 {
     glCreateVertexArrays(1, &handle);
-    for (auto i : range(attributes.size())) { make_attribute(static_cast<u32>(i), attributes[i]); }
+    for (auto i : range::end(attributes.size()))
+    {
+        make_attribute(static_cast<u32>(i), attributes[i]);
+    }
 }
 
 SM_INLINE void VertexArray::bind() const

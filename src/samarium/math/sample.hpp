@@ -32,7 +32,7 @@ auto sample(FunctionRef<Output(Input)> function, Input from, Input to, u64 steps
     auto vec             = std::vector<Output>(steps);
     const auto step_size = (to - from) / static_cast<Input>(steps);
 
-    for (auto i : range(steps)) { vec[i] = function(static_cast<Input>(i) * step_size); }
+    for (auto i : range::end(steps)) { vec[i] = function(static_cast<Input>(i) * step_size); }
 
     return vec;
 }
