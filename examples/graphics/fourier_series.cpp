@@ -50,7 +50,7 @@ auto raise_to_power(complex x) { return std::pow(math::e, math::two_pi_i * x); }
 auto main() -> i32
 {
     auto indices = std::array<i32, count>(); // indices of terms of Foruier series
-    for (auto i : range::end(count))
+    for (auto i : loop::end(count))
     {
         if (i % 2 == 0) { indices[i] = i32(i) / 2; }
         else { indices[i] = -(i32(i) + 1) / 2; }
@@ -107,7 +107,7 @@ auto main() -> i32
 
 
         // Draw trail:
-        for (auto i : range::end(trail.size() - 1UL))
+        for (auto i : loop::end(trail.size() - 1UL))
         {
             app.draw_line_segment(
                 {trail[i], trail[i + 1UL]},

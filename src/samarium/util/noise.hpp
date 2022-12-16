@@ -11,7 +11,7 @@
 
 #include "samarium/core/types.hpp"
 #include "samarium/math/Vector2.hpp"
-#include "samarium/math/range.hpp" // for end
+#include "samarium/math/loop.hpp" // for end
 
 namespace sm::noise
 {
@@ -110,7 +110,7 @@ auto perlin_1d(f64 pos, Params params) -> f64
     auto result    = 0.0;
     auto div       = 0.0;
 
-    for (auto i : range::end(params.detail))
+    for (auto i : loop::end(params.detail))
     {
         div += 256 * amplitude;
         result += single_iter_noise1d(pos) * amplitude;
@@ -127,7 +127,7 @@ auto perlin_2d(Vector2 pos, Params params) -> f64
     auto result    = 0.0;
     auto div       = 0.0;
 
-    for (auto i : range::end(params.detail))
+    for (auto i : loop::end(params.detail))
     {
         div += 256.0 * amplitude;
         result += single_iter_noise2d(pos) * amplitude;

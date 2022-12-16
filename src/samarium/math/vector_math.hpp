@@ -16,7 +16,7 @@
 #include "BoundingBox.hpp"
 #include "Vector2.hpp" // for Vector2_t
 #include "interp.hpp"
-#include "range.hpp" // for start_end
+#include "loop.hpp" // for start_end
 #include "shapes.hpp"
 
 namespace sm::math
@@ -154,7 +154,7 @@ template <u32 point_count, concepts::FloatingPoint Float = f64>
     auto points           = std::array<Vector2_t<Float>, point_count>{};
     points[0].x           = 1; // first vertex is always (1, 0)
     const auto base_angle = static_cast<Float>(math::two_pi) / static_cast<Float>(point_count);
-    for (auto i : range::start_end(u32{1}, point_count))
+    for (auto i : loop::start_end(u32{1}, point_count))
     {
         const auto angle = static_cast<Float>(i) * base_angle;
         points[i]        = Vector2_t<Float>::from_polar({1.0, angle});
@@ -177,7 +177,7 @@ template <concepts::FloatingPoint Float = f64>
     auto points           = SmallVector<Vector2_t<Float>, 64>(point_count);
     points[0].x           = 1; // first vertex is always (1, 0)
     const auto base_angle = static_cast<Float>(math::two_pi) / static_cast<Float>(point_count);
-    for (auto i : range::start_end(u32{1}, point_count))
+    for (auto i : loop::start_end(u32{1}, point_count))
     {
         const auto angle = static_cast<Float>(i) * base_angle;
         points[i]        = Vector2_t<Float>::from_polar({1.0, angle});

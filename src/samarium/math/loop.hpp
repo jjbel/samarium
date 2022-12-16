@@ -12,7 +12,7 @@
 
 #include "samarium/core/concepts.hpp" // for Integral
 
-namespace sm::range
+namespace sm::loop
 {
 enum class Interval
 {
@@ -143,4 +143,4 @@ template <concepts::Integral T, Interval interval = Interval::Open>
 {
     return Integral<T, interval>{start, end};
 }
-} // namespace sm::range
+} // namespace sm::loop

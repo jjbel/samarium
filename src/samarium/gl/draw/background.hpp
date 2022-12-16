@@ -47,7 +47,7 @@ template <u64 size> void background(Window& window, const Gradient<size>& gradie
 
     auto verts = std::array<gl::Vertex<gl::Layout::PosColor>, size * 2>();
 
-    for (auto i : range::end(size))
+    for (auto i : loop::end(size))
     {
         const auto factor =
             interp::lerp_inverse<f32>(static_cast<f64>(i), {0.0F, static_cast<f32>(size - 1)});

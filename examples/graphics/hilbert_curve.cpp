@@ -30,7 +30,7 @@ auto point_at(i32 index, i32 level)
     i32 thingy = index & 3;
     auto v     = points[u64(thingy)];
 
-    for (auto j : range::end(1UL, u64(level)))
+    for (auto j : loop::end(1UL, u64(level)))
     {
         index >>= 2;
         thingy = index & 3;
@@ -57,7 +57,7 @@ auto point_count(u64 level) { return u64(std::pow(2.0, 2.0 * static_cast<f64>(le
 auto points_f64(u64 level)
 {
     auto vec = Path(point_count(level));
-    for (auto i : range::end(vec.size()))
+    for (auto i : loop::end(vec.size()))
     {
         const auto point = point_at(i32(i), i32(level)).cast<f64>();
         vec[i]           = (point + Vector2::combine(0.5)) /
@@ -74,14 +74,14 @@ auto rescale(const Path& input, u64 factor)
     output.reserve(input.size() * factor);
     const auto extra_size = input.size() * (factor - 1UL);
 
-    for (auto i : range::end(input.size() - 1UL))
+    for (auto i : loop::end(input.size() - 1UL))
     {
         auto count = extra_size / (input.size() - 1);
         if (i < extra_size % (input.size() - 1)) { count++; }
 
         output.push_back(input[i]);
 
-        for (auto j : range::end(1, count + 1UL))
+        for (auto j : loop::end(1, count + 1UL))
         {
             const auto segment = input[i + 1] - input[i];
             const auto adder   = segment / static_cast<f64>(count + 1);
@@ -95,7 +95,7 @@ auto rescale(const Path& input, u64 factor)
 auto levels_till(u64 level)
 {
     auto levels = std::vector<Path>(level);
-    for (auto i : range::end(level)) { levels[i] = points_f64(i + 1); }
+    for (auto i : loop::end(level)) { levels[i] = points_f64(i + 1); }
     return levels;
 }
 
@@ -104,7 +104,7 @@ auto rescaled_levels_till(u64 level)
     auto levels         = std::vector<Path>(level);
     const auto max_size = point_count(level);
 
-    for (auto i : range::end(level))
+    for (auto i : loop::end(level))
     {
         const auto points = points_f64(i + 1);
         levels[i]         = rescale(points, max_size / points.size());
@@ -132,7 +132,7 @@ auto main() -> i32
         const auto lerp_factor =
             static_cast<f64>(app.frame_counter % duration) / static_cast<f64>(duration);
 
-        for (auto i : range::end(path.size()))
+        for (auto i : loop::end(path.size()))
         {
             path[i] = interp::lerp(
                 interp::ease(lerp_factor, 3),
@@ -141,7 +141,7 @@ auto main() -> i32
 
         const auto mapper = [&](Vector2 vec) { return vec * static_cast<f64>(window_width); };
 
-        for (auto i : range::end(path.size() - 1))
+        for (auto i : loop::end(path.size() - 1))
         {
             app.draw_line_segment({mapper(path[i]), mapper(path[i + 1])}, colors::aliceblue, 1);
         }

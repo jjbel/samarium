@@ -66,9 +66,9 @@ auto main() -> i32
         std::vector<Spring> temp;
         temp.reserve(params.particle_count_xy.x * params.particle_count_xy.y * 4UL);
 
-        for (auto i : range::end(params.particle_count_xy.y))
+        for (auto i : loop::end(params.particle_count_xy.y))
         {
-            for (auto j : range::end(params.particle_count_xy.x))
+            for (auto j : loop::end(params.particle_count_xy.x))
             {
                 if (j != 0) { temp.emplace_back(particles[{j, i}].now, particles[{j - 1, i}].now); }
                 if (i != 0) { temp.emplace_back(particles[{j, i}].now, particles[{j, i - 1}].now); }

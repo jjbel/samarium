@@ -8,7 +8,7 @@
 // #include "samarium/samarium.hpp"
 #include "samarium/util/print.hpp"
 
-#include "samarium/math/range.hpp"
+#include "samarium/math/loop.hpp"
 
 using namespace sm;
 // using namespace sm::literals;
@@ -27,7 +27,7 @@ void main() {
 }
 )glsl";
 
-auto main() -> i32
+auto main() ->i32
 {
     //    auto window       = Window{{{1800, 900}}};
     //    window.view.scale = Vector2::combine(1.0 / 10.0);
@@ -58,6 +58,6 @@ auto main() -> i32
     //
     //    run(window, update, draw);
     print("Start");
-    for (auto i : range::start_end<i32, range::Interval::Closed>(15, 12)) { print(i); }
+    for (auto i : loop::start_end<i32, loop::Interval::Closed>(15, 12)) { print(i); }
     print("End");
 }

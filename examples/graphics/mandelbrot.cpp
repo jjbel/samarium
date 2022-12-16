@@ -20,7 +20,7 @@ auto main() -> i32
         auto z                 = std::complex<f64>{};
         const auto pos_complex = to_complex(pos);
 
-        for (auto i : range::end(max_iterations))
+        for (auto i : loop::end(max_iterations))
         {
             z = z * z + pos_complex;
             if (std::abs(z) > threshold) { return std::optional<u64>{i}; }

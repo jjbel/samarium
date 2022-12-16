@@ -12,7 +12,7 @@
 #include "samarium/math/Transform.hpp"
 #include "samarium/math/Vector2.hpp"
 #include "samarium/math/complex.hpp"
+#include "samarium/math/loop.hpp"
 #include "samarium/math/math.hpp"
-#include "samarium/math/range.hpp"
 #include "samarium/math/sample.hpp"
 #include "samarium/math/vector_math.hpp"
