@@ -23,22 +23,21 @@ concept Integral =
     reason("NOTE: T should be of integral type, eg int or size_t") && std::is_integral_v<T>;
 
 template <typename T>
-concept FloatingPoint = reason(
-    "NOTE: T should be of floating point type, eg float or double") && std::is_floating_point_v<T>;
+concept FloatingPoint = reason("NOTE: T should be of floating point type, eg float or double") &&
+                        std::is_floating_point_v<T>;
 
 template <typename T>
 concept Number = Integral<T> || FloatingPoint<T>;
 
 template <typename T>
-concept Arithmetic = requires(T a, T b)
-{
-    {
-        a + b
-        } -> std::same_as<T>;
-    {
-        a - b
-        } -> std::same_as<T>;
-};
+concept Arithmetic = requires(T a, T b) {
+                         {
+                             a + b
+                             } -> std::same_as<T>;
+                         {
+                             a - b
+                             } -> std::same_as<T>;
+                     };
 
 template <typename T, typename... U>
 concept AnyOf = (std::same_as<T, U> || ...);

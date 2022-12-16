@@ -40,7 +40,8 @@ template <typename To> [[nodiscard]] inline auto cast_view()
 }
 
 template <typename T>
-[[nodiscard]] inline auto project_view(T&& proj) requires std::is_member_object_pointer_v<T>
+[[nodiscard]] inline auto project_view(T&& proj)
+    requires std::is_member_object_pointer_v<T>
 {
     return ranges::views::transform([proj](const auto& value) { return value.*proj; });
 }

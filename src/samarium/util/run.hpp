@@ -20,7 +20,8 @@ namespace sm
  * @param  window       Window to display
  * @param  update       Callable which updates the state of objects
  * @param  draw         Callable which draws objects
- * @param  substeps     Call update this many times for better accuracy. Divide \f$ \Delta t \f$ accordingly
+ * @param  substeps     Call update this many times for better accuracy. Divide \f$ \Delta t \f$
+ * accordingly
  */
 auto run(Window& window,
          const std::invocable auto& update,

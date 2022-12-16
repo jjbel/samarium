@@ -447,9 +447,9 @@ static uint32_t crc32_pclmul(const uint8_t* p, size_t size, uint32_t crc)
                   u = _mm_load_si128(reinterpret_cast<const __m128i*>(s_u));
     b               = _mm_xor_si128(_mm_srli_si128(b, 8), _mm_clmulepi64_si128(b, k3k4, 16));
     b               = _mm_xor_si128(
-                      _mm_clmulepi64_si128(_mm_and_si128(b, z),
+        _mm_clmulepi64_si128(_mm_and_si128(b, z),
                                            _mm_loadl_epi64(reinterpret_cast<const __m128i*>(s_k5k0)), 0),
-                      _mm_srli_si128(b, 4));
+        _mm_srli_si128(b, 4));
     return ~_mm_extract_epi32(
         _mm_xor_si128(
             b, _mm_clmulepi64_si128(

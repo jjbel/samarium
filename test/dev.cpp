@@ -27,7 +27,7 @@ void main() {
 }
 )glsl";
 
-auto main() ->i32
+auto main() -> i32
 {
     //    auto window       = Window{{{1800, 900}}};
     //    window.view.scale = Vector2::combine(1.0 / 10.0);
