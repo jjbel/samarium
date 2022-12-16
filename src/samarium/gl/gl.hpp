@@ -55,6 +55,7 @@ enum class Access
     ReadWrite = GL_READ_WRITE
 };
 
+// https://www.khronos.org/opengl/wiki/Primitive
 enum class Primitive
 {
     Points        = GL_POINTS,
@@ -64,6 +65,51 @@ enum class Primitive
     Triangles     = GL_TRIANGLES,
     TriangleStrip = GL_TRIANGLE_STRIP,
     TriangleFan   = GL_TRIANGLE_FAN
+};
+
+// https://www.khronos.org/opengl/wiki/Image_Format
+enum class ImageFormat
+{
+    RGBA8   = GL_RGBA8,
+    R32F    = GL_R32F,
+    RG32F   = GL_RG32F,
+    RGB32F  = GL_RGB32F,
+    RGBA32F = GL_RGBA32F
+};
+
+struct FormatAndType
+{
+    u32 format{};
+    u32 type{};
+
+    explicit constexpr FormatAndType(ImageFormat image_format)
+    {
+        using enum ImageFormat;
+
+        switch (image_format)
+        {
+        case RGBA8:
+            format = GL_RGBA;
+            type   = GL_UNSIGNED_BYTE;
+            break;
+        case R32F:
+            format = GL_RED;
+            type   = GL_FLOAT;
+            break;
+        case RG32F:
+            format = GL_RG;
+            type   = GL_FLOAT;
+            break;
+        case RGB32F:
+            format = GL_RGB;
+            type   = GL_FLOAT;
+            break;
+        case RGBA32F:
+            format = GL_RGBA;
+            type   = GL_FLOAT;
+            break;
+        }
+    }
 };
 
 inline auto get_current(GLenum object)

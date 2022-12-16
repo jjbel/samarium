@@ -5,13 +5,10 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
-// #include "samarium/samarium.hpp"
-#include "samarium/util/print.hpp"
-
-#include "samarium/math/loop.hpp"
+#include "samarium/samarium.hpp"
 
 using namespace sm;
-// using namespace sm::literals;
+using namespace sm::literals;
 
 static constexpr auto src = R"glsl(
 #version 460 core
@@ -29,22 +26,22 @@ void main() {
 
 auto main() -> i32
 {
-    //    auto window       = Window{{{1800, 900}}};
-    //    window.view.scale = Vector2::combine(1.0 / 10.0);
-    //    auto point        = MovablePoint{{1.0, 1.0}, "#4e22ff"_c};
-    //
-    //    auto data = std::vector<f32>{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-    //    print("Data before:", data);
-    //
-    //    auto texture = gl::Texture{};
-    //    texture.bind();
-    //    texture.set_data(data, {data.size(), 1}, GL_R32F, GL_RED, GL_FLOAT);
-    //    auto shader = expect(gl::ComputeShader::make(src));
-    //    shader.bind(1, 1);
-    //    glGetTextureImage(texture.handle, 0, GL_RED, GL_FLOAT, data.size() * sizeof(float),
-    //                      data.data());
-    //    print("Data after:", data);
-    //
+    auto window       = Window{{{1800, 900}}};
+    window.view.scale = Vector2::combine(1.0 / 10.0);
+    auto point        = MovablePoint{{1.0, 1.0}, "#4e22ff"_c};
+
+    auto data = std::vector<f32>{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    print("Data before:", data);
+
+    auto texture = gl::Texture{gl::ImageFormat::R32F};
+    texture.bind();
+    texture.set_data(std::span(data), {data.size(), 1}, gl::ImageFormat::R32F);
+    auto shader = expect(gl::ComputeShader::make(src));
+    shader.bind(1, 1);
+    glGetTextureImage(texture.handle, 0, GL_RED, GL_FLOAT, data.size() * sizeof(float),
+                      data.data());
+    print("Data after:", data);
+
     //    const auto update = [&] { point.update(window.mouse); };
     //
     //    const auto draw = [&]
@@ -57,7 +54,4 @@ auto main() -> i32
     //    };
     //
     //    run(window, update, draw);
-    print("Start");
-    for (auto i : loop::start_end<i32, loop::Interval::Closed>(15, 12)) { print(i); }
-    print("End");
 }

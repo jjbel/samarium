@@ -249,8 +249,8 @@ SM_INLINE void Window::display()
     if (resized)
     {
         context.frame_texture =
-            gl::Texture{dims, gl::Texture::Wrap::ClampEdge, gl::Texture::Filter::Nearest,
-                        gl::Texture::Filter::Nearest};
+            gl::Texture{gl::ImageFormat::RGBA8, dims, gl::Texture::Wrap::ClampEdge,
+                        gl::Texture::Filter::Nearest, gl::Texture::Filter::Nearest};
         context.framebuffer.bind_texture(context.frame_texture);
     }
 }

@@ -69,7 +69,7 @@ struct Context
 namespace sm::gl
 {
 SM_INLINE Context::Context(Dimensions dims)
-    : frame_texture{dims, Texture::Wrap::ClampEdge, Texture::Filter::Nearest,
+    : frame_texture{ImageFormat::RGBA8, dims, Texture::Wrap::ClampEdge, Texture::Filter::Nearest,
                     Texture::Filter::Nearest},
       framebuffer(frame_texture)
 {
@@ -140,7 +140,7 @@ SM_INLINE Context::Context(Dimensions dims)
     vertex_buffers.emplace("default", VertexBuffer{});
     element_buffers.emplace("default", ElementBuffer{});
 
-    textures.emplace("default", Texture{});
+    //    textures.emplace("default", Texture{});
 
     shaders.at("Pos").bind();
     vertex_arrays.at("Pos").bind();

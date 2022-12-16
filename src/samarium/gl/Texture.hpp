@@ -7,8 +7,7 @@
 
 #pragma once
 
-#include "glad/glad.h"                   // for GLenum, GL_RGBA8, glDeleteTex...
-#include "range/v3/range/primitives.hpp" // for data
+#include "glad/glad.h" // for GLenum, GL_RGBA8, glDeleteTex...
 
 #include "samarium/core/types.hpp"   // for u32, i32
 #include "samarium/math/Vector2.hpp" // for Dimensions
@@ -22,6 +21,7 @@ struct Texture
 {
     enum class Wrap
     {
+        None,
         Repeat      = GL_REPEAT,
         Mirror      = GL_MIRRORED_REPEAT,
         ClampEdge   = GL_CLAMP_TO_EDGE,
@@ -30,6 +30,7 @@ struct Texture
 
     enum class Filter
     {
+        None,
         Linear               = GL_LINEAR,
         Nearest              = GL_NEAREST,
         LinearMipmapLinear   = GL_LINEAR_MIPMAP_LINEAR,
@@ -40,9 +41,16 @@ struct Texture
 
     u32 handle;
 
-    explicit Texture(Wrap mode         = Wrap::Repeat,
-                     Filter min_filter = Filter::LinearMipmapLinear,
-                     Filter mag_filter = Filter::Linear);
+    explicit Texture(ImageFormat format,
+                     Wrap mode         = Wrap::None,
+                     Filter min_filter = Filter::None,
+                     Filter mag_filter = Filter::None);
+
+    explicit Texture(ImageFormat format,
+                     Dimensions dims,
+                     Wrap mode         = Wrap::None,
+                     Filter min_filter = Filter::None,
+                     Filter mag_filter = Filter::None);
 
     explicit Texture(const Image& image,
                      Wrap mode         = Wrap::Repeat,
@@ -54,23 +62,14 @@ struct Texture
                      Filter min_filter = Filter::LinearMipmapLinear,
                      Filter mag_filter = Filter::Linear);
 
-    explicit Texture(Dimensions dims,
-                     Wrap mode         = Wrap::Repeat,
-                     Filter min_filter = Filter::LinearMipmapLinear,
-                     Filter mag_filter = Filter::Linear);
-
     void set_data(const Image& image, bool mipmaps = true);
 
-    void set_data(const ranges::range auto& data,
-                  Dimensions dims,
-                  GLenum internal_format,
-                  GLenum format,
-                  GLenum datatype)
+    void set_data(ranges::range auto&& data, Dimensions dims, ImageFormat internal_format)
     {
         create(dims, internal_format);
-
+        const auto [format, type] = FormatAndType{internal_format};
         glTextureSubImage2D(handle, 0, 0, 0, static_cast<i32>(dims.x), static_cast<i32>(dims.y),
-                            format, datatype, static_cast<const void*>(ranges::data(data)));
+                            format, type, static_cast<const void*>(ranges::data(data)));
     }
 
     void bind(u32 texture_unit_index = 0U);
@@ -100,7 +99,7 @@ struct Texture
     ~Texture() { glDeleteTextures(1, &handle); }
 
   private:
-    void create(Dimensions dims, GLenum internal_format = GL_RGBA8);
+    void create(Dimensions dims, ImageFormat internal_format);
 };
 } // namespace sm::gl
 
@@ -115,44 +114,54 @@ struct Texture
 
 namespace sm::gl
 {
-SM_INLINE Texture::Texture(Wrap mode, Filter min_filter, Filter mag_filter)
+SM_INLINE Texture::Texture(ImageFormat format, Wrap mode, Filter min_filter, Filter mag_filter)
 {
     glCreateTextures(GL_TEXTURE_2D, 1, &handle);
 
-    // set the texture wrapping parameters
-    glTextureParameteri(handle, GL_TEXTURE_WRAP_S, static_cast<GLint>(mode));
-    glTextureParameteri(handle, GL_TEXTURE_WRAP_T, static_cast<GLint>(mode));
+    if (mode != Wrap::None)
+    {
+        // set the texture wrapping parameters
+        glTextureParameteri(handle, GL_TEXTURE_WRAP_S, static_cast<GLint>(mode));
+        glTextureParameteri(handle, GL_TEXTURE_WRAP_T, static_cast<GLint>(mode));
+    }
 
     // set texture filtering parameters
-    glTextureParameteri(handle, GL_TEXTURE_MIN_FILTER, static_cast<GLint>(min_filter));
-    glTextureParameteri(handle, GL_TEXTURE_MAG_FILTER, static_cast<GLint>(mag_filter));
+    if (min_filter != Filter::None)
+    {
+        glTextureParameteri(handle, GL_TEXTURE_MIN_FILTER, static_cast<GLint>(min_filter));
+    }
+    if (mag_filter != Filter::None)
+    {
+        glTextureParameteri(handle, GL_TEXTURE_MAG_FILTER, static_cast<GLint>(mag_filter));
+    }
 }
 
 SM_INLINE
 Texture::Texture(const Image& image, Wrap mode, Filter min_filter, Filter mag_filter)
-    : Texture(mode, min_filter, mag_filter)
+    : Texture(ImageFormat::RGBA8, mode, min_filter, mag_filter)
 {
     set_data(image);
 }
 
 SM_INLINE
-Texture::Texture(Dimensions dims, Wrap mode, Filter min_filter, Filter mag_filter)
-    : Texture(mode, min_filter, mag_filter)
+Texture::Texture(
+    ImageFormat format, Dimensions dims, Wrap mode, Filter min_filter, Filter mag_filter)
+    : Texture(format, mode, min_filter, mag_filter)
 {
-    create(dims);
+    create(dims, format);
 }
 
 SM_INLINE void Texture::make_mipmaps() { glGenerateTextureMipmap(handle); }
 
-SM_INLINE void Texture::create(Dimensions dims, GLenum internal_format)
+SM_INLINE void Texture::create(Dimensions dims, ImageFormat internal_format)
 {
-    glTextureStorage2D(handle, 1, internal_format, static_cast<i32>(dims.x),
+    glTextureStorage2D(handle, 1, static_cast<u32>(internal_format), static_cast<i32>(dims.x),
                        static_cast<i32>(dims.y));
 }
 
 SM_INLINE void Texture::set_data(const Image& image, bool mipmaps)
 {
-    create(image.dims);
+    create(image.dims, ImageFormat::RGBA8);
     glTextureSubImage2D(handle, 0, 0, 0, static_cast<i32>(image.dims.x),
                         static_cast<i32>(image.dims.y), GL_RGBA, GL_UNSIGNED_BYTE,
                         static_cast<const void*>(image.data()));

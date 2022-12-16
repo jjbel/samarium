@@ -88,16 +88,16 @@ struct Text
 
             const auto& bitmap = face->glyph->bitmap;
             // fmt::print("\nglyph for ({}) width: {} rows: {}. ", c, bitmap.width, bitmap.rows);
-            auto texture = gl::Texture{gl::Texture::Wrap::ClampEdge, gl::Texture::Filter::Linear,
-                                       gl::Texture::Filter::Linear};
+            auto texture = gl::Texture{gl::ImageFormat::RGBA8, gl::Texture::Wrap::ClampEdge,
+                                       gl::Texture::Filter::Linear, gl::Texture::Filter::Linear};
 
             // some characters eg space don't have data but take up space
             if (bitmap.width * bitmap.rows != 0)
             {
                 texture.set_data(
                     std::span{bitmap.buffer, static_cast<u64>(bitmap.width * bitmap.rows)},
-                    {static_cast<u64>(bitmap.width), static_cast<u64>(bitmap.rows)}, GL_R8, GL_RED,
-                    GL_UNSIGNED_BYTE);
+                    {static_cast<u64>(bitmap.width), static_cast<u64>(bitmap.rows)},
+                    gl::ImageFormat::RGBA8);
             }
 
             text.characters.insert(
