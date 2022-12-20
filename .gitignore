@@ -12,6 +12,9 @@ CMakeUserPresets.json
 .conan/data
 /usr/include/c++
 
+# python
+__pycache__/
+
 # images
 *.tga
 *.png
