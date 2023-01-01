@@ -31,7 +31,7 @@ struct Action
 struct Handler
 {
     u16 frame{};
-    std::unordered_set<Action> actions;
+    // std::unordered_set<Action> actions;
 
     void update();
 };
@@ -45,17 +45,17 @@ namespace sm::anim
 {
 SM_INLINE void Handler::update()
 {
-    const auto current_frame = this->frame;
-    std::erase_if(actions, [current_frame](const Action& action)
-                  { return action.frame_range.max > current_frame; });
+    // const auto current_frame = this->frame;
+    // std::erase_if(actions, [current_frame](const Action& action)
+    //               { return action.frame_range.max > current_frame; });
 
-    for (const auto& action : actions)
-    {
-        if (action.frame_range.min >= current_frame)
-        {
-            action.action({action.frame_range.lerp_inverse(current_frame), current_frame});
-        }
-    }
+    // for (const auto& action : actions)
+    // {
+    //     if (action.frame_range.min >= current_frame)
+    //     {
+    //         action.action({action.frame_range.lerp_inverse(current_frame), current_frame});
+    //     }
+    // }
 }
 } // namespace sm::anim
 
