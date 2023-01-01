@@ -68,7 +68,7 @@
                 "BUILD_EXAMPLES": false,
                 "BUILD_DOCS": false,
                 "BUILD_BENCHMARKS": false,
-                "RUN_AFTER_BUILD": "",
+                "RUN_AFTER_BUILD": "test/samarium_tests",
                 "RUN_AFTER_BUILD_DEPENDS": "samarium_tests",
                 "USE_CCACHE": true
             },
