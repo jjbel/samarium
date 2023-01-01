@@ -3,7 +3,7 @@
 from conan import ConanFile
 from conan.tools.cmake import CMake, cmake_layout
 
-required_conan_version = ">=1.53.0"
+required_conan_version = ">=1.56.0"
 
 
 class SamariumConan(ConanFile):
