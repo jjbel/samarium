@@ -75,6 +75,18 @@ template <BufferType type> struct Buffer
         glNamedBufferSubData(handle, offset, util::range_byte_size(array), std::data(array));
     }
 
+    template <typename T> auto read(u64 count) const -> std::vector<T>
+    {
+        auto data = std::vector<T>(count);
+        glGetNamedBufferSubData(handle, 0, count * sizeof(T), data.data());
+        return data;
+    }
+
+    template <typename T> auto read_to(std::span<T> buffer) const
+    {
+        glGetNamedBufferSubData(handle, 0, buffer.size() * sizeof(T), buffer.data());
+    }
+
     ~Buffer() { glDeleteBuffers(1, &handle); }
 };
 
