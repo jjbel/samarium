@@ -24,6 +24,8 @@
 #include "samarium/util/Result.hpp"    // for Result
 #include "samarium/util/file.hpp"      // for read
 
+#include "Texture.hpp"
+
 namespace sm::gl
 {
 struct VertexShader
@@ -235,7 +237,18 @@ struct ComputeShader
                         std::string_view{log_str.data(), static_cast<u64>(log_size)}));
     }
 
-    void bind(u32 x, u32 y, u32 z = 1U) const;
+    void bind();
+    void run(u32 x, u32 y = 1U, u32 z = 1U);
+
+    [[nodiscard]] auto get_uniform_location(const std::string& name) const -> i32;
+
+    void set(const std::string& name, bool value) const;
+    void set(const std::string& name, i32 value) const;
+    void set(const std::string& name, f32 value) const;
+    void set(const std::string& name, Color value) const;
+    void set(const std::string& name, Vector2 value) const;
+    void set(const std::string& name, const glm::mat4& value) const;
+    void set(const std::string& name, const Texture& texture) const;
 
     ~ComputeShader() { glDeleteProgram(handle); }
 
@@ -291,11 +304,54 @@ void Shader::set(const std::string& name, const glm::mat4& value) const
     glUniformMatrix4fv(get_uniform_location(name), 1, GL_FALSE, glm::value_ptr(value));
 }
 
-void ComputeShader::bind(u32 x, u32 y, u32 z) const
+void ComputeShader::bind() { glUseProgram(handle); }
+
+void ComputeShader::run(u32 x, u32 y, u32 z)
 {
-    glUseProgram(handle);
     glDispatchCompute(x, y, z);
     glMemoryBarrier(GL_ALL_BARRIER_BITS);
+}
+
+auto ComputeShader::get_uniform_location(const std::string& name) const -> i32
+{
+    return glGetUniformLocation(handle, name.c_str());
+}
+
+void ComputeShader::set(const std::string& name, bool value) const
+{
+    glUniform1i(get_uniform_location(name), static_cast<i32>(value));
+}
+
+void ComputeShader::set(const std::string& name, i32 value) const
+{
+    glUniform1i(get_uniform_location(name), value);
+}
+
+void ComputeShader::set(const std::string& name, f32 value) const
+{
+    glUniform1f(get_uniform_location(name), value);
+}
+
+void ComputeShader::set(const std::string& name, Color value) const
+{
+    glUniform4f(get_uniform_location(name), static_cast<f32>(value.r) / 255.0F,
+                static_cast<f32>(value.g) / 255.0F, static_cast<f32>(value.b) / 255.0F,
+                static_cast<f32>(value.a) / 255.0F);
+}
+
+void ComputeShader::set(const std::string& name, Vector2 value) const
+{
+    glUniform2f(get_uniform_location(name), static_cast<f32>(value.x), static_cast<f32>(value.y));
+}
+
+void ComputeShader::set(const std::string& name, const glm::mat4& value) const
+{
+    glUniformMatrix4fv(get_uniform_location(name), 1, GL_FALSE, glm::value_ptr(value));
+}
+
+void ComputeShader::set(const std::string& name, const Texture& texture) const
+{
+    glUniform1i(get_uniform_location(name), static_cast<i32>(texture.handle));
 }
 } // namespace sm::gl
 #endif
