@@ -199,9 +199,7 @@ namespace sm
 SM_INLINE Window::Window(const WindowConfig& config)
     : dims{config.dims}, init{config, handle}, context{config.dims}
 {
-    gl::enable_debug_output();
-
-    // glEnable(GL_MULTISAMPLE);
+    // gl::enable_debug_output();
 
     glEnable(GL_BLEND); // enable blending function
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
