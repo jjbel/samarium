@@ -96,8 +96,7 @@ struct Text
             {
                 texture.set_data(
                     std::span{bitmap.buffer, static_cast<u64>(bitmap.width * bitmap.rows)},
-                    {static_cast<u64>(bitmap.width), static_cast<u64>(bitmap.rows)},
-                    gl::ImageFormat::RGBA8);
+                    {static_cast<u64>(bitmap.width), static_cast<u64>(bitmap.rows)});
             }
 
             text.characters.insert(

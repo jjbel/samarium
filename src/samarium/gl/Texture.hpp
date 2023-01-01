@@ -7,6 +7,9 @@
 
 #pragma once
 
+#include <span>   // for span
+#include <vector> // for vector
+
 #include "glad/glad.h" // for GLenum, GL_RGBA8, glDeleteTex...
 
 #include "samarium/core/types.hpp"   // for u32, i32
@@ -40,6 +43,7 @@ struct Texture
     };
 
     u32 handle;
+    ImageFormat format{};
 
     explicit Texture(ImageFormat format,
                      Wrap mode         = Wrap::None,
@@ -64,22 +68,26 @@ struct Texture
 
     void set_data(const Image& image, bool mipmaps = true);
 
-    void set_data(ranges::range auto&& data, Dimensions dims, ImageFormat internal_format)
+    void set_data(ranges::range auto&& data, Dimensions dims)
     {
-        create(dims, internal_format);
-        const auto [format, type] = FormatAndType{internal_format};
+        create(dims, format);
+        const auto [format_, type] = FormatAndType{format};
         glTextureSubImage2D(handle, 0, 0, 0, static_cast<i32>(dims.x), static_cast<i32>(dims.y),
-                            format, type, static_cast<const void*>(ranges::data(data)));
+                            format_, type, static_cast<const void*>(ranges::data(data)));
     }
 
     void bind(u32 texture_unit_index = 0U);
 
-    void bind_level(u32 texture_unit_index = 0,
-                    i32 level              = 0,
-                    Access access          = Access::ReadWrite,
-                    GLenum format          = GL_RGBA8);
+    void bind_level(u32 texture_unit_index = 0, i32 level = 0, Access access = Access::ReadWrite);
 
     void make_mipmaps();
+
+    template <typename T> auto read(u64 count) const -> std::vector<T>
+    {
+        auto data = std::vector<T>(count);
+        glGetTextureImage(handle, 0, GL_RED, GL_FLOAT, count * sizeof(T), data.data());
+        return data;
+    }
 
     Texture(const Texture&) = delete;
 
@@ -91,6 +99,7 @@ struct Texture
         {
             glDeleteTextures(1, &handle);
             handle       = other.handle;
+            format       = other.format;
             other.handle = 0;
         }
         return *this;
@@ -114,7 +123,8 @@ struct Texture
 
 namespace sm::gl
 {
-SM_INLINE Texture::Texture(ImageFormat format, Wrap mode, Filter min_filter, Filter mag_filter)
+SM_INLINE Texture::Texture(ImageFormat format_, Wrap mode, Filter min_filter, Filter mag_filter)
+    : format{format_}
 {
     glCreateTextures(GL_TEXTURE_2D, 1, &handle);
 
@@ -173,10 +183,10 @@ SM_INLINE void Texture::bind(u32 texture_unit_index)
     glBindTextureUnit(texture_unit_index, handle);
 }
 
-SM_INLINE void Texture::bind_level(u32 texture_unit_index, i32 level, Access access, GLenum format)
+SM_INLINE void Texture::bind_level(u32 texture_unit_index, i32 level, Access access)
 {
     glBindImageTexture(texture_unit_index, handle, level, GL_FALSE, 0, static_cast<GLenum>(access),
-                       format);
+                       static_cast<i32>(format));
 }
 } // namespace sm::gl
 
