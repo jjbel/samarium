@@ -113,20 +113,21 @@ SM_INLINE Context::Context(Dimensions dims)
 #include "shaders/text.frag.glsl"
     );
 
-    shaders.emplace("Pos", Shader{*VertexShader::make(vert_sources.at("Pos")),
-                                  *FragmentShader::make(frag_sources.at("Pos"))});
+    shaders.emplace("Pos", Shader{expect(VertexShader::make(vert_sources.at("Pos"))),
+                                  expect(FragmentShader::make(frag_sources.at("Pos")))});
 
-    shaders.emplace("PosColor", Shader{*VertexShader::make(vert_sources.at("PosColor")),
-                                       *FragmentShader::make(frag_sources.at("PosColor"))});
+    shaders.emplace("PosColor", Shader{expect(VertexShader::make(vert_sources.at("PosColor"))),
+                                       expect(FragmentShader::make(frag_sources.at("PosColor")))});
 
-    shaders.emplace("PosTex", Shader{*VertexShader::make(vert_sources.at("PosTex")),
-                                     *FragmentShader::make(frag_sources.at("PosTex"))});
+    shaders.emplace("PosTex", Shader{expect(VertexShader::make(vert_sources.at("PosTex"))),
+                                     expect(FragmentShader::make(frag_sources.at("PosTex")))});
 
-    shaders.emplace("PosColorTex", Shader{*VertexShader::make(vert_sources.at("PosColorTex")),
-                                          *FragmentShader::make(frag_sources.at("PosColorTex"))});
+    shaders.emplace("PosColorTex",
+                    Shader{expect(VertexShader::make(vert_sources.at("PosColorTex"))),
+                           expect(FragmentShader::make(frag_sources.at("PosColorTex")))});
 
-    shaders.emplace("text", Shader{*VertexShader::make(vert_sources.at("PosTex")),
-                                   *FragmentShader::make(frag_sources.at("text"))});
+    shaders.emplace("text", Shader{expect(VertexShader::make(vert_sources.at("PosTex"))),
+                                   expect(FragmentShader::make(frag_sources.at("text")))});
 
     vert_sources.emplace("polyline",
 #include "shaders/polyline.vert.glsl"
@@ -135,7 +136,7 @@ SM_INLINE Context::Context(Dimensions dims)
     shaders.emplace("polyline", Shader{*VertexShader::make(vert_sources.at("polyline")),
                                        *FragmentShader::make(frag_sources.at("Pos"))});
 
-    shader_storage_buffers.emplace("default", Buffer<BufferType::ShaderStorage>{});
+    shader_storage_buffers.emplace("default", ShaderStorageBuffer{});
 
     vertex_buffers.emplace("default", VertexBuffer{});
     element_buffers.emplace("default", ElementBuffer{});
