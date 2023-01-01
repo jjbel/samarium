@@ -12,3 +12,4 @@
 #include "samarium/physics/RigidBody.hpp"
 #include "samarium/physics/Spring.hpp"
 #include "samarium/physics/collision.hpp"
+#include "samarium/physics/gpu/ParticleSystem.hpp"

@@ -10,48 +10,52 @@
 using namespace sm;
 using namespace sm::literals;
 
-static constexpr auto src = R"glsl(
-#version 460 core
-layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
-layout(r32f, binding = 0) uniform image2D out_tex;
-void main() {
-   // get position to read/write data from
-   ivec2 pos = ivec2(gl_GlobalInvocationID.xy);
-   // get value stored in the image
-   float in_val = imageLoad( out_tex, pos ).r;
-   // store new value in image
-   imageStore( out_tex, pos, vec4( 69, 0.0, 0.0, 0.0 ) );
-}
-)glsl";
-
 auto main() -> i32
 {
-    auto window       = Window{{{1800, 900}}};
-    window.view.scale = Vector2::combine(1.0 / 10.0);
-    auto point        = MovablePoint{{1.0, 1.0}, "#4e22ff"_c};
+    auto window = Window{{{1800, 900}}};
 
-    auto data = std::vector<f32>{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-    print("Data before:", data);
+    auto rand  = RandomGenerator{};
 
-    auto texture = gl::Texture{gl::ImageFormat::R32F};
-    texture.bind();
-    texture.set_data(std::span(data), {data.size(), 1}, gl::ImageFormat::R32F);
-    auto shader = expect(gl::ComputeShader::make(src));
-    shader.bind(1, 1);
-    glGetTextureImage(texture.handle, 0, GL_RED, GL_FLOAT, data.size() * sizeof(float),
-                      data.data());
-    print("Data after:", data);
+    print(gpu::ParticleSystem::src);
 
-    //    const auto update = [&] { point.update(window.mouse); };
-    //
-    //    const auto draw = [&]
-    //    {
-    //        draw::background("#131417"_c);
-    //        draw::grid_lines(window, {.spacing = 1, .color{255, 255, 255, 90}, .thickness =
-    //        0.028F}); draw::circle(window, {{0.0, 0.0}, 0.1}, {.fill_color = "#ff0e4e"_c});
-    //
-    //        point.draw(window);
-    //    };
-    //
-    //    run(window, update, draw);
+    auto ps    = gpu::ParticleSystem(20);
+    auto watch = Stopwatch{};
+
+    for (auto& i : ps.particles)
+    {
+        i.pos    = rand.vector(window.viewport()).cast<f32>();
+        i.vel    = rand.polar_vector({0, 4}).cast<f32>();
+        i.radius = 0.4F;
+    }
+
+    auto frame = u64();
+
+    const auto update = [&]
+    {
+        // if (frame == 60)
+        {
+            watch.reset();
+            ps.update();
+            watch.print();
+        }
+        frame++;
+    };
+
+    const auto draw = [&]
+    {
+        draw::background("#131417"_c);
+        draw::grid_lines(window, {.spacing = 1, .color{255, 255, 255, 90}, .thickness = 0.028F});
+        for (const auto& particle : ps.particles)
+        {
+            draw::circle(window, {particle.pos.cast<f64>(), particle.radius},
+                         {.fill_color = "#ff0000"_c});
+        }
+    };
+
+    run(window, update, draw);
 }
+
+// old texture stuff:
+// auto texture = gl::Texture{gl::ImageFormat::R32F};
+// imageStore( data, pos, vec4( in_val, 0.0, 0.0, 0.0 ) );
+// buffer.bind_level(0, 0, gl::Access::ReadWrite);

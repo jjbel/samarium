@@ -18,8 +18,8 @@ template <typename Float = f64> struct Particle
     Vector2_t<Float> pos{};
     Vector2_t<Float> vel{};
     Vector2_t<Float> acc{};
-    f64 radius{1};
-    f64 mass{1};
+    Float radius{1};
+    Float mass{1};
 
     [[nodiscard]] constexpr auto as_circle() const noexcept { return Circle{pos, radius}; }
 
