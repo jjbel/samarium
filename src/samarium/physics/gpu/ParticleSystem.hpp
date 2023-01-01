@@ -18,14 +18,6 @@ namespace sm::gpu
 {
 struct ParticleSystem
 {
-    static constexpr auto src =
-#include "version.comp.glsl"
-
-#include "Particle.comp.glsl"
-
-#include "update.comp.glsl"
-        ;
-
     struct Buffers
     {
         gl::ShaderStorageBuffer particles{};
@@ -34,7 +26,13 @@ struct ParticleSystem
 
     struct Shaders
     {
-        gl::ComputeShader update{expect(gl::ComputeShader::make(src))};
+        gl::ComputeShader update{expect(gl::ComputeShader::make(
+#include "version.comp.glsl"
+
+#include "Particle.comp.glsl"
+
+#include "update.comp.glsl"
+            ))};
     };
 
     std::vector<Particle<f32>> particles{};
