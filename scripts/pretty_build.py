@@ -14,10 +14,10 @@ PRESET = argv[1] if len(argv) == 2 else 'dev'
 FILTER_LIST = ['FAILED', 'isystem',
                'Building CXX object', 'ninja: build stopped', ' warnings and ']
 
-if 'RELOAD_FILES' in environ:
-    format(environ['RELOAD_FILES'].splitlines())
-else:
-    format() # format all files
+# if 'RELOAD_FILES' in environ:
+#     format(environ['RELOAD_FILES'].splitlines())
+# else:
+#     format() # format all files
 
 if not (ROOT / 'build').exists():
     mkdir(ROOT / 'build')
@@ -30,7 +30,7 @@ print('Building...')
 result = run(BUILD_COMMAND,
              shell=True, capture_output=True)
 output = result.stdout.decode().replace(
-    root_str, 'file://' + root_str).splitlines()
+    root_str, '').splitlines()  # or 'file://' + root_str or clion
 
 
 def is_valid(line: str):
