@@ -5,6 +5,8 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
+#include "samarium/gl/draw/poly.hpp"
+#include "samarium/gl/draw/shapes.hpp"
 #include "samarium/samarium.hpp"
 
 using namespace sm;
@@ -14,42 +16,37 @@ auto main() -> i32
 {
     auto window = Window{{{1800, 900}}};
 
-    auto rand  = RandomGenerator{};
+    auto rand = RandomGenerator{};
 
-    print(gpu::ParticleSystem::src);
-
-    auto ps    = gpu::ParticleSystem(20);
+    auto ps    = gpu::ParticleSystem(100);
     auto watch = Stopwatch{};
 
     for (auto& i : ps.particles)
     {
         i.pos    = rand.vector(window.viewport()).cast<f32>();
         i.vel    = rand.polar_vector({0, 4}).cast<f32>();
-        i.radius = 0.4F;
+        i.radius = 0.1F;
     }
-
-    auto frame = u64();
+    window.view.scale /= 2.0;
 
     const auto update = [&]
     {
-        // if (frame == 60)
-        {
-            watch.reset();
-            ps.update();
-            watch.print();
-        }
-        frame++;
+        watch.reset();
+        ps.update();
+        watch.print();
     };
 
     const auto draw = [&]
     {
         draw::background("#131417"_c);
-        draw::grid_lines(window, {.spacing = 1, .color{255, 255, 255, 90}, .thickness = 0.028F});
+        draw::grid_lines(window, {.spacing = 1, .color{255, 255, 255, 20}, .thickness = 0.03F});
+        draw::grid_lines(window, {.spacing = 4, .color{255, 255, 255, 20}, .thickness = 0.08F});
         for (const auto& particle : ps.particles)
         {
-            draw::circle(window, {particle.pos.cast<f64>(), particle.radius},
-                         {.fill_color = "#ff0000"_c});
+            draw::regular_polygon(window, {particle.pos.cast<f64>(), particle.radius}, 8,
+                                  {.fill_color = "#ff0000"_c});
         }
+        draw::circle(window, {{0, 0}, 1}, {.fill_color{0, 25, 255}});
     };
 
     run(window, update, draw);
