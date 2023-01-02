@@ -14,7 +14,7 @@ except ModuleNotFoundError:
 
 chdir(Path(__file__).parent.parent)
 
-print('\ninstalling samarium (this may take some time)')
+print('\ninstalling samarium (this may take some time to build dependencies)')
 run(['conan', 'create', '.',
     '-pr:b=default', '-b', 'missing'], check=True, stdout=PIPE)
 
