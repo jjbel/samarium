@@ -12,6 +12,10 @@ except ModuleNotFoundError:
     run(['pip', 'install', 'conan'], check=True, stdout=PIPE)
     print('done')
 
+    print('adding conan default profile...')
+    run(['conan', 'profile', 'new', 'default', '--detect'],  stdout=PIPE)
+    print('done')
+
 chdir(Path(__file__).parent.parent)
 
 print('\ninstalling samarium (this may take some time to build dependencies)')
@@ -29,4 +33,4 @@ run(['cmake', '--preset=default'], check=True)
 print('\nbuilding example with "cmake --build --preset=default"')
 run(['cmake', '--build', '--preset=default'], check=True)
 
-print('\nExample ran successfully! Now check out the examples in the examples directory')
+print('\nExample ran successfully! Now check out the examples in the examples directory.')
