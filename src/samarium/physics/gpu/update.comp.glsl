@@ -17,6 +17,9 @@ void main() {
 //    particle.pos += particle.vel * delta_time;
 //    particles[pos] = particle;
 
+    particles[pos + 2].pos = vec2(2.0, 3.0);
+    particles[pos + 4].pos = vec2(2.0, 3.0);
     particles[pos].pos = vec2(2.0, 3.0);
+    // particles[pos + 1].pos = vec2(2.0, 3.0);
 }
 )glsl"
