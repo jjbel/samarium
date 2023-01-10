@@ -70,8 +70,8 @@ template <typename Float> class formatter<sm::Particle<Float>>
 
     auto format(const sm::Particle<Float>& p, auto& ctx)
     {
-        return fmt::format_to(ctx.out(), "Particle(pos: {}, vel: {}, acc: {})", p.pos, p.acc,
-                              p.vel);
+        return fmt::format_to(ctx.out(), "Particle(pos: {}, vel: {}, acc: {})", p.pos, p.vel,
+                              p.acc);
     }
 };
 
