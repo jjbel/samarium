@@ -1,3 +1,5 @@
+// from: https://github.com/richgel999/fpng
+
 // fpng.h - unlicense (see end of fpng.cpp)
 #pragma once
 
