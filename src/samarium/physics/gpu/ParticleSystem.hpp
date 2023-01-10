@@ -13,6 +13,7 @@
 #include "samarium/gl/Vertex.hpp"        // for ShaderStorageBuffer
 #include "samarium/physics/Particle.hpp" // for Particle
 #include "samarium/util/Result.hpp"      // for expect
+#include "samarium/util/Stopwatch.hpp"
 
 namespace sm::gpu
 {
@@ -20,8 +21,8 @@ struct ParticleSystem
 {
     struct Buffers
     {
-        gl::MappedBuffer<Particle<f32>> particles;
-        gl::MappedBuffer<f32> delta_time;
+        gl::ShaderStorageBuffer particles{};
+        gl::ShaderStorageBuffer delta_time{};
     };
 
     struct Shaders
@@ -35,31 +36,33 @@ struct ParticleSystem
             ))};
     };
 
-    Buffers buffers;
+    std::vector<Particle<f32>> particles{};
+    Buffers buffers{};
     Shaders shaders{};
 
     explicit ParticleSystem(u64 size,
                             const Particle<f32>& default_particle = {},
-                            f32 delta_time                        = 0.01)
-        : buffers{expect(gl::MappedBuffer<Particle<f32>>::make(static_cast<i32>(size),
-                                                               default_particle)),
-                  expect(gl::MappedBuffer<f32>::make(1))}
+                            f32 delta_time                        = 0.01F)
+        : particles(size, default_particle)
     {
-        // buffers.delta_time.bind(1);
-        // auto delta_time_data    = std::to_array({delta_time});
-        // buffers.delta_time.data = std::span(delta_time_data);
+        buffers.delta_time.bind(1);
+        buffers.delta_time.set_data(std::to_array({delta_time}));
     }
+
+    void send_to_gpu() { buffers.particles.set_data(std::span(particles), gl::Usage::StaticCopy); }
+
+    void fetch_from_gpu() { buffers.particles.read_to(std::span(particles)); }
 
     void update()
     {
-        buffers.particles.bind();
+        buffers.particles.bind(0);
+        send_to_gpu();
 
-        print("updating", buffers.particles.data.size());
         shaders.update.bind();
-        shaders.update.run(buffers.particles.data.size());
-        print("updated");
+        shaders.update.run(static_cast<u32>(particles.size()));
+        auto watch = Stopwatch{};
+        fetch_from_gpu();
+        watch.print();
     }
-
-    auto particles() { return buffers.particles.data; }
 };
 } // namespace sm::gpu
