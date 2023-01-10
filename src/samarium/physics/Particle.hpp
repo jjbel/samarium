@@ -25,7 +25,7 @@ template <typename Float = f64> struct Particle
 
     constexpr auto apply_force(Vector2_t<Float> force) noexcept { acc += force / mass; }
 
-    constexpr auto update(f64 time_delta = 1.0 / 64) noexcept
+    constexpr auto update(Float time_delta = 1.0 / 64) noexcept
     {
         vel += acc * time_delta;
         pos += vel * time_delta;
