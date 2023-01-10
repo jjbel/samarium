@@ -1,12 +1,3 @@
-/*
- * SPDX-License-Identifier: MIT
- * Copyright (c) 2022 Jai Bellare
- * See <https://opensource.org/licenses/MIT/> or LICENSE.md
- * Project homepage: https://github.com/strangeQuark1041/samarium
- */
-
-#include "samarium/gl/draw/poly.hpp"
-#include "samarium/gl/draw/shapes.hpp"
 #include "samarium/samarium.hpp"
 
 using namespace sm;
@@ -18,22 +9,34 @@ auto main() -> i32
 
     auto rand = RandomGenerator{};
 
-    auto ps    = gpu::ParticleSystem(100);
-    auto watch = Stopwatch{};
+    auto ps = gpu::ParticleSystem(20, {.pos{69, 42}, .vel{4, 5}});
+    print(ps.buffers.particles.data[0]);
 
-    for (auto& i : ps.particles)
+    for (auto& i : ps.particles())
     {
         i.pos    = rand.vector(window.viewport()).cast<f32>();
-        i.vel    = rand.polar_vector({0, 4}).cast<f32>();
-        i.radius = 0.1F;
+        i.vel    = rand.polar_vector({0, 40}).cast<f32>();
+        i.radius = 0.8F;
     }
-    window.view.scale /= 2.0;
+
+    print(ps.buffers.particles.data[0]);
+    auto fence = gl::Sync{};
+    fence.wait();
+    ps.update();
+    fence.lock();
+    print(ps.buffers.particles.data[0]);
+
+    // window.view.scale /= 2.0;
+
+    auto watch = Stopwatch{};
 
     const auto update = [&]
     {
         watch.reset();
         ps.update();
+        // for (auto& i : ps.particles()) { i.update(); }
         watch.print();
+        // print(ps.buffers.particles.data[0]);
     };
 
     const auto draw = [&]
@@ -41,7 +44,7 @@ auto main() -> i32
         draw::background("#131417"_c);
         draw::grid_lines(window, {.spacing = 1, .color{255, 255, 255, 20}, .thickness = 0.03F});
         draw::grid_lines(window, {.spacing = 4, .color{255, 255, 255, 20}, .thickness = 0.08F});
-        for (const auto& particle : ps.particles)
+        for (const auto& particle : ps.particles())
         {
             draw::regular_polygon(window, {particle.pos.cast<f64>(), particle.radius}, 8,
                                   {.fill_color = "#ff0000"_c});
@@ -49,7 +52,9 @@ auto main() -> i32
         draw::circle(window, {{0, 0}, 1}, {.fill_color{0, 25, 255}});
     };
 
-    run(window, update, draw);
+    // run(window, update, draw);
+
+    // print(ps.particles()[0]);
 }
 
 // old texture stuff:

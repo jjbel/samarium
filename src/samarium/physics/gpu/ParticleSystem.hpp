@@ -20,8 +20,8 @@ struct ParticleSystem
 {
     struct Buffers
     {
-        gl::ShaderStorageBuffer particles{};
-        gl::ShaderStorageBuffer delta_time{};
+        gl::MappedBuffer<Particle<f32>> particles;
+        gl::MappedBuffer<f32> delta_time;
     };
 
     struct Shaders
@@ -35,31 +35,31 @@ struct ParticleSystem
             ))};
     };
 
-    std::vector<Particle<f32>> particles{};
-    Buffers buffers{};
+    Buffers buffers;
     Shaders shaders{};
 
-    explicit ParticleSystem(u64 size, const Particle<f32>& default_particle = {})
-        : particles(size, default_particle)
+    explicit ParticleSystem(u64 size,
+                            const Particle<f32>& default_particle = {},
+                            f32 delta_time                        = 0.01)
+        : buffers{expect(gl::MappedBuffer<Particle<f32>>::make(static_cast<i32>(size),
+                                                               default_particle)),
+                  expect(gl::MappedBuffer<f32>::make(1))}
     {
+        // buffers.delta_time.bind(1);
+        // auto delta_time_data    = std::to_array({delta_time});
+        // buffers.delta_time.data = std::span(delta_time_data);
     }
 
-    void send_to_gpu() { buffers.particles.set_data(std::span(particles), gl::Usage::StaticCopy); }
-
-    void fetch_from_gpu() { buffers.particles.read_to(std::span(particles)); }
-
-    void update(f32 delta_time = 0.01)
+    void update()
     {
-        buffers.particles.bind(0);
-        send_to_gpu();
+        buffers.particles.bind();
 
-        buffers.delta_time.bind(1);
-        buffers.delta_time.set_data(std::to_array({delta_time}));
-
+        print("updating", buffers.particles.data.size());
         shaders.update.bind();
-        shaders.update.set("delta_time", delta_time);
-        shaders.update.run(static_cast<u32>(particles.size()));
-        fetch_from_gpu();
+        shaders.update.run(buffers.particles.data.size());
+        print("updated");
     }
+
+    auto particles() { return buffers.particles.data; }
 };
 } // namespace sm::gpu

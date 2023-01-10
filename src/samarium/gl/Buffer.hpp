@@ -7,21 +7,27 @@
 
 #pragma once
 
-#include <span>   // for span
+#include <span> // for span
+#include <tl/expected.hpp>
 #include <vector> // for vector
 
 #include "glad/glad.h"
+#include "range/v3/algorithm/fill.hpp" // for fill
 #include "range/v3/range_concepts.hpp" // for range
 
 #include "samarium/core/types.hpp"     // for u32
 #include "samarium/math/Vector2.hpp"   // for Vector2f
 #include "samarium/util/Error.hpp"     // for Error
+#include "samarium/util/Result.hpp"    // for Result
 #include "samarium/util/byte_size.hpp" // for byte_size
+
+#include "samarium/util/print.hpp" // for print
 
 #include "gl.hpp"
 
 namespace sm::gl
 {
+// https://www.khronos.org/opengl/wiki/Buffer_Object
 template <BufferType type> struct Buffer
 {
     u32 handle;
@@ -94,4 +100,88 @@ template <BufferType type> struct Buffer
 using VertexBuffer        = Buffer<BufferType::Vertex>;
 using ElementBuffer       = Buffer<BufferType::Element>;
 using ShaderStorageBuffer = Buffer<BufferType::ShaderStorage>;
+
+// https://www.khronos.org/opengl/wiki/Buffer_Object#Persistent_mapping
+template <typename T> struct MappedBuffer
+{
+    static constexpr GLbitfield mapping_flags =
+        GL_MAP_WRITE_BIT | GL_MAP_READ_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
+    static constexpr GLbitfield storage_flags = /* GL_DYNAMIC_STORAGE_BIT | */ mapping_flags;
+
+    u32 handle;
+    std::span<T> data;
+
+  private:
+    MappedBuffer() = default;
+
+  public:
+    static auto make(i32 size) -> Result<MappedBuffer<T>>
+    {
+        auto buffer = MappedBuffer<T>{};
+        glCreateBuffers(1, &buffer.handle);
+        if (!buffer.resize(size))
+        {
+            return make_unexpected(fmt::format(
+                "MappedBuffer: glMapNamedBufferRange failed to create buffer of size {}", size));
+        }
+        return {std::move(buffer)};
+    }
+
+    static auto make(i32 size, const T& initial_value) -> Result<MappedBuffer<T>>
+    {
+        auto buffer = MappedBuffer<T>{};
+        glCreateBuffers(1, &buffer.handle);
+        if (!buffer.resize(size))
+        {
+            return make_unexpected(fmt::format(
+                "MappedBuffer: glMapNamedBufferRange failed to create buffer of size {}", size));
+        }
+        buffer.fill(initial_value);
+        return {std::move(buffer)};
+    }
+
+    auto resize(i32 new_size)
+    {
+        glNamedBufferStorage(handle, new_size, nullptr, storage_flags);
+        void* pointer = glMapNamedBufferRange(handle, 0, new_size, mapping_flags);
+        // void* pointer = glMapNamedBuffer(handle, GL_READ_WRITE);
+        if (pointer == nullptr) { return false; }
+        data = std::span<T>((T*)pointer, static_cast<u64>(new_size));
+        return true;
+    }
+
+    auto fill(const T& value) { ranges::fill(data, value); }
+
+    auto bind(u32 index = 0) const { glBindBufferBase(GL_SHADER_STORAGE_BUFFER, index, handle); }
+
+    MappedBuffer(const MappedBuffer&)                    = delete;
+    auto operator=(const MappedBuffer&) -> MappedBuffer& = delete;
+
+    MappedBuffer(MappedBuffer&& other) noexcept : handle{other.handle}, data{other.data}
+    {
+        other.handle = 0;
+        other.data   = {};
+    }
+
+    auto operator=(MappedBuffer&& other) noexcept -> MappedBuffer&
+    {
+        if (this != &other)
+        {
+            glDeleteBuffers(1, &handle);
+            handle       = other.handle;
+            data         = other.data;
+            other.handle = 0;
+            other.data   = {};
+        }
+        return *this;
+    }
+
+    ~MappedBuffer()
+    {
+        // TODO: segfaults
+        // glUnmapNamedBuffer(handle);
+
+        glDeleteBuffers(1, &handle);
+    }
+};
 } // namespace sm::gl
