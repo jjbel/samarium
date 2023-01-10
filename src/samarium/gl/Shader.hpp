@@ -62,9 +62,8 @@ struct VertexShader
         char info_log[1024];
         glGetShaderInfoLog(program_handle, 1024, &log_size, info_log);
 
-        return tl::make_unexpected(
-            fmt::format("Vertex shader compilation error:\n{}",
-                        std::string_view{info_log, static_cast<u64>(log_size)}));
+        return make_unexpected(fmt::format("Vertex shader compilation error:\n{}",
+                                           std::string_view{info_log, static_cast<u64>(log_size)}));
     }
 
     VertexShader(VertexShader&& other) noexcept : handle{other.handle} { other.handle = 0; }
@@ -122,9 +121,8 @@ struct FragmentShader
         char info_log[1024];
         glGetShaderInfoLog(program_handle, 1024, &log_size, info_log);
 
-        return tl::make_unexpected(
-            fmt::format("Vertex shader compilation error:\n{}",
-                        std::string_view{info_log, static_cast<u64>(log_size)}));
+        return make_unexpected(fmt::format("Vertex shader compilation error:\n{}",
+                                           std::string_view{info_log, static_cast<u64>(log_size)}));
     }
 
     FragmentShader(FragmentShader&& other) noexcept : handle{other.handle} { other.handle = 0; }
@@ -232,7 +230,7 @@ struct ComputeShader
         auto log_str  = std::string(1024, ' ');
         glGetShaderInfoLog(program_handle, 1024, &log_size, log_str.data());
 
-        return tl::make_unexpected(
+        return make_unexpected(
             fmt::format("ComputeShader compilation error:\n{}",
                         std::string_view{log_str.data(), static_cast<u64>(log_size)}));
     }

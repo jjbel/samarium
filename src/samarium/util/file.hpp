@@ -129,11 +129,11 @@ SM_INLINE auto read([[maybe_unused]] Text tag, const Path& file_path) -> Result<
 {
     if (!std::filesystem::exists(file_path))
     {
-        return tl::make_unexpected(fmt::format("{} does not exist", file_path));
+        return make_unexpected(fmt::format("{} does not exist", file_path));
     }
     if (!std::filesystem::is_regular_file(file_path))
     {
-        return tl::make_unexpected(fmt::format("{} is not a file", file_path));
+        return make_unexpected(fmt::format("{} is not a file", file_path));
     }
 
     auto ifs = std::ifstream{file_path};
@@ -149,11 +149,11 @@ SM_INLINE auto read_image(const Path& file_path) -> Result<Image>
 {
     if (!std::filesystem::exists(file_path))
     {
-        return {tl::make_unexpected(fmt::format("{} does not exist", file_path))};
+        return {make_unexpected(fmt::format("{} does not exist", file_path))};
     }
     if (!std::filesystem::is_regular_file(file_path))
     {
-        return {tl::make_unexpected(fmt::format("{} is not a file", file_path))};
+        return {make_unexpected(fmt::format("{} is not a file", file_path))};
     }
 
     auto width         = 0;
@@ -164,7 +164,7 @@ SM_INLINE auto read_image(const Path& file_path) -> Result<Image>
 
     if (data == nullptr)
     {
-        return {tl::make_unexpected(fmt::format("stb_load failed while reading {}", file_path))};
+        return {make_unexpected(fmt::format("stb_load failed while reading {}", file_path))};
     }
 
     auto image = Image{{static_cast<u64>(width), static_cast<u64>(height)}};
@@ -202,7 +202,7 @@ SM_INLINE auto read_image(const Path& file_path) -> Result<Image>
     }
     else
     {
-        return tl::make_unexpected(
+        return make_unexpected(
             fmt::format("{} has unknown channel count: {}", file_path, channel_count));
     }
 
@@ -260,7 +260,7 @@ SM_INLINE auto find(const std::string& file_name, const Path& directory) -> Resu
         }
     }
 
-    return {tl::make_unexpected(fmt::format("File not found: '{}'", file_name))};
+    return {make_unexpected(fmt::format("File not found: '{}'", file_name))};
 }
 
 SM_INLINE auto find(const std::string& file_name, std::span<Path> search_paths) -> Result<Path>
@@ -278,7 +278,7 @@ SM_INLINE auto find(const std::string& file_name, std::span<Path> search_paths) 
         }
     }
 
-    return tl::make_unexpected(fmt::format("File not found: '{}'", file_name));
+    return make_unexpected(fmt::format("File not found: '{}'", file_name));
 }
 
 SM_INLINE auto find(const std::string& file_name, std::initializer_list<Path> search_paths)
@@ -297,7 +297,7 @@ SM_INLINE auto find(const std::string& file_name, std::initializer_list<Path> se
         }
     }
 
-    return tl::make_unexpected(fmt::format("File not found: '{}'", file_name));
+    return make_unexpected(fmt::format("File not found: '{}'", file_name));
 }
 } // namespace sm::file
 

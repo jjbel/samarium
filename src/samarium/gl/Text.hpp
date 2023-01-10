@@ -44,12 +44,12 @@ struct Text
     {
         if (!std::filesystem::exists(font_path))
         {
-            return tl::make_unexpected(fmt::format("{} does not exist", font_path));
+            return make_unexpected(fmt::format("{} does not exist", font_path));
         }
 
         if (!std::filesystem::is_regular_file(font_path))
         {
-            return tl::make_unexpected(fmt::format("{} is not a file", font_path));
+            return make_unexpected(fmt::format("{} is not a file", font_path));
         }
 
         auto* ft = FT_Library{};
@@ -57,7 +57,7 @@ struct Text
         // All functions return a value different than 0 whenever an error occurred
         if (FT_Init_FreeType(&ft) != 0)
         {
-            return tl::make_unexpected(std::string{"Could not initialize FreeType"});
+            return make_unexpected(std::string{"Could not initialize FreeType"});
         }
 
         // load font as face
@@ -65,7 +65,7 @@ struct Text
 
         if (FT_New_Face(ft, font_path.string().c_str(), 0, &face) != 0)
         {
-            return tl::make_unexpected(fmt::format("Could not create font: {}", font_path));
+            return make_unexpected(fmt::format("Could not create font: {}", font_path));
         }
 
         // set size to load glyphs as
@@ -82,7 +82,7 @@ struct Text
             // Load character glyph
             if (FT_Load_Char(face, static_cast<u64>(c), FT_LOAD_RENDER) != 0)
             {
-                return tl::make_unexpected(
+                return make_unexpected(
                     fmt::format("Could not create glyph for {} for font: {}", c, font_path));
             }
 

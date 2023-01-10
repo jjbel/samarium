@@ -33,4 +33,9 @@ template <typename T>
     if (value) { return std::move(value.value()); }
     throw BadResultAccess{value.error(), source_location};
 }
+
+template <class E> auto make_unexpected(E&& e)
+{
+    return tl::unexpected<typename std::decay_t<E>>(std::forward<E>(e));
+}
 } // namespace sm
