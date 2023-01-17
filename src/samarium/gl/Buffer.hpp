@@ -105,7 +105,7 @@ using ShaderStorageBuffer = Buffer<BufferType::ShaderStorage>;
 template <typename T> struct MappedBuffer
 {
     static constexpr GLbitfield mapping_flags =
-        GL_MAP_WRITE_BIT | GL_MAP_READ_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
+        GL_MAP_READ_BIT | GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
     static constexpr GLbitfield storage_flags = /* GL_DYNAMIC_STORAGE_BIT | */ mapping_flags;
 
     u32 handle;

@@ -13,13 +13,14 @@
 
 namespace sm::gl
 {
+// https://www.cppstories.com/2015/01/persistent-mapped-buffers-benchmark/
 struct Sync
 {
     GLsync handle{};
 
-    void lock()
+    void fence_sync()
     {
-        if (handle) { glDeleteSync(handle); }
+        if (handle != nullptr) { glDeleteSync(handle); }
         handle = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
     }
 
