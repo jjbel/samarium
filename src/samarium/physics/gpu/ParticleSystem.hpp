@@ -19,12 +19,6 @@ namespace sm::gpu
 {
 struct ParticleSystem
 {
-    struct Buffers
-    {
-        gl::MappedBuffer<Particle<f32>> particles;
-        gl::MappedBuffer<f32> delta_time;
-    };
-
     struct Shaders
     {
         gl::ComputeShader update{expect(gl::ComputeShader::make(
@@ -36,15 +30,16 @@ struct ParticleSystem
             ))};
     };
 
-    Buffers buffers;
+    gl::MappedBuffer<Particle<f32>> particles;
+    gl::MappedBuffer<f32> delta_time;
     Shaders shaders{};
 
     explicit ParticleSystem(u64 size,
                             const Particle<f32>& default_particle = {},
                             f32 delta_time                        = 0.01)
-        : buffers{expect(gl::MappedBuffer<Particle<f32>>::make(static_cast<i32>(size),
-                                                               default_particle)),
-                  expect(gl::MappedBuffer<f32>::make(1))}
+        : particles{expect(
+              gl::MappedBuffer<Particle<f32>>::make(static_cast<i32>(size), default_particle))},
+          delta_time{expect(gl::MappedBuffer<f32>::make(1))}
     {
         // buffers.delta_time.bind(1);
         // auto delta_time_data    = std::to_array({delta_time});
@@ -55,17 +50,16 @@ struct ParticleSystem
     {
         auto fence = gl::Sync{};
         fence.fence_sync();
-        fence.wait();
+        print("Fence waited ", fence.wait());
     }
 
     void update()
     {
-        buffers.particles.bind();
+        particles.bind(2);
         shaders.update.bind();
-        shaders.update.run(static_cast<u32>(buffers.particles.data.size()));
+        shaders.update.run(static_cast<u32>(particles.data.size()));
+        print("Updated ", static_cast<u32>(particles.data.size()));
         sync();
     }
-
-    auto particles() { return buffers.particles.data; }
 };
 } // namespace sm::gpu

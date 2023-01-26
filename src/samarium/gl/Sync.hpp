@@ -24,17 +24,17 @@ struct Sync
         handle = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
     }
 
-    void wait()
+    auto wait()
     {
-        if (handle != nullptr)
+        if (handle == nullptr) { return -1; }
+        auto count = i32{-1};
+        while (true)
         {
-            while (true)
+            count++;
+            GLenum waitReturn = glClientWaitSync(handle, GL_SYNC_FLUSH_COMMANDS_BIT, 1);
+            if (waitReturn == GL_ALREADY_SIGNALED || waitReturn == GL_CONDITION_SATISFIED)
             {
-                GLenum waitReturn = glClientWaitSync(handle, GL_SYNC_FLUSH_COMMANDS_BIT, 1);
-                if (waitReturn == GL_ALREADY_SIGNALED || waitReturn == GL_CONDITION_SATISFIED)
-                {
-                    return;
-                }
+                return count;
             }
         }
     }

@@ -9,15 +9,15 @@ auto main() -> i32
 
     auto rand = RandomGenerator{};
 
-    auto ps = gpu::ParticleSystem(5, {.pos{69, 42}, .vel{4, 5}});
+    auto ps = gpu::ParticleSystem(8, {.pos{69, 42}, .vel{4, 5}});
 
     const auto print_buf = [&]
     {
-        for (auto i : ps.particles()) { fmt::print("{}, ", i.pos); }
+        for (auto i : ps.particles.data) { fmt::print("{}, ", i.pos); }
         print();
     };
 
-    for (auto& i : ps.particles())
+    for (auto& i : ps.particles.data)
     {
         i.pos    = rand.vector(window.viewport()).cast<f32>();
         i.vel    = rand.polar_vector({0, 4}).cast<f32>();
@@ -25,9 +25,10 @@ auto main() -> i32
     }
 
     // ================================== NOTE ========================================
-    // reading from the gpu seems to take 16ms whether we use regular buffers or persistent mapped buffers
-    // however with persistent mapped buffers only the first element seems to be updated
-    // perhaps use triple buffering? (seep https://www.cppstories.com/2015/01/persistent-mapped-buffers-benchmark/)
+    // reading from the gpu seems to take 16ms whether we use regular buffers or persistent mapped
+    // buffers however with persistent mapped buffers only the first element seems to be updated
+    // perhaps use triple buffering? (seep
+    // https://www.cppstories.com/2015/01/persistent-mapped-buffers-benchmark/)
 
     print_buf();
     ps.update();
@@ -55,15 +56,16 @@ auto main() -> i32
         // draw::grid_lines(window, {.spacing = 4, .color{255, 255, 255, 20}, .thickness = 0.08F});
         draw::circle(window, {{2, 3}, 1.4}, {.fill_color{0, 25, 255}});
 
-        for (const auto& particle : ps.particles())
+        for (const auto& particle : ps.particles.data)
         {
             draw::regular_polygon(window, {particle.pos.cast<f64>(), particle.radius}, 8,
                                   {.fill_color = "#ff0000"_c});
         }
-        draw::circle(window, {{0, 0}, 1}, {.fill_color{0, 25, 255}});
+        draw::circle(window, {{0, 0}, .1}, {.fill_color{0, 25, 255}});
     };
 
     run(window, update, draw);
+    print(sizeof(Particle<f32>));
 
     print_buf();
 }
