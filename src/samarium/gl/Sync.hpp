@@ -18,11 +18,7 @@ struct Sync
 {
     GLsync handle{};
 
-    void fence_sync()
-    {
-        if (handle != nullptr) { glDeleteSync(handle); }
-        handle = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
-    }
+    Sync() { handle = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0); }
 
     auto wait()
     {
@@ -38,5 +34,16 @@ struct Sync
             }
         }
     }
+
+    Sync(const Sync&)                    = delete;
+    auto operator=(const Sync&) -> Sync& = delete;
+
+    ~Sync() { glDeleteSync(handle); }
 };
+
+auto sync()
+{
+    auto fence = gl::Sync{};
+    return fence.wait();
+}
 } // namespace sm::gl
