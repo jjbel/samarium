@@ -1,5 +1,3 @@
-#include "range/v3/numeric/accumulate.hpp"
-#include "range/v3/view/take.hpp"
 #include "samarium/samarium.hpp"
 
 using namespace sm;
@@ -12,11 +10,11 @@ auto main() -> i32
     auto rand   = RandomGenerator{};
     for (auto& i : ps.particles.data)
     {
-        i.pos    = rand.vector(window.viewport()).cast<f32>();
+        i.pos    = rand.vector(window.viewport()).cast<f32>() / 2.0F;
         i.vel    = rand.polar_vector({0, 4}).cast<f32>();
         i.radius = 0.1F;
     }
-    window.view.scale /= 2.0;
+
     auto watch = Stopwatch{};
 
     const auto update = [&]
@@ -30,14 +28,12 @@ auto main() -> i32
     {
         draw::background("#131417"_c);
         draw::grid_lines(window, {.spacing = 1, .color{255, 255, 255, 20}, .thickness = 0.03F});
-        draw::circle(window, {{2, 3}, 1.4}, {.fill_color{0, 25, 255}});
 
         for (const auto& particle : ps.particles.data)
         {
             draw::regular_polygon(window, {particle.pos.cast<f64>(), particle.radius}, 3,
                                   {.fill_color = "#ff0000"_c});
         }
-        draw::circle(window, {{0, 0}, .1}, {.fill_color{0, 25, 255}});
     };
 
     run(window, update, draw);
