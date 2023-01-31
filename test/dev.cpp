@@ -1,45 +1,44 @@
 #include "range/v3/numeric/accumulate.hpp"
 #include "range/v3/view/take.hpp"
 #include "samarium/samarium.hpp"
-#include "samarium/util/Stopwatch.hpp"
 
 using namespace sm;
 using namespace sm::literals;
 
-constexpr auto src =
-#include "samarium/physics/gpu/version.comp.glsl"
-
-#include "samarium/physics/gpu/Particle.comp.glsl"
-
-#include "samarium/physics/gpu/update.comp.glsl"
-    ;
-
 auto main() -> i32
 {
     auto window = Window{{{1800, 900}}};
-    auto buffer = expect(gl::MappedBuffer<Particle<f32>>::make(1024));
-    buffer.fill(Particle<f32>{.pos{0, 0}, .vel{1, 2}});
-
-    auto shader = expect(gl::ComputeShader::make(src));
-
-    // https://juandiegomontoya.github.io/particles.html#gpu
+    auto ps     = gpu::ParticleSystem{u64(1) << u64(20), Particle<f32>{.pos{0, 0}, .vel{1, 1}}};
+    auto rand   = RandomGenerator{};
+    for (auto& i : ps.particles.data)
+    {
+        i.pos    = rand.vector(window.viewport()).cast<f32>();
+        i.vel    = rand.polar_vector({0, 4}).cast<f32>();
+        i.radius = 0.1F;
+    }
+    window.view.scale /= 2.0;
+    auto watch = Stopwatch{};
 
     const auto update = [&]
     {
-        const auto work_group_count = (buffer.data.size() + 64 - 1) / 64;
-        shader.bind();
-        buffer.bind(2);
-        shader.run(static_cast<u32>(work_group_count));
-        buffer.read();
-        gl::sync();
+        ps.update();
+        print(ps.particles.data.size(), " at ", i32(1000.0 * watch.seconds()), " ms");
+        watch.reset();
     };
 
-    auto watch = Stopwatch{};
-    update();
-    // update();
+    const auto draw = [&]
+    {
+        draw::background("#131417"_c);
+        draw::grid_lines(window, {.spacing = 1, .color{255, 255, 255, 20}, .thickness = 0.03F});
+        draw::circle(window, {{2, 3}, 1.4}, {.fill_color{0, 25, 255}});
 
-    watch.print();
-    print("SUM:", ranges::accumulate(
-                      buffer.data, Vector2f{}, [](Vector2f a, Vector2f b) { return a + b; },
-                      &Particle<f32>::pos));
+        for (const auto& particle : ps.particles.data)
+        {
+            draw::regular_polygon(window, {particle.pos.cast<f64>(), particle.radius}, 3,
+                                  {.fill_color = "#ff0000"_c});
+        }
+        draw::circle(window, {{0, 0}, .1}, {.fill_color{0, 25, 255}});
+    };
+
+    run(window, update, draw);
 }

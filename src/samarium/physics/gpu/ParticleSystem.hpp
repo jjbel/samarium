@@ -14,6 +14,7 @@
 #include "samarium/gl/Vertex.hpp"        // for ShaderStorageBuffer
 #include "samarium/physics/Particle.hpp" // for Particle
 #include "samarium/util/Result.hpp"      // for expect
+#include "samarium/util/Stopwatch.hpp"
 
 namespace sm::gpu
 {
@@ -31,35 +32,21 @@ struct ParticleSystem
     };
 
     gl::MappedBuffer<Particle<f32>> particles;
-    gl::MappedBuffer<f32> delta_time;
     Shaders shaders{};
 
-    explicit ParticleSystem(u64 size,
-                            const Particle<f32>& default_particle = {},
-                            f32 delta_time                        = 0.01)
+    explicit ParticleSystem(u64 size, const Particle<f32>& default_particle = {})
         : particles{expect(
-              gl::MappedBuffer<Particle<f32>>::make(static_cast<i32>(size), default_particle))},
-          delta_time{expect(gl::MappedBuffer<f32>::make(1))}
+              gl::MappedBuffer<Particle<f32>>::make(static_cast<i32>(size), default_particle))}
     {
-        // buffers.delta_time.bind(1);
-        // auto delta_time_data    = std::to_array({delta_time});
-        // buffers.delta_time.data = std::span(delta_time_data);
     }
 
-    void sync()
+    void update(f32 delta_time = 0.01F)
     {
-        auto fence = gl::Sync{};
-        fence.fence_sync();
-        print("Fence waited ", fence.wait());
-    }
-
-    void update()
-    {
-        particles.bind(2);
+        const auto work_group_count = (particles.data.size() + 64 - 1) / 64;
         shaders.update.bind();
-        shaders.update.run(static_cast<u32>(particles.data.size()));
-        print("Updated ", static_cast<u32>(particles.data.size()));
-        sync();
+        particles.bind(2);
+        shaders.update.set("delta_time", delta_time);
+        shaders.update.run(static_cast<u32>(work_group_count));
     }
 };
 } // namespace sm::gpu
