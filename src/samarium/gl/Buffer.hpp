@@ -106,7 +106,7 @@ template <typename T> struct MappedBuffer
 {
     static constexpr GLbitfield mapping_flags =
         GL_MAP_READ_BIT | GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
-    static constexpr GLbitfield storage_flags = /* GL_DYNAMIC_STORAGE_BIT | */ mapping_flags;
+    static constexpr GLbitfield storage_flags = GL_DYNAMIC_STORAGE_BIT | mapping_flags;
 
     u32 handle;
     std::span<T> data;
@@ -142,17 +142,18 @@ template <typename T> struct MappedBuffer
 
     auto resize(i32 new_size)
     {
-        glNamedBufferStorage(handle, new_size, nullptr, storage_flags);
-        void* pointer = glMapNamedBufferRange(handle, 0, new_size, mapping_flags);
-        // void* pointer = glMapNamedBuffer(handle, GL_READ_WRITE);
+        glNamedBufferStorage(handle, new_size * sizeof(T), nullptr, storage_flags);
+        void* pointer = glMapNamedBufferRange(handle, 0, new_size * sizeof(T), mapping_flags);
         if (pointer == nullptr) { return false; }
-        data = std::span<T>((T*)pointer, static_cast<u64>(new_size));
+        data = std::span<T>(reinterpret_cast<T*>(pointer), static_cast<u64>(new_size));
         return true;
     }
 
     auto fill(const T& value) { ranges::fill(data, value); }
 
     auto bind(u32 index = 0) const { glBindBufferBase(GL_SHADER_STORAGE_BUFFER, index, handle); }
+
+    auto read() { glGetNamedBufferSubData(handle, 0, data.size() * sizeof(T), data.data()); }
 
     MappedBuffer(const MappedBuffer&)                    = delete;
     auto operator=(const MappedBuffer&) -> MappedBuffer& = delete;
