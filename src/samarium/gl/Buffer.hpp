@@ -115,18 +115,6 @@ template <typename T> struct MappedBuffer
     MappedBuffer() = default;
 
   public:
-    static auto make(i32 size) -> Result<MappedBuffer<T>>
-    {
-        auto buffer = MappedBuffer<T>{};
-        glCreateBuffers(1, &buffer.handle);
-        if (!buffer.resize(size))
-        {
-            return make_unexpected(fmt::format(
-                "MappedBuffer: glMapNamedBufferRange failed to create buffer of size {}", size));
-        }
-        return {std::move(buffer)};
-    }
-
     static auto make(i32 size, const T& initial_value) -> Result<MappedBuffer<T>>
     {
         auto buffer = MappedBuffer<T>{};
@@ -138,6 +126,17 @@ template <typename T> struct MappedBuffer
         }
         buffer.fill(initial_value);
         return {std::move(buffer)};
+    }
+
+    explicit MappedBuffer(i32 size, const T& initial_value)
+    {
+        glCreateBuffers(1, &handle);
+        if (!resize(size))
+        {
+            throw Error(fmt::format(
+                "MappedBuffer: glMapNamedBufferRange failed to create buffer of size {}", size));
+        }
+        fill(initial_value);
     }
 
     auto resize(i32 new_size)
@@ -152,8 +151,6 @@ template <typename T> struct MappedBuffer
     auto fill(const T& value) { ranges::fill(data, value); }
 
     auto bind(u32 index = 0) const { glBindBufferBase(GL_SHADER_STORAGE_BUFFER, index, handle); }
-
-    auto read() { glGetNamedBufferSubData(handle, 0, data.size() * sizeof(T), data.data()); }
 
     MappedBuffer(const MappedBuffer&)                    = delete;
     auto operator=(const MappedBuffer&) -> MappedBuffer& = delete;
