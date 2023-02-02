@@ -235,6 +235,13 @@ struct ComputeShader
                         std::string_view{log_str.data(), static_cast<u64>(log_size)}));
     }
 
+    explicit ComputeShader(const std::string& source)
+    {
+        auto result = make(source);
+        if (result) { *this = std::move(*result); }
+        else { throw Error{result.error()}; }
+    }
+
     void bind();
     void run(u32 x, u32 y = 1U, u32 z = 1U);
 
