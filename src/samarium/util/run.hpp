@@ -15,6 +15,21 @@
 namespace sm
 {
 /**
+ * @brief               call update  -> display the window
+ *
+ * @param  window       Window to display
+ * @param  update       Callable which updates the state of objects
+ */
+auto run(Window& window, const std::invocable auto& update)
+{
+    while (window.is_open())
+    {
+        update();
+        window.display();
+    }
+}
+
+/**
  * @brief               call update  -> call draw -> display the window
  *
  * @param  window       Window to display
