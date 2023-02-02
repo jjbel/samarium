@@ -133,8 +133,19 @@ SM_INLINE Context::Context(Dimensions dims)
 #include "shaders/polyline.vert.glsl"
     );
 
-    shaders.emplace("polyline", Shader{*VertexShader::make(vert_sources.at("polyline")),
-                                       *FragmentShader::make(frag_sources.at("Pos"))});
+    shaders.emplace("polyline", Shader{expect(VertexShader::make(vert_sources.at("polyline"))),
+                                       expect(FragmentShader::make(frag_sources.at("Pos")))});
+
+    vert_sources.emplace("particles",
+#include "samarium/physics/gpu/version.comp.glsl"
+
+#include "samarium/physics/gpu/Particle.comp.glsl"
+
+#include "shaders/particles.vert.glsl"
+    );
+
+    shaders.emplace("particles", Shader{expect(VertexShader::make(vert_sources.at("particles"))),
+                                        expect(FragmentShader::make(frag_sources.at("Pos")))});
 
     shader_storage_buffers.emplace("default", ShaderStorageBuffer{});
 

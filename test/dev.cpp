@@ -6,7 +6,7 @@ using namespace sm::literals;
 auto main() -> i32
 {
     auto window = Window{{{1800, 900}}};
-    auto ps     = gpu::ParticleSystem{u64(1) << u64(20), Particle<f32>{.pos{0, 0}, .vel{1, 1}}};
+    auto ps     = gpu::ParticleSystem{u64(1) << u64(22), Particle<f32>{.pos{0, 0}, .vel{1, 1}}, 16};
     auto rand   = RandomGenerator{};
     for (auto& i : ps.particles.data)
     {
@@ -20,21 +20,18 @@ auto main() -> i32
     const auto update = [&]
     {
         ps.update();
-        print(ps.particles.data.size(), " at ", i32(1000.0 * watch.seconds()), " ms");
-        watch.reset();
-    };
 
-    const auto draw = [&]
-    {
-        draw::background("#131417"_c);
+        draw::background("#111114"_c);
         draw::grid_lines(window, {.spacing = 1, .color{255, 255, 255, 20}, .thickness = 0.03F});
 
-        for (const auto& particle : ps.particles.data)
-        {
-            draw::regular_polygon(window, {particle.pos.cast<f64>(), particle.radius}, 3,
-                                  {.fill_color = "#ff0000"_c});
-        }
+        ps.draw(window, "#2050d6"_c.with_multiplied_alpha(0.4), 0.4F, 3);
     };
 
-    run(window, update, draw);
+    while (window.is_open())
+    {
+        watch.reset();
+        window.display(); // glfwSwapBuffers takes 66ms
+        update();
+        watch.print();
+    }
 }

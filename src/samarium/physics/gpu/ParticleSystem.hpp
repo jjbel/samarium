@@ -5,16 +5,16 @@
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
-#include <array>  // for to_array
-#include <span>   // for span
-#include <vector> // for vector
+#include <span> // for span
 
-#include "samarium/gl/Shader.hpp"        // for ComputeShader
-#include "samarium/gl/Sync.hpp"          // for Sync
-#include "samarium/gl/Vertex.hpp"        // for ShaderStorageBuffer
-#include "samarium/physics/Particle.hpp" // for Particle
-#include "samarium/util/Result.hpp"      // for expect
-#include "samarium/util/Stopwatch.hpp"
+#include "fmt/format.h" // for to_string
+
+#include "samarium/gl/Shader.hpp"           // for ComputeShader
+#include "samarium/gui/Window.hpp"          // for Window
+#include "samarium/math/vector_math.hpp"    // for regular_polygon_points
+#include "samarium/physics/Particle.hpp"    // for Particle
+#include "samarium/util/Result.hpp"         // for expect
+#include "samarium/util/replace_substr.hpp" // for replace_substr
 
 namespace sm::gpu
 {
@@ -22,31 +22,63 @@ struct ParticleSystem
 {
     struct Shaders
     {
-        gl::ComputeShader update{expect(gl::ComputeShader::make(
+        static constexpr auto update_src =
 #include "version.comp.glsl"
 
 #include "Particle.comp.glsl"
 
 #include "update.comp.glsl"
-            ))};
+            ;
+        gl::ComputeShader update;
     };
 
     gl::MappedBuffer<Particle<f32>> particles;
-    Shaders shaders{};
+    u32 shader_local_size;
+    Shaders shaders;
 
-    explicit ParticleSystem(u64 size, const Particle<f32>& default_particle = {})
-        : particles{expect(
-              gl::MappedBuffer<Particle<f32>>::make(static_cast<i32>(size), default_particle))}
+    auto format_shader_src(std::string_view src) const
+    {
+        return util::replace_substr(src, "LOCAL_SIZE", fmt::to_string(shader_local_size));
+    }
+
+    explicit ParticleSystem(i32 size,
+                            const Particle<f32>& default_particle = {},
+                            u32 compute_shader_local_size         = 16)
+        : particles{size, default_particle}, shader_local_size{compute_shader_local_size},
+          shaders{.update{format_shader_src(Shaders::update_src)}}
     {
     }
 
     void update(f32 delta_time = 0.01F)
     {
-        const auto work_group_count = (particles.data.size() + 64 - 1) / 64;
+        const auto work_group_count =
+            (particles.data.size() + shader_local_size - 1) / shader_local_size;
+        print("work_group_count:", work_group_count, shader_local_size);
         shaders.update.bind();
         particles.bind(2);
         shaders.update.set("delta_time", delta_time);
         shaders.update.run(static_cast<u32>(work_group_count));
+    }
+
+    void draw(Window& window, Color color, f32 scale = 1.0F, u32 point_count = 16)
+    {
+        const auto points = math::regular_polygon_points<f32>(point_count, {{}, 1.0F});
+
+        const auto& shader = window.context.shaders.at("particles");
+        window.context.set_active(shader);
+        shader.set("scale", scale);
+        shader.set("view", window.view);
+        shader.set("color", color);
+
+        const auto& buffer = window.context.vertex_buffers.at("default");
+
+        auto& vao = window.context.vertex_arrays.at("Pos");
+        window.context.set_active(vao);
+        buffer.set_data(points);
+        vao.bind(buffer, sizeof(Vector2_t<f32>));
+
+        glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, static_cast<i32>(points.size()),
+                              static_cast<i32>(particles.data.size()));
     }
 };
 } // namespace sm::gpu
