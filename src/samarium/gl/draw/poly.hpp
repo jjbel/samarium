@@ -7,12 +7,13 @@
 
 #pragma once
 
-#include "samarium/core/types.hpp" // for u32, f32
-#include "samarium/gl/Context.hpp" // for Context
-#include "samarium/gl/draw/vertices.hpp"
-#include "samarium/graphics/Color.hpp" // for Color
-#include "samarium/gui/Window.hpp"     // for Window
-#include "samarium/math/Vector2.hpp"   // for Vector2f
+#include "samarium/core/types.hpp"       // for u32, f32
+#include "samarium/gl/Context.hpp"       // for Context
+#include "samarium/gl/draw/vertices.hpp" // for Buffer
+#include "samarium/graphics/Color.hpp"   // for Color
+#include "samarium/gui/Window.hpp"       // for Window
+#include "samarium/math/Vector2.hpp"     // for Vector2f
+#include "samarium/math/vector_math.hpp" // for regular_polygon_points
 
 namespace sm::draw
 {
