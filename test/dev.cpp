@@ -30,7 +30,7 @@ auto main() -> i32
     while (window.is_open())
     {
         watch.reset();
-        window.display(); // glfwSwapBuffers takes 66ms
+        window.display();
         update();
         watch.print();
     }
