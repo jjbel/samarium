@@ -53,7 +53,6 @@ struct ParticleSystem
     {
         const auto work_group_count =
             (particles.data.size() + shader_local_size - 1) / shader_local_size;
-        print("work_group_count:", work_group_count, shader_local_size);
         shaders.update.bind();
         particles.bind(2);
         shaders.update.set("delta_time", delta_time);
