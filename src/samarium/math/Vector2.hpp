@@ -153,6 +153,11 @@ template <typename T> struct Vector2_t
         return Vector2_t<U>{static_cast<U>(this->x), static_cast<U>(this->y)};
     }
 
+    template <typename U> [[nodiscard]] explicit constexpr operator Vector2_t<U>() const noexcept
+    {
+        return Vector2_t<U>{static_cast<U>(this->x), static_cast<U>(this->y)};
+    }
+
     [[nodiscard]] static constexpr auto dot(Vector2_t<T> p1, Vector2_t<T> p2) noexcept
     {
         return p1.x * p2.x + p1.y * p2.y;
