@@ -7,7 +7,9 @@
 
 #pragma once
 
-#include "samarium/math/shapes.hpp"
+#include "samarium/graphics/Color.hpp" // for Color, ShapeColor
+#include "samarium/gui/Window.hpp"     // for Window
+#include "samarium/math/shapes.hpp"    // for LineSegment, Circle
 
 namespace sm::draw
 {
