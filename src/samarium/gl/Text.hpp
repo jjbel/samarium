@@ -176,9 +176,9 @@ SM_INLINE void Text::operator()(gl::Context& context,
         // render quad
         glDrawArrays(GL_TRIANGLES, 0, 6);
         // now advance cursors for next glyph (note that advance is number of 1/64 pixels)
-        pos.x +=
-            (ch.advance >> 6) * scale; // bitshift by 6 to get value in pixels (2^6 = 64 (divide
-                                       // amount of 1/64th pixels by 64 to get amount of pixels))
+        pos.x += static_cast<f32>(ch.advance) / 64.0F * scale;
+        // bitshift by 6 to get value in pixels (2^6 = 64 (divide
+        // amount of 1/64th pixels by 64 to get amount of pixels))
     }
 }
 
