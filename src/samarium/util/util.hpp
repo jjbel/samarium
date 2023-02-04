@@ -29,7 +29,7 @@ namespace sm::util
     throw std::invalid_argument("hex character must be 0-9, a-f, or A-F");
 }
 
-template <typename To, typename Range> [[nodiscard]] inline auto range_cast(const Range& range)
+template <typename To, typename Range> [[nodiscard]] inline auto cast_range(const Range& range)
 {
     return ranges::actions::transform(range, [](const auto& value) { return (To)value; });
 }
