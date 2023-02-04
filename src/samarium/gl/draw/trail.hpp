@@ -38,11 +38,11 @@ SM_INLINE void trail(Window& window, const Trail& trail, Color color, f32 thickn
     polyline(window, points, color, thickness);
 }
 
-SM_INLINE void
-trail(Window& window, const Trail& trail, FunctionRef<Color(f64)> dynamic_color, f32 thickness)
-{
-    // TODO
-}
+// SM_INLINE void
+// trail(Window& window, const Trail& trail, FunctionRef<Color(f64)> dynamic_color, f32 thickness)
+// {
+// TODO
+// }
 } // namespace sm::draw
 
 #endif
