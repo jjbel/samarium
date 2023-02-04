@@ -11,4 +11,5 @@
 #include "draw/grid.hpp"
 #include "draw/poly.hpp"
 #include "draw/shapes.hpp"
+#include "draw/trail.hpp"
 #include "draw/vertices.hpp"
