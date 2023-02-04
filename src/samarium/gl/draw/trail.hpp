@@ -30,6 +30,7 @@ namespace sm::draw
 {
 SM_INLINE void trail(Window& window, const Trail& trail, Color color, f32 thickness)
 {
+    if (trail.size() < 2) { return; }
     const auto points = trail.trail |
                         ranges::views::transform([](Vector2 vec) { return vec.cast<f32>(); }) |
                         ranges::to<std::vector>;
