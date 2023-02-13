@@ -19,7 +19,7 @@ struct GridLines
 {
     f64 spacing   = 1.0;
     Color color   = Color{200, 200, 200, 50};
-    f32 thickness = 0.02F;
+    f32 thickness = 0.1F;
 };
 void grid_lines(Window& window, const GridLines& config = {});
 
