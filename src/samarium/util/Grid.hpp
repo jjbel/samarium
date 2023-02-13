@@ -61,7 +61,7 @@ template <typename T> class Grid
 
     Grid(Dimensions dims_, T init_value) : elements(dims_.x * dims_.y, init_value), dims{dims_} {}
 
-    explicit Grid(std::span<T> span, Dimensions dims_)
+    explicit Grid(std::span<const T> span, Dimensions dims_)
         : elements(span.begin(), span.end()), dims{dims_}
     {
     }
