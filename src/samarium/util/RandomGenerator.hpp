@@ -12,6 +12,7 @@
 #include <vector>           // for vector
 
 #include "range/v3/algorithm/generate.hpp" // for generate, generate_fn
+#include "range/v3/range/concepts.hpp"     // for random_access_range
 
 #include "samarium/core/types.hpp"       // for f64, u64
 #include "samarium/math/BoundingBox.hpp" // for BoundingBox
@@ -98,12 +99,18 @@ struct RandomGenerator
     }
 
     [[nodiscard]] auto poisson_disc_points(f64 radius,
-                                           Vector2 sample_region_size,
+                                           BoundingBox<f64> sample_region,
                                            u64 sample_count = 30UL) -> std::vector<Vector2>;
 
     [[nodiscard]] auto boolean(f64 threshold = 0.5) -> bool;
 
     [[nodiscard]] auto gaussian(f64 mean, f64 deviation = 1.0) -> f64;
+
+    [[nodiscard]] auto choice(const ranges::random_access_range auto& iterable)
+    {
+        return iterable[static_cast<u64>(
+            std::round(random() * static_cast<f64>(ranges::size(iterable) - 1)))];
+    }
 };
 } // namespace sm
 
@@ -207,11 +214,11 @@ void RandomGenerator::reseed(u64 new_seed)
 }
 
 [[nodiscard]] auto RandomGenerator::poisson_disc_points(f64 radius,
-                                                        Vector2 sample_region_size,
+                                                        BoundingBox<f64> sample_region,
                                                         u64 sample_count) -> std::vector<Vector2>
 {
-    const f64 cell_size = radius / std::numbers::sqrt2;
-
+    const f64 cell_size           = radius / std::numbers::sqrt2;
+    const auto sample_region_size = sample_region.diagonal();
     auto grid = Grid<i32>{{static_cast<u64>(std::ceil(sample_region_size.x / cell_size)),
                            static_cast<u64>(std::ceil(sample_region_size.y / cell_size))}};
 
@@ -231,17 +238,18 @@ void RandomGenerator::reseed(u64 new_seed)
             std::ignore          = i;
             const auto candidate = spawn_centre + this->polar_vector({radius, 2 * radius});
 
-            if (detail::poisson_is_valid(candidate, sample_region_size, cell_size, radius, points,
-                                         grid))
+            if (!detail::poisson_is_valid(candidate, sample_region_size, cell_size, radius, points,
+                                          grid))
             {
-                points.push_back(candidate);
-                spawn_points.push_back(candidate);
-                grid[{static_cast<u64>(candidate.x / cell_size),
-                      static_cast<u64>(candidate.y / cell_size)}] = static_cast<i32>(points.size());
-
-                candidate_accepted = true;
-                break;
+                continue;
             }
+            points.push_back(candidate);
+            spawn_points.push_back(candidate);
+            grid[{static_cast<u64>(candidate.x / cell_size),
+                  static_cast<u64>(candidate.y / cell_size)}] = static_cast<i32>(points.size());
+
+            candidate_accepted = true;
+            break;
         }
 
         if (!candidate_accepted)
@@ -250,6 +258,7 @@ void RandomGenerator::reseed(u64 new_seed)
         }
     }
 
+    for (auto& point : points) { point += sample_region.min; }
     return points;
 }
 
