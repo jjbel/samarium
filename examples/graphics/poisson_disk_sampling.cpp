@@ -6,39 +6,34 @@
  */
 
 #include "samarium/graphics/colors.hpp"
-#include "samarium/math/Vector2.hpp"
-#include "samarium/math/interp.hpp"
-#include "samarium/math/vector_math.hpp"
 #include "samarium/samarium.hpp"
-#include "samarium/util/Grid.hpp"
-#include "samarium/util/random.hpp"
 
 using namespace sm;
 using namespace sm::literals;
 
 auto main() -> i32
 {
-    auto app = App{{.dims = dims720}};
+    auto window = Window{{.dims = dims720}};
 
     const auto region  = Vector2{40, 30};
     const auto samples = 10UL;
     const auto radius  = 1.0;
+    auto rand          = RandomGenerator{};
+    auto points        = rand.poisson_disc_points(radius, {region}, samples);
 
-    auto points = sm::random.poisson_disc_points(radius, region, samples);
-
-    auto box = app.transform.apply_inverse(app.bounding_box().template cast<f64>());
+    auto box = window.viewport();
 
     auto mapper =
         interp::make_mapper<Vector2>({{}, region}, {box.min.cast<f64>(), box.max.cast<f64>()});
 
-    app.run(
+    run(window,
         [&]
         {
             app.fill("#15151f"_c);
             for (auto point : points)
             {
-                app.draw(Circle{.centre = mapper(point), .radius = radius},
-                         {.fill_color = "#ff1438"_c});
+                draw::circle(window, Circle{.centre = mapper(point), .radius = radius},
+                             {.fill_color = "#ff1438"_c});
             }
         });
 }
