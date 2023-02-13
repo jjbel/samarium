@@ -48,7 +48,7 @@ namespace sm::draw
 {
 SM_INLINE void circle(Window& window, Circle circle, ShapeColor color, const glm::mat4& transform)
 {
-    regular_polygon(window, circle, 64, color, transform);
+    regular_polygon(window, circle, 16, color, transform);
 }
 
 SM_INLINE void circle(Window& window, Circle circle_, ShapeColor color)
