@@ -13,8 +13,9 @@
 
 #include "glad/glad.h" // for gladLoadGLLoader, glEnable
 
-#include "GLFW/glfw3.h"                // for glfwWindowHint, glfwGetMous...
-#include "glm/ext/matrix_float4x4.hpp" // for mat4
+#include "GLFW/glfw3.h"                            // for glfwWindowHint, glfwGetMous...
+#include "glm/ext/matrix_float4x4.hpp"             // for mat4
+#include "samarium/util/call_thunk/call_thunk.hpp" // for thunk
 
 #include "samarium/core/types.hpp"       // for f64, i32, u64, f32
 #include "samarium/gl/Context.hpp"       // for Context
@@ -44,6 +45,41 @@ struct WindowConfig
     bool resizable    = true;
 };
 
+struct ScrollCallback
+{
+    struct Holder
+    {
+        double scroll{};
+        void function([[maybe_unused]] GLFWwindow* window,
+                      [[maybe_unused]] double xoffset,
+                      double yoffset)
+        {
+            scroll = yoffset;
+        }
+    };
+
+    Holder holder{};
+    call_thunk::thunk<GLFWscrollfun> thunk{holder, &Holder::function};
+};
+
+struct ResizeCallback
+{
+    struct Holder
+    {
+        Dimensions dims{};
+        bool resized{};
+        void function([[maybe_unused]] GLFWwindow* window, i32 new_width, i32 new_height)
+        {
+            glViewport(0, 0, new_width, new_height);
+            dims    = Dimensions::make(new_width, new_height);
+            resized = true;
+        }
+    };
+
+    Holder holder{};
+    call_thunk::thunk<GLFWframebuffersizefun> thunk{holder, &Holder::function};
+};
+
 /**
  * @brief               An RAII wrapper around GLFWwindow
  *
@@ -70,7 +106,6 @@ struct Window
             glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, gl::version_major);
             glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, gl::version_minor);
             glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-            // glfwWindowHint(GLFW_SAMPLES, 4);
 
             handle = Handle(glfwCreateWindow(static_cast<i32>(config.dims.x),
                                              static_cast<i32>(config.dims.y), config.title.c_str(),
@@ -79,8 +114,6 @@ struct Window
             if (!handle) { throw Error{"failed to create window"}; }
 
             glfwMakeContextCurrent(handle.get());
-            glfwSetFramebufferSizeCallback(handle.get(), framebuffer_size_callback);
-
             if (gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)) == 0)
             {
                 throw Error{"failed to initialize GLAD"};
@@ -98,14 +131,8 @@ struct Window
         ~Init() { glfwTerminate(); }
     };
 
-    static inline bool resized;
-
-    static void
-    framebuffer_size_callback([[maybe_unused]] GLFWwindow* window, i32 new_width, i32 new_height)
-    {
-        glViewport(0, 0, new_width, new_height);
-        Window::resized = true;
-    }
+    ScrollCallback scroll_callback{};
+    ResizeCallback resize_callback{};
 
     Handle handle{};
     Dimensions dims{};
@@ -121,8 +148,8 @@ struct Window
     Window(const Window&)                    = delete;
     auto operator=(const Window&) -> Window& = delete;
 
-    Window(Window&&) noexcept                    = default;
-    auto operator=(Window&&) noexcept -> Window& = default;
+    Window(Window&&) noexcept                    = delete;
+    auto operator=(Window&&) noexcept -> Window& = delete;
 
     ~Window() = default;
 
@@ -199,13 +226,17 @@ namespace sm
 SM_INLINE Window::Window(const WindowConfig& config)
     : dims{config.dims}, init{config, handle}, context{config.dims}
 {
-    // gl::enable_debug_output();
+    gl::enable_debug_output();
 
     glEnable(GL_BLEND); // enable blending function
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     keymap.push_back(keyboard::OnKeyPress{
         *handle, {Key::Escape}, [this] { this->close(); }}); // by default, exit on escape
+
+    resize_callback.holder.dims = dims;
+    glfwSetFramebufferSizeCallback(handle.get(), resize_callback.thunk);
+    glfwSetScrollCallback(handle.get(), scroll_callback.thunk);
 }
 
 SM_INLINE auto Window::is_open() const -> bool { return glfwWindowShouldClose(handle.get()) == 0; }
@@ -214,7 +245,10 @@ SM_INLINE void Window::close() { glfwSetWindowShouldClose(handle.get(), true); }
 
 SM_INLINE void Window::get_inputs()
 {
+    scroll_callback.holder.scroll = 0.0;
+
     glfwPollEvents();
+
     mouse.left    = glfwGetMouseButton(handle.get(), GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
     mouse.right   = glfwGetMouseButton(handle.get(), GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS;
     mouse.old_pos = mouse.pos;
@@ -225,6 +259,8 @@ SM_INLINE void Window::get_inputs()
     mouse.pos = view.apply_inverse(Vector2{xpos, ypos} / dims.cast<f64>() * Vector2{2.0, -2.0} +
                                    Vector2{-1.0, 1.0});
 
+    mouse.scroll_amount = scroll_callback.holder.scroll;
+
     keymap.run();
 }
 
@@ -232,25 +268,20 @@ SM_INLINE void Window::display()
 {
     context.draw_frame();
 
-    resized = false;
+    resize_callback.holder.resized = false;
     glfwSwapBuffers(handle.get());
-    get_inputs();
-
-    auto width  = 0;
-    auto height = 0;
-
-    glfwGetWindowSize(handle.get(), &width, &height);
-    dims = {static_cast<u64>(width), static_cast<u64>(height)};
-
+    dims         = resize_callback.holder.dims;
     view.scale.y = view.scale.x * aspect_ratio();
 
-    if (resized)
+    if (resize_callback.holder.resized)
     {
         context.frame_texture =
             gl::Texture{gl::ImageFormat::RGBA8, dims, gl::Texture::Wrap::ClampEdge,
                         gl::Texture::Filter::Nearest, gl::Texture::Filter::Nearest};
         context.framebuffer.bind_texture(context.frame_texture);
     }
+
+    get_inputs();
 }
 
 SM_INLINE auto Window::is_key_pressed(Key key) const -> bool
