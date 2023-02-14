@@ -139,10 +139,11 @@ template <typename T> struct MappedBuffer
         fill(initial_value);
     }
 
-    auto resize(i32 new_size)
+    auto resize(i64 new_size)
     {
         glNamedBufferStorage(handle, new_size * sizeof(T), nullptr, storage_flags);
-        void* pointer = glMapNamedBufferRange(handle, 0, new_size * sizeof(T), mapping_flags);
+        void* pointer =
+            glMapNamedBufferRange(handle, 0, new_size * static_cast<i64>(sizeof(T)), mapping_flags);
         if (pointer == nullptr) { return false; }
         data = std::span<T>(reinterpret_cast<T*>(pointer), static_cast<u64>(new_size));
         return true;
