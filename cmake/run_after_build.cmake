@@ -18,6 +18,7 @@ if(RUN_AFTER_BUILD)
         OUTPUT ${RUN_OUTPUT}
         COMMAND ${RUN_AFTER_BUILD}
         DEPENDS ${RUN_AFTER_BUILD_DEPENDS}
+        USES_TERMINAL
     )
 
     # Create target which consume the command via DEPENDS.
