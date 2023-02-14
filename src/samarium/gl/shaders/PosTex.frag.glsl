@@ -1,6 +1,4 @@
 R"glsl(
-#version 460 core
-
 in vec2 tex_coord;
 layout(binding = 0) uniform sampler2D input_texture;
 

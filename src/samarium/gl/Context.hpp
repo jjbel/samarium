@@ -137,8 +137,6 @@ SM_INLINE Context::Context(Dimensions dims)
                                        expect(FragmentShader::make(frag_sources.at("Pos")))});
 
     vert_sources.emplace("particles",
-#include "samarium/physics/gpu/version.comp.glsl"
-
 #include "samarium/physics/gpu/Particle.comp.glsl"
 
 #include "shaders/particles.vert.glsl"

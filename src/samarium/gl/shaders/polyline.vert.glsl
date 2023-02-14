@@ -1,6 +1,4 @@
 R"glsl(
-#version 460
-
 layout(std430, binding = 0) buffer ssbo { vec2 vertices[]; };
 
 uniform mat4 view;

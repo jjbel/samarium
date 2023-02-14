@@ -23,8 +23,6 @@ struct ParticleSystem
     struct Shaders
     {
         static constexpr auto update_src =
-#include "version.comp.glsl"
-
 #include "Particle.comp.glsl"
 
 #include "update.comp.glsl"
@@ -33,26 +31,21 @@ struct ParticleSystem
     };
 
     gl::MappedBuffer<Particle<f32>> particles;
-    u32 shader_local_size;
+    i32 shader_local_size;
     Shaders shaders;
-
-    auto format_shader_src(std::string_view src) const
-    {
-        return util::replace_substr(src, "LOCAL_SIZE", fmt::to_string(shader_local_size));
-    }
 
     explicit ParticleSystem(i32 size,
                             const Particle<f32>& default_particle = {},
-                            u32 compute_shader_local_size         = 16)
+                            i32 compute_shader_local_size         = 16)
         : particles{size, default_particle}, shader_local_size{compute_shader_local_size},
-          shaders{.update{format_shader_src(Shaders::update_src)}}
+          shaders{.update{Shaders::update_src, shader_local_size}}
     {
     }
 
     void update(f32 delta_time = 0.01F)
     {
         const auto work_group_count =
-            (particles.data.size() + shader_local_size - 1) / shader_local_size;
+            (static_cast<i32>(particles.data.size()) + shader_local_size - 1) / shader_local_size;
         shaders.update.bind();
         particles.bind(2);
         shaders.update.set("delta_time", delta_time);

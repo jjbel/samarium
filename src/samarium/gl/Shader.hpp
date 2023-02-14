@@ -41,9 +41,10 @@ struct VertexShader
         return expect(make(*file::read(path)));
     }
 
-    [[nodiscard]] static auto make(const std::string& source) -> Result<VertexShader>
+    [[nodiscard]] static auto make(std::string source) -> Result<VertexShader>
     {
         auto program_handle = glCreateShader(GL_VERTEX_SHADER);
+        source              = "#version 460 core\n" + source;
         const auto src      = source.c_str();
         glShaderSource(program_handle, 1, &src, nullptr);
         glCompileShader(program_handle);
@@ -100,9 +101,10 @@ struct FragmentShader
         return FragmentShader(*file::read(path));
     }
 
-    static inline auto make(const std::string& source) -> Result<FragmentShader>
+    static inline auto make(std::string source) -> Result<FragmentShader>
     {
         auto program_handle = glCreateShader(GL_FRAGMENT_SHADER);
+        source              = "#version 460 core\n" + source;
         const auto src      = source.c_str();
         glShaderSource(program_handle, 1, &src, nullptr);
         glCompileShader(program_handle);
@@ -207,11 +209,17 @@ struct ComputeShader
         return *this;
     }
 
-    static inline auto make(const std::string& source) -> Result<ComputeShader>
+    static inline auto
+    make(std::string source, i32 local_size_x = 1, i32 local_size_y = 1, i32 local_size_z = 1)
+        -> Result<ComputeShader>
     {
         auto program_handle = glCreateShader(GL_COMPUTE_SHADER);
-        const auto src      = source.c_str();
-        glShaderSource(program_handle, 1, &src, nullptr);
+        source = fmt::format("#version 460 core\nlayout(local_size_x = {}, local_size_y = {}, "
+                             "local_size_z = {}) in;\n",
+                             local_size_x, local_size_y, local_size_z) +
+                 source;
+        const auto src_pointer = source.c_str();
+        glShaderSource(program_handle, 1, &src_pointer, nullptr);
         glCompileShader(program_handle);
 
         auto success = 0;
@@ -235,7 +243,10 @@ struct ComputeShader
                         std::string_view{log_str.data(), static_cast<u64>(log_size)}));
     }
 
-    explicit ComputeShader(const std::string& source)
+    explicit ComputeShader(const std::string& source,
+                           i32 local_size_x = 1,
+                           i32 local_size_y = 1,
+                           i32 local_size_z = 1)
     {
         auto result = make(source);
         if (result) { *this = std::move(*result); }
