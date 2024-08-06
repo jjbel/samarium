@@ -1,5 +1,5 @@
 # Samarium
-
+<!-- 
 [![GCC](https://github.com/strangeQuark1041/samarium/actions/workflows/gcc.yml/badge.svg)](https://github.com/strangeQuark1041/samarium/actions/workflows/gcc.yml)
 [![Clang](https://github.com/strangeQuark1041/samarium/actions/workflows/clang.yml/badge.svg)](https://github.com/strangeQuark1041/samarium/actions/workflows/clang.yml)
 [![MSVC](https://github.com/strangeQuark1041/samarium/actions/workflows/msvc.yml/badge.svg)](https://github.com/strangeQuark1041/samarium/actions/workflows/msvc.yml)
@@ -7,7 +7,8 @@
 
 ![Lines of Code](https://img.shields.io/tokei/lines/github/strangeQuark1041/samarium)
 ![Repo Size](https://img.shields.io/github/repo-size/strangeQuark1041/samarium)
-[![MIT License](https://img.shields.io/badge/license-MIT-yellow)](https://github.com/strangeQuark1041/samarium/blob/main/LICENSE.md)
+[![MIT License](https://img.shields.io/badge/license-MIT-yellow)](https://github.com/strangeQuark1041/samarium/blob/main/LICENSE.md) -->
+
 ![language: C++20](https://img.shields.io/badge/language-C%2B%2B20-yellow)
 [![Latest Github Release](https://img.shields.io/github/v/tag/strangeQuark1041/samarium?label=latest%20release)](https://github.com/strangeQuark1041/samarium/tags)
 
@@ -46,6 +47,8 @@ python scripts/bootstrap.py
 | git        | <https://git-scm.com/downloads/> | <https://git-scm.com/docs/> |
 | cmake      | <https://cmake.org/download/> | <https://cmake.org/cmake/help/latest/> |
 | conan      | <https://conan.io/downloads.html/> | <https://docs.conan.io/en/latest/> |
+
+# Install conan 1.64: `pip install --force-reinstall -v "conan==1.64"`
 
 A compiler supporting C++20 is required, namely GCC-11, Clang-13, or Visual C++ 2019
 
