@@ -1,20 +1,28 @@
-#include "samarium/gl/draw/grid.hpp"
 #include "samarium/graphics/colors.hpp"
 #include "samarium/samarium.hpp"
+
+#include "turtle.hpp"
+
 
 using namespace sm;
 using namespace sm::literals;
 
-auto main() -> i32
+static auto turtle = Turtle{};
+
+int main()
 {
-    auto window = Window{{{1800, 900}}};
+    auto window       = Window{{{500, 500}, "Turtle Sim", false}};
+    window.view.scale = Vector2::combine(1.0 / 250.0);
 
     const auto update = [&]
     {
-        draw::background("#12121a"_c);
-        draw::grid_lines(window);
-        draw::circle(window, {{0, 0}, 0.6}, {colors::crimson});
-        print(window.dims, window.aspect_ratio(), window.view.scale.y / window.view.scale.x);
+        draw::background(colors::white);
+        turtle.draw(window);
+
+        // turtle.pos.x += 0.001;
+        // turtle.pos.y -= 0.001;
+        turtle.angle += 0.0005;
+        turtle.forward(0.03);
     };
 
     run(window, update);
