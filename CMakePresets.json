@@ -29,6 +29,17 @@
             }
         },
         {
+            "name": "win",
+            "displayName": "Windows Dev",
+            "description": "Windows Dev",
+            "inherits": "default",
+            "cacheVariables": {
+                "BUILD_EXAMPLES": false,
+                "BUILD_DOCS_TARGET": false,
+                "USE_CCACHE": false
+            }
+        },
+        {
             "name": "ci",
             "inherits": "default",
             "cacheVariables": {
@@ -102,6 +113,12 @@
             "name": "default",
             "configurePreset": "default",
             "configuration": "Release"
+        },
+        {
+            "name": "win",
+            "configurePreset": "win",
+            "configuration": "Release",
+            "jobs": 8
         },
         {
             "name": "dev",
