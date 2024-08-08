@@ -7,8 +7,8 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
-  schedule:
-    - cron: "0 2 * * *" # run everyday to keep fresh
+  # schedule:
+  #   - cron: "0 2 * * *" # run everyday to keep fresh
 
 env:
   # Path to the CMake build directory.
