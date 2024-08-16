@@ -36,6 +36,6 @@ run(['cmake', '--build', '--preset=default'], check=True)
 
 # TODO only on windows
 print('\nrunning turtle')
-run(['run', 'turtle'], check=True)
+run('run turtle',shell=True, check=True)
 
 print('\nExample ran successfully! Now check out the examples in the samarium/examples directory.')
