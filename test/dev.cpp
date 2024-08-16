@@ -1,10 +1,10 @@
-#include "turtle.hpp"
+#include "samarium/turtle.hpp"
 
 main_program
 {
     int counter = 0;
 
-    for (int i = 0; i < 200; i++)
+    repeat(200)
     {
         left(3);
         forward(6);
