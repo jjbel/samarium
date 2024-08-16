@@ -1,5 +1,6 @@
 # Samarium
-<!-- 
+
+<!--
 [![GCC](https://github.com/strangeQuark1041/samarium/actions/workflows/gcc.yml/badge.svg)](https://github.com/strangeQuark1041/samarium/actions/workflows/gcc.yml)
 [![Clang](https://github.com/strangeQuark1041/samarium/actions/workflows/clang.yml/badge.svg)](https://github.com/strangeQuark1041/samarium/actions/workflows/clang.yml)
 [![MSVC](https://github.com/strangeQuark1041/samarium/actions/workflows/msvc.yml/badge.svg)](https://github.com/strangeQuark1041/samarium/actions/workflows/msvc.yml)
@@ -37,16 +38,18 @@ Samarium is a 2d physics simulation library written in modern C++20.
 
 ```sh
 git clone --depth 1 https://github.com/strangeQuark1041/samarium.git
-python scripts/bootstrap.py
+python samarium/scripts/bootstrap.py
 ```
 
 ## Prerequistes
 
-| Dependency | URL | Documentation |
-| ---        | --- | --- |
-| git        | <https://git-scm.com/downloads/> | <https://git-scm.com/docs/> |
-| cmake      | <https://cmake.org/download/> | <https://cmake.org/cmake/help/latest/> |
-| conan      | <https://conan.io/downloads.html/> | <https://docs.conan.io/en/latest/> |
+| Dependency | URL                                 | Documentation                          |
+| ---------- | ----------------------------------- | -------------------------------------- |
+| python     | <https://www.python.org/downloads/> |                                        |
+| git        | <https://git-scm.com/downloads/>    | <https://git-scm.com/docs/>            |
+| cmake      | <https://cmake.org/download/>       | <https://cmake.org/cmake/help/latest/> |
+
+<!-- | conan      | <https://conan.io/downloads.html/> | <https://docs.conan.io/en/latest/> | -->
 
 # Install conan 1.64: `pip install --force-reinstall -v "conan==1.64"`
 
