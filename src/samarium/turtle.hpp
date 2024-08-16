@@ -74,20 +74,24 @@ struct Turtle
         while (!this->window.mouse.left && this->window.is_open())
         {
             this->display();
-            std::cout << this->window.mouse.left << std::endl;
+            // std::cout << this->window.mouse.left << std::endl;
         }
     }
 };
 } // namespace sm
 
-#define main_program int main()
 
 using namespace std;
 using namespace sm;
 
-static auto turtle = Turtle{};
+
+static auto turtle = sm::Turtle{};
 
 void left(f32 degrees) { turtle.left(degrees); }
 void right(f32 degrees) { turtle.right(degrees); }
 void forward(f32 distance) { turtle.forward(distance); }
 void getClick() { turtle.getClick(); }
+
+#define main_program int main()
+#define repeat(n) for(int i = 0; i < n; i++)
+// TODO support nested loops
