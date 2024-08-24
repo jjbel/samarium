@@ -19,7 +19,7 @@
                 "CMAKE_COMPILE_WARNING_AS_ERROR": false,
                 "SAMARIUM_HEADER_ONLY": false,
                 "BUILD_UNIT_TESTS": false,
-                "BUILD_EXAMPLES": false,
+                "BUILD_EXAMPLES": true,
                 "BUILD_BENCHMARKS": false,
                 "BUILD_DOCS": false,
                 "BUILD_DOCS_TARGET": false,
@@ -34,9 +34,7 @@
             "displayName": "Windows Dev",
             "description": "Windows Dev",
             "inherits": "default",
-            "cacheVariables": {
-                "BUILD_EXAMPLES": true
-            }
+            "cacheVariables": {}
         },
         {
             "name": "ci",
