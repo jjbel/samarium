@@ -3,13 +3,12 @@
 # See <https://opensource.org/licenses/MIT/> or LICENSE.md
 # Project homepage: <https://github.com/strangeQuark1041/samarium>
 
-# install dependencies by running '
+# install dependencies by running 'conan install'
 
 if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/conan.lock AND RUN_CONAN)
     find_program(CONAN_EXE conan REQUIRED)
 
     set(DEPS_OPTION "")
-
     if(BUILD_UNIT_TESTS OR BUILD_BENCHMARKS)
         set(DEPS_OPTION "-o samarium/*:build_tests=True")
     endif()
