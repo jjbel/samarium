@@ -1,6 +1,6 @@
 /*
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2022 Jai Bellare
+ * Copyright (c) 2022-2024 Jai Bellare
  * See <https://opensource.org/licenses/MIT/> or LICENSE.md
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
@@ -84,8 +84,8 @@ namespace sm::math
     return interp::in_range(Vector2::dot(point - l.p1, l.vector()) / l.length_sq(), {0., 1.});
 }
 
-[[nodiscard]] constexpr auto intersection(const LineSegment& l1, const LineSegment& l2) noexcept
-    -> std::optional<Vector2>
+[[nodiscard]] constexpr auto intersection(const LineSegment& l1,
+                                          const LineSegment& l2) noexcept -> std::optional<Vector2>
 {
     const auto denom1 = l1.p2.x - l1.p1.x;
     const auto denom2 = l2.p2.x - l2.p1.x;
@@ -106,9 +106,9 @@ namespace sm::math
     return {Vector2{x, m1 * (x - l1.p1.x) + l1.p1.y}};
 }
 
-[[nodiscard]] inline auto clamped_intersection(const LineSegment& l1,
-                                               const LineSegment& l2) noexcept
-    -> std::optional<Vector2>
+[[nodiscard]] inline auto
+clamped_intersection(const LineSegment& l1,
+                     const LineSegment& l2) noexcept -> std::optional<Vector2>
 {
     const auto point = intersection(l1, l2);
     if (!point) { return std::nullopt; }

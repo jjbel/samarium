@@ -1,6 +1,6 @@
 /*
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2022 Jai Bellare
+ * Copyright (c) 2022-2024 Jai Bellare
  * See <https://opensource.org/licenses/MIT/> or LICENSE.md
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
@@ -71,7 +71,7 @@ template <BufferType type> struct Buffer
         else { throw Error{"Binding points can only be used for ShaderStorage objects"}; }
     }
 
-    // TODO use ranges::range concept for array 
+    // TODO use ranges::range concept for array
     // in 2 places below
     // removed coz range header deprecated
 

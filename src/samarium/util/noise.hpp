@@ -1,6 +1,6 @@
 /*
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2022 Jai Bellare
+ * Copyright (c) 2022-2024 Jai Bellare
  * See <https://opensource.org/licenses/MIT/> or LICENSE.md
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
@@ -135,7 +135,7 @@ auto perlin_2d(Vector2 pos, Params params) -> f64
         result += single_iter_noise2d(pos) * amplitude;
         amplitude *= params.roughness;
         pos *= 2.0;
-        
+
         std::ignore = i;
     }
     return result / div;

@@ -1,6 +1,6 @@
 /*
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2022 Jai Bellare
+ * Copyright (c) 2022-2024 Jai Bellare
  * See <https://opensource.org/licenses/MIT/> or LICENSE.md
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
@@ -86,8 +86,8 @@ void write([[maybe_unused]] Bmp tag,
            const Image& image,
            const Path& file_path = date_time_str() + ".bmp");
 
-auto find(const std::string& file_name, const Path& directory = std::filesystem::current_path())
-    -> Result<Path>;
+auto find(const std::string& file_name,
+          const Path& directory = std::filesystem::current_path()) -> Result<Path>;
 
 auto find(const std::string& file_name, std::span<Path> search_paths) -> Result<Path>;
 
@@ -281,8 +281,8 @@ SM_INLINE auto find(const std::string& file_name, std::span<Path> search_paths) 
     return make_unexpected(fmt::format("File not found: '{}'", file_name));
 }
 
-SM_INLINE auto find(const std::string& file_name, std::initializer_list<Path> search_paths)
-    -> Result<Path>
+SM_INLINE auto find(const std::string& file_name,
+                    std::initializer_list<Path> search_paths) -> Result<Path>
 {
     for (const auto& path : search_paths)
     {

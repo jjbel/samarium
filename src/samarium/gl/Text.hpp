@@ -1,6 +1,6 @@
 /*
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2022 Jai Bellare
+ * Copyright (c) 2022-2024 Jai Bellare
  * See <https://opensource.org/licenses/MIT/> or LICENSE.md
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
@@ -39,8 +39,8 @@ struct Text
 {
     Map<char, Character> characters{};
 
-    [[nodiscard]] static auto make(const std::filesystem::path& font_path, u32 height = 48)
-        -> Result<Text>
+    [[nodiscard]] static auto make(const std::filesystem::path& font_path,
+                                   u32 height = 48) -> Result<Text>
     {
         if (!std::filesystem::exists(font_path))
         {

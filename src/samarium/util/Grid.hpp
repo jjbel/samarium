@@ -1,6 +1,6 @@
 /*
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2022 Jai Bellare
+ * Copyright (c) 2022-2024 Jai Bellare
  * See <https://opensource.org/licenses/MIT/> or LICENSE.md
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
@@ -209,7 +209,7 @@ template <typename T> class Grid
     auto byte_size() const { return size() * sizeof(T); }
 };
 
-using Image       = Grid<Color>;
+using Image = Grid<Color>;
 
 // TODO the fields should have their own transform and rounding, to make indexing easier.
 // see flow_field_noise

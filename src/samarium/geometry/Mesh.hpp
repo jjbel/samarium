@@ -1,6 +1,6 @@
 /*
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2022 Jai Bellare
+ * Copyright (c) 2022-2024 Jai Bellare
  * See <https://opensource.org/licenses/MIT/> or LICENSE.md
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
@@ -31,9 +31,8 @@ struct Mesh
 
     auto edges_view()
     {
-        const auto get_line_segment = [this](const auto& edge) {
-            return LineSegment{vertices[edge.v1], vertices[edge.v2]};
-        };
+        const auto get_line_segment = [this](const auto& edge)
+        { return LineSegment{vertices[edge.v1], vertices[edge.v2]}; };
         return ranges::views::transform(edges, get_line_segment);
     }
 };

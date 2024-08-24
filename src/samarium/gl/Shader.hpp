@@ -1,6 +1,6 @@
 /*
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2022 Jai Bellare
+ * Copyright (c) 2022-2024 Jai Bellare
  * See <https://opensource.org/licenses/MIT/> or LICENSE.md
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
@@ -209,9 +209,10 @@ struct ComputeShader
         return *this;
     }
 
-    static inline auto
-    make(std::string source, i32 local_size_x = 1, i32 local_size_y = 1, i32 local_size_z = 1)
-        -> Result<ComputeShader>
+    static inline auto make(std::string source,
+                            i32 local_size_x = 1,
+                            i32 local_size_y = 1,
+                            i32 local_size_z = 1) -> Result<ComputeShader>
     {
         auto program_handle = glCreateShader(GL_COMPUTE_SHADER);
         source = fmt::format("#version 460 core\nlayout(local_size_x = {}, local_size_y = {}, "
@@ -252,10 +253,9 @@ struct ComputeShader
         if (result) { *this = std::move(*result); }
         else { throw Error{result.error()}; }
         // TODO use local_sizes?
-        (void) local_size_x;
-        (void) local_size_y;
-        (void) local_size_z;
-
+        (void)local_size_x;
+        (void)local_size_y;
+        (void)local_size_z;
     }
 
     void bind();

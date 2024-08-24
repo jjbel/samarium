@@ -1,6 +1,6 @@
 /*
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2022 Jai Bellare
+ * Copyright (c) 2022-2024 Jai Bellare
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
 
@@ -31,13 +31,9 @@ concept Number = Integral<T> || FloatingPoint<T>;
 
 template <typename T>
 concept Arithmetic = requires(T a, T b) {
-                         {
-                             a + b
-                             } -> std::same_as<T>;
-                         {
-                             a - b
-                             } -> std::same_as<T>;
-                     };
+    { a + b } -> std::same_as<T>;
+    { a - b } -> std::same_as<T>;
+};
 
 template <typename T, typename... U>
 concept AnyOf = (std::same_as<T, U> || ...);
