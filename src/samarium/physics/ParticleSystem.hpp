@@ -12,7 +12,7 @@
 #include <span>   // for span
 #include <vector> // for vector
 
-#include "BS_thread_pool.hpp"                         // for multi_future
+// #include "BS_thread_pool.hpp"                         // for multi_future TODO needed? iwyu...
 #include "range/v3/algorithm/for_each.hpp"            // for for_each
 #include "range/v3/algorithm/sort.hpp"                // for sort
 #include "range/v3/functional/identity.hpp"           // for identity
@@ -78,8 +78,8 @@ template <typename Particle_t = Particle<f64>, u64 CellCapacity = 32> struct Par
             for (auto i : loop::end(min, max)) { particles[i].update(time_delta); }
         };
 
-        thread_pool.parallelize_loop(0UL, particles.size(), job, thread_pool.get_thread_count())
-            .wait();
+        thread_pool.detach_loop(0UL, particles.size(), job, thread_pool.get_thread_count());
+        thread_pool.wait();
     }
 
     void apply_force(Vector2 force) noexcept

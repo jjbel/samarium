@@ -143,7 +143,10 @@ template <> class formatter<sm::SourceLocation>
   public:
     constexpr auto parse(const format_parse_context& ctx) const { return ctx.begin(); }
 
-    auto format(const sm::SourceLocation& p, auto& ctx)
+    // as of fmt 11, should be marked const
+    // https://fmt.dev/11.0/api/
+    // TODO parse shouldn't be const?
+    auto format(const sm::SourceLocation& p, auto& ctx) const
     {
         return fmt::format_to(ctx.out(), "[{}:{}:{} in {}()]", p.file_name(), p.line(), p.column(),
                               p.function_name());
