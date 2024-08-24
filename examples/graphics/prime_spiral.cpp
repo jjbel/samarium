@@ -1,6 +1,6 @@
 /*
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2022 Jai Bellare
+ * Copyright (c) 2022-2024 Jai Bellare
  * See <https://opensource.org/licenses/MIT/> or LICENSE.md
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
@@ -43,7 +43,7 @@ auto main() -> i32
 
     const auto draw = [&]
     {
-        app.fill("#06060c"_c);
+        draw::background("#06060c"_c);
         if (app.mouse.left)
         {
             app.transform.pos += app.mouse.current_pos - app.mouse.old_pos;

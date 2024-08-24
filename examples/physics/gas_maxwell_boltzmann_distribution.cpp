@@ -1,6 +1,6 @@
 /*
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2022 Jai Bellare
+ * Copyright (c) 2022-2024 Jai Bellare
  * See <https://opensource.org/licenses/MIT/> or LICENSE.md
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
@@ -76,7 +76,7 @@ auto main() -> i32
             frequencies.at(static_cast<u64>(speed / class_size)) += 1.0;
         }
 
-        app.fill("#131417"_c);
+        draw::background("#131417"_c);
         app.draw(App::GridLines{});
         for (const auto& i : particles) { app.draw(i, {.fill_color = "#fc0330"_c}); }
 

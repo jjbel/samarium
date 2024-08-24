@@ -1,6 +1,6 @@
 /*
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2022 Jai Bellare
+ * Copyright (c) 2022-2024 Jai Bellare
  * See <https://opensource.org/licenses/MIT/> or LICENSE.md
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
@@ -29,7 +29,7 @@ auto main() -> i32
     run(window,
         [&]
         {
-            app.fill("#15151f"_c);
+            draw::background("#15151f"_c);
             for (auto point : points)
             {
                 draw::circle(window, Circle{.centre = mapper(point), .radius = radius},

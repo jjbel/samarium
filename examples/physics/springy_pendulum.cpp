@@ -1,6 +1,6 @@
 /*
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2022 Jai Bellare
+ * Copyright (c) 2022-2024 Jai Bellare
  * See <https://opensource.org/licenses/MIT/> or LICENSE.md
  * Project homepage: https://github.com/strangeQuark1041/samarium
  */
@@ -31,7 +31,7 @@ auto main() -> i32
 
     const auto update = [&]
     {
-        app.fill(Color{16, 18, 20});
+        draw::background(Color{16, 18, 20});
         p1.apply_force(p1.mass * gravity);
         const auto spring = p1.pos - anchor;
         const auto force  = spring.with_length(spring_constant * (rest_length - spring.length()));
