@@ -49,7 +49,8 @@ if(USE_WARNINGS)
 endif()
 
 if(MSVC)
-    set(FPNG_OPTIONS "/w")
+    # TODO Not needed to ignore warning?
+    # set(FPNG_OPTIONS "/w")
 else()
     set(FPNG_OPTIONS "-fno-strict-aliasing;-msse4.1;-mpclmul;-w")
 endif()
