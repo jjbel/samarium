@@ -116,6 +116,8 @@ auto perlin_1d(f64 pos, Params params) -> f64
         result += single_iter_noise1d(pos) * amplitude;
         amplitude *= params.roughness;
         pos *= 2.0;
+
+        std::ignore = i;
     }
     return result / div;
 }
@@ -133,6 +135,8 @@ auto perlin_2d(Vector2 pos, Params params) -> f64
         result += single_iter_noise2d(pos) * amplitude;
         amplitude *= params.roughness;
         pos *= 2.0;
+        
+        std::ignore = i;
     }
     return result / div;
 }

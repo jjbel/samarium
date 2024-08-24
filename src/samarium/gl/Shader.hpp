@@ -251,6 +251,11 @@ struct ComputeShader
         auto result = make(source);
         if (result) { *this = std::move(*result); }
         else { throw Error{result.error()}; }
+        // TODO use local_sizes?
+        (void) local_size_x;
+        (void) local_size_y;
+        (void) local_size_z;
+
     }
 
     void bind();

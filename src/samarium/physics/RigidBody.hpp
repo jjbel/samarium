@@ -31,6 +31,8 @@ struct RigidBody
     constexpr auto apply_force(Vector2 force, Vector2 relative_pos) noexcept
     {
         acc += force / mass;
+        // TODO use relative_pos
+        (void)relative_pos;
     }
 
     constexpr auto update(f64 time_delta = 1.0 / 64) noexcept

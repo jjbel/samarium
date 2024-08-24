@@ -209,6 +209,9 @@ struct thunk_code
                 else if (argc > 6)
                 {
                     alignment_stack* _alignment_stack = reinterpret_cast<alignment_stack*>(p);
+
+// TODO size_t to uint32_t may lose data
+#pragma warning(suppress : 4267)
                     new (_alignment_stack) alignment_stack(5, argc - 4);
                     p += sizeof(alignment_stack);
                 }
@@ -318,7 +321,11 @@ struct thunk_code
 
         jump_function()
         {
+
+// TODO cast truncates constant value
+#pragma warning(suppress : 4310)
             mov_proc  = (short)0xB848;
+#pragma warning(suppress : 4310)
             call_proc = (short)0xE0FF;
         }
     };
@@ -336,7 +343,11 @@ struct thunk_code
 
         call_function()
         {
+            
+// TODO cast truncates constant value
+#pragma warning(suppress : 4310)
             mov_proc  = (short)0xB848;
+#pragma warning(suppress : 4310)
             call_proc = (short)0xD0FF;
         }
     };
@@ -351,6 +362,9 @@ struct thunk_code
 
         return_caller(short n)
         {
+            
+// TODO truncation of constant value
+#pragma warning(suppress : 4309)
             ret = 0xC2;
             _n  = n * 8;
         }

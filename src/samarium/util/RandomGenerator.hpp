@@ -69,6 +69,9 @@ struct RandomGenerator
         // Calculate output function (XSH RR), uses old state for max ILP
         const auto xorshifted = static_cast<u32>(((oldstate >> 18UL) ^ oldstate) >> 27UL);
         const auto rot        = static_cast<u32>(oldstate >> 59UL);
+
+// TODO unary minus operator applied to unsigned type, result still unsigned
+#pragma warning(suppress : 4146)
         return (xorshifted >> rot) | (xorshifted << ((-rot) & 31));
     }
 
@@ -85,8 +88,8 @@ struct RandomGenerator
     [[nodiscard]] auto vector(const BoundingBox<f64>& bounding_box) noexcept -> Vector2;
 
     [[nodiscard]] auto polar_vector(Extents<f64> radius_range,
-                                    Extents<f64> angle_range = {0.0, 2 * math::pi}) noexcept
-        -> Vector2;
+                                    Extents<f64> angle_range = {0.0,
+                                                                2 * math::pi}) noexcept -> Vector2;
 
     [[nodiscard]] auto choice(const ranges::range auto& iterable)
     {

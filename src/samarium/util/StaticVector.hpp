@@ -484,7 +484,10 @@ template <typename T, size_t Capacity> struct static_vector
         for (auto&& i : l) { push_back(i); }
     }
 
+    // TODO use alignas and std::byte, remove MSVC warning
+#pragma warning(suppress : 4996)
     typename std::aligned_storage<sizeof(T), std::alignment_of<T>::value>::type m_data[Capacity];
+
     size_t m_size = 0;
 };
 
