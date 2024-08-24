@@ -34,7 +34,9 @@
             "displayName": "Windows Dev",
             "description": "Windows Dev",
             "inherits": "default",
-            "cacheVariables": {}
+            "cacheVariables": {
+                "BUILD_EXAMPLES": true
+            }
         },
         {
             "name": "ci",
@@ -42,7 +44,7 @@
             "cacheVariables": {
                 "BUILD_UNIT_TESTS": true,
                 "BUILD_EXAMPLES": false,
-                "RUN_CONAN": false
+                "RUN_CONAN": true
             }
         },
         {
