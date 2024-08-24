@@ -31,9 +31,10 @@ jobs:
         with:
           version: 2.6.0
 
-      - name: Configure Conan
+      - name: Configure Conan default profile
         run: |
-          conan profile new default --detect
+            conan profile detect --force
+# or use conan profile new default --detect?
 
       - name: Install Ninja
         uses: seanmiddleditch/gha-setup-ninja@master
@@ -53,7 +54,7 @@ jobs:
 
       - name: Run Conan
         if: steps.cache-conan.outputs.cache-hit != 'true'
-        run: conan install . -b missing -if build -pr:b=default -o samarium:build_tests=True
+        run: conan install . -b missing -pr:b=default -o samarium:build_tests=True
 
 
       - name: CMake Configure
