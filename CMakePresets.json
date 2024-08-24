@@ -19,12 +19,12 @@
                 "CMAKE_COMPILE_WARNING_AS_ERROR": false,
                 "SAMARIUM_HEADER_ONLY": false,
                 "BUILD_UNIT_TESTS": false,
-                "BUILD_EXAMPLES": true,
+                "BUILD_EXAMPLES": false,
                 "BUILD_BENCHMARKS": false,
                 "BUILD_DOCS": false,
-                "BUILD_DOCS_TARGET": true,
+                "BUILD_DOCS_TARGET": false,
                 "USE_WARNINGS": true,
-                "USE_CCACHE": true,
+                "USE_CCACHE": false,
                 "USE_UBSAN": false
             }
         },
@@ -33,11 +33,7 @@
             "displayName": "Windows Dev",
             "description": "Windows Dev",
             "inherits": "default",
-            "cacheVariables": {
-                "BUILD_EXAMPLES": false,
-                "BUILD_DOCS_TARGET": false,
-                "USE_CCACHE": false
-            }
+            "cacheVariables": {}
         },
         {
             "name": "ci",
