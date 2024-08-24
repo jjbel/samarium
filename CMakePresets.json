@@ -25,7 +25,8 @@
                 "BUILD_DOCS_TARGET": false,
                 "USE_WARNINGS": true,
                 "USE_CCACHE": false,
-                "USE_UBSAN": false
+                "USE_UBSAN": false,
+                "RUN_CONAN": true
             }
         },
         {
