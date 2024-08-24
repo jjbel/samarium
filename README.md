@@ -41,7 +41,7 @@ Samarium is a 2d physics simulation library written in modern C++20.
 
 ```sh
 git clone --depth 1 https://github.com/strangeQuark1041/samarium.git
-python samarium/scripts/bootstrap.py
+python samarium/bootstrap.py
 ```
 
 ## Prerequistes
@@ -50,13 +50,13 @@ python samarium/scripts/bootstrap.py
 | ---------- | ----------------------------------- | -------------------------------------- |
 | python     | <https://www.python.org/downloads/> |                                        |
 | git        | <https://git-scm.com/downloads/>    | <https://git-scm.com/docs/>            |
-| cmake      | <https://cmake.org/download/>       | <https://cmake.org/cmake/help/latest/> |
 
+<!-- | cmake      | <https://cmake.org/download/>       | <https://cmake.org/cmake/help/latest/> | -->
 <!-- | conan      | <https://conan.io/downloads.html/> | <https://docs.conan.io/en/latest/> | -->
 
-# Install conan 1.64: `pip install --force-reinstall -v "conan==1.64"`
+A compiler supporting C++20 is required, namely GCC-11, Clang-13, or Visual C++ 2019.
 
-A compiler supporting C++20 is required, namely GCC-11, Clang-13, or Visual C++ 2019
+Running `boostrap.py` will install CMake and Conan, or you can do it yourself first.
 
 ## Installation
 
