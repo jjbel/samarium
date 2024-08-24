@@ -41,7 +41,7 @@ jobs:
           key: ${{ runner.os }}-builder-${{ env.cache-name }}-${{ hashFiles('**/conanfile.py') }}
           restore-keys: ${{ runner.os }}-builder-${{ env.cache-name }}-
 
-      - name: Run Conan
+      - name: Conan download packages
         if: steps.cache-conan.outputs.cache-hit != 'true'
         run: conan install . -b missing -pr:b=default -o samarium/*:build_tests=True
 
@@ -54,4 +54,3 @@ jobs:
 
       - name: CTest
         run: ctest --preset=default
-  
