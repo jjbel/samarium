@@ -210,6 +210,9 @@ template <typename T> class Grid
 };
 
 using Image       = Grid<Color>;
+
+// TODO the fields should have their own transform and rounding, to make indexing easier.
+// see flow_field_noise
 using ScalarField = Grid<f64>;
 using VectorField = Grid<Vector2>;
 
