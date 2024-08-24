@@ -48,8 +48,11 @@ auto run(Window& window,
     {
         for (auto i : loop::end(substeps))
         {
+            // TODO should give update the correct dt
             update();
             watch.reset();
+
+            std::ignore = i;
         }
         draw();
 
