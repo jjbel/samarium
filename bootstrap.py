@@ -1,21 +1,13 @@
 #!/usr/bin/env python
 
-from subprocess import run, PIPE
+# to make installation easy, put boostrap.py in root of repo
+
 from os import chdir
 from pathlib import Path
+import scripts.bootstrap.install_conan
+from subprocess import run
 
-try:
-    import conan
-    print('conan already installed.')
-except ModuleNotFoundError:
-    print('installing conan...')
-    run('pip install --force-reinstall -v "conan==1.64"', shell=True, check=True, stdout=PIPE)
-    print('done')
-
-    # TODO test this on CI
-    print('adding conan default profile...')
-    run(['conan', 'profile', 'new', 'default', '--detect'],  stdout=PIPE)
-    print('done')
+install_conan.main()
 
 chdir(Path(__file__).parent.parent.parent)
 
@@ -36,6 +28,6 @@ run(['cmake', '--build', '--preset=default'], check=True)
 
 # TODO only on windows
 print('\nrunning turtle')
-run('run turtle',shell=True, check=True)
+run('run turtle', shell=True, check=True)
 
 print('\nExample ran successfully! Now check out the examples in the samarium/examples directory.')

@@ -25,24 +25,18 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Install CMake
+        run: python ./scripts/bootstrap/install_cmake.py
+
       - name: Install Conan
         id: conan
-        uses: turtlebrowser/get-conan@main
-        with:
-          version: 2.6.0
+        run: python ./scripts/bootstrap/install_conan.py
 
-      - name: Configure Conan default profile
-        run: |
-            conan profile detect --force
-# or use conan profile new default --detect?
-
+# Ninja not needed for CI?
       - name: Install Ninja
         uses: seanmiddleditch/gha-setup-ninja@master
 
-      - name: Install CMake
-        uses: jwlawson/actions-setup-cmake@v1.13
-
-      - name: Cache .conan directory
+      - name: Cache .conan2 directory
         id: cache-conan
         uses: actions/cache@v3
         env:
@@ -58,8 +52,7 @@ jobs:
 
 
       - name: CMake Configure
-        run: |
-          cmake --preset=ci
+        run: cmake --preset=ci
 
       - name: CMake Build
         run: cmake --build --preset=default
