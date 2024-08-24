@@ -2,13 +2,7 @@
 
 name: MSVC
 
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-  # schedule:
-  #   - cron: "0 2 * * *" # run everyday to keep fresh
+on: [push, pull_request, fork]
 
 env:
   # Path to the CMake build directory.
