@@ -54,7 +54,7 @@ jobs:
 
       - name: Run Conan
         if: steps.cache-conan.outputs.cache-hit != 'true'
-        run: conan install . -b missing -pr:b=default -o samarium:build_tests=True
+        run: conan install . -b missing -pr:b=default -o samarium/*:build_tests=True
 
 
       - name: CMake Configure
