@@ -13,8 +13,8 @@ from os import chdir
 project = "Samarium"
 copyright = "2022, Jai Bellare"
 author = "Jai Bellare"
-version = "1.0.2"
-release = "1.0.2"
+version = "1.1.0"
+release = "1.1.0"
 
 extensions = [
     "breathe",
@@ -38,7 +38,8 @@ extlinks = {
         "%s",
     ),
     "src": (
-        f"https://github.com/strangeQuark1041/samarium/blob/{HEAD_REF}/src/samarium/%s",
+        f"https://github.com/strangeQuark1041/samarium/blob/{
+            HEAD_REF}/src/samarium/%s",
         "samarium/%s",
     ),
 }

@@ -46,10 +46,10 @@ python samarium/bootstrap.py
 
 ## Prerequistes
 
-| Dependency | URL                                 | Documentation                          |
-| ---------- | ----------------------------------- | -------------------------------------- |
-| python     | <https://www.python.org/downloads/> |                                        |
-| git        | <https://git-scm.com/downloads/>    | <https://git-scm.com/docs/>            |
+| Dependency | URL                                 | Documentation               |
+| ---------- | ----------------------------------- | --------------------------- |
+| python     | <https://www.python.org/downloads/> |                             |
+| git        | <https://git-scm.com/downloads/>    | <https://git-scm.com/docs/> |
 
 <!-- | cmake      | <https://cmake.org/download/>       | <https://cmake.org/cmake/help/latest/> | -->
 <!-- | conan      | <https://conan.io/downloads.html/> | <https://docs.conan.io/en/latest/> | -->
@@ -63,7 +63,7 @@ Running `boostrap.py` will install CMake and Conan, or you can do it yourself fi
 To install the library locally:
 
 ```
-conan download samarium/1.0.2@
+conan download samarium/1.1.0@
 ```
 
 or for the latest version
