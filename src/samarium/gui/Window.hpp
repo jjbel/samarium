@@ -136,7 +136,13 @@ struct Window
 
     Handle handle{};
     Dimensions dims{};
+
     Transform view{.scale = Vector2::combine(1.0 / 20.0)};
+    // applying view goes from GL clip space (ie -1 to 1) to graph space
+    // TODO but actually seems to be smthg else
+    // https://learnopengl.com/Getting-started/Coordinate-Systems
+    // TODO make a function to return a pixel_space transform
+
     Mouse mouse{};
     keyboard::Keymap keymap{};
 
@@ -203,6 +209,7 @@ struct Window
             return transform.apply_inverse(box);
         }
     }
+    // TODO implement it for Space::Screen
 
     /**
      * @brief               Get the pixels currently rendered
