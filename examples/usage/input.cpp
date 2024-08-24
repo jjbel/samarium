@@ -23,7 +23,8 @@ auto main() -> i32
         draw::circle(window, {{0.2, 0.3}, 0.4}, {.fill_color = "#fa2844"_c});
         watch.reset();
 
-        if (Window::resized) { print("Resized"); }
+        // TODO: no way of detecting resized?
+        // if (Window::resized) { print("Resized"); }
         if (window.mouse.left) { print("Left"); }
         if (window.mouse.right) { print("Right"); }
         if (window.is_key_pressed(Key::Space)) { print("Space"); }
@@ -31,3 +32,4 @@ auto main() -> i32
         window.display();
     }
 }
+    
