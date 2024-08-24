@@ -23,6 +23,10 @@ class Transform
     Vector2 scale{1.0, 1.0};
     f64 rotation{};
 
+    // TODO we're inconsistent about using rotations or not
+    // maybe useful for animating scaled rotations, or for vector math
+    // but for drawing, most likely will be axis aligned, ie multiple of 90 degrees
+
     [[nodiscard]] constexpr auto apply(Vector2 vec) const noexcept { return vec * scale + pos; }
 
     [[nodiscard]] constexpr auto apply(const BoundingBox<f64>& bounding_box) const noexcept
