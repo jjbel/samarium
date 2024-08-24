@@ -15,9 +15,10 @@ jobs:
   windows-test:
     runs-on: windows-2022
     steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v4
+        # TODO do we need fetch depth 0?
+        # with:
+          # fetch-depth: 0
 
       - name: Install CMake
         run: python ./scripts/bootstrap/install_cmake.py
@@ -32,7 +33,7 @@ jobs:
 
       - name: Cache .conan2 directory
         id: cache-conan
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         env:
           cache-name: cache-conan-modules
         with:
