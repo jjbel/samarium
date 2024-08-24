@@ -26,9 +26,10 @@ struct Turtle
 
     std::vector<Vector2f> tri()
     {
+        constexpr auto HALF_PI = static_cast<f32>(math::pi * 0.5);
         const auto disp = Vector2f(size, 0).rotated(angle);
-        return {pos + disp, pos + disp.rotated(math::pi * 0.5),
-                pos + disp.rotated(-math::pi * 0.5)};
+        return {pos + disp, pos + disp.rotated(HALF_PI),
+                pos + disp.rotated(-HALF_PI)};
     }
 
     void draw(f32 thickness = 3.0F)
@@ -57,8 +58,8 @@ struct Turtle
 
     // ----------------------------------------- API :
 
-    void left(f32 degrees) { this->angle += math::to_radians(degrees); }
-    void right(f32 degrees) { this->angle -= math::to_radians(degrees); }
+    void left(f32 degrees) { this->angle += static_cast<f32>(math::to_radians(degrees)); }
+    void right(f32 degrees) { this->angle -= static_cast<f32>(math::to_radians(degrees)); }
 
     void forward(f32 distance)
     {
@@ -93,5 +94,5 @@ void forward(f32 distance) { turtle.forward(distance); }
 void getClick() { turtle.getClick(); }
 
 #define main_program int main()
-#define repeat(n) for(int i = 0; i < n; i++)
+#define repeat(n) for (int i = 0; i < n; i++)
 // TODO support nested loops
