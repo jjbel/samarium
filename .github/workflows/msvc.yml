@@ -32,7 +32,7 @@ jobs:
         id: conan
         run: python ./scripts/bootstrap/install_conan.py
 
-# Ninja not needed for CI?
+# TODO Ninja not needed for CI?
       # - name: Install Ninja
         # uses: seanmiddleditch/gha-setup-ninja@master
 
