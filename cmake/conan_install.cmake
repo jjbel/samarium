@@ -11,7 +11,7 @@ if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/conan.lock AND RUN_CONAN)
     set(DEPS_OPTION "")
 
     if(BUILD_UNIT_TESTS OR BUILD_BENCHMARKS)
-        set(DEPS_OPTION "-o samarium:build_tests=True")
+        set(DEPS_OPTION "-o samarium/*:build_tests=True")
     endif()
 
     message(STATUS "samarium: installing dependencies ... (this may take a few seconds)")
