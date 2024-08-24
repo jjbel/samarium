@@ -33,8 +33,8 @@ jobs:
         run: python ./scripts/bootstrap/install_conan.py
 
 # Ninja not needed for CI?
-      - name: Install Ninja
-        uses: seanmiddleditch/gha-setup-ninja@master
+      # - name: Install Ninja
+        # uses: seanmiddleditch/gha-setup-ninja@master
 
       - name: Cache .conan2 directory
         id: cache-conan
