@@ -2,8 +2,6 @@
 
 main_program
 {
-    int counter = 0;
-
     repeat(200)
     {
         left(3);
