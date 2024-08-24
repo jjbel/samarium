@@ -10,9 +10,11 @@
 ![Repo Size](https://img.shields.io/github/repo-size/strangeQuark1041/samarium)
 [![MIT License](https://img.shields.io/badge/license-MIT-yellow)](https://github.com/strangeQuark1041/samarium/blob/main/LICENSE.md)
 
-<!-- 
+<!--
 ![language: C++20](https://img.shields.io/badge/language-C%2B%2B20-yellow)
 [![Latest Github Release](https://img.shields.io/github/v/tag/strangeQuark1041/samarium?label=latest%20release)](https://github.com/strangeQuark1041/samarium/tags) -->
+
+![MSVC build status](https://github.com/jjbel/samarium/actions/workflows/msvc.yml/badge.svg)
 
 Samarium is a 2d physics simulation library written in modern C++20.
 
