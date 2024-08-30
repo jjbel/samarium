@@ -1,6 +1,6 @@
 # Github Action: Windows MSVC build
 
-name: MSVC
+name: Windows Build
 
 on: [push, pull_request, fork]
 
