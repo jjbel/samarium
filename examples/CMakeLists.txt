@@ -22,5 +22,6 @@ if(BUILD_EXAMPLES)
     # endforeach()
     # TODO get all examples working
     add_example("./usage/input.cpp")
+    add_example("./hello_world.cpp")
     add_example("./graphics/flow_field_noise.cpp")
 endif()
