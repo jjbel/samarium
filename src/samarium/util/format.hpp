@@ -28,9 +28,13 @@ namespace fmt
 template <sm::concepts::Integral T> class formatter<sm::Vector2_t<T>>
 {
   public:
+    // as of fmt 11, should be marked const
+    // https://fmt.dev/11.0/api/
+    // TODO parse shouldn't be const?
+
     constexpr auto parse(const format_parse_context& ctx) { return ctx.begin(); }
 
-    constexpr auto format(sm::Vector2_t<T> p, auto& ctx)
+    constexpr auto format(sm::Vector2_t<T> p, auto& ctx) const
     {
         return fmt::format_to(ctx.out(), "({:>3}, {:>3})", p.x, p.y);
     }
@@ -57,7 +61,7 @@ template <> class formatter<sm::Version>
   public:
     constexpr auto parse(const format_parse_context& ctx) { return ctx.begin(); }
 
-    auto format(const sm::Version& p, auto& ctx)
+    auto format(const sm::Version& p, auto& ctx) const
     {
         return fmt::format_to(ctx.out(), "samarium version {}.{}.{}", p.major, p.minor, p.patch);
     }
@@ -68,7 +72,7 @@ template <typename Float> class formatter<sm::Particle<Float>>
   public:
     constexpr auto parse(const format_parse_context& ctx) { return ctx.begin(); }
 
-    auto format(const sm::Particle<Float>& p, auto& ctx)
+    auto format(const sm::Particle<Float>& p, auto& ctx) const
     {
         return fmt::format_to(ctx.out(), "Particle(pos: {}, vel: {}, acc: {})", p.pos, p.vel,
                               p.acc);
@@ -80,7 +84,7 @@ template <> class formatter<sm::Color>
   public:
     constexpr auto parse(const format_parse_context& ctx) const { return ctx.begin(); }
 
-    auto format(const sm::Color& p, auto& ctx)
+    auto format(const sm::Color& p, auto& ctx) const
     {
         return fmt::format_to(ctx.out(),
                               "\x1b[38;2;{0};{1};{2}mCol\x1b[0m[{0:>3}, {1:>3}, {2:>3}, {3:>3}]",
@@ -94,7 +98,7 @@ template <sm::concepts::Number T> class formatter<sm::BoundingBox<T>>
   public:
     constexpr auto parse(const format_parse_context& ctx) { return ctx.begin(); }
 
-    auto format(const sm::BoundingBox<T>& p, auto& ctx)
+    auto format(const sm::BoundingBox<T>& p, auto& ctx) const
     {
         return fmt::format_to(ctx.out(),
                               R"(
@@ -110,7 +114,7 @@ template <> class formatter<sm::LineSegment>
   public:
     constexpr auto parse(const format_parse_context& ctx) const { return ctx.begin(); }
 
-    auto format(const sm::LineSegment& p, auto& ctx)
+    auto format(const sm::LineSegment& p, auto& ctx) const
     {
         return fmt::format_to(ctx.out(), "LineSegment({}, {})", p.p1, p.p2);
     }
@@ -121,7 +125,7 @@ template <> class formatter<sm::Transform>
   public:
     constexpr auto parse(const format_parse_context& ctx) const { return ctx.begin(); }
 
-    auto format(const sm::Transform& p, auto& ctx)
+    auto format(const sm::Transform& p, auto& ctx) const
     {
         return fmt::format_to(ctx.out(), "Transform[pos: {}, scale: {}]", p.pos, p.scale);
     }
@@ -132,7 +136,7 @@ template <> class formatter<std::complex<sm::f64>>
   public:
     constexpr auto parse(const format_parse_context& ctx) const { return ctx.begin(); }
 
-    auto format(const std::complex<sm::f64>& p, auto& ctx)
+    auto format(const std::complex<sm::f64>& p, auto& ctx) const
     {
         return fmt::format_to(ctx.out(), "complex({:.4}, {:.4})", p.real(), p.imag());
     }
@@ -143,9 +147,6 @@ template <> class formatter<sm::SourceLocation>
   public:
     constexpr auto parse(const format_parse_context& ctx) const { return ctx.begin(); }
 
-    // as of fmt 11, should be marked const
-    // https://fmt.dev/11.0/api/
-    // TODO parse shouldn't be const?
     auto format(const sm::SourceLocation& p, auto& ctx) const
     {
         return fmt::format_to(ctx.out(), "[{}:{}:{} in {}()]", p.file_name(), p.line(), p.column(),
