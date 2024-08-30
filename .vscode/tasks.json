@@ -5,32 +5,19 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Build",
+            "label": "Configure",
             "type": "shell",
-            "command": "cmake --build --preset=default",
+            "command": "cmake --preset=default",
             "group": "build"
         },
         {
-            "label": "Run",
+            "label": "Build",
             "type": "shell",
-            "command": "cmake --workflow --preset=run",
+            "command": "cmake --build --preset=default",
             "group": {
                 "kind": "build",
                 "isDefault": true
             },
-            "problemMatcher": []
-        },
-        {
-            "label": "Setup Debug",
-            "type": "shell",
-            "command": "rm -rf build && cmake --preset=debug",
-            "group": "build"
-        },
-        {
-            "label": "Setup Release",
-            "type": "shell",
-            "command": "rm -rf build && cmake --preset=dev",
-            "group": "build"
         }
     ]
 }
