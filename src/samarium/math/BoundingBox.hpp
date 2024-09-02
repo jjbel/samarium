@@ -17,6 +17,8 @@
 
 namespace sm
 {
+
+// use BoundingBox{{}, max}, not BoundingBox{max} for min={0, 0}
 template <concepts::Number T = f64> struct BoundingBox
 {
     using VecType = Vector2_t<T>;
@@ -35,6 +37,7 @@ template <concepts::Number T = f64> struct BoundingBox
         return BoundingBox{{x_min.x, y_min.y}, {x_max.x, y_max.y}};
     }
 
+    // TODO rename cast
     template <concepts::Number U> [[nodiscard]] constexpr auto as() const
     {
         return BoundingBox<U>{min.template cast<U>(), max.template cast<U>()};
