@@ -7,5 +7,5 @@
 
 #ifndef SAMARIUM_HEADER_ONLY
 #define SAMARIUM_POISSON_DISC_IMPL
-#include "poisson_disC.hpp"
+#include "poisson_disc.hpp"
 #endif // !SAMARIUM_HEADER_ONLY
