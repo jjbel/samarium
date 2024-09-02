@@ -50,7 +50,7 @@ exclude_patterns = ["build", "Thumbs.db", ".DS_Store"]
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = "furo"
-html_title = "samarium docs"
+html_title = "Samarium Docs"
 
 html_static_path = ["_static"]
 
