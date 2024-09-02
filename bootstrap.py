@@ -17,7 +17,7 @@ run(['conan', 'create', 'samarium',
 
 print('\ncloning samarium_example into ./samarium_example')
 run(['git', 'clone', '--depth', '1',
-    'https://github.com/strangeQuark1041/samarium_example.git'], check=True)
+    'https://github.com/jjbel/samarium_example.git'], check=True)
 
 chdir('samarium_example')
 print('\nconfiguring example with "cmake --preset=default"')
