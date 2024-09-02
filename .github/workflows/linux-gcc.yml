@@ -13,7 +13,7 @@ env:
   CXX: "g++"
 
 jobs:
-  windows-test:
+  test:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
@@ -43,7 +43,7 @@ jobs:
 
       - name: Conan download packages
         if: steps.cache-conan.outputs.cache-hit != 'true'
-        run: conan install . -b missing -pr:b=default -o samarium/*:build_tests=True
+        run: conan install . -b missing -pr:b=default -o samarium/*:build_tests=True -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=True
 
       - name: CMake Configure
         run: cmake --preset=ci
