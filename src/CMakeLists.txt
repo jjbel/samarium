@@ -1,13 +1,13 @@
 # SPDX-License-Identifier: MIT Copyright (c) 2022-2024 Jai Bellare See
 # <https://opensource.org/licenses/MIT/> or LICENSE.md Project homepage:
-# <https://github.com/strangeQuark1041/samarium>
+# <https://github.com/jjbel/samarium>
 
 cmake_minimum_required(VERSION 3.15)
 project(
     samarium
     VERSION 1.1.0
     DESCRIPTION "2-D physics simulation engine written in modern C++"
-    HOMEPAGE_URL "https://github.com/strangeQuark1041/samarium"
+    HOMEPAGE_URL "https://github.com/jjbel/samarium"
     LANGUAGES CXX
 )
 

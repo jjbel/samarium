@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: MIT
  * Copyright (c) 2022-2024 Jai Bellare
  * See <https://opensource.org/licenses/MIT/> or LICENSE.md
- * Project homepage: https://github.com/strangeQuark1041/samarium
+ * Project homepage: https://github.com/jjbel/samarium
  */
 
 #include "samarium/graphics/colors.hpp"
@@ -57,7 +57,8 @@ auto main() -> i32
     }
     std::sort(distances.begin(), distances.end());
     print("distances:", distances[0], distances[1], distances[distances.size() - 1]);
-    print("total:", points.size() * points.size(), "\nd < radius:", count1, "\nd < 2 radius:", count2);
+    print("total:", points.size() * points.size(), "\nd < radius:", count1,
+          "\nd < 2 radius:", count2);
 
     run(window,
         [&]

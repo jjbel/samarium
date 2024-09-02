@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT Copyright (c) 2022-2024 Jai Bellare See
 # <https://opensource.org/licenses/MIT/> or LICENSE.md Project homepage:
-# <https://github.com/strangeQuark1041/samarium>
+# <https://github.com/jjbel/samarium>
 
 # https://www.reddit.com/r/cpp/comments/t2yoay/comment/hyrgm63/
 

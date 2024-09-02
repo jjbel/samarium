@@ -1,13 +1,13 @@
-.. image:: https://github.com/strangeQuark1041/samarium/actions/workflows/gcc.yml/badge.svg
-    :target: https://github.com/strangeQuark1041/samarium/actions/workflows/gcc.yml
+.. image:: https://github.com/jjbel/samarium/actions/workflows/gcc.yml/badge.svg
+    :target: https://github.com/jjbel/samarium/actions/workflows/gcc.yml
     :alt: GCC
 
-.. image:: https://github.com/strangeQuark1041/samarium/actions/workflows/clang.yml/badge.svg
-    :target: https://github.com/strangeQuark1041/samarium/actions/workflows/clang.yml
+.. image:: https://github.com/jjbel/samarium/actions/workflows/clang.yml/badge.svg
+    :target: https://github.com/jjbel/samarium/actions/workflows/clang.yml
     :alt: Clang
 
-.. image:: https://github.com/strangeQuark1041/samarium/actions/workflows/msvc.yml/badge.svg
-    :target: https://github.com/strangeQuark1041/samarium/actions/workflows/msvc.yml
+.. image:: https://github.com/jjbel/samarium/actions/workflows/msvc.yml/badge.svg
+    :target: https://github.com/jjbel/samarium/actions/workflows/msvc.yml
     :alt: MSVC
 
 .. image:: https://sonarcloud.io/api/project_badges/measure?project=strangeQuark1041_samarium&metric=alert_status
@@ -21,7 +21,7 @@
    :alt: GitHub code size
 
 .. image:: https://img.shields.io/badge/license-MIT-yellow
-    :target: https://github.com/strangeQuark1041/samarium/blob/main/LICENSE.md
+    :target: https://github.com/jjbel/samarium/blob/main/LICENSE.md
     :alt: MIT License
 
 .. image:: https://img.shields.io/badge/language-C%2B%2B20-yellow

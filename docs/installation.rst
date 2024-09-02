@@ -17,7 +17,7 @@ Installation
 4. **Install samarium**
     .. code-block:: sh
 
-        git clone https://github.com/strangeQuark1041/samarium.git
+        git clone https://github.com/jjbel/samarium.git
         conan create samarium -b missing -pr default -pr:b=default
 
 .. asciinema:: 0ZgfSBZKOAZQYE4ngGcoHCReo

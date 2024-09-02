@@ -18,8 +18,8 @@ Contents
 
     Symbol Index <https://strangequark1041.github.io/samarium/genindex>
     Search <https://strangequark1041.github.io/samarium/search>
-    Github <https://github.com/strangeQuark1041/samarium>
-    Releases <https://github.com/strangeQuark1041/samarium/releases>
+    Github <https://github.com/jjbel/samarium>
+    Releases <https://github.com/jjbel/samarium/releases>
 
 ..  toctree::
     :caption: Usage

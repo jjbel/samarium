@@ -34,11 +34,11 @@ HEAD_REF = run(
 
 extlinks = {
     "github": (
-        f"https://github.com/strangeQuark1041/samarium/blob/{HEAD_REF}/%s",
+        f"https://github.com/jjbel/samarium/blob/{HEAD_REF}/%s",
         "%s",
     ),
     "src": (
-        f"https://github.com/strangeQuark1041/samarium/blob/{
+        f"https://github.com/jjbel/samarium/blob/{
             HEAD_REF}/src/samarium/%s",
         "samarium/%s",
     ),
@@ -74,7 +74,7 @@ html_theme_options = {
     "footer_icons": [
         {
             "name": "GitHub",
-            "url": "https://github.com/strangeQuark1041/samarium",
+            "url": "https://github.com/jjbel/samarium",
             "html": Path('_static/github-logo.svg').read_text(),
             "class": "",
         },
