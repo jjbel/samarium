@@ -2,7 +2,7 @@
 
 name: Linux Clang Build
 
-on: [push, pull_request, fork]
+on: [push, pull_request, fork, workflow_dispatch]
 
 env:
   # Path to the CMake build directory.
