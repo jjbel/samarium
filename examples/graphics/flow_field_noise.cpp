@@ -16,7 +16,7 @@ using namespace sm::literals;
 constexpr auto window_dims     = Dimensions{1920, 1080};
 constexpr u64 downscale_factor = 20;
 constexpr u64 particle_count   = 100'000;
-constexpr f64 radius           = 0.0016;
+constexpr f64 radius           = 0.0020;
 constexpr f64 transparency     = 0.1;
 constexpr f64 sim_speed        = 0.5;
 constexpr f64 max_speed        = 4;
