@@ -17,9 +17,10 @@ Contents
     :caption: Links
 
     Symbol Index <https://jjbel.github.io/samarium/genindex>
-    Search <https://jjbel.github.io/samarium/search>
+    .. Search <https://jjbel.github.io/samarium/search>
+    
     Github <https://github.com/jjbel/samarium>
-    Releases <https://github.com/jjbel/samarium/releases>
+    .. TODO Releases <https://github.com/jjbel/samarium/releases>
 
 ..  toctree::
     :caption: Usage
