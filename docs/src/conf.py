@@ -38,8 +38,7 @@ extlinks = {
         "%s",
     ),
     "src": (
-        f"https://github.com/jjbel/samarium/blob/{
-            HEAD_REF}/src/samarium/%s",
+        f"https://github.com/jjbel/samarium/blob/{HEAD_REF}/src/samarium/%s",
         "samarium/%s",
     ),
 }
