@@ -103,7 +103,9 @@ Documentation is located at [Github Pages](https://strangequark1041.github.io/sa
 
 Samarium is distributed under the [MIT License](LICENSE.md).
 
-Libraries used:
+## Libraries Used
+
+Many thanks to the following wonderful libraries:
 
 1. [fmtlib](https://github.com/fmtlib/fmt)
 2. [range-v3](https://github.com/ericniebler/range-v3)
