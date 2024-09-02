@@ -21,8 +21,10 @@
 #include "samarium/util/file.hpp"
 #include "samarium/util/format.hpp"
 #include "samarium/util/noise.hpp"
+#include "samarium/util/poisson_disc.hpp"
 #include "samarium/util/print.hpp"
 #include "samarium/util/run.hpp"
 #include "samarium/util/unordered.hpp"
 #include "samarium/util/util.hpp"
+
 // #include "samarium/util/terminal_dims.hpp"

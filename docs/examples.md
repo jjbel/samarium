@@ -30,11 +30,11 @@ The speeds of particles of a gas approach a [Maxwell Boltzmann Distribution](htt
 
 Highlights: particle simulation, plotting a graph
 
-## Poisson Disk Sampling
+## Poisson Disc Sampling
 
 Distribute points evenly in a plane
 
-Highlights: `random::poisson_disc_points`
+Highlights: `poisson_disc::uniform`
 
 ## Prime Spiral
 
