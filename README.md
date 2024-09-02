@@ -21,6 +21,7 @@
 Samarium is a 2d physics simulation library written in modern C++20.
 
 ## Contents
+
 <!-- TODO use vscode markdown auto TOC -->
 
 - [Examples](#examples)
@@ -108,4 +109,6 @@ Libraries used:
 2. [range-v3](https://github.com/ericniebler/range-v3)
 3. [BS::thread_pool](https://github.com/bshoshany/thread-pool)
 4. [PCG RNG](https://www.pcg-random.org/)
-5. [tl::function_ref](https://github.com/TartanLlama/function_ref)
+5. [tl::function_ref](https://github.com/TartanLlama/function_ref) and [tl::expected](https://github.com/TartanLlama/expected)
+6. [znone/call_thunk](https://github.com/znone/call_thunk)
+7. [itlib-static-vector](https://github.com/iboB/itlib)
