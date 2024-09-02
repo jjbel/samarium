@@ -104,7 +104,7 @@ mathjax3_config = {
     }
 }
 
-ogp_site_url = "https://strangequark1041.github.io/samarium/"
+ogp_site_url = "https://jjbel.github.io/samarium/"
 ogp_site_name = "Samarium Docs"
 
 run(["doxygen", "Doxyfile.cfg"], check=True)

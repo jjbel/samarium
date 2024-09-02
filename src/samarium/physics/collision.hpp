@@ -38,7 +38,7 @@ solve_collision(f64& vel_left, f64& vel_right, f64 mass_left, f64 mass_right, f6
 template <typename Float = f64>
 [[maybe_unused]] auto collide(Particle<Float>& p1, Particle<Float>& p2, f64 damping = 1.0) -> bool
 {
-    // https://strangequark1041.github.io/samarium/physics/two-Particle<Float>-collision
+    // https://jjbel.github.io/samarium/physics/two-particle-collision
     if (!did_collide(p1, p2)) { return false; }
 
     const auto angle_of_impact = Vector2::angle_between(p1.pos, p2.pos);
