@@ -38,7 +38,7 @@ struct ParticleSystem
                             const Particle<f32>& default_particle = {},
                             i32 compute_shader_local_size         = 16)
         : particles{size, default_particle}, shader_local_size{compute_shader_local_size},
-          shaders{.update{Shaders::update_src, shader_local_size}}
+          shaders{.update = gl::ComputeShader(Shaders::update_src, shader_local_size)}
     {
     }
 
