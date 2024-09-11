@@ -52,6 +52,12 @@ class Transform
                            apply_inverse(l.p1), apply_inverse(l.p2)};
     }
 
+    [[nodiscard]] constexpr auto inverse() const noexcept
+    {
+        const auto new_scale = 1.0 / scale;
+        return Transform{-pos * new_scale, new_scale};
+    }
+
     [[nodiscard]] auto as_matrix() const noexcept
     {
         return glm::translate(
@@ -60,5 +66,7 @@ class Transform
     }
 
     [[nodiscard]] operator glm::mat4() const noexcept { return as_matrix(); }
+
+    // TODO operator*
 };
 } // namespace sm
