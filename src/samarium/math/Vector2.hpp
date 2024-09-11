@@ -283,6 +283,13 @@ template <typename T> [[nodiscard]] constexpr auto operator/(Vector2_t<T> lhs, T
     return lhs;
 }
 
+// scalar / vector
+// TODO implement /= also?
+template <typename T> [[nodiscard]] constexpr auto operator/(T lhs, Vector2_t<T> rhs) noexcept
+{
+    return Vector2_t{lhs / rhs.x, lhs / rhs.y};
+}
+
 using Vector2    = Vector2_t<f64>;
 using Vector2f   = Vector2_t<f32>;
 using Indices    = Vector2_t<u64>;
