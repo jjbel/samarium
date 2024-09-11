@@ -217,6 +217,13 @@ struct Window
      * @return Image
      */
     [[nodiscard]] auto get_image() const -> Image;
+
+    /**
+     * @brief               Write current pixels to target.
+     * Assumes window size is >= image size
+     * @return void
+     */
+    [[nodiscard]] auto get_image(Image& target) const -> void;
 };
 } // namespace sm
 
@@ -311,6 +318,13 @@ SM_INLINE auto Window::aspect_vector_max() const -> Vector2
 {
     return dims.cast<f64>() / static_cast<f64>(math::min(dims.x, dims.y));
 }
+
+SM_INLINE auto Window::get_image(Image& target) const -> void
+{
+    glReadPixels(0, 0, static_cast<i32>(target.dims.x), static_cast<i32>(target.dims.y), GL_RGBA,
+                 GL_UNSIGNED_BYTE, static_cast<void*>(&target.front()));
+}
+
 
 SM_INLINE auto Window::get_image() const -> Image
 {
