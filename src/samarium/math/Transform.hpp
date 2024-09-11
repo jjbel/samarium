@@ -27,6 +27,10 @@ class Transform
     // but for drawing, most likely will be axis aligned, ie multiple of 90 degrees
 
     [[nodiscard]] constexpr auto apply(Vector2 vec) const noexcept { return vec * scale + pos; }
+    [[nodiscard]] constexpr auto operator()(Vector2 vec) const noexcept
+    {
+        return vec * scale + pos;
+    }
 
     [[nodiscard]] constexpr auto apply(const BoundingBox<f64>& bounding_box) const noexcept
     {
