@@ -211,6 +211,27 @@ struct Window
     }
     // TODO implement it for Space::Screen
 
+    // ##################################
+    // Coordinate Systems
+    // gl: x: [-1, 1], y: [-r, r] where r = 1/aspect_ratio. +ve y is upward. origin at center of
+    // screen
+    //
+    // px: pixel space: x: [0, dims.x), y: [0, dims.y). +ve y is downard. origin at top left corner of screen
+    [[nodiscard]] auto view_px2gl() const -> Transform
+    {
+        const auto dimsf  = dims.cast<f64>();
+        const auto factor = dimsf.y / dims.x;
+        const auto scale  = Vector2{2.0, -2.0 * factor} / dimsf; // 2 map [0,1] to [-1,1].
+        return Transform{{-1.0, factor}, scale};                 // todo why +factor not -factor
+    }
+
+    [[nodiscard]] auto view_gl2px() const -> Transform
+    {
+        return view_px2gl().inverse();
+    }
+
+    
+
     /**
      * @brief               Get the pixels currently rendered
      *
@@ -270,14 +291,19 @@ SM_INLINE void Window::get_inputs()
     auto xpos = 0.0;
     auto ypos = 0.0;
     glfwGetCursorPos(handle.get(), &xpos, &ypos);
-    mouse.pos = view.apply_inverse(Vector2{xpos, ypos} / dims.cast<f64>() * Vector2{2.0, -2.0} +
-                                   Vector2{-1.0, 1.0});
+
+    // since the view can change based on mouse movement
+    // keep mouse pos in pixel coords, which are stable
+    // TODO what abt when moving window
+    // mouse.pos = view_pixel_to_gl().apply(Vector2{xpos, ypos});
+    mouse.pos = Vector2{xpos, ypos};
 
     mouse.scroll_amount = scroll_callback.holder.scroll;
 
     keymap.run();
 }
 
+// TODO should call display once at the start or fix view.scale.y
 SM_INLINE void Window::display()
 {
     context.draw_frame();
@@ -285,7 +311,7 @@ SM_INLINE void Window::display()
     resize_callback.holder.resized = false;
     glfwSwapBuffers(handle.get());
     dims         = resize_callback.holder.dims;
-    view.scale.y = view.scale.x * aspect_ratio();
+    view.scale.y = view.scale.x * aspect_ratio(); // shd be inside below if?
 
     if (resize_callback.holder.resized)
     {
@@ -324,7 +350,6 @@ SM_INLINE auto Window::get_image(Image& target) const -> void
     glReadPixels(0, 0, static_cast<i32>(target.dims.x), static_cast<i32>(target.dims.y), GL_RGBA,
                  GL_UNSIGNED_BYTE, static_cast<void*>(&target.front()));
 }
-
 
 SM_INLINE auto Window::get_image() const -> Image
 {
