@@ -127,7 +127,7 @@ template <> class formatter<sm::Transform>
 
     auto format(const sm::Transform& p, auto& ctx) const
     {
-        return fmt::format_to(ctx.out(), "Transform[pos: {}, scale: {}]", p.pos, p.scale);
+        return fmt::format_to(ctx.out(), "[pos: {}, scale: {}]", p.pos, p.scale);
     }
 };
 
