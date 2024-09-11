@@ -21,9 +21,8 @@ class Transform
   public:
     Vector2 pos{};
     Vector2 scale{1.0, 1.0};
-    f64 rotation{};
 
-    // TODO we're inconsistent about using rotations or not
+    // add back rotation?
     // maybe useful for animating scaled rotations, or for vector math
     // but for drawing, most likely will be axis aligned, ie multiple of 90 degrees
 
@@ -55,10 +54,9 @@ class Transform
 
     [[nodiscard]] auto as_matrix() const noexcept
     {
-        return glm::translate(glm::rotate(glm::scale(glm::vec3{static_cast<f32>(scale.x),
-                                                               static_cast<f32>(scale.y), 1.0F}),
-                                          static_cast<f32>(rotation), glm::vec3{0.0F, 0.0F, 1.0F}),
-                              glm::vec3{static_cast<f32>(pos.x), static_cast<f32>(pos.y), 0.0F});
+        return glm::translate(
+            glm::scale(glm::vec3{static_cast<f32>(scale.x), static_cast<f32>(scale.y), 1.0F}),
+            glm::vec3{static_cast<f32>(pos.x), static_cast<f32>(pos.y), 0.0F});
     }
 
     [[nodiscard]] operator glm::mat4() const noexcept { return as_matrix(); }
