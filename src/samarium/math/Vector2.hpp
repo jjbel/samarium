@@ -287,7 +287,7 @@ template <typename T> [[nodiscard]] constexpr auto operator/(Vector2_t<T> lhs, T
 // TODO implement /= also?
 template <typename T> [[nodiscard]] constexpr auto operator/(T lhs, Vector2_t<T> rhs) noexcept
 {
-    return Vector2_t{lhs / rhs.x, lhs / rhs.y};
+    return Vector2_t<T>{lhs / rhs.x, lhs / rhs.y};
 }
 
 using Vector2    = Vector2_t<f64>;
