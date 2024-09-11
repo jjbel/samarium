@@ -13,8 +13,16 @@
 
 namespace sm::draw
 {
-void circle(Window& window, Circle circle, ShapeColor color, const glm::mat4& transform);
-void circle(Window& window, Circle circle_, ShapeColor color);
+void circle(
+    Window& window, Circle circle, Color color, const glm::mat4& transform, u32 point_count = 16);
+void circle(Window& window, Circle circle_, Color color, u32 point_count = 16);
+
+void circle(Window& window,
+            Circle circle,
+            ShapeColor color,
+            const glm::mat4& transform,
+            u32 point_count = 16);
+void circle(Window& window, Circle circle_, ShapeColor color, u32 point_count = 16);
 
 void line_segment(Window& window,
                   const LineSegment& line,
@@ -46,14 +54,26 @@ void bounding_box(Window& window, const BoundingBox<f64>& box, Color color, f32 
 
 namespace sm::draw
 {
-SM_INLINE void circle(Window& window, Circle circle, ShapeColor color, const glm::mat4& transform)
+SM_INLINE void
+circle(Window& window, Circle circle, Color color, const glm::mat4& transform, u32 point_count)
 {
-    regular_polygon(window, circle, 16, color, transform);
+    regular_polygon(window, circle, point_count, color, transform);
 }
 
-SM_INLINE void circle(Window& window, Circle circle_, ShapeColor color)
+SM_INLINE void circle(Window& window, Circle circle_, Color color, u32 point_count)
 {
-    circle(window, circle_, color, window.view);
+    circle(window, circle_, color, window.view, point_count);
+}
+
+SM_INLINE void
+circle(Window& window, Circle circle, ShapeColor color, const glm::mat4& transform, u32 point_count)
+{
+    regular_polygon(window, circle, point_count, color, transform);
+}
+
+SM_INLINE void circle(Window& window, Circle circle_, ShapeColor color, u32 point_count)
+{
+    circle(window, circle_, color, window.view, point_count);
 }
 
 

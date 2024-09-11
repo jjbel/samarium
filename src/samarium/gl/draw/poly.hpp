@@ -26,6 +26,20 @@ void polyline(Window& window, std::span<const Vector2f> points, Color color, f32
 
 void polygon(Window& window,
              std::span<const Vector2f> points,
+             Color color,
+             const glm::mat4& transform);
+void polygon(Window& window, std::span<const Vector2f> points, Color color);
+
+void regular_polygon(Window& window,
+                     Circle border_circle,
+                     u32 point_count,
+                     Color color,
+                     const glm::mat4& transform);
+void regular_polygon(Window& window, Circle border_circle, u32 point_count, Color color);
+
+// SHAPECOLOR stuf todo -----------------------------------------------------
+void polygon(Window& window,
+             std::span<const Vector2f> points,
              ShapeColor color,
              const glm::mat4& transform);
 void polygon(Window& window, std::span<const Vector2f> points, ShapeColor color);
@@ -88,15 +102,13 @@ polyline(Window& window, std::span<const Vector2f> points, Color color, f32 thic
 
 SM_INLINE void polygon(Window& window,
                        std::span<const Vector2f> points,
-                       ShapeColor color,
+                       Color fill_color,
                        const glm::mat4& transform)
 {
-    if (color.fill_color.a != 0)
-    {
         const auto& shader = window.context.shaders.at("Pos");
         window.context.set_active(shader);
         shader.set("view", transform);
-        shader.set("color", color.fill_color);
+        shader.set("color", fill_color);
 
         const auto& buffer = window.context.vertex_buffers.at("default");
 
@@ -106,6 +118,39 @@ SM_INLINE void polygon(Window& window,
         vao.bind(buffer, sizeof(Vector2_t<f32>));
 
         glDrawArrays(GL_TRIANGLE_FAN, 0, static_cast<i32>(points.size()));
+}
+
+SM_INLINE void polygon(Window& window, std::span<const Vector2f> points, Color color)
+{
+    polygon(window, points, color, window.view);
+}
+
+SM_INLINE void regular_polygon(Window& window,
+                               Circle border_circle,
+                               u32 point_count,
+                               Color color,
+                               const glm::mat4& transform)
+{
+    const auto points = math::regular_polygon_points<f32>(point_count, border_circle);
+    polygon(window, {points.begin(), point_count}, color, transform);
+}
+
+SM_INLINE void
+regular_polygon(Window& window, Circle border_circle, u32 point_count, Color color)
+{
+    regular_polygon(window, border_circle, point_count, color, window.view);
+}
+
+// TODO SHAPECOLOR STUFF -------------------------------------------------------------------------
+
+SM_INLINE void polygon(Window& window,
+                       std::span<const Vector2f> points,
+                       ShapeColor color,
+                       const glm::mat4& transform)
+{
+    if (color.fill_color.a != 0)
+    {
+        // TODO
     }
 
     if (color.border_color.a != 0 && color.border_width != 0.0)
