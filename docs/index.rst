@@ -27,6 +27,7 @@ Contents
 
     installation
     usage/basics.rst
+    usage/coordinate_systems.rst
     examples
 
 .. toctree::
