@@ -220,8 +220,10 @@ struct Window
     {
         return /* Transform{} */ /* squash */ camera.then(squash);
     }
+
     [[nodiscard]] auto gl2world() const -> Transform { return world2gl().inverse(); }
 
+    // TODO use squash for these? or leave it expanded...
     [[nodiscard]] auto pixel2view() const -> Transform
     {
         const auto dimsf  = dims.cast<f64>();
@@ -237,6 +239,44 @@ struct Window
         return pixel2view().then(camera.inverse());
     }
 
+    [[nodiscard]] auto world2pixel() const -> Transform { return pixel2world().inverse(); }
+
+    auto pan(f64 scale = 1.0)
+    {
+        const auto transform = pixel2world();
+        const auto pos       = transform(mouse.pos);
+        const auto old_pos   = transform(mouse.old_pos);
+        if (mouse.left)
+        {
+            // TODO why do we hv to mult by scale
+            camera.pos += scale * camera.scale * (pos - old_pos);
+        }
+    }
+
+    // camera.scale  multiplied by (1 + strength)
+    auto zoom_to_cursor(f64 strength = 0.2)
+    {
+        // https://stackoverflow.com/a/38302057
+        // TODO is the if needed?
+        if (mouse.scroll_amount != 0)
+        {
+            const auto scale = std::pow(1.0 + strength, mouse.scroll_amount);
+            camera.scale *= scale;
+            const auto mouse_pos = pixel2view()(mouse.pos);
+            // VVIMP multiply by scale, not divide
+            camera.pos = mouse_pos + (camera.pos - mouse_pos) * scale;
+        }
+    }
+
+    // camera.scale  multiplied by (1 + strength)
+    auto zoom_to_origin(f64 strength = 0.2)
+    {
+        if (mouse.scroll_amount != 0)
+        {
+            const auto scale = std::pow(1.0 + strength, mouse.scroll_amount);
+            camera.scale *= scale;
+        }
+    }
 
     /**
      * @brief               Get the pixels currently rendered
