@@ -73,6 +73,8 @@ struct ResizeCallback
             glViewport(0, 0, new_width, new_height);
             dims    = Dimensions::make(new_width, new_height);
             resized = true;
+
+            print("resized3");
         }
     };
 
@@ -354,7 +356,6 @@ SM_INLINE void Window::display()
 {
     context.draw_frame();
 
-    resize_callback.holder.resized = false;
     glfwSwapBuffers(handle.get());
     dims = resize_callback.holder.dims;
 
@@ -362,11 +363,16 @@ SM_INLINE void Window::display()
 
     if (resize_callback.holder.resized)
     {
+        print("resized", dims);
         context.frame_texture =
             gl::Texture{gl::ImageFormat::RGBA8, dims, gl::Texture::Wrap::ClampEdge,
                         gl::Texture::Filter::Nearest, gl::Texture::Filter::Nearest};
         context.framebuffer.bind_texture(context.frame_texture);
     }
+    // we don't know when glfwSetFramebufferSizeCallback will call our callback
+    // so it only makes sense resized to false after we've done handling the resizing.
+    // TODO or should put this code inside the callback as well
+    resize_callback.holder.resized = false;
 
     get_inputs();
 }

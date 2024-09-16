@@ -60,6 +60,7 @@ auto run(Window& window,
     }
 }
 
+// TODO deprecate
 auto zoom_pan(Window& window, f64 zoom_factor = 0.1, f64 pan_factor = 1.0)
 {
     if (window.mouse.left)

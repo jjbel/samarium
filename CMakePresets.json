@@ -37,8 +37,9 @@
             "description": "Windows Dev",
             "inherits": "default",
             "cacheVariables": {
+                "BUILD_EXAMPLES": false,
                 "BUILD_BENCHMARKS": false,
-                "SAMARIUM_HEADER_ONLY": true
+                "SAMARIUM_HEADER_ONLY": false
             }
         },
         {
