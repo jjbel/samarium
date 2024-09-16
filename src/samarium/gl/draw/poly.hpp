@@ -30,11 +30,8 @@ void polygon(Window& window,
              const glm::mat4& transform);
 void polygon(Window& window, std::span<const Vector2f> points, Color color);
 
-void regular_polygon(Window& window,
-                     Circle border_circle,
-                     u32 point_count,
-                     Color color,
-                     const glm::mat4& transform);
+void regular_polygon(
+    Window& window, Circle border_circle, u32 point_count, Color color, const glm::mat4& transform);
 void regular_polygon(Window& window, Circle border_circle, u32 point_count, Color color);
 
 // SHAPECOLOR stuf todo -----------------------------------------------------
@@ -97,7 +94,7 @@ SM_INLINE void polyline(Window& window,
 SM_INLINE void
 polyline(Window& window, std::span<const Vector2f> points, Color color, f32 thickness)
 {
-    polyline(window, points, color, thickness, window.view);
+    polyline(window, points, color, thickness, window.world2gl());
 }
 
 SM_INLINE void polygon(Window& window,
@@ -105,40 +102,39 @@ SM_INLINE void polygon(Window& window,
                        Color fill_color,
                        const glm::mat4& transform)
 {
-        const auto& shader = window.context.shaders.at("Pos");
-        window.context.set_active(shader);
-        shader.set("view", transform);
-        shader.set("color", fill_color);
+    const auto& shader = window.context.shaders.at("Pos");
+    window.context.set_active(shader);
 
-        const auto& buffer = window.context.vertex_buffers.at("default");
+    // print(glm::to_string(transform));
+    shader.set("view", transform);
+    shader.set("color", fill_color);
 
-        auto& vao = window.context.vertex_arrays.at("Pos");
-        window.context.set_active(vao);
-        buffer.set_data(points);
-        vao.bind(buffer, sizeof(Vector2_t<f32>));
+    const auto& buffer = window.context.vertex_buffers.at("default");
 
-        glDrawArrays(GL_TRIANGLE_FAN, 0, static_cast<i32>(points.size()));
+    auto& vao = window.context.vertex_arrays.at("Pos");
+    window.context.set_active(vao);
+    buffer.set_data(points);
+    vao.bind(buffer, sizeof(Vector2_t<f32>));
+
+    glDrawArrays(GL_TRIANGLE_FAN, 0, static_cast<i32>(points.size()));
 }
 
 SM_INLINE void polygon(Window& window, std::span<const Vector2f> points, Color color)
 {
-    polygon(window, points, color, window.view);
+    polygon(window, points, color, window.world2gl());
 }
 
-SM_INLINE void regular_polygon(Window& window,
-                               Circle border_circle,
-                               u32 point_count,
-                               Color color,
-                               const glm::mat4& transform)
+SM_INLINE void regular_polygon(
+    Window& window, Circle border_circle, u32 point_count, Color color, const glm::mat4& transform)
 {
+    // TODO cache this. its allocated millions of times
     const auto points = math::regular_polygon_points<f32>(point_count, border_circle);
     polygon(window, {points.begin(), point_count}, color, transform);
 }
 
-SM_INLINE void
-regular_polygon(Window& window, Circle border_circle, u32 point_count, Color color)
+SM_INLINE void regular_polygon(Window& window, Circle border_circle, u32 point_count, Color color)
 {
-    regular_polygon(window, border_circle, point_count, color, window.view);
+    regular_polygon(window, border_circle, point_count, color, window.world2gl());
 }
 
 // TODO SHAPECOLOR STUFF -------------------------------------------------------------------------
@@ -166,7 +162,7 @@ SM_INLINE void polygon(Window& window,
 
 SM_INLINE void polygon(Window& window, std::span<const Vector2f> points, ShapeColor color)
 {
-    polygon(window, points, color, window.view);
+    polygon(window, points, color, window.world2gl());
 }
 
 SM_INLINE void regular_polygon(Window& window,
@@ -182,7 +178,7 @@ SM_INLINE void regular_polygon(Window& window,
 SM_INLINE void
 regular_polygon(Window& window, Circle border_circle, u32 point_count, ShapeColor color)
 {
-    regular_polygon(window, border_circle, point_count, color, window.view);
+    regular_polygon(window, border_circle, point_count, color, window.world2gl());
 }
 } // namespace sm::draw
 #endif

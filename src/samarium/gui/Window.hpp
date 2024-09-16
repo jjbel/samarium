@@ -137,11 +137,11 @@ struct Window
     Handle handle{};
     Dimensions dims{};
 
-    Transform view{.scale = Vector2::combine(1.0 / 20.0)};
-    // applying view goes from GL clip space (ie -1 to 1) to graph space
-    // TODO but actually seems to be smthg else
-    // https://learnopengl.com/Getting-started/Coordinate-Systems
-    // TODO make a function to return a pixel_space transform
+    Transform camera{};
+    Transform squash{};
+
+    // TODO remove view without error
+    Transform view{};
 
     Mouse mouse{};
     keyboard::Keymap keymap{};
@@ -190,34 +190,39 @@ struct Window
      */
     [[nodiscard]] auto aspect_vector_max() const -> Vector2;
 
-    /**
-     * @brief               The bounds of the visible region of the window
-     *
-     * @tparam space
-     * @return BoundingBox<f64>
-     */
-    template <Space space = Space::World> [[nodiscard]] auto viewport() const -> BoundingBox<f64>
-    {
-        const auto ratio = aspect_ratio();
-        const auto box   = BoundingBox<f64>{{-ratio, -1.0}, {ratio, 1.0}};
+    // /**
+    //  * @brief               The bounds of the visible region of the window
+    //  *
+    //  * @tparam space
+    //  * @return BoundingBox<f64>
+    //  */
+    // template <Space space = Space::World> [[nodiscard]] auto viewport() const -> BoundingBox<f64>
+    // {
+    //     const auto ratio = aspect_ratio();
+    //     const auto box   = BoundingBox<f64>{{-ratio, -1.0}, {ratio, 1.0}};
 
-        if constexpr (space == Space::World)
-        {
-            auto transform = view;
-            transform.scale *= 2.0;
-            // TODO without dividing by 2 stuff is off
-            return transform.apply_inverse(box);
-        }
-    }
+    //     if constexpr (space == Space::World)
+    //     {
+    //         auto transform = view;
+    //         transform.scale *= 2.0;
+    //         // TODO without dividing by 2 stuff is off
+    //         return transform.apply_inverse(box);
+    //     }
+    // }
     // TODO implement it for Space::Screen
 
     // ##################################
     // Coordinate Systems
-    // gl: x: [-1, 1], y: [-r, r] where r = 1/aspect_ratio. +ve y is upward. origin at center of
-    // screen
-    //
-    // px: pixel space: x: [0, dims.x), y: [0, dims.y). +ve y is downard. origin at top left corner of screen
-    [[nodiscard]] auto view_px2gl() const -> Transform
+
+    // used by all the drawing functions
+    // TODO potentially will be called millions of times..should cache it somehow
+    [[nodiscard]] auto world2gl() const -> Transform
+    {
+        return /* Transform{} */ /* squash */ camera.then(squash);
+    }
+    [[nodiscard]] auto gl2world() const -> Transform { return world2gl().inverse(); }
+
+    [[nodiscard]] auto pixel2view() const -> Transform
     {
         const auto dimsf  = dims.cast<f64>();
         const auto factor = dimsf.y / dims.x;
@@ -225,12 +230,13 @@ struct Window
         return Transform{{-1.0, factor}, scale};                 // todo why +factor not -factor
     }
 
-    [[nodiscard]] auto view_gl2px() const -> Transform
+    [[nodiscard]] auto view2pixel() const -> Transform { return pixel2view().inverse(); }
+
+    [[nodiscard]] auto pixel2world() const -> Transform
     {
-        return view_px2gl().inverse();
+        return pixel2view().then(camera.inverse());
     }
 
-    
 
     /**
      * @brief               Get the pixels currently rendered
@@ -310,8 +316,9 @@ SM_INLINE void Window::display()
 
     resize_callback.holder.resized = false;
     glfwSwapBuffers(handle.get());
-    dims         = resize_callback.holder.dims;
-    view.scale.y = view.scale.x * aspect_ratio(); // shd be inside below if?
+    dims = resize_callback.holder.dims;
+
+    squash.scale.y = aspect_ratio(); // shd be inside below if?
 
     if (resize_callback.holder.resized)
     {

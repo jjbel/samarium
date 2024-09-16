@@ -54,6 +54,7 @@ void bounding_box(Window& window, const BoundingBox<f64>& box, Color color, f32 
 
 namespace sm::draw
 {
+    // TODO dwap transform and point_count order for uniformity
 SM_INLINE void
 circle(Window& window, Circle circle, Color color, const glm::mat4& transform, u32 point_count)
 {
@@ -62,7 +63,7 @@ circle(Window& window, Circle circle, Color color, const glm::mat4& transform, u
 
 SM_INLINE void circle(Window& window, Circle circle_, Color color, u32 point_count)
 {
-    circle(window, circle_, color, window.view, point_count);
+    circle(window, circle_, color, window.world2gl(), point_count);
 }
 
 SM_INLINE void
@@ -73,7 +74,7 @@ circle(Window& window, Circle circle, ShapeColor color, const glm::mat4& transfo
 
 SM_INLINE void circle(Window& window, Circle circle_, ShapeColor color, u32 point_count)
 {
-    circle(window, circle_, color, window.view, point_count);
+    circle(window, circle_, color, window.world2gl(), point_count);
 }
 
 
@@ -94,7 +95,7 @@ SM_INLINE void line_segment(
 
 SM_INLINE void line_segment(Window& window, const LineSegment& line, Color color, f32 thickness)
 {
-    line_segment(window, line, color, thickness, window.view);
+    line_segment(window, line, color, thickness, window.world2gl());
 }
 
 SM_INLINE void bounding_box(Window& window,
@@ -111,7 +112,7 @@ SM_INLINE void bounding_box(Window& window,
 
 SM_INLINE void bounding_box(Window& window, const BoundingBox<f64>& box, Color color, f32 thickness)
 {
-    bounding_box(window, box, color, thickness, window.view);
+    bounding_box(window, box, color, thickness, window.world2gl());
 }
 
 SM_INLINE void line(
@@ -128,7 +129,7 @@ SM_INLINE void line(
 
 SM_INLINE void line(Window& window, const LineSegment& line_, Color color, f32 thickness)
 {
-    line(window, line_, color, thickness, window.view);
+    line(window, line_, color, thickness, window.world2gl());
 }
 } // namespace sm::draw
 #endif
