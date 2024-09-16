@@ -64,13 +64,21 @@ class Transform
 
     [[nodiscard]] auto as_matrix() const noexcept
     {
-        return glm::translate(
-            glm::scale(glm::vec3{static_cast<f32>(scale.x), static_cast<f32>(scale.y), 1.0F}),
-            glm::vec3{static_cast<f32>(pos.x), static_cast<f32>(pos.y), 0.0F});
+        // VVIMP
+        // glm translate POST multiplies a translation matrix
+        // http://www.c-jump.com/bcc/common/Talk3/Math/GLM/GLM.html#W01_0110_glmtranslate
+        // bug I encountered: aspect ratio was getting multiplied twice
+        const auto gl_scale = glm::vec3{static_cast<f32>(scale.x), static_cast<f32>(scale.y), 1.0F};
+        const auto gl_pos   = glm::vec3{static_cast<f32>(pos.x), static_cast<f32>(pos.y), 0.0F};
+        // return glm::translate(glm::scale(gl_scale), gl_pos);
+        return glm::scale(glm::translate(glm::mat4(1.0F), gl_pos), gl_scale);
     }
 
     [[nodiscard]] operator glm::mat4() const noexcept { return as_matrix(); }
 
-    // TODO operator*
+    [[nodiscard]] constexpr auto then(Transform next) const noexcept
+    {
+        return Transform{pos * next.scale + next.pos, scale * next.scale};
+    }
 };
 } // namespace sm
