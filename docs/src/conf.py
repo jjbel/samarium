@@ -24,8 +24,9 @@ extensions = [
     "sphinx_copybutton",
     "sphinxext.opengraph",
     "sphinx.ext.extlinks",
+    "sphinx.ext.graphviz",
     "sphinxcontrib.asciinema",
-    "sphinx.ext.graphviz"
+    "sphinxcontrib.video"
 ]
 
 HEAD_REF = run(
