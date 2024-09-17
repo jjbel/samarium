@@ -32,6 +32,6 @@ template <typename Float = f64> struct Particle
         acc = Vector2_t<Float>{}; // reset acceleration
     }
 
-    [[nodiscard]] constexpr auto operator==(const Particle&) const -> bool = default;
+    [[nodiscard]] constexpr bool operator==(const Particle&) const = default;
 };
 } // namespace sm
