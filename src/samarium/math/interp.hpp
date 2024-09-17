@@ -325,7 +325,7 @@ namespace sm::interp
 // }
 
 /**
- * @brief               Check if a value is within asome Extents
+ * @brief               Check if a value is within some Extents
  *
  * @param  value        Input value
  * @param  range_       Input range
