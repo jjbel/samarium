@@ -46,6 +46,7 @@ template <typename Particle_t = Particle<f64>, u64 CellCapacity = 32> struct Par
      *
      * @param  size
      * @param  default_particle
+     * @param  cell_size
      */
     explicit ParticleSystem(u64 size                           = 100UL,
                             const Particle_t& default_particle = {},
@@ -99,11 +100,13 @@ template <typename Particle_t = Particle<f64>, u64 CellCapacity = 32> struct Par
      *
      * @tparam CellCapacity Max particles in one cell of the hash grid
      * @param  damping      Coefficient of restitution
-     * @param  cell_size    Size of cell of hash grid
      * @return Dimensions   [collisions, pairs checked]
      */
     [[maybe_unused]] auto self_collision(f64 damping = 1.0)
     {
+        // TODO hash grid cell size param?
+        // @param  cell_size    Size of cell of hash grid
+
         hash_grid.map.clear();
         hash_grid.map.reserve(particles.size());
         for (auto i : loop::end(particles.size())) { hash_grid.insert(particles[i].pos, i); }
