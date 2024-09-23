@@ -18,6 +18,7 @@ enum class Interval
 {
     Open,
     Closed
+    // TODO OpenClosed, ClosedOpen
 };
 
 template <concepts::Integral T> struct IntegerIterator
