@@ -24,7 +24,6 @@ auto main() -> i32
         watch.reset();
 
         // TODO: no way of detecting resized?
-        // if (Window::resized) { print("Resized"); }
         if (window.mouse.left) { print("Left"); }
         if (window.mouse.right) { print("Right"); }
         if (window.is_key_pressed(Key::Space)) { print("Space"); }
