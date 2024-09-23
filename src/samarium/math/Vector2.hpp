@@ -58,6 +58,7 @@ template <typename T> struct Vector2_t
     [[nodiscard]] static constexpr auto from_polar(Polar polar) noexcept
         requires concepts::FloatingPoint<T>
     {
+        // TODO direct sin cos instruction? or not needed
         return Vector2_t{polar.length * std::cos(polar.angle),
                          polar.length * std::sin(polar.angle)};
     }
@@ -175,6 +176,14 @@ template <typename T> struct Vector2_t
 
     [[nodiscard]] static constexpr auto angle_between(Vector2_t<T> from, Vector2_t<T> to) noexcept
     {
+        // speed: compare this with to.angle() - from.angle()
+        return std::acos(Vector2_t<T>::dot(from, to) / (from.length() * to.length()));
+    }
+
+    [[nodiscard]] static constexpr auto angle_between_signed(Vector2_t<T> from,
+                                                             Vector2_t<T> to) noexcept
+    {
+        // speed: compare this with
         return to.angle() - from.angle();
     }
 
