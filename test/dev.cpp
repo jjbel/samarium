@@ -4,38 +4,64 @@
 using namespace sm;
 using namespace sm::literals;
 
+auto square(Vector2 centre, f64 size)
+{
+    return std::vector{centre + Vector2{size, size}, centre + Vector2{size, -size},
+                       centre + Vector2{-size, -size}, centre + Vector2{-size, size}};
+}
+
+auto points_to_f32(std::span<const Vector2> in_pts)
+{
+    auto out_pts = std::vector<Vector2f>(in_pts.size());
+    for (auto i : loop::end(in_pts.size())) { out_pts[i] = in_pts[i].cast<f32>(); }
+    return out_pts;
+}
+
 auto main() -> i32
 {
-    auto window = Window{{.dims{1200, 600}}};
+    auto window = Window{{.dims = dims720}};
+    window.camera.scale /= 6.0;
+
+    auto in_pts  = points_to_f32(square({}, 2.0));
+    auto out_pts = draw::make_polyline(in_pts, 1.0F);
+    print(out_pts);
+
+    auto left_old = false;
 
     auto draw = [&]
     {
         draw::background("#07090b"_c);
 
-        constexpr auto a = 0.5;
-        for (auto pos : std::vector<Vector2>{{0, 0}, {a, a}, {-a, a}, {a, -a}, {-a, -a}})
+        draw::polyline(window, in_pts, 0.3F, "#0000ff"_c);
+
+        // TODO gives flaky:
+        // (window.mouse.pos != window.mouse.old_pos
+        // TODO sometimes flips to concave polys
+        if (window.mouse.left && !left_old)
         {
-            draw::circle(window, Circle{pos, 0.2}, "#ff0000"_c, 4);
-            // draw::circle(window, Circle{pos, 0.2}, "#ff0000"_c, Transform{}, 4);
+            in_pts.push_back(window.pixel2world()(window.mouse.pos).cast<f32>());
+            print(in_pts);
         }
+        left_old = window.mouse.left;
+
+        // for (auto pos : in_pts)
+        // {
+        //     draw::circle(window, Circle{pos.cast<f64>(), 0.2}, "#ff0000"_c, 64);
+        // }
+        // for (auto pos : out_pts)
+        // {
+        //     draw::circle(window, Circle{pos.cast<f64>(), 0.2}, "#0000ff"_c, 64);
+        // }
     };
 
     auto count = 0;
     auto watch = Stopwatch{};
-
-    while (window.is_open())
-    {
-        // print(window.dims, window.squash);
-
-
-        // window.pan();
-        // window.zoom_to_cursor();
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        count++;
-        draw();
-        window.display();
-    }
+    run(window,
+        [&]
+        {
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            count++;
+            draw();
+        });
+    print(1.0 / 2.0);
 }
-
-// TODO resizing window: see glViewport. draw 4 circles at GL corners and see if they remain at
-// corners

@@ -73,8 +73,6 @@ struct ResizeCallback
             glViewport(0, 0, new_width, new_height);
             dims    = Dimensions::make(new_width, new_height);
             resized = true;
-
-            print("resized3");
         }
     };
 
@@ -363,7 +361,6 @@ SM_INLINE void Window::display()
 
     if (resize_callback.holder.resized)
     {
-        print("resized", dims);
         context.frame_texture =
             gl::Texture{gl::ImageFormat::RGBA8, dims, gl::Texture::Wrap::ClampEdge,
                         gl::Texture::Filter::Nearest, gl::Texture::Filter::Nearest};
