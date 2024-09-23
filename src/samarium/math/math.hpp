@@ -124,7 +124,7 @@ template <concepts::Number T> [[nodiscard]] constexpr auto abs(T x) noexcept
 template <typename T>
 [[nodiscard]] constexpr auto sign(T x, std::false_type /* is_signed */) noexcept -> i32
 {
-    return T(0) < x;
+    return T{} < x;
 }
 
 /**
@@ -137,7 +137,7 @@ template <typename T>
 template <typename T>
 [[nodiscard]] constexpr auto sign(T x, std::true_type /* is_signed */) noexcept -> i32
 {
-    return (T(0) < x) - (x < T(0));
+    return (T{} < x) - (x < T{});
 }
 
 /**
