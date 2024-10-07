@@ -38,5 +38,5 @@ auto obj_to_pts(const std::filesystem::path& obj_file)
     return read_file(obj_file) | std::views::split('\n') |
            std::views::transform([](auto r) { return std::string(r.data(), r.size()); }) |
            std::views::filter([](const auto& line) { return line.starts_with("v "); }) |
-           std::views::transform(line_to_vec) | std::ranges::to<std::vector>();
+           std::views::transform(line_to_vec) | ranges::to<std::vector>();
 }
