@@ -31,10 +31,14 @@ auto make_indices(u64 count)
 
 auto raise_to_power(complex x) { return std::pow(math::e, math::two_pi_i * x); }
 
+// does the actual fourier transform
 auto coefficients(ShapeFn shape, u64 count, u64 integration_steps)
 {
     const auto indices = make_indices(count);
     auto coefficients  = std::vector<complex>(count, {1.0});
+
+    // TODO split this into a different function for just 1 coeff
+    // add a way to pass any indices, have a mapping from frequencies to array indices
 
     for (auto i : indices)
     {
