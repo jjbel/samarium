@@ -23,6 +23,7 @@ namespace sm::util
 
 [[nodiscard]] consteval u8 hex_to_int_safe(char ch)
 {
+    // TODO do this with bitmanip and benchmark compilation time
     if ('0' <= ch && ch <= '9') { return static_cast<u8>(ch - '0'); }
     if ('a' <= ch && ch <= 'f') { return static_cast<u8>(ch - 'a' + 10); }
     if ('A' <= ch && ch <= 'F') { return static_cast<u8>(ch - 'A' + 10); }
