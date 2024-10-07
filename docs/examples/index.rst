@@ -7,6 +7,7 @@ These examples are included with the library in ``/examples``
     softbody
     hilbert_curve
     fourier
+    maxwell_boltzmann
 
 Flow Field Noise
 ----------------
