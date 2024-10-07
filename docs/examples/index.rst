@@ -6,11 +6,7 @@ These examples are included with the library in ``/examples``
 ..  toctree::
     softbody
     hilbert_curve
-
-Fourier Series
---------------
-
-Create a complex [Fourier Series](https://en.wikipedia.org/wiki/Fourier_series) to draw a `target_shape` which returns the shape when queried from 0 to 1
+    fourier
 
 Flow Field Noise
 ----------------

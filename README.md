@@ -8,6 +8,7 @@
 
 ![Lines of Code](https://img.shields.io/endpoint?url=https://ghloc.vercel.app/api/jjbel/samarium/badge?filter=.hpp$,.cpp$,.glsl$&style=flat&logoColor=red&label=Lines%20of%20Code&color=red)
 ![Repo Size](https://img.shields.io/github/repo-size/jjbel/samarium)
+
 <!-- [![MIT License](https://img.shields.io/badge/license-MIT-yellow)](https://github.com/jjbel/samarium/blob/main/LICENSE.md) -->
 
 <!--
@@ -38,6 +39,8 @@ Samarium is a 2d physics simulation library written in modern C++20.
 [](https://user-images.githubusercontent.com/83468982/178472984-8cd83808-bfb2-478b-8a5e-3d45782f2c7d.mp4)
 
 [](https://user-images.githubusercontent.com/83468982/178473002-b7f896f6-d5ed-4cc5-be34-bcccab9ef11e.mp4)
+
+[](https://github.com/user-attachments/assets/d870c975-44d4-4624-b122-48129506bbf6)
 
 ## Quickstart
 
