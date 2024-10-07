@@ -19,6 +19,7 @@ __pycache__/
 *.tga
 *.png
 *.bmp
+exports/
 
 # videos
 *.mp4

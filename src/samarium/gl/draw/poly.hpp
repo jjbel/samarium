@@ -15,13 +15,16 @@
 #include "samarium/math/Vector2.hpp"     // for Vector2f
 #include "samarium/math/vector_math.hpp" // for regular_polygon_points
 
+namespace sm
+{
+std::vector<Vector2f> points_to_f32(std::span<const Vector2> in_pts);
+} // namespace sm
+
 namespace sm::draw
 {
-// TODO add simple and fast polyline versions, which just draw rectangle or whatev
 // TODO cud add a bias from -1 to 1 to offset it inward or outward
-
-// return points for a triangle strip
 auto make_polyline(std::span<const Vector2f> in_pts, f32 thickness) -> std::vector<Vector2f>;
+
 
 // void polyline(Window& window,
 //               std::span<const Vector2f> points,
@@ -62,8 +65,20 @@ void regular_polygon(Window& window, Circle border_circle, u32 point_count, Shap
 #include "samarium/math/loop.hpp" // for start_end
 #include "samarium/math/vector_math.hpp"
 
+namespace sm
+{
+std::vector<Vector2f> points_to_f32(std::span<const Vector2> in_pts)
+{
+    auto out_pts = std::vector<Vector2f>(in_pts.size());
+    for (auto i : loop::end(in_pts.size())) { out_pts[i] = in_pts[i].cast<f32>(); }
+    return out_pts;
+}
+} // namespace sm
+
 
 namespace sm::draw
+{
+namespace detail
 {
 constexpr auto sign_of(f32 x)
 {
@@ -74,12 +89,16 @@ constexpr auto sign_of(f32 x)
 // which side of v1 does v0 lie on?
 constexpr auto which_side_of(Vector2f v0, Vector2f v1)
 {
-    return sign_of(v1.y * v0.x - v0.y * v1.x);
+    return detail::sign_of(v1.y * v0.x - v0.y * v1.x);
 }
+} // namespace detail
 
-SM_INLINE
+
+// return points for a triangle strip
 auto make_polyline(std::span<const Vector2f> in_pts, f32 thickness) -> std::vector<Vector2f>
 {
+    // TODO perhaps almost parallel edges are a problem
+
     const auto count = in_pts.size();
 
     if (count == 1) { return {}; }
@@ -99,12 +118,12 @@ auto make_polyline(std::span<const Vector2f> in_pts, f32 thickness) -> std::vect
         edge                 = -edge; // reversing later calcns simpler
         const auto cos       = Vector2f::dot(edge, new_edge);
         const auto sin_theta = std::sqrt(1.0F - cos * cos);
-        auto new_disp        = thickness * (new_edge + edge) / sin_theta;
+        auto new_disp        = thickness * (new_edge + edge) / /* std::abs */ (sin_theta);
         // TODO link the onenote diag here
 
         // TODO explanation
         // GL_TRIANGLE_STRIP need the vertices to e specified in zig zag order
-        new_disp *= which_side_of(disp, edge) * which_side_of(new_disp, edge);
+        // new_disp *= which_side_of(disp, edge) * which_side_of(new_disp, edge);
 
         out_pts[2 * i]     = in_pts[i] + new_disp;
         out_pts[2 * i + 1] = in_pts[i] - new_disp;
@@ -119,6 +138,7 @@ auto make_polyline(std::span<const Vector2f> in_pts, f32 thickness) -> std::vect
 
     return out_pts;
 }
+
 
 SM_INLINE void
 polyline(Window& window, std::span<const Vector2f> in_pts, f32 thickness, Color color)
@@ -140,6 +160,7 @@ polyline(Window& window, std::span<const Vector2f> in_pts, f32 thickness, Color 
 
     glDrawArrays(GL_TRIANGLE_STRIP, 0, static_cast<i32>(out_pts.size()));
 }
+
 
 // SM_INLINE void polyline_impl(Window& window,
 //                              std::span<const Vector2f> points,

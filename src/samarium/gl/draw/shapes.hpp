@@ -44,6 +44,13 @@ void bounding_box(Window& window,
                   f32 thickness,
                   const glm::mat4& transform);
 void bounding_box(Window& window, const BoundingBox<f64>& box, Color color, f32 thickness = 0.02F);
+
+void polyline_segments(Window& window,
+                       std::span<const Vector2f> points,
+                       f32 thickness,
+                       Color color);
+
+void polygon_segments(Window& window, std::span<const Vector2f> points, f32 thickness, Color color);
 } // namespace sm::draw
 
 #if defined(SAMARIUM_HEADER_ONLY) || defined(SAMARIUM_DRAW_IMPL)
@@ -54,7 +61,7 @@ void bounding_box(Window& window, const BoundingBox<f64>& box, Color color, f32 
 
 namespace sm::draw
 {
-    // TODO dwap transform and point_count order for uniformity
+// TODO dwap transform and point_count order for uniformity
 SM_INLINE void
 circle(Window& window, Circle circle, Color color, const glm::mat4& transform, u32 point_count)
 {
@@ -90,7 +97,7 @@ SM_INLINE void line_segment(
     const auto last  = line.p2.cast<f32>();
     auto points      = std::to_array<Vector2f>({first - thickness_vector, first + thickness_vector,
                                                 last + thickness_vector, last - thickness_vector});
-    polygon(window, points, {.fill_color = color}, transform);
+    polygon(window, points, color, transform);
 }
 
 SM_INLINE void line_segment(Window& window, const LineSegment& line, Color color, f32 thickness)
@@ -130,6 +137,26 @@ SM_INLINE void line(
 SM_INLINE void line(Window& window, const LineSegment& line_, Color color, f32 thickness)
 {
     line(window, line_, color, thickness, window.world2gl());
+}
+
+// quick and dirty
+
+SM_INLINE void
+polyline_segments(Window& window, std::span<const Vector2f> in_pts, f32 thickness, Color color)
+{
+    for (auto i : loop::end(in_pts.size() - 1UL))
+    {
+        draw::line_segment(window, {in_pts[i].cast<f64>(), in_pts[i + 1UL].cast<f64>()}, color,
+                           thickness);
+    }
+}
+
+SM_INLINE void
+polygon_segments(Window& window, std::span<const Vector2f> in_pts, f32 thickness, Color color)
+{
+    polyline_segments(window, in_pts, thickness, color);
+    draw::line_segment(window, {in_pts[in_pts.size() - 1UL].cast<f64>(), in_pts[0].cast<f64>()},
+                       color, thickness);
 }
 } // namespace sm::draw
 #endif
