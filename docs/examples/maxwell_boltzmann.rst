@@ -1,5 +1,5 @@
-Fourier Shape
-=============
+Maxwell-Boltzmann Distribution
+==============================
 
 TODO add source code
 
