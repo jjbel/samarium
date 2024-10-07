@@ -8,12 +8,7 @@ These examples are included with the library in ``/examples``
     hilbert_curve
     fourier
     maxwell_boltzmann
-
-Flow Field Noise
-----------------
-
-Move particles around by placing them on a grid of forces (a Flow Field)
-
+    flow_field_noise
 
 Mandelbrot
 ----------
