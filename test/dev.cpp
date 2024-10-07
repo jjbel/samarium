@@ -10,13 +10,6 @@ auto square(Vector2 centre, f64 size)
                        centre + Vector2{-size, -size}, centre + Vector2{-size, size}};
 }
 
-auto points_to_f32(std::span<const Vector2> in_pts)
-{
-    auto out_pts = std::vector<Vector2f>(in_pts.size());
-    for (auto i : loop::end(in_pts.size())) { out_pts[i] = in_pts[i].cast<f32>(); }
-    return out_pts;
-}
-
 auto main() -> i32
 {
     auto window = Window{{.dims = dims720}};
@@ -35,9 +28,10 @@ auto main() -> i32
         draw::polyline(window, in_pts, 0.3F, "#0000ff"_c);
 
         // TODO gives flaky:
-        // (window.mouse.pos != window.mouse.old_pos
+
         // TODO sometimes flips to concave polys
-        if (window.mouse.left && !left_old)
+        // if (window.mouse.left && !left_old)
+        if (window.mouse.pos != window.mouse.old_pos)
         {
             in_pts.push_back(window.pixel2world()(window.mouse.pos).cast<f32>());
             print(in_pts);
@@ -63,5 +57,5 @@ auto main() -> i32
             count++;
             draw();
         });
-    print(1.0 / 2.0);
+    // print(count / watch.time());
 }
