@@ -5,26 +5,30 @@
  * Project homepage: https://github.com/jjbel/samarium
  */
 
+#include "range/v3/view/enumerate.hpp"
 #include "samarium/graphics/colors.hpp"
 #include "samarium/samarium.hpp"
-#include "range/v3/view/enumerate.hpp"
+
 
 using namespace sm;
 using namespace sm::literals;
 
 constexpr auto window_dims     = Dimensions{1000, 1000};
 constexpr u64 downscale_factor = 20;
-constexpr u64 particle_count   = 100000;
+constexpr u64 particle_count   = 10'000;
 constexpr f64 radius           = 0.0045;
 constexpr f64 transparency     = 1.0;
-constexpr f64 sim_speed        = .125;
+constexpr f64 sim_speed        = 0.5;
 constexpr f64 max_speed        = 4;
 constexpr f64 max_force        = 1.0;
 constexpr f64 mouse_dist       = 0.05;
 
+// TODO fps seems to scale inversely with particle count
+// TODO add some bloom for the orange particles
+// TODO also see old values (the ones in 1920x1080). gave better results
+
 auto main() -> i32
 {
-    // TODO also see old values (the ones in 1920x1080). gave better results
     auto window        = Window{{.dims = window_dims}};
     auto watch         = Stopwatch{};
     auto frame_counter = 0;
@@ -34,7 +38,7 @@ auto main() -> i32
 
     auto ps     = ParticleSystem{particle_count};
     auto forces = VectorField{dims};
-    auto rand   = RandomGenerator{1000'000, RandomMode::Stable, 42};
+    auto rand   = RandomGenerator{1'000'000, RandomMode::Stable, 42};
 
     const auto dims_f64 = dims.cast<f64>();
 
@@ -54,6 +58,8 @@ auto main() -> i32
         particle.radius = radius;
     }
 
+
+    auto bench  = Benchmark{};
 
     const auto update = [&]
     {
@@ -124,12 +130,10 @@ auto main() -> i32
 
         file::write(file::pam, window.get_image(),
                     fmt::format("./exports/{:05}.pam", frame_counter));
+
+        bench.add_frame();
     };
 
-    auto watch1 = Stopwatch{};
     run(window, update, draw);
-    print(frame_counter / watch1.seconds(), "fps");
-    // TODO fps seems to scale inversely with particle count
-
-    // TODO add some bloom for the orange particles
+    bench.print();
 }

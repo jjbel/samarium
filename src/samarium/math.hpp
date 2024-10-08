@@ -15,4 +15,5 @@
 #include "samarium/math/loop.hpp"
 #include "samarium/math/math.hpp"
 #include "samarium/math/sample.hpp"
+#include "samarium/math/stats.hpp"
 #include "samarium/math/vector_math.hpp"

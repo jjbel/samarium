@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "samarium/util/Benchmark.hpp"
 #include "samarium/util/Error.hpp"
 #include "samarium/util/FunctionRef.hpp"
 #include "samarium/util/Grid.hpp"

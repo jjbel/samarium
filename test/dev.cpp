@@ -1,61 +1,145 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2022-2024 Jai Bellare
+ * See <https://opensource.org/licenses/MIT/> or LICENSE.md
+ * Project homepage: https://github.com/jjbel/samarium
+ */
+
+#include "range/v3/view/enumerate.hpp"
 #include "samarium/graphics/colors.hpp"
 #include "samarium/samarium.hpp"
+
 
 using namespace sm;
 using namespace sm::literals;
 
-auto square(Vector2 centre, f64 size)
-{
-    return std::vector{centre + Vector2{size, size}, centre + Vector2{size, -size},
-                       centre + Vector2{-size, -size}, centre + Vector2{-size, size}};
-}
+constexpr auto window_dims     = Dimensions{1000, 1000};
+constexpr u64 downscale_factor = 20;
+constexpr u64 particle_count   = 10'000;
+constexpr f64 radius           = 0.0045;
+constexpr f64 transparency     = 1.0;
+constexpr f64 sim_speed        = 0.5;
+constexpr f64 max_speed        = 4;
+constexpr f64 max_force        = 1.0;
+constexpr f64 mouse_dist       = 0.05;
+
+// TODO fps seems to scale inversely with particle count
+// TODO add some bloom for the orange particles
+// TODO also see old values (the ones in 1920x1080). gave better results
 
 auto main() -> i32
 {
-    auto window = Window{{.dims = dims720}};
-    window.camera.scale /= 6.0;
+    auto window        = Window{{.dims = window_dims}};
+    auto watch         = Stopwatch{};
+    auto frame_counter = 0;
 
-    auto in_pts  = points_to_f32(square({}, 2.0));
-    auto out_pts = draw::make_polyline(in_pts, 1.0F);
-    print(out_pts);
+    const auto scale = .4;
+    const auto dims  = window.dims / downscale_factor; // make this window dims / detail
 
-    auto left_old = false;
+    auto ps     = ParticleSystem{particle_count};
+    auto forces = VectorField{dims};
+    auto rand   = RandomGenerator{1'000'000, RandomMode::Stable, 42};
 
-    auto draw = [&]
+    const auto dims_f64 = dims.cast<f64>();
+
+    // instead of doing any mapping, should change the window view
+    // TODO VVIMP mapping pixel space to graph space.
+    const auto aspect_ratio_reciprocal = window.dims.cast<f64>().slope();
+    const auto field_to_graph          = [dims_f64, aspect_ratio_reciprocal](Vector2 pos)
     {
-        draw::background("#07090b"_c);
-
-        draw::polyline(window, in_pts, 0.3F, "#0000ff"_c);
-
-        // TODO gives flaky:
-
-        // TODO sometimes flips to concave polys
-        // if (window.mouse.left && !left_old)
-        if (window.mouse.pos != window.mouse.old_pos)
-        {
-            in_pts.push_back(window.pixel2world()(window.mouse.pos).cast<f32>());
-            print(in_pts);
-        }
-        left_old = window.mouse.left;
-
-        // for (auto pos : in_pts)
-        // {
-        //     draw::circle(window, Circle{pos.cast<f64>(), 0.2}, "#ff0000"_c, 64);
-        // }
-        // for (auto pos : out_pts)
-        // {
-        //     draw::circle(window, Circle{pos.cast<f64>(), 0.2}, "#0000ff"_c, 64);
-        // }
+        return interp::map_range(
+            pos, {{}, dims_f64},
+            {{-1.0, -aspect_ratio_reciprocal}, {1.0, aspect_ratio_reciprocal}});
     };
 
-    auto count = 0;
-    auto watch = Stopwatch{};
-    run(window,
-        [&]
+    for (auto& particle : ps)
+    {
+        particle.pos    = rand.vector({.min = Vector2{0.0, 0.0}, .max = dims_f64});
+        particle.radius = radius;
+    }
+
+
+    auto bench = Benchmark{};
+
+    const auto update = [&]
+    {
+        for (auto [pos, force] : forces.enumerate_2d())
         {
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
-            count++;
-            draw();
-        });
-    // print(count / watch.time());
+            const auto noisy_angle =
+                noise::perlin_2d(pos.cast<f64>() +
+                                     Vector2::combine(10) * static_cast<f64>(frame_counter * 0.01),
+                                 {.scale = scale, .roughness = 1.0}) *
+                math::two_pi;
+            // TODO frame_counter is always zero here, how were we using it? make flow field slowly
+            // change?
+            force = Vector2::from_polar({.length = max_force, .angle = noisy_angle});
+        }
+
+        for (auto [i, particle] : ranges::views::enumerate(ps))
+        {
+            const auto index = particle.pos.cast<u64>();
+            auto force       = forces.at_or(index, Vector2{0.0, 0.0});
+            //     // TODO what if we zero out prev vel and let it move only due to current force
+            //     // particle.vel     = Vector2{};
+
+            //     // if (math::distance(field_to_graph(particle.pos), window.mouse.pos) <=
+            //     mouse_dist)
+            //     // {
+            //     //     particle.vel += rand.polar_vector({1.0, 2.0});
+            //     // }
+            particle.apply_force(force);
+        }
+
+        ps.update(watch.seconds() * sim_speed);
+        watch.reset();
+
+        // // wrap position
+        // // TODO draw tiled, so the wrapping is obvious and looks beautiful
+        ps.for_each(
+            [=](Particle<>& particle)
+            {
+                particle.pos.x = math::wrap_max(particle.pos.x, static_cast<f64>(dims.x));
+                particle.pos.y = math::wrap_max(particle.pos.y, static_cast<f64>(dims.y));
+                particle.vel.clamp_length({0.0, max_speed});
+            });
+
+        frame_counter++;
+    };
+
+    const auto draw = [&]
+    {
+        draw::background("#000000"_c);
+        bench.add("draw background");
+
+        for (const auto& particle : ps)
+        {
+            // when vel is -ve, it gives a cool shadow effect coz of overflow!!!
+            const auto col = (particle.vel.normalized() * 255.0).cast<u8>();
+            // const auto col = (particle.vel.abs().normalized() * 255.0).cast<u8>();
+            const auto colorr = Color{col.x, 0, col.y};
+            // const auto colorr = "#ffffff"_c;
+
+            draw::circle(window, Circle{field_to_graph(particle.pos), particle.radius}, colorr, 3);
+
+            // drawing a circle around the mouse gives a cool following effect for some reason
+            // draw::circle(window, Circle{window.mouse.pos, mouse_dist},
+            //              {.fill_color = "#8400ff05"_c});
+        }
+
+        bench.add("draw particles");
+
+
+        // window.pan();
+        window.zoom_to_cursor();
+        bench.add("zoom to cursor");
+
+        // file::write(file::pam, window.get_image(),
+        //             fmt::format("./exports/{:05}.pam", frame_counter));
+        // bench.add("pam export");
+
+        bench.add_frame();
+    };
+
+    run(window, update, draw);
+    bench.print();
 }
