@@ -29,6 +29,7 @@ template <class Key,
 using Set = ankerl::unordered_dense::set<Key, Hash, KeyEqual, AllocatorOrContainer, Bucket>;
 } // namespace sm
 
+// TODO for other types?
 template <typename T> struct ankerl::unordered_dense::hash<sm::Vector2_t<T>>
 {
     using is_avalanching = void;
