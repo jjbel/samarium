@@ -27,8 +27,12 @@ template <typename Float = f64> struct Particle
 
     constexpr auto update(Float time_delta = 1.0 / 64) noexcept
     {
-        vel += acc * time_delta;
+        // https://youtu.be/yGhfUcPjXuE&t=609
+        // update pos using the average value of velocity
+        const auto half_dv = acc * time_delta;
+        vel += half_dv;
         pos += vel * time_delta;
+        vel += half_dv;
         acc = Vector2_t<Float>{}; // reset acceleration
     }
 
