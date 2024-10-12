@@ -36,6 +36,8 @@ Samarium is a 2d physics simulation library written in modern C++20.
 
 ## Examples
 
+<!-- TODO make a script to merge these into 2x2 grid, loop them -->
+
 [](https://user-images.githubusercontent.com/83468982/178472984-8cd83808-bfb2-478b-8a5e-3d45782f2c7d.mp4)
 
 [](https://user-images.githubusercontent.com/83468982/178473002-b7f896f6-d5ed-4cc5-be34-bcccab9ef11e.mp4)
@@ -48,6 +50,9 @@ Samarium is a 2d physics simulation library written in modern C++20.
 git clone --depth 1 https://github.com/jjbel/samarium.git
 python samarium/bootstrap.py
 ```
+
+<!-- TODO make sure bootstrap works -->
+<!-- TODO make it easy to run examples, easier than copy pasting the code into a source file? -->
 
 ## Prerequistes
 
@@ -82,6 +87,7 @@ conan create ./samarium/ -b missing
 
 For a fully-featured and self-contained example, run:
 
+<!-- is depth 1 rly faster? -->
 ```sh
 git clone --depth 1 https://github.com/jjbel/samarium_example.git .
 cmake --preset default
@@ -95,8 +101,8 @@ For the optimal developing experience, use [VSCode](https://code.visualstudio.co
 1. [C++ Extension Pack](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools-extension-pack)
 2. [Clang Format](https://clang.llvm.org/docs/ClangFormat.html)
 3. [CMake Format](https://github.com/cheshirekow/cmake_format) and the corresponding [extension](https://marketplace.visualstudio.com/items?itemName=cheshirekow.cmake-format)
-4. [SonarLint](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarlint-vscode)
-5. [C++ Advanced Lint](https://marketplace.visualstudio.com/items?itemName=jbenden.c-cpp-flylint)
+<!-- 4. [SonarLint](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarlint-vscode) -->
+<!-- 5. [C++ Advanced Lint](https://marketplace.visualstudio.com/items?itemName=jbenden.c-cpp-flylint) -->
 
 ## Documentation
 
@@ -117,3 +123,5 @@ Many thanks to the following wonderful libraries:
 5. [tl::function_ref](https://github.com/TartanLlama/function_ref) and [tl::expected](https://github.com/TartanLlama/expected)
 6. [znone/call_thunk](https://github.com/znone/call_thunk)
 7. [itlib-static-vector](https://github.com/iboB/itlib)
+
+<!-- TODO add the rest which are in conanfile.py -->
