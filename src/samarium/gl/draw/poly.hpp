@@ -157,46 +157,47 @@ inline void regular_polygon(Window& window, Circle border_circle, u32 point_coun
 }
 
 // SHAPECOLOR stuf todo -----------------------------------------------------
-inline void polygon(Window& window,
-                    std::span<const Vector2f> points,
-                    ShapeColor color,
-                    const glm::mat4& transform)
-{
-    if (color.fill_color.a != 0)
-    {
-        // TODO
-    }
+// inline void polygon(Window& window,
+//                     std::span<const Vector2f> points,
+//                     ShapeColor color,
+//                     const glm::mat4& transform)
+// {
+// if (color.fill_color.a != 0)
+// {
+// TODO
+// }
 
-    if (color.border_color.a != 0 && color.border_width != 0.0)
-    {
-        auto new_points = std::vector<Vector2f>{points.begin(), points.end()};
-        new_points.insert(new_points.begin(), new_points.back());
-        new_points.push_back(new_points[1]);
-        new_points.push_back(new_points[2]);
-        // polyline_impl(window, {new_points}, color.border_color,
-        //   static_cast<f32>(color.border_width), transform);
-    }
-}
+// if (color.border_color.a != 0 && color.border_width != 0.0)
+// {
+//     auto new_points = std::vector<Vector2f>{points.begin(), points.end()};
+//     new_points.insert(new_points.begin(), new_points.back());
+//     new_points.push_back(new_points[1]);
+//     new_points.push_back(new_points[2]);
+// polyline_impl(window, {new_points}, color.border_color,
+//   static_cast<f32>(color.border_width), transform);
+// }
+// }
 
-inline void polygon(Window& window, std::span<const Vector2f> points, ShapeColor color)
-{
-    polygon(window, points, color, window.world2gl());
-}
+// inline void polygon(Window& window, std::span<const Vector2f> points, ShapeColor color)
+// {
+//     polygon(window, points, color, window.world2gl());
+// }
 
-inline void regular_polygon(Window& window,
-                            Circle border_circle,
-                            u32 point_count,
-                            ShapeColor color,
-                            const glm::mat4& transform)
-{
-    const auto points = math::regular_polygon_points<f32>(point_count, border_circle);
-    polygon(window, {points.begin(), point_count}, color, transform);
-}
+// inline void regular_polygon(Window& window,
+//                             Circle border_circle,
+//                             u32 point_count,
+//                             ShapeColor color,
+//                             const glm::mat4& transform)
+// {
+//     const auto points = math::regular_polygon_points<f32>(point_count, border_circle);
+//     polygon(window, {points.begin(), point_count}, color, transform);
+// }
 
-inline void regular_polygon(Window& window, Circle border_circle, u32 point_count, ShapeColor color)
-{
-    regular_polygon(window, border_circle, point_count, color, window.world2gl());
-}
+// inline void regular_polygon(Window& window, Circle border_circle, u32 point_count, ShapeColor
+// color)
+// {
+//     regular_polygon(window, border_circle, point_count, color, window.world2gl());
+// }
 } // namespace sm::draw
 
 namespace sm::draw

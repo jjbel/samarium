@@ -80,7 +80,7 @@ SM_INLINE void grid_dots(Window& window, const GridDots& config)
                  y_min, y_max, static_cast<i64>((y_max - y_min) / config.spacing) + 1))
         {
             draw::regular_polygon(window, {{i, j}, config.thickness}, config.point_count,
-                                  {.fill_color = config.color});
+                                  config.color);
         }
     }
 };

@@ -25,8 +25,8 @@ struct MovablePoint
 
     void draw(Window& window) const
     {
-        draw::circle(window, {pos, major_radius}, {.fill_color = color.with_multiplied_alpha(0.4)});
-        draw::circle(window, {pos, minor_radius}, {.fill_color = color});
+        draw::circle(window, {pos, major_radius}, color.with_multiplied_alpha(0.4));
+        draw::circle(window, {pos, minor_radius}, color);
     }
 
     void update(const Mouse& mouse)

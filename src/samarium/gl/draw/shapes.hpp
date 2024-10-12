@@ -7,85 +7,41 @@
 
 #pragma once
 
+#include "samarium/gl/draw/poly.hpp"
 #include "samarium/graphics/Color.hpp" // for Color, ShapeColor
 #include "samarium/gui/Window.hpp"     // for Window
 #include "samarium/math/shapes.hpp"    // for LineSegment, Circle
 
-namespace sm::draw
-{
-void circle(
-    Window& window, Circle circle, Color color, const glm::mat4& transform, u32 point_count = 16);
-void circle(Window& window, Circle circle_, Color color, u32 point_count = 16);
-
-void circle(Window& window,
-            Circle circle,
-            ShapeColor color,
-            const glm::mat4& transform,
-            u32 point_count = 16);
-void circle(Window& window, Circle circle_, ShapeColor color, u32 point_count = 16);
-
-void line_segment(Window& window,
-                  const LineSegment& line,
-                  Color color,
-                  f32 thickness,
-                  const glm::mat4& transform);
-void line_segment(Window& window, const LineSegment& line, Color color, f32 thickness = 0.02F);
-
-void line(Window& window,
-          const LineSegment& line,
-          Color color,
-          f32 thickness,
-          const glm::mat4& transform);
-void line(Window& window, const LineSegment& line_, Color color, f32 thickness = 0.02F);
-
-void bounding_box(Window& window,
-                  const BoundingBox<f64>& box,
-                  Color color,
-                  f32 thickness,
-                  const glm::mat4& transform);
-void bounding_box(Window& window, const BoundingBox<f64>& box, Color color, f32 thickness = 0.02F);
-
-void polyline_segments(Window& window,
-                       std::span<const Vector2f> points,
-                       f32 thickness,
-                       Color color);
-
-void polygon_segments(Window& window, std::span<const Vector2f> points, f32 thickness, Color color);
-} // namespace sm::draw
-
-#if defined(SAMARIUM_HEADER_ONLY) || defined(SAMARIUM_DRAW_IMPL)
-
-#include "samarium/core/inline.hpp"
-#include "samarium/gl/draw/poly.hpp"
-#include "samarium/gl/draw/shapes.hpp"
 
 namespace sm::draw
 {
-// TODO dwap transform and point_count order for uniformity
-SM_INLINE void
-circle(Window& window, Circle circle, Color color, const glm::mat4& transform, u32 point_count)
+// TODO swap transform and point_count order for uniformity
+inline void
+circle(Window& window, Circle circle, Color color, const glm::mat4& transform, u32 point_count = 16)
 {
     regular_polygon(window, circle, point_count, color, transform);
 }
 
-SM_INLINE void circle(Window& window, Circle circle_, Color color, u32 point_count)
+inline void circle(Window& window, Circle circle_, Color color, u32 point_count = 16)
 {
     circle(window, circle_, color, window.world2gl(), point_count);
 }
 
-SM_INLINE void
-circle(Window& window, Circle circle, ShapeColor color, const glm::mat4& transform, u32 point_count)
-{
-    regular_polygon(window, circle, point_count, color, transform);
-}
+// inline void circle(Window& window,
+//                    Circle circle,
+//                    ShapeColor color,
+//                    const glm::mat4& transform,
+//                    u32 point_count = 16)
+// {
+//     regular_polygon(window, circle, point_count, color, transform);
+// }
 
-SM_INLINE void circle(Window& window, Circle circle_, ShapeColor color, u32 point_count)
-{
-    circle(window, circle_, color, window.world2gl(), point_count);
-}
+// inline void circle(Window& window, Circle circle_, ShapeColor color, u32 point_count = 16)
+// {
+//     circle(window, circle_, color, window.world2gl(), point_count);
+// }
 
-
-SM_INLINE void line_segment(
+inline void line_segment(
     Window& window, const LineSegment& line, Color color, f32 thickness, const glm::mat4& transform)
 {
     const auto thickness_vector =
@@ -100,63 +56,61 @@ SM_INLINE void line_segment(
     polygon(window, points, color, transform);
 }
 
-SM_INLINE void line_segment(Window& window, const LineSegment& line, Color color, f32 thickness)
+inline void
+line_segment(Window& window, const LineSegment& line, Color color, f32 thickness = 0.02F)
 {
     line_segment(window, line, color, thickness, window.world2gl());
 }
 
-SM_INLINE void bounding_box(Window& window,
-                            const BoundingBox<f64>& box,
-                            Color color,
-                            f32 thickness,
-                            const glm::mat4& transform)
+inline void line(
+    Window& window, const LineSegment& line, Color color, f32 thickness, const glm::mat4& transform)
+{
+    const auto midpoint = (line.p1 + line.p2) / 2.0;
+    // const auto scale         = window.aspect_vector_max().length() * window.view.scale.length();
+    // TODO calculate proper scale. see grid
+    const auto scale         = 1000.0;
+    const auto extended_line = LineSegment{(line.p1 - midpoint) * scale + midpoint,
+                                           (line.p2 - midpoint) * scale + midpoint};
+    line_segment(window, extended_line, color, thickness, transform);
+}
+inline void line(Window& window, const LineSegment& line_, Color color, f32 thickness = 0.02F)
+{
+    line(window, line_, color, thickness, window.world2gl());
+}
+
+inline void bounding_box(Window& window,
+                         const BoundingBox<f64>& box,
+                         Color color,
+                         f32 thickness,
+                         const glm::mat4& transform)
 {
     for (const auto& line : box.line_segments())
     {
         line_segment(window, line, color, thickness, transform);
     }
 }
-
-SM_INLINE void bounding_box(Window& window, const BoundingBox<f64>& box, Color color, f32 thickness)
+inline void
+bounding_box(Window& window, const BoundingBox<f64>& box, Color color, f32 thickness = 0.02F)
 {
     bounding_box(window, box, color, thickness, window.world2gl());
 }
 
-SM_INLINE void line(
-    Window& window, const LineSegment& line, Color color, f32 thickness, const glm::mat4& transform)
-{
-    const auto midpoint = (line.p1 + line.p2) / 2.0;
-    // const auto scale         = window.aspect_vector_max().length() * window.view.scale.length();
-    // TODO calculate proper scale
-    const auto scale         = 1000.0;
-    const auto extended_line = LineSegment{(line.p1 - midpoint) * scale + midpoint,
-                                           (line.p2 - midpoint) * scale + midpoint};
-    line_segment(window, extended_line, color, thickness, transform);
-}
-
-SM_INLINE void line(Window& window, const LineSegment& line_, Color color, f32 thickness)
-{
-    line(window, line_, color, thickness, window.world2gl());
-}
-
 // quick and dirty
-
-SM_INLINE void
-polyline_segments(Window& window, std::span<const Vector2f> in_pts, f32 thickness, Color color)
+inline void
+polyline_segments(Window& window, std::span<const Vector2f> points, f32 thickness, Color color)
 {
-    for (auto i : loop::end(in_pts.size() - 1UL))
+    for (auto i : loop::end(points.size() - 1UL))
     {
-        draw::line_segment(window, {in_pts[i].cast<f64>(), in_pts[i + 1UL].cast<f64>()}, color,
+        draw::line_segment(window, {points[i].cast<f64>(), points[i + 1UL].cast<f64>()}, color,
                            thickness);
     }
 }
 
-SM_INLINE void
-polygon_segments(Window& window, std::span<const Vector2f> in_pts, f32 thickness, Color color)
+inline void
+polygon_segments(Window& window, std::span<const Vector2f> points, f32 thickness, Color color)
 {
-    polyline_segments(window, in_pts, thickness, color);
-    draw::line_segment(window, {in_pts[in_pts.size() - 1UL].cast<f64>(), in_pts[0].cast<f64>()},
+    polyline_segments(window, points, thickness, color);
+    draw::line_segment(window, {points[points.size() - 1UL].cast<f64>(), points[0].cast<f64>()},
                        color, thickness);
 }
 } // namespace sm::draw
-#endif
