@@ -72,26 +72,26 @@ enum class Layout
 
 template <Layout mode> struct Vertex
 {
-    Vector2_t<f32> pos{};
+    Vector2f pos{};
 };
 
 template <> struct Vertex<Layout::PosColor>
 {
-    Vector2_t<f32> pos{};
+    Vector2f pos{};
     Color color{};
 };
 
 template <> struct Vertex<Layout::PosTex>
 {
-    Vector2_t<f32> pos{};
-    Vector2_t<f32> tex_coord{};
+    Vector2f pos{};
+    Vector2f tex_coord{};
 };
 
 template <> struct Vertex<Layout::PosColorTex>
 {
-    Vector2_t<f32> pos{};
+    Vector2f pos{};
     Color color{};
-    Vector2_t<f32> tex_coord{};
+    Vector2f tex_coord{};
 };
 } // namespace sm::gl
 

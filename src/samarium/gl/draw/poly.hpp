@@ -109,7 +109,7 @@ inline void polyline(Window& window, std::span<const Vector2f> in_pts, f32 thick
     auto& vao = window.context.vertex_arrays.at("Pos");
     window.context.set_active(vao);
     buffer.set_data(out_pts);
-    vao.bind(buffer, sizeof(Vector2_t<f32>));
+    vao.bind(buffer, sizeof(Vector2f));
 
     glDrawArrays(GL_TRIANGLE_STRIP, 0, static_cast<i32>(out_pts.size()));
 }
@@ -132,7 +132,7 @@ inline void polygon(Window& window,
     auto& vao = window.context.vertex_arrays.at("Pos");
     window.context.set_active(vao);
     buffer.set_data(points);
-    vao.bind(buffer, sizeof(Vector2_t<f32>));
+    vao.bind(buffer, sizeof(Vector2f));
 
     // TODO this requires convex...we should use triangle strip...
     glDrawArrays(GL_TRIANGLE_FAN, 0, static_cast<i32>(points.size()));
