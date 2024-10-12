@@ -16,7 +16,7 @@ using namespace sm::literals;
 constexpr auto window_dims     = Dimensions{1000, 1000};
 constexpr u64 downscale_factor = 20;
 constexpr u64 particle_count   = 10'000;
-constexpr f64 radius           = 0.0045;
+constexpr f64 radius           = 0.007;
 constexpr f64 transparency     = 1.0;
 constexpr f64 sim_speed        = 0.5;
 constexpr f64 max_speed        = 4;
@@ -26,6 +26,9 @@ constexpr f64 mouse_dist       = 0.05;
 // TODO fps seems to scale inversely with particle count
 // TODO add some bloom for the orange particles
 // TODO also see old values (the ones in 1920x1080). gave better results
+
+// TODO make f64 a typedef and compare performance throughout
+// TODO make f32 <-> f64 vector conversion functions
 
 auto main() -> i32
 {
@@ -59,10 +62,11 @@ auto main() -> i32
     }
 
 
-    auto bench  = Benchmark{};
+    auto bench = Benchmark{};
 
     const auto update = [&]
     {
+        bench.reset();
         for (auto [pos, force] : forces.enumerate_2d())
         {
             const auto noisy_angle =
@@ -74,6 +78,11 @@ auto main() -> i32
             // change?
             force = Vector2::from_polar({.length = max_force, .angle = noisy_angle});
         }
+
+        bench.add("update forces");
+
+        // TODO what if we just rotate the forces at the same speed
+        // TODO what if we make it a velocity field instead of a force field
 
         for (auto [i, particle] : ranges::views::enumerate(ps))
         {
@@ -90,8 +99,13 @@ auto main() -> i32
             particle.apply_force(force);
         }
 
+        bench.add("apply forces");
+
         ps.update(watch.seconds() * sim_speed);
         watch.reset();
+
+        bench.add("particles update");
+
 
         // // wrap position
         // // TODO draw tiled, so the wrapping is obvious and looks beautiful
@@ -103,12 +117,17 @@ auto main() -> i32
                 particle.vel.clamp_length({0.0, max_speed});
             });
 
+        bench.add("particles wrap");
+
         frame_counter++;
     };
+
+    auto image = Image{window.dims};
 
     const auto draw = [&]
     {
         draw::background("#000000"_c);
+        bench.add("draw background");
 
         for (const auto& particle : ps)
         {
@@ -125,11 +144,20 @@ auto main() -> i32
             //              {.fill_color = "#8400ff05"_c});
         }
 
+        bench.add("draw particles");
+
+
         // window.pan();
         window.zoom_to_cursor();
+        bench.add("zoom to cursor");
 
-        file::write(file::pam, window.get_image(),
-                    fmt::format("./exports/{:05}.pam", frame_counter));
+        // file::write(file::pam, window.get_image(),
+        //             fmt::format("./exports/{:05}.pam", frame_counter));
+        // bench.add("pam export");
+
+        // window.get_image(image);
+        // file::write(file::pam, image, fmt::format("./exports/{:05}.pam", frame_counter));
+        // bench.add("pam export to target");
 
         bench.add_frame();
     };
