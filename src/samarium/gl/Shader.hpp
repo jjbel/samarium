@@ -20,9 +20,11 @@
 
 #include "samarium/core/types.hpp"     // for u32, u64, i32, f32
 #include "samarium/graphics/Color.hpp" // for Color
+#include "samarium/math/Transform.hpp" // for Transform
 #include "samarium/math/Vector2.hpp"   // for Vector2
 #include "samarium/util/Result.hpp"    // for Result
 #include "samarium/util/file.hpp"      // for read
+
 
 #include "Texture.hpp"
 
@@ -182,6 +184,7 @@ struct Shader
     void set(const std::string& name, Color value) const;
     void set(const std::string& name, Vector2 value) const;
     void set(const std::string& name, const glm::mat4& value) const;
+    void set(const std::string& name, const Transform& value) const;
 
     void bind() const { glUseProgram(handle); }
 
@@ -269,6 +272,7 @@ struct ComputeShader
     void set(const std::string& name, Color value) const;
     void set(const std::string& name, Vector2 value) const;
     void set(const std::string& name, const glm::mat4& value) const;
+
     void set(const std::string& name, const Texture& texture) const;
 
     ~ComputeShader() { glDeleteProgram(handle); }
@@ -323,6 +327,13 @@ void Shader::set(const std::string& name, Vector2 value) const
 void Shader::set(const std::string& name, const glm::mat4& value) const
 {
     glUniformMatrix4fv(get_uniform_location(name), 1, GL_FALSE, glm::value_ptr(value));
+}
+
+void Shader::set(const std::string& name, const Transform& value) const
+{
+    glUniform4f(get_uniform_location(name), static_cast<f32>(value.pos.x),
+                static_cast<f32>(value.pos.y), static_cast<f32>(value.scale.x),
+                static_cast<f32>(value.scale.y));
 }
 
 void ComputeShader::bind() { glUseProgram(handle); }
