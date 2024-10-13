@@ -5,163 +5,125 @@
  * Project homepage: https://github.com/jjbel/samarium
  */
 
-#include "range/v3/view/enumerate.hpp"
-#include "samarium/graphics/colors.hpp"
 #include "samarium/samarium.hpp"
 
-
 using namespace sm;
-using namespace sm::literals;
-
-constexpr auto window_dims     = Dimensions{1000, 1000};
-constexpr u64 downscale_factor = 20;
-constexpr u64 particle_count   = 10'000;
-constexpr f64 radius           = 0.007;
-constexpr f64 transparency     = 1.0;
-constexpr f64 sim_speed        = 0.5;
-constexpr f64 max_speed        = 4;
-constexpr f64 max_force        = 1.0;
-constexpr f64 mouse_dist       = 0.05;
-
-// TODO fps seems to scale inversely with particle count
-// TODO add some bloom for the orange particles
-// TODO also see old values (the ones in 1920x1080). gave better results
-
-// TODO make f64 a typedef and compare performance throughout
-// TODO make f32 <-> f64 vector conversion functions
 
 auto main() -> i32
 {
-    auto window        = Window{{.dims = window_dims}};
-    auto watch         = Stopwatch{};
-    auto frame_counter = 0;
+    auto window = Window{{.dims = {1280, 720}}};
+    auto bench  = Benchmark{};
 
-    const auto scale = .4;
-    const auto dims  = window.dims / downscale_factor; // make this window dims / detail
+    auto& ctx = window.context;
 
-    auto ps     = ParticleSystem{particle_count};
-    auto forces = VectorField{dims};
-    auto rand   = RandomGenerator{1'000'000, RandomMode::Stable, 42};
+    ctx.vert_sources.emplace("PosInstance",
+#include "../src/samarium/gl/shaders/PosInstance.vert.glsl"
+    );
 
-    const auto dims_f64 = dims.cast<f64>();
+    ctx.shaders.emplace(
+        "PosInstance",
+        gl::Shader{expect(gl::VertexShader::make(ctx.vert_sources.at("PosInstance"))),
+                   expect(gl::FragmentShader::make(ctx.frag_sources.at("Pos")))});
+    const auto& shader = ctx.shaders.at("PosInstance");
+    ctx.set_active(shader);
 
-    // instead of doing any mapping, should change the window view
-    // TODO VVIMP mapping pixel space to graph space.
-    const auto aspect_ratio_reciprocal = window.dims.cast<f64>().slope();
-    const auto field_to_graph          = [dims_f64, aspect_ratio_reciprocal](Vector2 pos)
+
+    ctx.vertex_arrays.emplace("PosInstance", gl::VertexArray{{}});
+    print("hello");
+
+    const auto circle      = Circle{{0, 0}, 0.3};
+    const auto color       = Color{100, 60, 255};
+    const auto point_count = 64;
+    const auto points      = math::regular_polygon_points<f32>(point_count, circle);
+
+    glEnableVertexAttribArray(0);
+    GLuint points_vertex_buffer;
+    glGenBuffers(1, &points_vertex_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, points_vertex_buffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Vector2f) * points.size(), &points[0], GL_STATIC_DRAW);
+
+
+    auto pts = std::vector<Vector2f>{{-0.4F, -0.4F}, {-0.4F, 0.4F}, {0.4F, 0.4F}, {0.4F, -0.4F}};
+    auto particle_count = pts.size();
+    unsigned int instances_buffer;
+    glGenBuffers(1, &instances_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, instances_buffer);
+    glBufferData(GL_ARRAY_BUFFER, particle_count * sizeof(Vector2f), &pts[0],
+                 GL_STATIC_DRAW /* GL_STREAM_DRAW */);
+
+    // ctx.vertex_arrays.at("PosInstance").bind();
+    // vertex attributes
+    // glEnableVertexAttribArray(1);
+    // glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, /* 2 *  */ sizeof(Vector2f) /* or zero? */,
+    //                       (void*)0);
+    // glVertexAttribDivisor(1, 1);
+    // glBindVertexArray(0);
+
+
+    const auto draw_circles = [&]
     {
-        return interp::map_range(
-            pos, {{}, dims_f64},
-            {{-1.0, -aspect_ratio_reciprocal}, {1.0, aspect_ratio_reciprocal}});
+        const auto& shader = ctx.shaders.at("PosInstance");
+        ctx.set_active(shader);
+
+
+        ctx.vertex_arrays.at("PosInstance").bind();
+
+        glEnableVertexAttribArray(0);
+        glBindBuffer(GL_ARRAY_BUFFER, points_vertex_buffer);
+        glVertexAttribPointer(
+            0, // attribute. No particular reason for 0, but must match the layout in the shader.
+            2, // size
+            GL_FLOAT, // type
+            GL_FALSE, // normalized?
+            0,        // stride
+            (void*)0  // array buffer offset
+        );
+
+        // 2nd attribute buffer : positions of particles' centers
+        glEnableVertexAttribArray(1);
+        glBindBuffer(GL_ARRAY_BUFFER, instances_buffer);
+        glVertexAttribPointer(
+            1, // attribute. No particular reason for 1, but must match the layout in the shader.
+            2, // size : x, y => 2
+            GL_FLOAT, // type
+            GL_FALSE, // normalized?
+            0,        // stride
+            (void*)0  // array buffer offset
+        );
+        glVertexAttribDivisor(0, 0); // particles vertices : always reuse the same 4 vertices -> 0
+        glVertexAttribDivisor(1, 1); // positions : one per quad (its center) -> 1
+
+        shader.set("color", color);
+        shader.set("view", window.world2gl());
+        bench.add("gl uniforms");
+
+        bench.add("gl state update");
+        glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, static_cast<i32>(points.size()),
+                              static_cast<i32>(particle_count));
+        bench.add("gl draw instanced");
     };
-
-    for (auto& particle : ps)
-    {
-        particle.pos    = rand.vector({.min = Vector2{0.0, 0.0}, .max = dims_f64});
-        particle.radius = radius;
-    }
-
-
-    auto bench = Benchmark{};
-
-    const auto update = [&]
-    {
-        bench.reset();
-        for (auto [pos, force] : forces.enumerate_2d())
-        {
-            const auto noisy_angle =
-                noise::perlin_2d(pos.cast<f64>() +
-                                     Vector2::combine(10) * static_cast<f64>(frame_counter * 0.01),
-                                 {.scale = scale, .roughness = 1.0}) *
-                math::two_pi;
-            // TODO frame_counter is always zero here, how were we using it? make flow field slowly
-            // change?
-            force = Vector2::from_polar({.length = max_force, .angle = noisy_angle});
-        }
-
-        bench.add("update forces");
-
-        // TODO what if we just rotate the forces at the same speed
-        // TODO what if we make it a velocity field instead of a force field
-
-        for (auto [i, particle] : ranges::views::enumerate(ps))
-        {
-            const auto index = particle.pos.cast<u64>();
-            auto force       = forces.at_or(index, Vector2{0.0, 0.0});
-            //     // TODO what if we zero out prev vel and let it move only due to current force
-            //     // particle.vel     = Vector2{};
-
-            //     // if (math::distance(field_to_graph(particle.pos), window.mouse.pos) <=
-            //     mouse_dist)
-            //     // {
-            //     //     particle.vel += rand.polar_vector({1.0, 2.0});
-            //     // }
-            particle.apply_force(force);
-        }
-
-        bench.add("apply forces");
-
-        ps.update(watch.seconds() * sim_speed);
-        watch.reset();
-
-        bench.add("particles update");
-
-
-        // // wrap position
-        // // TODO draw tiled, so the wrapping is obvious and looks beautiful
-        ps.for_each(
-            [=](Particle<>& particle)
-            {
-                particle.pos.x = math::wrap_max(particle.pos.x, static_cast<f64>(dims.x));
-                particle.pos.y = math::wrap_max(particle.pos.y, static_cast<f64>(dims.y));
-                particle.vel.clamp_length({0.0, max_speed});
-            });
-
-        bench.add("particles wrap");
-
-        frame_counter++;
-    };
-
-    auto image = Image{window.dims};
 
     const auto draw = [&]
     {
-        draw::background("#000000"_c);
-        bench.add("draw background");
+        draw::background(Color{});
 
-        for (const auto& particle : ps)
-        {
-            // when vel is -ve, it gives a cool shadow effect coz of overflow!!!
-            const auto col = (particle.vel.normalized() * 255.0).cast<u8>();
-            // const auto col = (particle.vel.abs().normalized() * 255.0).cast<u8>();
-            const auto colorr = Color{col.x, 0, col.y};
-            // const auto colorr = "#ffffff"_c;
+        draw_circles();
+        // for (const auto& particle : ps)
+        // {
+        //     const auto colorr = Color{col.x, 0, col.y};
+        //     draw::circle(window, Circle{field_to_graph(particle.pos), particle.radius}, colorr,
+        //     3);
+        // }
+        // bench.add("draw particles");
 
-            draw::circle(window, Circle{field_to_graph(particle.pos), particle.radius}, colorr, 3);
-
-            // drawing a circle around the mouse gives a cool following effect for some reason
-            // draw::circle(window, Circle{window.mouse.pos, mouse_dist},
-            //              {.fill_color = "#8400ff05"_c});
-        }
-
-        bench.add("draw particles");
-
-
-        // window.pan();
+        window.pan();
         window.zoom_to_cursor();
         bench.add("zoom to cursor");
-
-        // file::write(file::pam, window.get_image(),
-        //             fmt::format("./exports/{:05}.pam", frame_counter));
-        // bench.add("pam export");
-
-        // window.get_image(image);
-        // file::write(file::pam, image, fmt::format("./exports/{:05}.pam", frame_counter));
-        // bench.add("pam export to target");
-
+        std::this_thread::sleep_for(std::chrono::milliseconds(16));
+        bench.add("sleep");
         bench.add_frame();
     };
 
-    run(window, update, draw);
+    run(window, draw);
     bench.print();
 }

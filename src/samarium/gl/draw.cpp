@@ -9,3 +9,5 @@
 #define SAMARIUM_DRAW_IMPL
 #include "draw.hpp"
 #endif // !SAMARIUM_HEADER_ONLY
+
+// TODO why does this exist
