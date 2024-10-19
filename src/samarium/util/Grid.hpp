@@ -221,4 +221,20 @@ constexpr static auto dimsFHD = Dimensions{1920UL, 1080UL};
 constexpr static auto dims720 = Dimensions{1280UL, 720UL};
 constexpr static auto dims480 = Dimensions{640UL, 480UL};
 constexpr static auto dimsP2  = Dimensions{2048UL, 1024UL};
+
+// TODO grid and box have opposite directions of y-axis
+inline auto subdivide_box(BoundingBox<f64> box, Dimensions rows_cols, f64 scale = 1.0)
+{
+    return Grid<BoundingBox<f64>>::generate(
+        rows_cols,
+        [box, rows_cols, scale](Indices pos)
+        {
+            const auto rows_cols_f64 = rows_cols.cast<f64>();
+            const auto pos_f64       = pos.cast<f64>();
+            const auto delta         = box.max - box.min;
+            return BoundingBox{box.min + delta / rows_cols_f64 * pos_f64,
+                               box.min + delta / rows_cols_f64 * (pos_f64 + Vector2{1, 1})}
+                .scaled(scale);
+        });
+}
 } // namespace sm
