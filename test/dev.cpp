@@ -1,129 +1,48 @@
-/*
- * SPDX-License-Identifier: MIT
- * Copyright (c) 2022-2024 Jai Bellare
- * See <https://opensource.org/licenses/MIT/> or LICENSE.md
- * Project homepage: https://github.com/jjbel/samarium
- */
-
+#include "samarium/graphics/colors.hpp"
 #include "samarium/samarium.hpp"
+
 
 using namespace sm;
 
 auto main() -> i32
 {
-    auto window = Window{{.dims = {1280, 720}}};
-    auto bench  = Benchmark{};
+    auto window = Window{{.dims = dims720}};
+    auto plot   = Plot{};
 
-    auto& ctx = window.context;
+    const auto grid_dims = Dimensions{2, 2};
 
-    ctx.vert_sources.emplace("PosInstance",
-#include "../src/samarium/gl/shaders/PosInstance.vert.glsl"
-    );
+    auto rng = RandomGenerator{};
 
-    ctx.shaders.emplace(
-        "PosInstance",
-        gl::Shader{expect(gl::VertexShader::make(ctx.vert_sources.at("PosInstance"))),
-                   expect(gl::FragmentShader::make(ctx.frag_sources.at("Pos")))});
-    const auto& shader = ctx.shaders.at("PosInstance");
-    ctx.set_active(shader);
+    plot.traces["x"] = {colors::red};
+    plot.traces["y"] = {colors::green};
+    plot.traces["z"] = {colors::blue};
 
+    print("Hello");
 
-    ctx.vertex_arrays.emplace("PosInstance", gl::VertexArray{{}});
-    print("hello");
-
-    const auto circle      = Circle{{0, 0}, 0.3};
-    const auto color       = Color{100, 60, 255};
-    const auto point_count = 64;
-    const auto points      = math::regular_polygon_points<f32>(point_count, circle);
-
-    glEnableVertexAttribArray(0);
-    GLuint points_vertex_buffer;
-    glGenBuffers(1, &points_vertex_buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, points_vertex_buffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(Vector2f) * points.size(), &points[0], GL_STATIC_DRAW);
-
-
-    auto pts = std::vector<Vector2f>{{-0.4F, -0.4F}, {-0.4F, 0.4F}, {0.4F, 0.4F}, {0.4F, -0.4F}};
-    auto particle_count = pts.size();
-    unsigned int instances_buffer;
-    glGenBuffers(1, &instances_buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, instances_buffer);
-    glBufferData(GL_ARRAY_BUFFER, particle_count * sizeof(Vector2f), &pts[0],
-                 GL_STATIC_DRAW /* GL_STREAM_DRAW */);
-
-    // ctx.vertex_arrays.at("PosInstance").bind();
-    // vertex attributes
-    // glEnableVertexAttribArray(1);
-    // glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, /* 2 *  */ sizeof(Vector2f) /* or zero? */,
-    //                       (void*)0);
-    // glVertexAttribDivisor(1, 1);
-    // glBindVertexArray(0);
-
-
-    const auto draw_circles = [&]
+    auto frame_counter = 0;
+    const auto draw    = [&]
     {
-        const auto& shader = ctx.shaders.at("PosInstance");
-        ctx.set_active(shader);
+        plot.transform.pos.x = -0.5;
 
+        const auto boxes = subdivide_box(window.world_box(), grid_dims, 0.97);
+        plot.box         = boxes[{0, 0}];
 
-        ctx.vertex_arrays.at("PosInstance").bind();
+        plot.add("x", Vector2{frame_counter / 1000.0,
+                              noise::perlin_1d(frame_counter / 1000.0, {100.0}) - 0.5});
 
-        glEnableVertexAttribArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, points_vertex_buffer);
-        glVertexAttribPointer(
-            0, // attribute. No particular reason for 0, but must match the layout in the shader.
-            2, // size
-            GL_FLOAT, // type
-            GL_FALSE, // normalized?
-            0,        // stride
-            (void*)0  // array buffer offset
-        );
+        plot.add("y", Vector2{frame_counter / 1000.0,
+                              noise::perlin_1d(frame_counter / 1000.0 + 100.0, {100.0}) - 0.5});
 
-        // 2nd attribute buffer : positions of particles' centers
-        glEnableVertexAttribArray(1);
-        glBindBuffer(GL_ARRAY_BUFFER, instances_buffer);
-        glVertexAttribPointer(
-            1, // attribute. No particular reason for 1, but must match the layout in the shader.
-            2, // size : x, y => 2
-            GL_FLOAT, // type
-            GL_FALSE, // normalized?
-            0,        // stride
-            (void*)0  // array buffer offset
-        );
-        glVertexAttribDivisor(0, 0); // particles vertices : always reuse the same 4 vertices -> 0
-        glVertexAttribDivisor(1, 1); // positions : one per quad (its center) -> 1
+        plot.add("z", Vector2{frame_counter / 1000.0,
+                              noise::perlin_1d(frame_counter / 1000.0 + 200.0, {100.0}) - 0.5});
 
-        shader.set("color", color);
-        shader.set("view", window.world2gl());
-        bench.add("gl uniforms");
+        draw::background(colors::black);
+        plot.draw(window);
 
-        bench.add("gl state update");
-        glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, static_cast<i32>(points.size()),
-                              static_cast<i32>(particle_count));
-        bench.add("gl draw instanced");
-    };
+        // print(plot.traces["x"].points, plot.traces["y"].points, plot.traces["z"].points);
 
-    const auto draw = [&]
-    {
-        draw::background(Color{});
-
-        draw_circles();
-        // for (const auto& particle : ps)
-        // {
-        //     const auto colorr = Color{col.x, 0, col.y};
-        //     draw::circle(window, Circle{field_to_graph(particle.pos), particle.radius}, colorr,
-        //     3);
-        // }
-        // bench.add("draw particles");
-
-        window.pan();
-        window.zoom_to_cursor();
-        bench.add("zoom to cursor");
+        frame_counter++;
         std::this_thread::sleep_for(std::chrono::milliseconds(16));
-        bench.add("sleep");
-        bench.add_frame();
     };
-
     run(window, draw);
-    bench.print();
 }

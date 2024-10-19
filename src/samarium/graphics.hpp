@@ -9,7 +9,9 @@
 
 #include "samarium/graphics/Color.hpp"
 #include "samarium/graphics/Gradient.hpp"
+#include "samarium/graphics/Plot.hpp"
 #include "samarium/graphics/Trail.hpp"
-#include "samarium/util/Grid.hpp"
+#include "samarium/util/Grid.hpp" // TODO why is Grid in graphics
+
 // #include "samarium/graphics/colors.hpp"
 // #include "samarium/graphics/gradients.hpp"
