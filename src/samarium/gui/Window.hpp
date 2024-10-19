@@ -241,6 +241,13 @@ struct Window
 
     [[nodiscard]] auto world2pixel() const -> Transform { return pixel2world().inverse(); }
 
+    [[nodiscard]] auto world_box() const -> BoundingBox<f64>
+    {
+        const auto transform = gl2world();
+        return BoundingBox{.min = transform(Vector2{-1.0, -1.0}),
+                           .max = transform(Vector2{1.0, 1.0})};
+    }
+
     auto pan(f64 scale = 1.0)
     {
         const auto transform = pixel2world();
@@ -341,7 +348,7 @@ SM_INLINE void Window::get_inputs()
     // since the view can change based on mouse movement
     // keep mouse pos in pixel coords, which are stable
     // TODO what abt when moving window
-    // mouse.pos = view_pixel_to_gl().apply(Vector2{xpos, ypos});
+    // mouse.pos = view_pixel_to_gl()(Vector2{xpos, ypos});
     mouse.pos = Vector2{xpos, ypos};
 
     mouse.scroll_amount = scroll_callback.holder.scroll;
