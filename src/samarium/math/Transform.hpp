@@ -26,10 +26,31 @@ class Transform
     // maybe useful for animating scaled rotations, or for vector math
     // but for drawing, most likely will be axis aligned, ie multiple of 90 degrees
 
+    [[nodiscard]] static constexpr auto map_boxes_from_to(BoundingBox<f64> from,
+                                                          BoundingBox<f64> to)
+    {
+        // equations:
+        // min1 * scale + pos = min2
+        // width1 * scale = width2
+        const auto scale = to.diagonal() / from.diagonal();
+        const auto pos   = to.min - scale * from.min;
+        return Transform{pos, scale};
+    }
+
+    // TODO we shouldn't have 2 overloads doing the same thing. remove apply
     [[nodiscard]] constexpr auto apply(Vector2 vec) const noexcept { return vec * scale + pos; }
     [[nodiscard]] constexpr auto operator()(Vector2 vec) const noexcept
     {
         return vec * scale + pos;
+    }
+
+    [[nodiscard]] constexpr auto apply(Vector2f vec) const noexcept
+    {
+        return vec * scale.cast<f32>() + pos.cast<f32>();
+    }
+    [[nodiscard]] constexpr auto operator()(Vector2f vec) const noexcept
+    {
+        return vec * scale.cast<f32>() + pos.cast<f32>();
     }
 
     [[nodiscard]] constexpr auto apply(const BoundingBox<f64>& bounding_box) const noexcept
