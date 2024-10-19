@@ -7,13 +7,14 @@
 
 #pragma once
 
-#include <array> // for array
-
-#include "range/v3/algorithm/minmax.hpp" // for minmax
+#include <algorithm> // for minmax
+#include <array>     // for array
 
 #include "Extents.hpp" // for Extents
 #include "Vector2.hpp" // for Vector2
+#include "loop.hpp"    // for start_end
 #include "shapes.hpp"  // for LineSegment
+
 
 namespace sm
 {
@@ -30,15 +31,33 @@ template <concepts::Number T = f64> struct BoundingBox
      *
      * @param  points       points to fit around
      */
-    [[nodiscard]] static constexpr auto fit(const auto& points)
+    [[nodiscard]] static constexpr auto fit_points(const auto& points)
     {
-        auto [x_min, x_max] = ranges::minmax(points, {}, &VecType::x);
-        auto [y_min, y_max] = ranges::minmax(points, {}, &VecType::y);
+        const auto [x_min, x_max] = std::ranges::minmax(points, {}, &VecType::x);
+        const auto [y_min, y_max] = std::ranges::minmax(points, {}, &VecType::y);
         return BoundingBox{{x_min.x, y_min.y}, {x_max.x, y_max.y}};
     }
 
+    // return a box which tightly encloses a and b
+    [[nodiscard]] static constexpr auto fit_boxes(BoundingBox<T> a, BoundingBox<T> b)
+    {
+        auto box  = BoundingBox<T>{};
+        box.min.x = a.min.x < b.min.x ? a.min.x : b.min.x;
+        box.min.y = a.min.y < b.min.y ? a.min.y : b.min.y;
+        box.max.x = a.max.x > b.max.x ? a.max.x : b.max.x;
+        box.max.y = a.max.y > b.max.y ? a.max.y : b.max.y;
+        return box;
+    }
+
+    [[nodiscard]] static constexpr auto fit_boxes(const auto& boxes)
+    {
+        auto box = boxes[0];
+        for (auto i : loop::start_end(1, boxes.size())) { box = fit_boxes(box, boxes[i]); }
+        return box;
+    }
+
     // TODO rename cast
-    template <concepts::Number U> [[nodiscard]] constexpr auto as() const
+    template <concepts::Number U> [[nodiscard]] constexpr auto cast() const
     {
         return BoundingBox<U>{min.template cast<U>(), max.template cast<U>()};
     }
@@ -111,7 +130,7 @@ template <concepts::Number T = f64> struct BoundingBox
         max += shift;
     }
 
-    constexpr auto set_width(f64 new_width) noexcept
+    constexpr auto set_width(T new_width) noexcept
     {
         const auto half_width     = math::abs(new_width) / static_cast<T>(2);
         const auto current_centre = centre();
@@ -119,12 +138,17 @@ template <concepts::Number T = f64> struct BoundingBox
         max.x                     = current_centre.x + half_width;
     }
 
-    constexpr auto set_height(f64 new_height) noexcept
+    constexpr auto set_height(T new_height) noexcept
     {
         const auto half_height    = math::abs(new_height) / static_cast<T>(2);
         const auto current_centre = centre();
         min.y                     = current_centre.y - half_height;
         max.y                     = current_centre.y + half_height;
+    }
+
+    [[nodiscard]] constexpr auto scaled(T scale) const noexcept
+    {
+        return from_centre_width_height(centre(), width() * scale, height() * scale);
     }
 
     [[nodiscard]] constexpr auto line_segments() const noexcept
