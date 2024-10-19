@@ -96,14 +96,24 @@ bounding_box(Window& window, const BoundingBox<f64>& box, Color color, f32 thick
 }
 
 // quick and dirty
-inline void
-polyline_segments(Window& window, std::span<const Vector2f> points, f32 thickness, Color color)
+inline void polyline_segments(Window& window,
+                              std::span<const Vector2f> points,
+                              f32 thickness,
+                              Color color,
+                              const glm::mat4& transform)
 {
+    // TODO assumes pts >= 2
     for (auto i : loop::end(points.size() - 1UL))
     {
         draw::line_segment(window, {points[i].cast<f64>(), points[i + 1UL].cast<f64>()}, color,
-                           thickness);
+                           thickness, transform);
     }
+}
+
+inline void
+polyline_segments(Window& window, std::span<const Vector2f> points, f32 thickness, Color color)
+{
+    polyline_segments(window, points, thickness, color, window.world2gl());
 }
 
 inline void
