@@ -91,27 +91,16 @@ struct Text
             }
 
             const auto& bitmap = face->glyph->bitmap;
-            // fmt::print("\nglyph for ({}) width: {} rows: {}. ", c, bitmap.width, bitmap.rows);
             auto texture = gl::Texture(gl::ImageFormat::R8, gl::Texture::Wrap::ClampEdge,
                                        gl::Texture::Filter::Linear, gl::Texture::Filter::Linear);
-
-            // print("\n1", c);
-
 
             // some characters eg space don't have data but take up space
             if (bitmap.width * bitmap.rows != 0)
             {
-                // TODO glTextureSubImage2D randomly generates an error for large values of
-                // pixel_height? maybe to do with alignment? SO post above
-                // 24 and 48 seem stable
-                // print((int) bitmap.buffer, static_cast<u64>(bitmap.width * bitmap.rows),
-                //   static_cast<u64>(bitmap.width), static_cast<u64>(bitmap.rows));
-                // auto image = Image{};
                 texture.set_data(
                     std::span{bitmap.buffer, static_cast<u64>(bitmap.width * bitmap.rows)},
                     {static_cast<u64>(bitmap.width), static_cast<u64>(bitmap.rows)});
             }
-            // print("2", c);
 
             text.characters.insert(
                 {c, Character{std::move(texture),
