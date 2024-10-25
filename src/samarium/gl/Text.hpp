@@ -37,10 +37,11 @@ struct Character
 
 struct Text
 {
+    u32 pixel_height{};
     Map<char, Character> characters{};
 
     [[nodiscard]] static auto make(const std::filesystem::path& font_path,
-                                   u32 height = 48) -> Result<Text>
+                                   u32 pixel_height = 48) -> Result<Text>
     {
         if (!std::filesystem::exists(font_path))
         {
@@ -69,12 +70,15 @@ struct Text
         }
 
         // set size to load glyphs as
-        FT_Set_Pixel_Sizes(face, 0, height);
+        FT_Set_Pixel_Sizes(face, 0, pixel_height);
 
+
+        // TODO doesn't do anything?
         // disable byte-alignment restriction
+        // https://stackoverflow.com/a/58927549
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-        auto text = Text{};
+        auto text = Text{pixel_height};
 
         // load first 128 characters of ASCII set
         for (/* unsigned */ char c = ' '; c <= '~'; c++)
@@ -88,16 +92,26 @@ struct Text
 
             const auto& bitmap = face->glyph->bitmap;
             // fmt::print("\nglyph for ({}) width: {} rows: {}. ", c, bitmap.width, bitmap.rows);
-            auto texture = gl::Texture{gl::ImageFormat::RGBA8, gl::Texture::Wrap::ClampEdge,
-                                       gl::Texture::Filter::Linear, gl::Texture::Filter::Linear};
+            auto texture = gl::Texture(gl::ImageFormat::R8, gl::Texture::Wrap::ClampEdge,
+                                       gl::Texture::Filter::Linear, gl::Texture::Filter::Linear);
+
+            // print("\n1", c);
+
 
             // some characters eg space don't have data but take up space
             if (bitmap.width * bitmap.rows != 0)
             {
+                // TODO glTextureSubImage2D randomly generates an error for large values of
+                // pixel_height? maybe to do with alignment? SO post above
+                // 24 and 48 seem stable
+                // print((int) bitmap.buffer, static_cast<u64>(bitmap.width * bitmap.rows),
+                //   static_cast<u64>(bitmap.width), static_cast<u64>(bitmap.rows));
+                // auto image = Image{};
                 texture.set_data(
                     std::span{bitmap.buffer, static_cast<u64>(bitmap.width * bitmap.rows)},
                     {static_cast<u64>(bitmap.width), static_cast<u64>(bitmap.rows)});
             }
+            // print("2", c);
 
             text.characters.insert(
                 {c, Character{std::move(texture),
@@ -105,6 +119,7 @@ struct Text
                               {face->glyph->bitmap_left, face->glyph->bitmap_top},
                               static_cast<u32>(face->glyph->advance.x)}});
         }
+
 
         // destroy FreeType once we're finished
         FT_Done_Face(face);
@@ -120,11 +135,15 @@ struct Text
                     Color color,
                     glm::mat4 transform);
 
-    void operator()(Window& window, const std::string& text, Vector2f pos, f32 scale, Color color);
+    void operator()(Window& window,
+                    const std::string& text,
+                    Vector2f pos = {},
+                    f32 scale    = 1.0,
+                    Color color  = Color{255, 255, 255});
 };
 } // namespace sm::draw
 
-#if defined(SAMARIUM_HEADER_ONLY) || defined(SAMARIUM_DRAW_IMPL)
+#if defined(SAMARIUM_HEADER_ONLY) || defined(SAMARIUM_TEXT_IMPL)
 
 #include "samarium/core/inline.hpp"
 
@@ -135,9 +154,9 @@ SM_INLINE void Text::operator()(gl::Context& context,
                                 Vector2f pos,
                                 f32 scale,
                                 Color color,
-                                glm::mat4 transform)
+                                glm::mat4 transform) // TODO make const ref
 {
-    scale /= 1000.0F; // FIXME pixel to screen size
+    scale /= 100.0F; // FIXME pixel to screen size
 
     const auto& shader = context.shaders.at("text");
     context.set_active(shader);
@@ -147,10 +166,13 @@ SM_INLINE void Text::operator()(gl::Context& context,
     // iterate through all characters
     for (auto c : text)
     {
-        auto& ch = characters.at(c);
+        auto& ch = characters.at(c); // TODO const ref
         if (ch.size.x * ch.size.y == 0)
         {
-            pos.x += static_cast<f32>(ch.advance >> 6) * scale;
+            // now advance cursors for next glyph (note that advance is number of 1/64 pixels)
+            // bitshift by 6 to get value in pixels (2^6 = 64)
+            // pos.x += static_cast<f32>(ch.advance >> 6) * scale;
+            pos.x += static_cast<f32>(ch.advance) / 64.0F * scale;
             continue;
         }
 
@@ -160,15 +182,18 @@ SM_INLINE void Text::operator()(gl::Context& context,
         const auto w = static_cast<f32>(ch.size.x) * scale;
         const auto h = static_cast<f32>(ch.size.y) * scale;
         // update VBO for each character
-        const f32 vertices[6][4] = {{xpos, ypos + h, 0.0F, 0.0F},    {xpos, ypos, 0.0F, 1.0F},
+        const f32 vertices[6][4] = {{xpos, ypos + h, 0.0F, 0.0F},
+                                    {xpos, ypos, 0.0F, 1.0F},
                                     {xpos + w, ypos, 1.0F, 1.0F},
 
-                                    {xpos, ypos + h, 0.0F, 0.0F},    {xpos + w, ypos, 1.0F, 1.0F},
+                                    {xpos, ypos + h, 0.0F, 0.0F},
+                                    {xpos + w, ypos, 1.0F, 1.0F},
                                     {xpos + w, ypos + h, 1.0F, 0.0F}};
         ch.texture.bind();
 
         auto& vao = context.vertex_arrays.at("PosTex");
         context.set_active(vao);
+        // TODO use a dedicated buffer for this
         const auto& buffer = context.vertex_buffers.at("default");
         buffer.set_data(vertices);
         vao.bind(buffer, sizeof(gl::Vertex<gl::Layout::PosTex>));
@@ -185,7 +210,7 @@ SM_INLINE void Text::operator()(gl::Context& context,
 SM_INLINE void
 Text::operator()(Window& window, const std::string& text, Vector2f pos, f32 scale, Color color)
 {
-    this->operator()(window.context, text, pos, scale, color, window.view);
+    this->operator()(window.context, text, pos, scale, color, window.world2gl());
 }
 } // namespace sm::draw
 
