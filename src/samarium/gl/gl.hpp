@@ -68,9 +68,12 @@ enum class Primitive
 };
 
 // https://www.khronos.org/opengl/wiki/Image_Format
+// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glTexImage2D.xhtml
 enum class ImageFormat
 {
     RGBA8   = GL_RGBA8,
+    RGB8    = GL_RGB8,
+    R8      = GL_R8,
     R32F    = GL_R32F,
     RG32F   = GL_RG32F,
     RGB32F  = GL_RGB32F,
@@ -90,6 +93,14 @@ struct FormatAndType
         {
         case RGBA8:
             format = GL_RGBA;
+            type   = GL_UNSIGNED_BYTE;
+            break;
+        case RGB8:
+            format = GL_RGB;
+            type   = GL_UNSIGNED_BYTE;
+            break;
+        case R8:
+            format = GL_RED;
             type   = GL_UNSIGNED_BYTE;
             break;
         case R32F:
