@@ -56,7 +56,7 @@ struct Plot
     struct Trace
     {
         Color color{255, 100, 0};
-        f32 thickness = 0.014;
+        f32 thickness = 0.014F;
         std::string display_name{};
         std::vector<Vector2f> points{};
     };
@@ -92,6 +92,10 @@ struct Plot
                 bounding_box_plot_space().scaled(rescale.padding_factor), box);
         }
 
+        // using window.zoom should not change line thickness
+        // perhaps add a flag to disable this behavior
+        const auto camera_scale_correction = 1.0F / static_cast<f32>(window.camera.scale.x);
+
         for (const auto& [key, trace] : traces)
         {
             if (trace.points.size() < 2) { continue; }
@@ -101,20 +105,17 @@ struct Plot
             // maybe add an overload for below fn which calls the transform in the loop only
             auto points = trace.points;
             for (auto& point : points) { point = transform(point); }
-            draw::polyline_segments(window, points, trace.thickness, trace.color);
+
+            draw::polyline_segments(window, points, trace.thickness * camera_scale_correction,
+                                    trace.color);
         }
 
         if (box_style.draw)
         {
-            draw::bounding_box(window, box, box_style.color, box_style.thickness);
+            draw::bounding_box(window, box, box_style.color,
+                               box_style.thickness * camera_scale_correction);
         }
     }
-
-    // if rescaling, every time plot is called, do max(current_bounds, new_bounds)
-    // so it will work for multiple traces
-
-    // maybe put some of this logic in the rocket app, in a separate repo
-    // add export to file button. saves immediately so can do it
 
   private:
     // TODO add default if no points / 1 point
