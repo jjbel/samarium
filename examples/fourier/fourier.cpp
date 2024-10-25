@@ -25,8 +25,8 @@ auto main() -> i32
     auto level      = 100; // what level to start drawing at
     auto level_step = 10;  // change of level on pressing Up or Down arrow
 
-    // auto points = obj_to_pts(".\\examples\\fourier\\india.obj");
-    auto points = obj_to_pts("D:\\blender\\2024-10-23 fourier card\\03.obj");
+    auto points = obj_to_pts(".\\examples\\fourier\\india.obj");
+    // auto points = obj_to_pts("D:\\blender\\2024-10-23 fourier card\\03.obj");
 
     // sometimes u need to flip the verts coz blener has different coord sys
     // for (auto& point : points) { point.y *= -1; }
@@ -145,7 +145,7 @@ auto main() -> i32
         frame++;
 
         // export to images:
-        file::write(file::pam, window.get_image(), fmt::format("./exports/{:05}.pam", frame));
+        // file::write(file::pam, window.get_image(), fmt::format("./exports/{:05}.pam", frame));
     };
 
     window.camera.scale /= zoom_out;
