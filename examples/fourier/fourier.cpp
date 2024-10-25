@@ -12,26 +12,24 @@
 #include "fourier.hpp"
 #include "parse_obj.hpp"
 
-#include "india_verts.hpp"
-
-
 using namespace sm;
 using namespace sm::literals;
 
 auto main() -> i32
 {
-    constexpr auto time_scale          = 3.0;   // speed up time
+    constexpr auto time_scale          = .4;    // speed up time
     constexpr auto integration_steps   = 100UL; // how many steps to use while integrating
-    constexpr auto fourier_terms_count = 200UL; // how many terms of Fourier series
-    constexpr auto trail_size          = 2800UL;
+    constexpr auto fourier_terms_count = 140UL;  // how many terms of Fourier series
+    constexpr auto trail_size          = 44000UL;
 
     auto level      = 100; // what level to start drawing at
     auto level_step = 10;  // change of level on pressing Up or Down arrow
 
-    auto points = obj_to_pts(".\\examples\\fourier\\india.obj");
+    // auto points = obj_to_pts(".\\examples\\fourier\\india.obj");
+    auto points = obj_to_pts("D:\\blender\\2024-10-23 fourier card\\03.obj");
 
     // sometimes u need to flip the verts coz blener has different coord sys
-    for (auto& point : points) { point.y *= -1; }
+    // for (auto& point : points) { point.y *= -1; }
 
     const auto shape = ShapeFnFromPts{points};
 
@@ -40,15 +38,17 @@ auto main() -> i32
 
     // TODO integration_steps = 300 gives spikes
     // or increasing fourier_terms_count
+    // sometimes decreasing timescale helps
+    // maybe fourier correct but integration when finding trail wrong?
 
     // TODO zooming now working but pan(), zoom() works
     constexpr auto zoom_out          = 2.7; // zoom out
-    constexpr auto dims              = Dimensions{1000, 1000};
-    constexpr auto trail_color       = "#ff4908"_c;
-    constexpr auto trail_thickness   = 0.03F;
-    constexpr auto vectors_color     = "#FFFFFFA0"_c;
-    constexpr auto vectors_thickness = 3.0F;
-    constexpr auto background_color  = "#06060f"_c;
+    constexpr auto dims              = Dimensions{1080, 1080};
+    constexpr auto trail_color       = "#ff0850"_c;
+    constexpr auto trail_thickness   = 0.036F;
+    constexpr auto vectors_color     = "#08b8ff"_c;
+    constexpr auto vectors_thickness = 0.023F;
+    constexpr auto background_color  = "#080819"_c;
 
     // --------------------------------------------------------------------
 
@@ -114,7 +114,7 @@ auto main() -> i32
             current *= coeffs[index];                     // apply coefficient
 
             draw::line_segment(window, LineSegment{from_complex(sum), from_complex(sum + current)},
-                               vectors_color, vectors_thickness / (index + 1));
+                               vectors_color, vectors_thickness /* / f32(j) */);
 
             // draw::circle(window, Circle{from_complex(sum), 0.05},
             //              colors::white);
@@ -131,8 +131,11 @@ auto main() -> i32
         level_up();
         level_down();
 
+        // TODO draw vectors also contains building the trail code, so doesn't make sense to put in
+        // a separate fn use flags instead
         draw_trail();
         draw_vectors();
+        // make path and steps CLI params
 
         // draw the original shape:
         // draw::polygon_segments(window, points_to_f32(points), 0.02F, ("#4d83f7"_c));
@@ -142,7 +145,7 @@ auto main() -> i32
         frame++;
 
         // export to images:
-        // file::write(file::pam, window.get_image(), fmt::format("./exports/{:05}.pam", frame));
+        file::write(file::pam, window.get_image(), fmt::format("./exports/{:05}.pam", frame));
     };
 
     window.camera.scale /= zoom_out;
