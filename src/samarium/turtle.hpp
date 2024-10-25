@@ -43,8 +43,9 @@ struct Turtle
         draw::circle(this->window, {this->pos.cast<f64>(), 2}, {colors::red});
         // not drawing the circle gives a garbage triangle?
 
-        draw::polygon(this->window, this->tri(), ShapeColor(colors::red, colors::red, 4),
-                      this->window.view);
+        // TOD shape color
+        // draw::polygon(this->window, this->tri(), ShapeColor(colors::red, colors::red, 4),
+        //               this->window.view);
     }
 
     void display()

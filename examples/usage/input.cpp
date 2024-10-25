@@ -20,7 +20,7 @@ auto main() -> i32
     while (window.is_open())
     {
         draw::background("#1c151b"_c);
-        draw::circle(window, {{0.2, 0.3}, 0.4}, {.fill_color = "#fa2844"_c});
+        draw::circle(window, {{0.2, 0.3}, 0.4}, "#fa2844"_c);
         watch.reset();
 
         // TODO: no way of detecting resized?

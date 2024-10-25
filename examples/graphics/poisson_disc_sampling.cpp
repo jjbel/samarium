@@ -75,7 +75,7 @@ auto main() -> i32
 
                 // TODO -region/2
                 draw::circle(window, Circle{.centre = point - region / 2.0, .radius = radius},
-                             {.fill_color = color});
+                             color);
             }
             // print(window.mouse.pos);
         });
