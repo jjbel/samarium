@@ -12,6 +12,7 @@
 
 
 #include "samarium/core/types.hpp"
+#include "samarium/gl/Text.hpp"
 #include "samarium/gl/draw/poly.hpp"
 #include "samarium/gl/draw/shapes.hpp"
 #include "samarium/graphics/Color.hpp"
@@ -19,6 +20,7 @@
 #include "samarium/math/BoundingBox.hpp"
 #include "samarium/math/Vector2.hpp"
 #include "samarium/util/unordered.hpp"
+
 
 namespace sm
 {
@@ -30,7 +32,7 @@ struct Plot
     {
         bool draw     = true;
         Color color   = Color{255, 255, 255};
-        f32 thickness = 0.01F;
+        f32 thickness = 0.006F;
     };
 
     struct Rescale
@@ -61,6 +63,15 @@ struct Plot
         std::vector<Vector2f> points{};
     };
 
+    struct Title
+    {
+        std::string text{};
+        Color color = {255, 255, 255};
+        f32 scale   = 1.0F;
+        // TODO dd centering, more positioning.
+        // make it CSS-like maybe?
+    };
+
     // TODO gridlines
 
     BoundingBox<Float> box{};
@@ -73,11 +84,14 @@ struct Plot
     // scale of the plot. maps from plot space to window's world space
     Transform transform{};
     Map<std::string, Trace> traces{{"default", {}}};
+    Title title{};
+    draw::Text text{};
 
+    Plot(const std::filesystem::path& font_path, u32 font_pixel_height = 48)
+    {
+        text = expect(draw::Text::make(font_path, font_pixel_height));
+    }
 
-    // Plot() {}
-
-    // operator()(Float thickness, Color color) {}
     void add(const std::string& key, Vector2 point)
     {
         traces[key].points.push_back(point.cast<f32>());
@@ -88,8 +102,9 @@ struct Plot
     {
         if (rescale.enabled)
         {
+            // TODO scaling to fit text. make this editable, calculate it from text size...
             transform = Transform::map_boxes_from_to(
-                bounding_box_plot_space().scaled(rescale.padding_factor), box);
+                bounding_box_plot_space().scaled(rescale.padding_factor), box.scaled_y(0.8));
         }
 
         // using window.zoom should not change line thickness
@@ -114,6 +129,13 @@ struct Plot
         {
             draw::bounding_box(window, box, box_style.color,
                                box_style.thickness * camera_scale_correction);
+        }
+
+        if (!title.text.empty())
+        {
+            const auto box_ = transform.apply(box);
+            text(window, title.text, Vector2{(box.min.x + box.max.x) / 2.0, box.max.y}.cast<f32>(),
+                 title.scale, title.color);
         }
     }
 
