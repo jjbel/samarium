@@ -151,6 +151,16 @@ template <concepts::Number T = f64> struct BoundingBox
         return from_centre_width_height(centre(), width() * scale, height() * scale);
     }
 
+    [[nodiscard]] constexpr auto scaled_x(T scale) const noexcept
+    {
+        return from_centre_width_height(centre(), width() * scale, height());
+    }
+
+    [[nodiscard]] constexpr auto scaled_y(T scale) const noexcept
+    {
+        return from_centre_width_height(centre(), width(), height() * scale);
+    }
+
     [[nodiscard]] constexpr auto line_segments() const noexcept
         requires concepts::FloatingPoint<T>
     {
