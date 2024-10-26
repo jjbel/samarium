@@ -3,28 +3,25 @@
 
 
 using namespace sm;
+using namespace sm::literals;
 
 auto main() -> i32
 {
     auto window = Window{{.dims = dims720}};
-    auto plot   = Plot{};
+    auto plot   = Plot();
 
     const auto grid_dims = Dimensions{2, 2};
 
     auto rng = RandomGenerator{};
 
-    plot.traces["x"] = {colors::red};
-    plot.traces["y"] = {colors::green};
-    plot.traces["z"] = {colors::blue};
+    plot.traces["x"] = {"#ff0f0f"_c};
+    plot.traces["y"] = {"#05ff00"_c};
+    plot.traces["z"] = {"#004dff"_c};
+    // plot.title.text = "Acceleration";
 
     // auto text = expect(draw::Text::make("D:\\fonts\\Inter\\static\\Inter_24pt-Regular.ttf"));
     // auto text = expect(draw::Text::make("D:\\fonts\\arial.ttf"));
-    auto text =
-    expect(draw::Text::make("D:\\fonts\\Roboto_Mono\\static\\RobotoMono-Medium.ttf", 128));
-    // TODO want bigger pixel_height
-    // but crashes sometimes
-    // also offset seems wrong
-    // try rendering the character texture buffer to an image and see how it is
+    auto text = expect(draw::Text::make("CascadiaCode.ttf"));
 
     auto frame_counter = 0;
     const auto draw    = [&]
@@ -46,7 +43,7 @@ auto main() -> i32
         draw::background(colors::black);
         plot.draw(window);
 
-        text(window, "This is sample text. 0123456789", {}, 1.0);
+        text(window, "This is sample text. 0123456789", {}, 0.2);
 
         // print(plot.traces["x"].points, plot.traces["y"].points, plot.traces["z"].points);
 
