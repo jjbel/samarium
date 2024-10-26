@@ -13,7 +13,7 @@ function(add_example file)
     add_executable(${EXAMPLE_NAME} ${file})
     link_deps(${EXAMPLE_NAME})
     target_link_libraries(${EXAMPLE_NAME} PUBLIC samarium)
-endfunction(())
+endfunction(add_example)
 
 if(BUILD_EXAMPLES)
     # file(GLOB_RECURSE files "*.cpp")
