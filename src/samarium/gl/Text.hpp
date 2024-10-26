@@ -41,18 +41,41 @@ struct Text
     u32 pixel_height{};
     Map<char, Character> characters{};
 
-    // TODO find system default fonts, eg Arial
-    [[nodiscard]] static auto make(const std::filesystem::path& font_path,
-                                   u32 pixel_height = 48) -> Result<Text>
+    static Result<std::filesystem::path> default_font_dir()
     {
-        if (!std::filesystem::exists(font_path))
-        {
-            return make_unexpected(fmt::format("{} does not exist", font_path));
-        }
+#if defined(_WIN32)
+        const auto path = std::filesystem::path("C:\\Windows\\Fonts\\");
+#elif defined(linux)
+        // TODO make it a priority list: /usr/local/share/fonts/ also
+        // maybe let user add font paths
+        const auto path = std::filesystem::path("/usr/share/fonts/");
+#else
+#error "unknown platform"
+#endif
+        if (std::filesystem::exists(path)) { return {path}; }
+        return make_unexpected("Default font path not found");
+    }
 
-        if (!std::filesystem::is_regular_file(font_path))
+    [[nodiscard]] static auto make(std::string font = "arial.ttf",
+                                   u32 pixel_height = 96) -> Result<Text>
+    {
+        const auto font_dir = default_font_dir();
+        // TODO more idiomatic way
+        if (font_dir && std::filesystem::exists(font_dir.value() / font))
         {
-            return make_unexpected(fmt::format("{} is not a file", font_path));
+            font = (font_dir.value() / font).lexically_normal().string();
+        }
+        else
+        {
+            if (!std::filesystem::exists(font))
+            {
+                return make_unexpected(fmt::format("{} does not exist", font));
+            }
+
+            if (!std::filesystem::is_regular_file(font))
+            {
+                return make_unexpected(fmt::format("{} is not a file", font));
+            }
         }
 
         auto* ft = FT_Library{};
@@ -66,9 +89,9 @@ struct Text
         // load font as face
         auto* face = FT_Face{};
 
-        if (FT_New_Face(ft, font_path.string().c_str(), 0, &face) != 0)
+        if (FT_New_Face(ft, font.c_str(), 0, &face) != 0)
         {
-            return make_unexpected(fmt::format("Could not create font: {}", font_path));
+            return make_unexpected(fmt::format("Could not create font: {}", font));
         }
 
         // set size to load glyphs as
@@ -89,7 +112,7 @@ struct Text
             if (FT_Load_Char(face, static_cast<u64>(c), FT_LOAD_RENDER) != 0)
             {
                 return make_unexpected(
-                    fmt::format("Could not create glyph for {} for font: {}", c, font_path));
+                    fmt::format("Could not create glyph for {} for font: {}", c, font));
             }
 
             const auto& bitmap = face->glyph->bitmap;
