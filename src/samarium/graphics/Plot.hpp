@@ -32,7 +32,7 @@ struct Plot
     {
         bool draw     = true;
         Color color   = Color{255, 255, 255};
-        f32 thickness = 0.006F;
+        f32 thickness = 0.003F;
     };
 
     struct Rescale
@@ -67,9 +67,7 @@ struct Plot
     {
         std::string text{};
         Color color = {255, 255, 255};
-        f32 scale   = 1.0F;
-        // TODO dd centering, more positioning.
-        // make it CSS-like maybe?
+        f32 scale   = 0.05F;
     };
 
     // TODO gridlines
@@ -87,7 +85,7 @@ struct Plot
     Title title{};
     draw::Text text{};
 
-    Plot(const std::string& font = "Arial.ttf", u32 font_pixel_height = 48)
+    Plot(const std::string& font = "Arial.ttf", u32 font_pixel_height = 96)
     {
         text = expect(draw::Text::make(font, font_pixel_height));
     }
@@ -133,9 +131,11 @@ struct Plot
 
         if (!title.text.empty())
         {
-            const auto box_ = transform.apply(box);
-            text(window, title.text, Vector2{(box.min.x + box.max.x) / 2.0, box.max.y}.cast<f32>(),
-                 title.scale, title.color);
+            const auto box_          = transform.apply(box);
+            constexpr auto placement = Placement{PlacementX::Middle, PlacementY::Top};
+            const auto position      = box.get_placement(placement);
+            text(window, title.text, position.cast<f32>(), title.scale * camera_scale_correction,
+                 title.color, placement);
         }
     }
 

@@ -33,9 +33,12 @@ struct Character
     gl::Texture texture;    // glyph texture
     Vector2_t<u32> size;    // Size of glyph
     Vector2_t<i32> bearing; // Offset from baseline to left/top of glyph
-    u32 advance;            // Horizontal offset to advance to next glyph
+    f32 advance;            // Horizontal offset to advance to next glyph
 };
 
+// TODO handle newlines?
+
+// https://learnopengl.com/In-Practice/Text-Rendering
 struct Text
 {
     u32 pixel_height{};
@@ -131,7 +134,9 @@ struct Text
                 {c, Character{std::move(texture),
                               {bitmap.width, bitmap.rows},
                               {face->glyph->bitmap_left, face->glyph->bitmap_top},
-                              static_cast<u32>(face->glyph->advance.x)}});
+                              static_cast<f32>(face->glyph->advance.x) / 64.0F}});
+            // advance is number of 1/64 pixels
+            // could use bitshift instead
         }
 
 
@@ -142,19 +147,69 @@ struct Text
         return text;
     }
 
+    // returns in pixels, ie not divided by pixel_height
+    BoundingBox<f64> bounding_box(const Character& c, f64 existing_advance = 0) const
+    {
+        return {{existing_advance, static_cast<f64>(c.bearing.y) - static_cast<f64>(c.size.y)},
+                {existing_advance + static_cast<f64>(c.advance), static_cast<f64>(c.bearing.y)}};
+    }
+
+    BoundingBox<f64> bounding_box(const std::string& text, f64 scale = 1.0) const
+    {
+        auto current_advance = f32{};
+        auto box             = BoundingBox<f64>{};
+        bool first           = true;
+
+        for (auto c : text)
+        {
+            const auto& ch    = characters.at(c);
+            const auto ch_box = bounding_box(ch, current_advance);
+            if (first)
+            {
+                box   = ch_box;
+                first = false;
+            }
+            else if (ch.size.x * ch.size.y != 0) { box = BoundingBox<f64>::fit_boxes(box, ch_box); }
+
+            current_advance += ch.advance;
+        }
+
+        scale /= static_cast<f32>(pixel_height);
+        box.min *= scale;
+        box.max *= scale;
+        return box;
+    }
+
+    Vector2f placement_movement(const std::string& text, f32 scale, Placement p) const
+    {
+        return bounding_box(text, scale).get_placement(p).cast<f32>();
+    }
+
+    BoundingBox<f64> bounding_box(const std::string& text, f64 scale, Placement p) const
+    {
+        auto box         = bounding_box(text, scale);
+        const auto delta = -box.get_placement(p);
+        box.min += delta;
+        box.max += delta;
+        return box;
+    }
+
+
     void operator()(gl::Context& context,
                     const std::string& text,
                     Vector2f pos,
                     f32 scale,
                     Color color,
-                    const glm::mat4& transform);
+                    const glm::mat4& transform,
+                    Placement p = {PlacementX::Middle, PlacementY::Middle});
 
     // scale is in world space
     void operator()(Window& window,
                     const std::string& text,
                     Vector2f pos = {},
                     f32 scale    = 1.0,
-                    Color color  = Color{255, 255, 255});
+                    Color color  = Color{255, 255, 255},
+                    Placement p  = {PlacementX::Middle, PlacementY::Middle});
 };
 } // namespace sm::draw
 
@@ -169,10 +224,18 @@ SM_INLINE void Text::operator()(gl::Context& context,
                                 Vector2f pos,
                                 f32 scale,
                                 Color color,
-                                const glm::mat4& transform)
+                                const glm::mat4& transform,
+                                Placement p)
 {
     // TODO add origin point: 9 possible. or at least the common ones. maybe make it x and y
     // separate
+    pos -= placement_movement(text, scale, p);
+
+    // divide by pixel_height
+    // ch.size.y was from 0 to pixel_height, now its from 0 to scale, in world space
+    // TODO draw a circle next to it: not EXACTLY of size "scale", but seems to be bigger
+    // TODO this shd be done in make(), not in each function individually
+    scale /= static_cast<f32>(pixel_height);
 
     const auto& shader = context.shaders.at("text");
     context.set_active(shader);
@@ -187,9 +250,7 @@ SM_INLINE void Text::operator()(gl::Context& context,
         if (ch.size.x * ch.size.y == 0)
         {
             // now advance cursors for next glyph
-            // advance is number of 1/64 pixels
-            // could use bitshift instead
-            pos.x += static_cast<f32>(ch.advance) / 64.0F * scale;
+            pos.x += ch.advance * scale;
             continue;
         }
 
@@ -216,18 +277,14 @@ SM_INLINE void Text::operator()(gl::Context& context,
         // render quad
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
-        pos.x += static_cast<f32>(ch.advance) / 64.0F * scale;
+        pos.x += ch.advance * scale;
     }
 }
 
-SM_INLINE void
-Text::operator()(Window& window, const std::string& text, Vector2f pos, f32 scale, Color color)
+SM_INLINE void Text::operator()(
+    Window& window, const std::string& text, Vector2f pos, f32 scale, Color color, Placement p)
 {
-    // divide by pixel_height
-    // ch.size.y was from 0 to pixel_height, now its from 0 to scale, in world space
-    // TODO draw a circle next to it: not EXACTLY of size "scale", but seems to be bigger
-    this->operator()(window.context, text, pos, scale / static_cast<f32>(pixel_height), color,
-                     window.world2gl());
+    this->operator()(window.context, text, pos, scale, color, window.world2gl(), p);
 }
 } // namespace sm::draw
 

@@ -18,6 +18,25 @@
 
 namespace sm
 {
+enum class PlacementX
+{
+    Left   = 0,
+    Middle = 1,
+    Right  = 2
+};
+
+enum class PlacementY
+{
+    Bottom = 0,
+    Middle = 1,
+    Top    = 2
+};
+
+struct Placement
+{
+    PlacementX x{};
+    PlacementY y{};
+};
 
 // use BoundingBox{{}, max}, not BoundingBox{max} for min={0, 0}
 template <concepts::Number T = f64> struct BoundingBox
@@ -38,6 +57,7 @@ template <concepts::Number T = f64> struct BoundingBox
         return BoundingBox{{x_min.x, y_min.y}, {x_max.x, y_max.y}};
     }
 
+    // TODO rename this union or smthg
     // return a box which tightly encloses a and b
     [[nodiscard]] static constexpr auto fit_boxes(BoundingBox<T> a, BoundingBox<T> b)
     {
@@ -75,6 +95,7 @@ template <concepts::Number T = f64> struct BoundingBox
                               {math::max(p1.x, p2.x), math::max(p1.y, p2.y)}};
     }
 
+    // TODO remove validation
     constexpr auto validate() { *this = find_min_max(this->min, this->max); }
 
     [[nodiscard]] constexpr auto validated() const
@@ -173,6 +194,15 @@ template <concepts::Number T = f64> struct BoundingBox
     [[nodiscard]] constexpr auto points() const noexcept
     {
         return std::to_array<VecType>({min, {min.x, max.y}, max, {max.x, min.y}});
+    }
+
+    // map from {(0 0) bottom-left, (1, 1) bottom-right} to {min, max}
+    // basically lerp
+    [[nodiscard]] constexpr auto map_position(VecType pos) { return min + (max - min) * pos; }
+
+    [[nodiscard]] constexpr auto get_placement(Placement p)
+    {
+        return map_position({static_cast<f64>(p.x) / 2.0, static_cast<f64>(p.y) / 2.0});
     }
 };
 } // namespace sm
