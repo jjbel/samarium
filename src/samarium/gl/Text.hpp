@@ -24,6 +24,7 @@
 #include "samarium/util/Result.hpp"    // for Result
 #include "samarium/util/unordered.hpp" // for Map
 
+// TODO file in gl but namespace is draw
 namespace sm::draw
 {
 /// Holds all state information relevant to a character as loaded using FreeType
@@ -40,6 +41,7 @@ struct Text
     u32 pixel_height{};
     Map<char, Character> characters{};
 
+    // TODO find system default fonts, eg Arial
     [[nodiscard]] static auto make(const std::filesystem::path& font_path,
                                    u32 pixel_height = 48) -> Result<Text>
     {
@@ -91,8 +93,8 @@ struct Text
             }
 
             const auto& bitmap = face->glyph->bitmap;
-            auto texture = gl::Texture(gl::ImageFormat::R8, gl::Texture::Wrap::ClampEdge,
-                                       gl::Texture::Filter::Linear, gl::Texture::Filter::Linear);
+            auto texture       = gl::Texture(gl::ImageFormat::R8, gl::Texture::Wrap::ClampEdge,
+                                             gl::Texture::Filter::Linear, gl::Texture::Filter::Linear);
 
             // some characters eg space don't have data but take up space
             if (bitmap.width * bitmap.rows != 0)
@@ -122,8 +124,9 @@ struct Text
                     Vector2f pos,
                     f32 scale,
                     Color color,
-                    glm::mat4 transform);
+                    const glm::mat4& transform);
 
+    // scale is in world space
     void operator()(Window& window,
                     const std::string& text,
                     Vector2f pos = {},
@@ -143,24 +146,26 @@ SM_INLINE void Text::operator()(gl::Context& context,
                                 Vector2f pos,
                                 f32 scale,
                                 Color color,
-                                glm::mat4 transform) // TODO make const ref
+                                const glm::mat4& transform)
 {
-    scale /= 100.0F; // FIXME pixel to screen size
+    // TODO add origin point: 9 possible. or at least the common ones. maybe make it x and y
+    // separate
 
     const auto& shader = context.shaders.at("text");
     context.set_active(shader);
-    shader.set("view", transform);
+    shader.set("view", static_cast<glm::mat4>(transform));
     shader.set("color", color);
+    // TODO cud simplify calcn by modifying transform using scale
 
     // iterate through all characters
     for (auto c : text)
     {
-        auto& ch = characters.at(c); // TODO const ref
+        auto& ch = characters.at(c);
         if (ch.size.x * ch.size.y == 0)
         {
-            // now advance cursors for next glyph (note that advance is number of 1/64 pixels)
-            // bitshift by 6 to get value in pixels (2^6 = 64)
-            // pos.x += static_cast<f32>(ch.advance >> 6) * scale;
+            // now advance cursors for next glyph
+            // advance is number of 1/64 pixels
+            // could use bitshift instead
             pos.x += static_cast<f32>(ch.advance) / 64.0F * scale;
             continue;
         }
@@ -171,12 +176,10 @@ SM_INLINE void Text::operator()(gl::Context& context,
         const auto w = static_cast<f32>(ch.size.x) * scale;
         const auto h = static_cast<f32>(ch.size.y) * scale;
         // update VBO for each character
-        const f32 vertices[6][4] = {{xpos, ypos + h, 0.0F, 0.0F},
-                                    {xpos, ypos, 0.0F, 1.0F},
+        const f32 vertices[6][4] = {{xpos, ypos + h, 0.0F, 0.0F},    {xpos, ypos, 0.0F, 1.0F},
                                     {xpos + w, ypos, 1.0F, 1.0F},
 
-                                    {xpos, ypos + h, 0.0F, 0.0F},
-                                    {xpos + w, ypos, 1.0F, 1.0F},
+                                    {xpos, ypos + h, 0.0F, 0.0F},    {xpos + w, ypos, 1.0F, 1.0F},
                                     {xpos + w, ypos + h, 1.0F, 0.0F}};
         ch.texture.bind();
 
@@ -189,17 +192,19 @@ SM_INLINE void Text::operator()(gl::Context& context,
 
         // render quad
         glDrawArrays(GL_TRIANGLES, 0, 6);
-        // now advance cursors for next glyph (note that advance is number of 1/64 pixels)
+
         pos.x += static_cast<f32>(ch.advance) / 64.0F * scale;
-        // bitshift by 6 to get value in pixels (2^6 = 64 (divide
-        // amount of 1/64th pixels by 64 to get amount of pixels))
     }
 }
 
 SM_INLINE void
 Text::operator()(Window& window, const std::string& text, Vector2f pos, f32 scale, Color color)
 {
-    this->operator()(window.context, text, pos, scale, color, window.world2gl());
+    // divide by pixel_height
+    // ch.size.y was from 0 to pixel_height, now its from 0 to scale, in world space
+    // TODO draw a circle next to it: not EXACTLY of size "scale", but seems to be bigger
+    this->operator()(window.context, text, pos, scale / static_cast<f32>(pixel_height), color,
+                     window.world2gl());
 }
 } // namespace sm::draw
 
