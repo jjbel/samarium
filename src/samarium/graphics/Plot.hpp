@@ -87,9 +87,9 @@ struct Plot
     Title title{};
     draw::Text text{};
 
-    Plot(const std::filesystem::path& font_path, u32 font_pixel_height = 48)
+    Plot(const std::string& font = "Arial.ttf", u32 font_pixel_height = 48)
     {
-        text = expect(draw::Text::make(font_path, font_pixel_height));
+        text = expect(draw::Text::make(font, font_pixel_height));
     }
 
     void add(const std::string& key, Vector2 point)
