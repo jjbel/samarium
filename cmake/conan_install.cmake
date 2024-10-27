@@ -19,6 +19,7 @@ if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/conan.lock AND RUN_CONAN)
         COMMAND ${CONAN_EXE} install .
         -b missing
         -vquiet
+        # TODO how come not using -of ?
         # -if ${CMAKE_CURRENT_BINARY_DIR}
         # -pr:b=default -pr=default
         ${DEPS_OPTION}
