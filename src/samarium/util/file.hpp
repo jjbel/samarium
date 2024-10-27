@@ -54,6 +54,9 @@ static constexpr auto bmp = Bmp{};
 
 auto read([[maybe_unused]] Text tag, const Path& file_path) -> Result<std::string>;
 
+// assume file exists and is regular
+auto read_unsafe([[maybe_unused]] Text tag, const Path& file_path) -> std::string;
+
 auto read(const Path& file_path) -> Result<std::string>;
 
 auto read_image(const Path& file_path) -> Result<Image>;
@@ -138,6 +141,25 @@ SM_INLINE auto read([[maybe_unused]] Text tag, const Path& file_path) -> Result<
 
     auto ifs = std::ifstream{file_path};
     return {std::string(std::istreambuf_iterator<char>{ifs}, {})};
+}
+
+// https://insanecoding.blogspot.com/2011/11/how-to-read-in-file-in-c.html
+SM_INLINE auto read_unsafe([[maybe_unused]] Text tag, const Path& file_path) -> std::string
+{
+    std::ifstream in(file_path, std::ios::in | std::ios::binary);
+    if (!in)
+    {
+        // throw(errno);
+        return "";
+    }
+
+    std::string contents;
+    in.seekg(0, std::ios::end);
+    contents.resize(in.tellg());
+    in.seekg(0, std::ios::beg);
+    in.read(&contents[0], contents.size());
+    in.close();
+    return contents;
 }
 
 SM_INLINE auto read(const Path& file_path) -> Result<std::string>
