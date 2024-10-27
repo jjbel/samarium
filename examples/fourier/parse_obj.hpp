@@ -24,6 +24,8 @@ auto obj_to_pts(const std::filesystem::path& obj_file)
 {
     const auto line_to_vec = [](const auto& line)
     {
+        // TODO why using std::ranges::to here, but ranges::to below
+        // in rocket-ui std::ranges gave error
         const auto components =
             std::string(line.begin() + 2, line.end()) | std::views::split(' ') |
             std::views::transform([](auto r) { return std::string(r.data(), r.size()); }) |
