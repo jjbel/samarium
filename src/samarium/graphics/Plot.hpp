@@ -85,7 +85,7 @@ struct Plot
     Title title{};
     draw::Text text{};
 
-    Plot(const std::string& font = "Arial.ttf", u32 font_pixel_height = 96)
+    Plot(const std::string& font = "CascadiaCode.ttf", u32 font_pixel_height = 96)
     {
         text = expect(draw::Text::make(font, font_pixel_height));
     }
