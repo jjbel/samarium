@@ -29,7 +29,7 @@ operator overloading for math types (Vector2 mainly), and callables
 sensible defaults. eg window size, escape on Esc
 
 Helper Scripts
-run.bat
+run.ps1
 tasks.json, bind it to Numpad0, so can run with 1 keypress. Could use live reload, but not useful for GUI
 
 examples, tests, benchmarks
