@@ -51,7 +51,7 @@ inline auto make_polyline(std::span<const Vector2f> in_pts, f32 thickness) -> st
 
     const auto count = in_pts.size();
 
-    if (count == 1) { return {}; }
+    if (count <= 2) { return {}; }
 
     auto out_pts = std::vector<Vector2f>(count * 2);
 
@@ -64,16 +64,23 @@ inline auto make_polyline(std::span<const Vector2f> in_pts, f32 thickness) -> st
     {
         // TODO overoptimized?
         // okay to split it up into many variables?
-        const auto new_edge  = (in_pts[i + 1] - in_pts[i]).normalized();
-        edge                 = -edge; // reversing later calcns simpler
-        const auto cos       = Vector2f::dot(edge, new_edge);
-        const auto sin_theta = std::sqrt(1.0F - cos * cos);
-        auto new_disp        = thickness * (new_edge + edge) / /* std::abs */ (sin_theta);
+        const auto new_edge = (in_pts[i + 1] - in_pts[i]).normalized();
+        edge                = -edge; // reversing later calcns simpler
+        const auto cos      = Vector2f::dot(edge, new_edge);
         // TODO link the onenote diag here
-
-        // TODO explanation
         // GL_TRIANGLE_STRIP need the vertices to e specified in zig zag order
-        // new_disp *= which_side_of(disp, edge) * which_side_of(new_disp, edge);
+        auto new_disp          = Vector2f{};
+        constexpr auto epsilon = 1e-4F;
+
+        // if antiparallel
+        // TODO cud also handle parallel
+        if (cos + 1 < epsilon) { new_disp = disp; }
+        else
+        {
+            const auto sin_theta = std::sqrt(1.0F - cos * cos);
+            new_disp             = thickness * (new_edge + edge) / /* std::abs */ (sin_theta);
+            new_disp *= detail::which_side_of(disp, edge) * detail::which_side_of(new_disp, edge);
+        }
 
         out_pts[2 * i]     = in_pts[i] + new_disp;
         out_pts[2 * i + 1] = in_pts[i] - new_disp;
@@ -81,7 +88,6 @@ inline auto make_polyline(std::span<const Vector2f> in_pts, f32 thickness) -> st
         edge = new_edge;
         disp = new_disp;
     }
-
     disp                         = edge.rotated(static_cast<f32>(math::pi / 2.0)) * thickness;
     out_pts[2 * (count - 1)]     = in_pts[count - 1] + disp;
     out_pts[2 * (count - 1) + 1] = in_pts[count - 1] - disp;
@@ -89,19 +95,18 @@ inline auto make_polyline(std::span<const Vector2f> in_pts, f32 thickness) -> st
     return out_pts;
 }
 
-// void polyline(Window& window,
-//               std::span<const Vector2f> points,
-//               Color color,
-//               f32 thickness,
-//               const glm::mat4& transform);
-inline void polyline(Window& window, std::span<const Vector2f> in_pts, f32 thickness, Color color)
+inline void polyline(Window& window,
+              std::span<const Vector2f> in_pts,
+              f32 thickness,
+              Color color,
+              const glm::mat4& transform)
 {
     const auto out_pts = make_polyline(in_pts, thickness);
 
     const auto& shader = window.context.shaders.at("Pos");
     window.context.set_active(shader);
 
-    shader.set("view", window.world2gl());
+    shader.set("view", transform);
     shader.set("color", color);
 
     const auto& buffer = window.context.vertex_buffers.at("default");
@@ -112,6 +117,16 @@ inline void polyline(Window& window, std::span<const Vector2f> in_pts, f32 thick
     vao.bind(buffer, sizeof(Vector2f));
 
     glDrawArrays(GL_TRIANGLE_STRIP, 0, static_cast<i32>(out_pts.size()));
+}
+
+inline void polyline(Window& window, std::span<const Vector2f> in_pts, f32 thickness, Color color)
+{
+    polyline(window, in_pts, thickness, color, window.world2gl());
+}
+
+inline void polyline(Window& window, std::span<const Vector2> in_pts, f32 thickness, Color color)
+{
+    polyline(window, points_to_f32(in_pts), thickness, color, window.world2gl());
 }
 
 inline void polygon(Window& window,
