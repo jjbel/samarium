@@ -10,9 +10,9 @@ auto main() -> i32
     auto plot            = Plot("CascadiaCode.ttf");
     const auto grid_dims = Dimensions{2, 2};
     auto rng             = RandomGenerator{};
-    plot.traces["x"]     = {"#ff0f0f"_c, 0.008};
-    plot.traces["y"]     = {"#05ff00"_c, 0.008};
-    plot.traces["z"]     = {"#004dff"_c, 0.008};
+    plot.traces["x"]     = {"#ff0f0f"_c, 0.008F};
+    plot.traces["y"]     = {"#05ff00"_c, 0.008F};
+    plot.traces["z"]     = {"#004dff"_c, 0.008F};
     plot.title.text      = "Acceleration";
     auto frame_counter   = 0;
     const auto draw      = [&]
