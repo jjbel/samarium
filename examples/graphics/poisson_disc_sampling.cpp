@@ -70,13 +70,12 @@ auto main() -> i32
                 const auto& point = points[i];
                 const auto c =
                     static_cast<u8>(static_cast<f64>(i) / static_cast<f64>(points.size()) * 255.0);
-                // const auto color = Color{color, color, color};
-                const auto color = "#ff0042"_c;
+                const auto color = Color{c, c, c};
+                // const auto color = "#ff0042"_c;
 
                 // TODO -region/2
                 draw::circle(window, Circle{.centre = point - region / 2.0, .radius = radius},
                              color);
             }
-            // print(window.mouse.pos);
         });
 }
