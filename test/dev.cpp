@@ -12,11 +12,14 @@ using namespace sm;
 struct Instancer
 {
     Window& window;
+
     std::vector<Vector2f> geometry{};
     std::vector<Vector2f> instances_pos{};
-
     u32 geometry_vb{};
     u32 instances_vb{};
+
+    Benchmark bench{};
+
 
     Instancer(Window& window,
               std::span<const Vector2f> geometry,
@@ -50,9 +53,14 @@ struct Instancer
         // glBindVertexArray(0);
     }
 
-    void draw(Color color, Benchmark& bench)
+    void draw(Color color)
     {
         bench.reset();
+        glBindBuffer(GL_ARRAY_BUFFER, instances_vb);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(Vector2f) * instances_pos.size(), &instances_pos[0],
+                     GL_STATIC_DRAW /* GL_STREAM_DRAW */);
+        bench.add("update positions buffer");
+
         const auto& shader = window.context.shaders.at("PosInstance");
         window.context.set_active(shader);
 
@@ -99,40 +107,66 @@ auto main() -> i32
     auto window = Window{{.dims = {1280, 720}}};
     auto bench  = Benchmark{};
 
-    const auto circle      = Circle{{0, 0}, 0.3};
+    const auto circle      = Circle{{0, 0}, 0.001};
     const auto color       = Color{100, 60, 255};
     const auto point_count = 64;
     const auto points      = math::regular_polygon_points<f32>(point_count, circle);
 
-    auto pts = std::vector<Vector2f>{{-0.4F, -0.4F}, {-0.4F, 0.4F}, {0.4F, 0.4F}, {0.4F, -0.4F}};
+    const auto count = 1'00'000;
+    /*
+    conclusion:
+    for 100K particles: window.display():  5.1ms, draw instance:  0.3ms
+    for   1M particles: window.display():  55ms, draw instance:  2ms
+    for  10M particles: window.display(): 440ms, draw instance: 45ms
 
+    avoid copying to instancer.instances_pos
+    (hence use data oriented design: store pos in instancer.instances_pos only)
+    copying from instancer.instances_pos to buffer is unavoidable
+    no need to copy to/from instancer.geometry
+
+    TODO: use gl classes
+    TODO: have to set vertattrib every call?
+    */
+
+    auto rand      = RandomGenerator{};
+    auto pts       = std::vector<Vector2f>();
+    const auto box = window.world_box(); // TODO gives a square
+    for (auto i : loop::end(count)) { pts.push_back(rand.vector(box).cast<f32>()); }
     auto instancer = Instancer(window, points, pts);
 
-    window.camera.scale /= 5;
-    const auto draw = [&]
+    while (true)
     {
+        bench.reset();
+        if (!window.is_open()) { break; }
+        bench.add("is_open");
+
+
         draw::background(Color{});
+        bench.add("bg");
+        const auto disp = rand.polar_vector({0, 0.001}).cast<f32>();
+        bench.add("rand disp");
+        // rand is the bottleneck, so just add const vec
+        // for (auto& pt : pts) { pt += rand.polar_vector({0, 0.001}).cast<f32>(); }
 
-        instancer.draw(color, bench);
+        // for (auto& pt : pts) { pt += disp; }
+        // instancer.instances_pos = pts;
+
+        instancer.draw(color);
+        bench.add("instance draw");
+
         draw::circle(window, {{0.1, 0.2}, 0.1}, Color{255, 255, 0});
-
-
-        // for (const auto& particle : ps)
-        // {
-        //     const auto colorr = Color{col.x, 0, col.y};
-        //     draw::circle(window, Circle{field_to_graph(particle.pos), particle.radius}, colorr,
-        //     3);
-        // }
-        // bench.add("draw particles");
+        bench.add("circle draw");
 
         window.pan();
         window.zoom_to_cursor();
-        bench.add("zoom to cursor");
-        std::this_thread::sleep_for(std::chrono::milliseconds(16));
+        bench.add("pan zoom");
+        // std::this_thread::sleep_for(std::chrono::milliseconds(16));
         bench.add("sleep");
+        window.display();
+        bench.add("display");
         bench.add_frame();
-    };
+    }
 
-    run(window, draw);
     bench.print();
+    instancer.bench.print();
 }
