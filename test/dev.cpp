@@ -9,67 +9,57 @@
 
 using namespace sm;
 
-auto main() -> i32
+struct Instancer
 {
-    auto window = Window{{.dims = {1280, 720}}};
-    auto bench  = Benchmark{};
+    Window& window;
+    std::vector<Vector2f> geometry{};
+    std::vector<Vector2f> instances_pos{};
 
-    auto& ctx = window.context;
+    u32 geometry_vb{};
+    u32 instances_vb{};
 
-    ctx.vert_sources.emplace("PosInstance",
-#include "../src/samarium/gl/shaders/PosInstance.vert.glsl"
-    );
-
-    ctx.shaders.emplace(
-        "PosInstance",
-        gl::Shader{expect(gl::VertexShader::make(ctx.vert_sources.at("PosInstance"))),
-                   expect(gl::FragmentShader::make(ctx.frag_sources.at("Pos")))});
-    const auto& shader = ctx.shaders.at("PosInstance");
-    ctx.set_active(shader);
-
-
-    ctx.vertex_arrays.emplace("PosInstance", gl::VertexArray{{}});
-    print("hello");
-
-    const auto circle      = Circle{{0, 0}, 0.3};
-    const auto color       = Color{100, 60, 255};
-    const auto point_count = 64;
-    const auto points      = math::regular_polygon_points<f32>(point_count, circle);
-
-    glEnableVertexAttribArray(0);
-    GLuint points_vertex_buffer;
-    glGenBuffers(1, &points_vertex_buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, points_vertex_buffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(Vector2f) * points.size(), &points[0], GL_STATIC_DRAW);
-
-
-    auto pts = std::vector<Vector2f>{{-0.4F, -0.4F}, {-0.4F, 0.4F}, {0.4F, 0.4F}, {0.4F, -0.4F}};
-    auto particle_count = pts.size();
-    unsigned int instances_buffer;
-    glGenBuffers(1, &instances_buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, instances_buffer);
-    glBufferData(GL_ARRAY_BUFFER, particle_count * sizeof(Vector2f), &pts[0],
-                 GL_STATIC_DRAW /* GL_STREAM_DRAW */);
-
-    // ctx.vertex_arrays.at("PosInstance").bind();
-    // vertex attributes
-    // glEnableVertexAttribArray(1);
-    // glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, /* 2 *  */ sizeof(Vector2f) /* or zero? */,
-    //                       (void*)0);
-    // glVertexAttribDivisor(1, 1);
-    // glBindVertexArray(0);
-
-
-    const auto draw_circles = [&]
+    Instancer(Window& window,
+              std::span<const Vector2f> geometry,
+              std::span<const Vector2f> instances_pos)
+        : window{window}, geometry(geometry.begin(), geometry.end()),
+          instances_pos(instances_pos.begin(), instances_pos.end())
     {
-        const auto& shader = ctx.shaders.at("PosInstance");
-        ctx.set_active(shader);
+        const auto& shader = window.context.shaders.at("PosInstance");
+        window.context.set_active(shader);
 
-
-        ctx.vertex_arrays.at("PosInstance").bind();
+        window.context.vertex_arrays.emplace("PosInstance", gl::VertexArray{{}});
 
         glEnableVertexAttribArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, points_vertex_buffer);
+        glGenBuffers(1, &geometry_vb);
+        glBindBuffer(GL_ARRAY_BUFFER, geometry_vb);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(Vector2f) * geometry.size(), &geometry[0],
+                     GL_STATIC_DRAW);
+
+        glGenBuffers(1, &instances_vb);
+        glBindBuffer(GL_ARRAY_BUFFER, instances_vb);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(Vector2f) * instances_pos.size(), &instances_pos[0],
+                     GL_STATIC_DRAW /* GL_STREAM_DRAW */);
+
+        // ctx.vertex_arrays.at("PosInstance").bind();
+        // vertex attributes
+        // glEnableVertexAttribArray(1);
+        // glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, /* 2 *  */ sizeof(Vector2f) /* or zero?
+        // */,
+        //                       (void*)0);
+        // glVertexAttribDivisor(1, 1);
+        // glBindVertexArray(0);
+    }
+
+    void draw(Color color, Benchmark& bench)
+    {
+        bench.reset();
+        const auto& shader = window.context.shaders.at("PosInstance");
+        window.context.set_active(shader);
+
+        window.context.vertex_arrays.at("PosInstance").bind();
+
+        glEnableVertexAttribArray(0);
+        glBindBuffer(GL_ARRAY_BUFFER, geometry_vb);
         glVertexAttribPointer(
             0, // attribute. No particular reason for 0, but must match the layout in the shader.
             2, // size
@@ -81,7 +71,7 @@ auto main() -> i32
 
         // 2nd attribute buffer : positions of particles' centers
         glEnableVertexAttribArray(1);
-        glBindBuffer(GL_ARRAY_BUFFER, instances_buffer);
+        glBindBuffer(GL_ARRAY_BUFFER, instances_vb);
         glVertexAttribPointer(
             1, // attribute. No particular reason for 1, but must match the layout in the shader.
             2, // size : x, y => 2
@@ -94,20 +84,39 @@ auto main() -> i32
         glVertexAttribDivisor(1, 1); // positions : one per quad (its center) -> 1
 
         shader.set("color", color);
-        shader.set("view", window.world2gl());
+        shader.set_transform("view", window.world2gl());
         bench.add("gl uniforms");
 
         bench.add("gl state update");
-        glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, static_cast<i32>(points.size()),
-                              static_cast<i32>(particle_count));
+        glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, static_cast<i32>(geometry.size()),
+                              static_cast<i32>(instances_pos.size()));
         bench.add("gl draw instanced");
-    };
+    }
+};
 
+auto main() -> i32
+{
+    auto window = Window{{.dims = {1280, 720}}};
+    auto bench  = Benchmark{};
+
+    const auto circle      = Circle{{0, 0}, 0.3};
+    const auto color       = Color{100, 60, 255};
+    const auto point_count = 64;
+    const auto points      = math::regular_polygon_points<f32>(point_count, circle);
+
+    auto pts = std::vector<Vector2f>{{-0.4F, -0.4F}, {-0.4F, 0.4F}, {0.4F, 0.4F}, {0.4F, -0.4F}};
+
+    auto instancer = Instancer(window, points, pts);
+
+    window.camera.scale /= 5;
     const auto draw = [&]
     {
         draw::background(Color{});
 
-        draw_circles();
+        instancer.draw(color, bench);
+        draw::circle(window, {{0.1, 0.2}, 0.1}, Color{255, 255, 0});
+
+
         // for (const auto& particle : ps)
         // {
         //     const auto colorr = Color{col.x, 0, col.y};
