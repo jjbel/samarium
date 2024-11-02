@@ -17,6 +17,7 @@ namespace sm
 {
 struct ParticleSystemInstanced
 {
+    // Mike Acton data oriented design https://youtu.be/rX0ItVEVjHc?t=2530
     gl::Instancer instancer;
     std::vector<Vector2f>& pos;
     std::vector<Vector2f> vel;

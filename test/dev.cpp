@@ -14,8 +14,8 @@ auto main() -> i32
     auto window = Window{{.dims = {1280, 720}}};
     auto bench  = Benchmark{};
 
-    const auto count = 10'000;
-    auto ps          = ParticleSystemInstanced(window, count, 0.005, Color{100, 60, 255});
+    const auto count = 1'000'000;
+    auto ps          = ParticleSystemInstanced(window, count, 0.001F, Color{100, 60, 255});
 
     auto rand      = RandomGenerator{};
     const auto box = window.world_box(); // TODO gives a square
@@ -25,6 +25,14 @@ auto main() -> i32
     const auto draw = [&]
     {
         draw::background(Color{});
+
+        const auto mouse_pos = window.pixel2world()(window.mouse.pos).cast<f32>();
+        for (auto i : loop::end(ps.size()))
+        {
+            const auto v = mouse_pos - ps.pos[i];
+            const auto l = v.length();
+            ps.acc[i]    = v * 0.005F / (l * l * l);
+        }
 
         ps.update();
         ps.draw();
