@@ -185,8 +185,8 @@ struct Shader
     void set(const std::string& name, Vector2 value) const;
     void set(const std::string& name, const glm::mat4& value) const;
 
-    // TODO implicit cast to glm mat4 but now explicit overload
-    // void set(const std::string& name, const Transform& value) const;
+    // TODO implicit cast to glm mat4 but now explicit overload, so added separate set_transform
+    void set_transform(const std::string& name, const Transform& value) const;
 
     void bind() const { glUseProgram(handle); }
 
@@ -331,12 +331,12 @@ void Shader::set(const std::string& name, const glm::mat4& value) const
     glUniformMatrix4fv(get_uniform_location(name), 1, GL_FALSE, glm::value_ptr(value));
 }
 
-// void Shader::set(const std::string& name, const Transform& value) const
-// {
-//     glUniform4f(get_uniform_location(name), static_cast<f32>(value.pos.x),
-//                 static_cast<f32>(value.pos.y), static_cast<f32>(value.scale.x),
-//                 static_cast<f32>(value.scale.y));
-// }
+void Shader::set_transform(const std::string& name, const Transform& value) const
+{
+    glUniform4f(get_uniform_location(name), static_cast<f32>(value.pos.x),
+                static_cast<f32>(value.pos.y), static_cast<f32>(value.scale.x),
+                static_cast<f32>(value.scale.y));
+}
 
 void ComputeShader::bind() { glUseProgram(handle); }
 
