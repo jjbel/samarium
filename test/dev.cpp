@@ -20,11 +20,13 @@ auto main() -> i32
     auto rand      = RandomGenerator{};
     const auto box = window.world_box(); // TODO gives a square
     for (auto& pos : ps.pos) { pos = rand.vector(box).cast<f32>(); }
+    for (auto& vel : ps.vel) { vel = rand.polar_vector({0, 0.1}).cast<f32>(); }
 
     const auto draw = [&]
     {
         draw::background(Color{});
 
+        ps.update();
         ps.draw();
         bench.add("instance draw");
 

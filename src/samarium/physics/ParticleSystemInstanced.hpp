@@ -10,6 +10,7 @@
 #include "samarium/gl/Instancer.hpp"
 #include "samarium/graphics/Color.hpp"
 #include "samarium/gui/Window.hpp"
+#include "samarium/util/Stopwatch.hpp"
 
 
 namespace sm
@@ -17,12 +18,11 @@ namespace sm
 struct ParticleSystemInstanced
 {
     gl::Instancer instancer;
-
     std::vector<Vector2f>& pos;
     std::vector<Vector2f> vel;
     std::vector<Vector2f> acc;
-
     Color color;
+    Stopwatch watch{};
 
     ParticleSystemInstanced(Window& window,
                             u64 count,
@@ -39,10 +39,11 @@ struct ParticleSystemInstanced
 
     auto size() const { return pos.size(); }
 
-    void draw() { instancer.draw(color); }
-
-    void update(f32 time_delta = 1.0)
+    void update()
     {
+        const auto time_delta = static_cast<f32>(watch.seconds());
+        watch.reset();
+
         for (auto i : loop::end(size()))
         {
             const auto half_dv = acc[i] * time_delta;
@@ -52,5 +53,7 @@ struct ParticleSystemInstanced
             acc[i] = Vector2f{}; // reset acceleration}
         }
     }
+
+    void draw() { instancer.draw(color); }
 };
 } // namespace sm
