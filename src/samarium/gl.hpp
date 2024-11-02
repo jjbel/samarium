@@ -9,9 +9,11 @@
 
 #include "samarium/gl/Context.hpp"
 #include "samarium/gl/Framebuffer.hpp"
+#include "samarium/gl/Instancer.hpp"
 #include "samarium/gl/Shader.hpp"
 #include "samarium/gl/Sync.hpp"
 #include "samarium/gl/Text.hpp"
 #include "samarium/gl/Texture.hpp"
 #include "samarium/gl/draw.hpp"
 #include "samarium/gl/gl.hpp"
+
