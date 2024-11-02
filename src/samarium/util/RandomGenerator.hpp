@@ -101,12 +101,14 @@ struct RandomGenerator
         return *(init_list.begin() + static_cast<u64>(this->random() * init_list.size()));
     }
 
+    // TODO remove this
     [[nodiscard]] auto poisson_disc_points(f64 radius,
                                            BoundingBox<f64> sample_region,
                                            u64 sample_count = 30UL) -> std::vector<Vector2>;
 
     [[nodiscard]] auto boolean(f64 threshold = 0.5) -> bool;
 
+    // TODO rejection sampling for general dist
     [[nodiscard]] auto gaussian(f64 mean, f64 deviation = 1.0) -> f64;
 
     [[nodiscard]] auto choice(const ranges::random_access_range auto& iterable)
