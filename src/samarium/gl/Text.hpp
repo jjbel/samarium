@@ -30,7 +30,7 @@
 
 namespace sm
 {
-Result<std::filesystem::path> find_fonts(const std::vector<std::string>& fonts)
+inline Result<std::filesystem::path> find_fonts(const std::vector<std::string>& fonts)
 {
     // TODO some are in C:|Users\user\AppData\Microsoft\Windows\Fonts, but how to get user?
     const std::vector<std::string> default_dirs = {"C:\\Windows\\Fonts", "~/.local/share/fonts",
@@ -54,14 +54,14 @@ Result<std::filesystem::path> find_fonts(const std::vector<std::string>& fonts)
     return make_unexpected("Error: font not found.");
 }
 
-auto find_font()
+inline auto find_font()
 {
     const std::vector<std::string> default_fonts = {"Arial", "CascadiaCode", "UbuntuMono",
                                                     "Ubuntu"};
     return expect(find_fonts(default_fonts));
 }
 
-auto find_font(const std::string& font)
+inline auto find_font(const std::string& font)
 {
     const auto path = std::filesystem::path(font);
     if (std::filesystem::exists(path) && std::filesystem::is_regular_file(path)) { return path; }
