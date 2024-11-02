@@ -7,8 +7,12 @@
 
 #pragma once
 
-#include <filesystem> // for path
-#include <string>     // for string
+#include <filesystem>  // for path
+#include <span>        // for span
+#include <stdexcept>   // for runtime_error
+#include <string>      // for string
+#include <string_view> // for string_view
+
 
 #include "glad/glad.h"
 
@@ -24,6 +28,47 @@
 #include "samarium/util/Result.hpp"    // for Result
 #include "samarium/util/unordered.hpp" // for Map
 
+namespace sm
+{
+Result<std::filesystem::path> find_fonts(const std::vector<std::string>& fonts)
+{
+    // TODO some are in C:|Users\user\AppData\Microsoft\Windows\Fonts, but how to get user?
+    const std::vector<std::string> default_dirs = {"C:\\Windows\\Fonts", "~/.local/share/fonts",
+                                                   "/usr/local/share/fonts", " /usr/share/fonts"};
+
+    for (const auto& dir : default_dirs)
+    {
+        for (const auto& dir_entry : std::filesystem::recursive_directory_iterator(dir))
+        {
+            if (!dir_entry.is_regular_file()) { continue; }
+            for (auto font : fonts)
+            {
+                if (dir_entry.path().stem().string() == font) // TODO tolower?
+                {
+                    print(dir_entry.path().string());
+                    return {dir_entry.path()};
+                }
+            }
+        }
+    }
+    return make_unexpected("Error: font not found.");
+}
+
+auto find_font()
+{
+    const std::vector<std::string> default_fonts = {"Arial", "CascadiaCode", "UbuntuMono",
+                                                    "Ubuntu"};
+    return expect(find_fonts(default_fonts));
+}
+
+auto find_font(const std::string& font)
+{
+    const auto path = std::filesystem::path(font);
+    if (std::filesystem::exists(path) && std::filesystem::is_regular_file(path)) { return path; }
+    return expect(find_fonts({font}));
+}
+} // namespace sm
+
 // TODO file in gl but namespace is draw
 namespace sm::draw
 {
@@ -36,52 +81,18 @@ struct Character
     f32 advance;            // Horizontal offset to advance to next glyph
 };
 
-// TODO handle newlines?
 
+// TODO handle newlines?
 // https://learnopengl.com/In-Practice/Text-Rendering
 struct Text
 {
     u32 pixel_height{};
     Map<char, Character> characters{};
 
-    static Result<std::filesystem::path> default_font_dir()
+    [[nodiscard]] static auto make(std::string font = "", u32 pixel_height = 96) -> Result<Text>
     {
-#if defined(_WIN32)
-        const auto path = std::filesystem::path("C:\\Windows\\Fonts\\");
-#elif defined(linux)
-        // TODO make it a priority list: /usr/local/share/fonts/ also
-        // maybe let user add font paths
-        const auto path = std::filesystem::path("/usr/share/fonts/");
-#else
-#error "unknown platform"
-#endif
-        if (std::filesystem::exists(path)) { return {path}; }
-        return make_unexpected("Default font path not found");
-    }
-
-    [[nodiscard]] static auto make(std::string font = "arial.ttf",
-                                   u32 pixel_height = 96) -> Result<Text>
-    {
-        const auto font_dir = default_font_dir();
-        // TODO more idiomatic way
-        if (font_dir && std::filesystem::exists(font_dir.value() / font))
-        {
-            font = (font_dir.value() / font).lexically_normal().string();
-        }
-        else
-        {
-            if (!std::filesystem::exists(font))
-            {
-                return make_unexpected(fmt::format("{} does not exist", font));
-            }
-
-            if (!std::filesystem::is_regular_file(font))
-            {
-                return make_unexpected(fmt::format("{} is not a file", font));
-            }
-        }
-
-        auto* ft = FT_Library{};
+        const auto font_path = find_font(font).string();
+        auto* ft             = FT_Library{};
 
         // All functions return a value different than 0 whenever an error occurred
         if (FT_Init_FreeType(&ft) != 0)
@@ -92,9 +103,9 @@ struct Text
         // load font as face
         auto* face = FT_Face{};
 
-        if (FT_New_Face(ft, font.c_str(), 0, &face) != 0)
+        if (FT_New_Face(ft, font_path.c_str(), 0, &face) != 0)
         {
-            return make_unexpected(fmt::format("Could not create font: {}", font));
+            return make_unexpected(fmt::format("Could not create font: {}", font_path));
         }
 
         // set size to load glyphs as
@@ -115,7 +126,7 @@ struct Text
             if (FT_Load_Char(face, static_cast<u64>(c), FT_LOAD_RENDER) != 0)
             {
                 return make_unexpected(
-                    fmt::format("Could not create glyph for {} for font: {}", c, font));
+                    fmt::format("Could not create glyph for {} for font: {}", c, font_path));
             }
 
             const auto& bitmap = face->glyph->bitmap;
