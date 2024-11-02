@@ -5,6 +5,8 @@
  * Project homepage: https://github.com/jjbel/samarium
  */
 
+#pragma once
+
 #include <span>
 #include <vector>
 
@@ -29,6 +31,25 @@ struct Instancer
 
     Benchmark bench{};
 
+    /*
+    conclusion:
+    for 64 verts:
+    window.display() and draw instance take:
+    100K particles: 5.1ms, 0.3ms
+        1M particles: 28-55ms, 2ms
+        10M particles: 440ms, 45ms
+
+    for 3 verts:
+    10M particles: 19ms, 19ms
+
+    avoid copying to instancer.instances_pos
+    (hence use data oriented design: store pos in instancer.instances_pos only)
+    copying from instancer.instances_pos to buffer is unavoidable
+    no need to copy to/from instancer.geometry
+
+    TODO: use gl classes
+    TODO: have to set vertattrib every call?
+    */
 
     Instancer(Window& window,
               std::span<const Vector2f> geometry,
