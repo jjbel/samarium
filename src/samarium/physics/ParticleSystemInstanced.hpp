@@ -42,6 +42,7 @@ struct ParticleSystemInstanced
 
     void update()
     {
+        // TODO when playing back/simulating properly, shd use a const delta
         const auto time_delta = static_cast<f32>(watch.seconds());
         watch.reset();
 
