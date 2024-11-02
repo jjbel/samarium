@@ -141,7 +141,7 @@ struct Plot
 
   private:
     // TODO add default if no points / 1 point
-    auto bounding_box_plot_space() const
+    BoundingBox<f64> bounding_box_plot_space() const
     {
         using Box       = BoundingBox<f32>;
         auto box_       = Box{};
