@@ -18,6 +18,7 @@
 
 namespace sm::draw
 {
+// TODO too many overloads?
 void vertices(gl::Context& context,
               std::span<const gl::Vertex<gl::Layout::Pos>> verts,
               Color color,

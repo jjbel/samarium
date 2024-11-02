@@ -50,26 +50,26 @@ template <typename T> struct Extents
     }
 
     [[nodiscard]] constexpr auto lerp(f64 factor) const noexcept
-        requires concepts::Number<T>
     {
-        return static_cast<f64>(min) * (1.0 - factor) +
-               static_cast<f64>(max) * factor; // prevent conversion warnings
+        return min + (max - min) * factor;
     }
-
-    [[nodiscard]] constexpr auto lerp(f64 factor) const noexcept
-        requires(!concepts::Number<T>)
+    [[nodiscard]] constexpr auto lerp(f32 factor) const noexcept
     {
-        return min * (1.0 - factor) + max * factor;
+        return min + (max - min) * factor;
     }
 
     [[nodiscard]] constexpr auto clamped_lerp(f64 factor) const noexcept
     {
-        return min * (1.0 - this->clamp(factor)) + max * factor;
+        return clamp(lerp(factor));
+    }
+    [[nodiscard]] constexpr auto clamped_lerp(f32 factor) const noexcept
+    {
+        return clamp(lerp(factor));
     }
 
     [[nodiscard]] constexpr auto lerp_inverse(T value) const noexcept -> f64
     {
-        return (value - min) / this->size();
+        return static_cast<f64>(value - min) / static_cast<f64>(this->size());
     }
 
     template <typename Function>
