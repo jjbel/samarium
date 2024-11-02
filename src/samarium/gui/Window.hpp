@@ -248,6 +248,15 @@ struct Window
                            .max = transform(Vector2{1.0, 1.0})};
     }
 
+    // mouse movement in world coords
+    auto mouse_delta() const
+    {
+        const auto transform = pixel2world();
+        const auto pos       = transform(mouse.pos);
+        const auto old_pos   = transform(mouse.old_pos);
+        return pos - old_pos;
+    }
+
     auto pan(f64 scale = 1.0)
     {
         const auto transform = pixel2world();
@@ -256,6 +265,7 @@ struct Window
         if (mouse.left)
         {
             // TODO why do we hv to mult by scale
+            // TODO why multiply by camera.scale here but not in mouse_delta
             camera.pos += scale * camera.scale * (pos - old_pos);
         }
     }
