@@ -69,10 +69,11 @@ template <u64 CellCapacity = 32> struct ParticleSystemInstanced
                     // const auto c = static_cast<u8>(std::abs(g) * 100);
                     const auto c = static_cast<u8>(255);
                     draw::line_segment(instancer.window, {pos[i].cast<f64>(), pos[j].cast<f64>()},
-                                       Color{c, c, c}, 0.005);
+                                       Color{c, c, c}, 0.005F);
                 }
             }
         }
+        print(count2, "/", size() * size() / 2);
         // return Dimensions::make(count1, count2);
     }
 

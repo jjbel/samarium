@@ -17,7 +17,9 @@ auto main() -> i32
     // TODO at 2000, start shooting off
     const auto count     = 100;
     const auto radius    = 0.06F;
-    const auto cell_size = 0.1;
+
+    // TODO with 0.1, why does it still draw so many lines?
+    const auto cell_size = 1.0;
     auto ps = ParticleSystemInstanced<>(window, count, cell_size, radius, Color{100, 60, 255});
 
     auto rand = RandomGenerator{};
@@ -32,6 +34,16 @@ auto main() -> i32
         draw::background(Color{});
         bench.add("bg, display");
 
+        const auto box = window.world_box();
+        for (auto i : loop::start_end(-100, 100))
+        {
+            draw::line_segment(window, {{i * cell_size, box.min.y}, {i * cell_size, box.max.y}},
+                               Color{255, 255, 0, 90}, 0.01F);
+            draw::line_segment(window, {{box.min.x, i * cell_size}, {box.max.x, i * cell_size}},
+                               Color{255, 255, 0, 90}, 0.01F);
+        }
+        bench.add("grid draw");
+
         // const auto mouse_pos = window.pixel2world()(window.mouse.pos).cast<f32>();
         // for (auto i : loop::end(ps.size()))
         // {
@@ -40,32 +52,32 @@ auto main() -> i32
         //     ps.acc[i]    = v * 0.005F / (l * l * l);
         // }
 
-        // for (auto i : loop::end(ps.size()))
-        // {
-        //     for (auto j : loop::end(i)) // +1 ?
-        //     {
-        //         const auto v = ps.pos[i] - ps.pos[j];
-        //         const auto l = v.length();
-        //         // gravity:
-        //         // const auto f = v * 0.000005F / (l * l * l);
+        for (auto i : loop::end(ps.size()))
+        {
+            for (auto j : loop::end(i)) // +1 ?
+            {
+                const auto v = ps.pos[i] - ps.pos[j];
+                const auto l = v.length();
+                // gravity:
+                // const auto f = v * 0.000005F / (l * l * l);
 
-        //         // lennard-jones:
-        //         const auto r0 = 3 * radius;
-        //         auto g        = 0.04F * (6 * std::pow(r0, 6.0F) / std::pow(l, 7.0F) -
-        //                           12 * std::pow(r0, 12.0F) / std::pow(l, 13.0F));
-        //         g             = std::max(g, -0.1F); // clamp the repulsion
-        //         // nice: if u clamp a lot: only attraction: clumping
+                // lennard-jones:
+                const auto r0 = 3 * radius;
+                auto g        = 0.04F * (6 * std::pow(r0, 6.0F) / std::pow(l, 7.0F) -
+                                  12 * std::pow(r0, 12.0F) / std::pow(l, 13.0F));
+                g             = std::max(g, -0.1F); // clamp the repulsion
+                // nice: if u clamp a lot: only attraction: clumping
 
-        //         // const auto c = static_cast<u8>(std::abs(g) * 100);
-        //         // const auto c = static_cast<u8>(200);
-        //         // draw::line_segment(window, {ps.pos[i].cast<f64>(), ps.pos[j].cast<f64>()},
-        //         //                    Color{c, c, c, 30}, 0.01);
+                // const auto c = static_cast<u8>(std::abs(g) * 100);
+                // const auto c = static_cast<u8>(200);
+                // draw::line_segment(window, {ps.pos[i].cast<f64>(), ps.pos[j].cast<f64>()},
+                //                    Color{c, c, c, 30}, 0.01);
 
-        //         const auto f = (v / l) * g;
-        //         // ps.acc[i] -= f;
-        //         // ps.acc[j] += f;
-        //     }
-        // }
+                const auto f = (v / l) * g;
+                ps.acc[i] -= f;
+                ps.acc[j] += f;
+            }
+        }
         bench.add("forces");
 
         ps.self_collision();
@@ -84,7 +96,7 @@ auto main() -> i32
         // std::this_thread::sleep_for(std::chrono::milliseconds(2000));
         bench.add_frame();
         frame++;
-        file::write(file::pam, window.get_image(), fmt::format("./exports/{:05}.pam", frame));
+        // file::write(file::pam, window.get_image(), fmt::format("./exports/{:05}.pam", frame));
     };
     run(window, draw);
 
