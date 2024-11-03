@@ -29,7 +29,7 @@ auto obj_to_pts(const std::filesystem::path& obj_file)
         const auto components =
             std::string(line.begin() + 2, line.end()) | std::views::split(' ') |
             std::views::transform([](auto r) { return std::string(r.data(), r.size()); }) |
-            std::ranges::to<std::vector>();
+            ranges::to<std::vector>();
 
         // blender needs y-axis flipping?
         return sm::Vector2{std::stod(components[0]), -std::stod(components[2])};

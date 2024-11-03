@@ -232,8 +232,8 @@ inline auto subdivide_box(BoundingBox<f64> box, Dimensions rows_cols, f64 scale 
             const auto rows_cols_f64 = rows_cols.cast<f64>();
             const auto pos_f64       = pos.cast<f64>();
             const auto delta         = box.max - box.min;
-            return BoundingBox{box.min + delta / rows_cols_f64 * pos_f64,
-                               box.min + delta / rows_cols_f64 * (pos_f64 + Vector2{1, 1})}
+            return BoundingBox<f64>{box.min + delta / rows_cols_f64 * pos_f64,
+                                    box.min + delta / rows_cols_f64 * (pos_f64 + Vector2{1, 1})}
                 .scaled(scale);
         });
 }
