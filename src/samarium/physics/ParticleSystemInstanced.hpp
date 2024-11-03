@@ -25,14 +25,14 @@ template <u64 CellCapacity = 32> struct ParticleSystemInstanced
     std::vector<Vector2f> vel;
     std::vector<Vector2f> acc;
 
-    HashGrid<u32, CellCapacity> hash_grid;
+    HashGrid<u32, CellCapacity, f32> hash_grid;
 
     Color color;
     Stopwatch watch{};
 
     ParticleSystemInstanced(Window& window,
                             u64 count,
-                            f64 cell_size         = 0.1,
+                            f32 cell_size         = 0.1,
                             f32 radius            = 0.01F,
                             Color color           = Color{255, 255, 255},
                             u32 circle_resolution = 16)
@@ -46,19 +46,22 @@ template <u64 CellCapacity = 32> struct ParticleSystemInstanced
 
     auto size() const { return pos.size(); }
 
-    auto self_collision(f64 damping = 1.0)
+    auto rehash()
     {
         hash_grid.map.clear();
         hash_grid.map.reserve(size());
-        for (auto i : loop::end(size())) { hash_grid.insert(pos[i].cast<f64>(), u32(i)); }
+        for (auto i : loop::end(size())) { hash_grid.insert(pos[i], u32(i)); }
+    }
 
+    auto self_collision(f64 damping = 1.0)
+    {
         auto count1 = u32{};
         auto count2 = u32{};
         for (auto i : loop::end(size()))
         {
             // Slow: for (auto j : loop::end(particles.size()))
             // TODO bottleneck is still here, not in the actual collision
-            for (auto j : hash_grid.neighbors(pos[i].cast<f64>()))
+            for (auto j : hash_grid.neighbors(pos[i]))
             {
                 // we're looping through ordered pairs, so avoid colliding each pair twice
                 if (i < j)
@@ -73,7 +76,7 @@ template <u64 CellCapacity = 32> struct ParticleSystemInstanced
                 }
             }
         }
-        print(count2, "/", size() * size() / 2);
+        // print(count2, "/", size() * size() / 2);
         // return Dimensions::make(count1, count2);
     }
 

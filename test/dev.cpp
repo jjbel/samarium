@@ -9,17 +9,23 @@
 
 using namespace sm;
 
-auto main() -> i32
+auto main(int argc, char* argv[]) -> i32
 {
+    // TODO with 0.1, why does it still draw so many lines?
+    const auto cell_size = 1.4F;
+    // const auto cell_size = std::strtof(argv[1], nullptr);
+    // print(cell_size);
+    // std::abort();
+
     auto window = Window{{.dims = {1920, 1080}}};
     auto bench  = Benchmark{};
 
     // TODO at 2000, start shooting off
-    const auto count     = 100;
-    const auto radius    = 0.06F;
+    // keep it fixed time. if fps too low, not enough substeps
+    const auto count  = 10'000;
+    const auto radius = 0.01F;
 
-    // TODO with 0.1, why does it still draw so many lines?
-    const auto cell_size = 1.0;
+
     auto ps = ParticleSystemInstanced<>(window, count, cell_size, radius, Color{100, 60, 255});
 
     auto rand = RandomGenerator{};
@@ -52,20 +58,30 @@ auto main() -> i32
         //     ps.acc[i]    = v * 0.005F / (l * l * l);
         // }
 
+        ps.rehash();
+        bench.add("rehash");
+
+        auto c = 0;
         for (auto i : loop::end(ps.size()))
         {
-            for (auto j : loop::end(i)) // +1 ?
+            for (auto j : ps.hash_grid.neighbors(ps.pos[i])) // +1 ?
             {
+                // TODO cud also find for each particle independently, then add up
+                // twice the looping, but paralellizable
+                // commenting this and (ps.acc[j]+=f) breaks it
+                if (i >= j) { continue; }
+
                 const auto v = ps.pos[i] - ps.pos[j];
                 const auto l = v.length();
                 // gravity:
-                // const auto f = v * 0.000005F / (l * l * l);
+                auto g = 0.0006F / (l * l);
+                g      = std::min(g, 1.0F); // clamp the repulsion
 
                 // lennard-jones:
-                const auto r0 = 3 * radius;
-                auto g        = 0.04F * (6 * std::pow(r0, 6.0F) / std::pow(l, 7.0F) -
-                                  12 * std::pow(r0, 12.0F) / std::pow(l, 13.0F));
-                g             = std::max(g, -0.1F); // clamp the repulsion
+                // const auto r0 = 3 * radius;
+                // auto g        = 0.1F * (6 * math::power<6>(r0) / math::power<7>(l) -
+                //                   12 * math::power<12>(r0) / math::power<13>(l));
+                // g             = std::max(g, -0.1F); // clamp the repulsion
                 // nice: if u clamp a lot: only attraction: clumping
 
                 // const auto c = static_cast<u8>(std::abs(g) * 100);
@@ -75,15 +91,21 @@ auto main() -> i32
 
                 const auto f = (v / l) * g;
                 ps.acc[i] -= f;
-                ps.acc[j] += f;
+                // ps.acc[j] += f;
+                c++;
             }
+        }
+        if (frame % 3 == 0)
+        {
+            print(c, "/", count * count / 2);
+            ps.hash_grid.print_occupancy();
         }
         bench.add("forces");
 
-        ps.self_collision();
-        bench.add("coll");
+        // ps.self_collision();
+        // bench.add("coll");
 
-        ps.update();
+        ps.update(1.0F / 100.0F);
         bench.add("update");
 
         ps.draw();
