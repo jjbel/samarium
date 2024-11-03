@@ -15,9 +15,10 @@ auto main() -> i32
     auto bench  = Benchmark{};
 
     // TODO at 2000, start shooting off
-    const auto count  = 1000;
-    const auto radius = 0.06F;
-    auto ps           = ParticleSystemInstanced(window, count, radius, Color{100, 60, 255});
+    const auto count     = 100;
+    const auto radius    = 0.06F;
+    const auto cell_size = 0.1;
+    auto ps = ParticleSystemInstanced<>(window, count, cell_size, radius, Color{100, 60, 255});
 
     auto rand = RandomGenerator{};
     window.display();
@@ -29,6 +30,7 @@ auto main() -> i32
     const auto draw = [&]
     {
         draw::background(Color{});
+        bench.add("bg, display");
 
         // const auto mouse_pos = window.pixel2world()(window.mouse.pos).cast<f32>();
         // for (auto i : loop::end(ps.size()))
@@ -38,33 +40,40 @@ auto main() -> i32
         //     ps.acc[i]    = v * 0.005F / (l * l * l);
         // }
 
-        for (auto i : loop::end(ps.size()))
-        {
-            for (auto j : loop::end(i)) // +1 ?
-            {
-                const auto v = ps.pos[i] - ps.pos[j];
-                const auto l = v.length();
-                // gravity:
-                // const auto f = v * 0.000005F / (l * l * l);
+        // for (auto i : loop::end(ps.size()))
+        // {
+        //     for (auto j : loop::end(i)) // +1 ?
+        //     {
+        //         const auto v = ps.pos[i] - ps.pos[j];
+        //         const auto l = v.length();
+        //         // gravity:
+        //         // const auto f = v * 0.000005F / (l * l * l);
 
-                // lennard-jones:
-                const auto r0 = 3 * radius;
-                auto g        = 0.04F * (6 * std::pow(r0, 6.0F) / std::pow(l, 7.0F) -
-                                  12 * std::pow(r0, 12.0F) / std::pow(l, 13.0F));
-                g             = std::max(g, -0.1F); // clamp the repulsion
-                // nice: if u clamp a lot: only attraction: clumping
+        //         // lennard-jones:
+        //         const auto r0 = 3 * radius;
+        //         auto g        = 0.04F * (6 * std::pow(r0, 6.0F) / std::pow(l, 7.0F) -
+        //                           12 * std::pow(r0, 12.0F) / std::pow(l, 13.0F));
+        //         g             = std::max(g, -0.1F); // clamp the repulsion
+        //         // nice: if u clamp a lot: only attraction: clumping
 
-                // const auto c = static_cast<u8>(std::abs(g) * 100);
-                // draw::line_segment(window, {ps.pos[i].cast<f64>(), ps.pos[j].cast<f64>()},
-                //                    Color{c, c, c}, 0.7);
+        //         // const auto c = static_cast<u8>(std::abs(g) * 100);
+        //         // const auto c = static_cast<u8>(200);
+        //         // draw::line_segment(window, {ps.pos[i].cast<f64>(), ps.pos[j].cast<f64>()},
+        //         //                    Color{c, c, c, 30}, 0.01);
 
-                const auto f = (v / l) * g;
-                ps.acc[i] -= f;
-                ps.acc[j] += f;
-            }
-        }
+        //         const auto f = (v / l) * g;
+        //         // ps.acc[i] -= f;
+        //         // ps.acc[j] += f;
+        //     }
+        // }
+        bench.add("forces");
+
+        ps.self_collision();
+        bench.add("coll");
 
         ps.update();
+        bench.add("update");
+
         ps.draw();
         bench.add("instance draw");
 
@@ -80,5 +89,5 @@ auto main() -> i32
     run(window, draw);
 
     bench.print();
-    ps.instancer.bench.print();
+    // ps.instancer.bench.print();
 }
