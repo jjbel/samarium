@@ -5,14 +5,20 @@
 
 # the CMake build system https://cmake.org/
 
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.30)
+
+if(SAMARIUM_ENABLE_CUDA)
+    project(samarium_dev LANGUAGES CXX CUDA)
+else()
+    project(samarium_dev LANGUAGES CXX)
+endif()
+# project with CUDA has to be before conan install, else fails like
+# https://gitlab.kitware.com/cmake/cmake/-/issues/26144
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 option(RUN_CONAN "Run Conan from CMake itself to automatically get dependenices" ON)
 include(conan_install)
-
-project(samarium_dev LANGUAGES CXX)
 
 option(BUILD_UNIT_TESTS "Build unit tests" OFF)
 option(BUILD_EXAMPLES "Build examples" ON)
@@ -28,7 +34,11 @@ option(USE_THIN_LTO "Use ThinLTO" OFF)
 
 include(check_project_structure)
 include(ccache)
-include(compiler_options)
+
+# TODO should set options for CUDA and MSVC separately
+# https://cmake.org/cmake/help/latest/manual/cmake-generator-expressions.7.html#genex:COMPILE_LANGUAGE
+# include(compiler_options)
+
 include(docs)
 include(CTest)
 include(include_what_you_use)

@@ -39,7 +39,8 @@
             "cacheVariables": {
                 "BUILD_EXAMPLES": false,
                 "BUILD_BENCHMARKS": false,
-                "SAMARIUM_HEADER_ONLY": false
+                "SAMARIUM_HEADER_ONLY": false,
+                "SAMARIUM_ENABLE_CUDA": true
             }
         },
         {

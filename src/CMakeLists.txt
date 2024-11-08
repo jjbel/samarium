@@ -2,15 +2,23 @@
 # <https://opensource.org/licenses/MIT/> or LICENSE.md Project homepage:
 # <https://github.com/jjbel/samarium>
 
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.30)
+
+if(SAMARIUM_ENABLE_CUDA)
+    set(langs "CXX")
+else()
+    set(langs "CXX CUDA")
+endif()
+
 project(
     samarium
     VERSION 1.1.0
     DESCRIPTION "2-D physics simulation engine written in modern C++"
     HOMEPAGE_URL "https://github.com/jjbel/samarium"
-    LANGUAGES CXX
+    LANGUAGES "${langs}"
 )
 
+# why not target_compile_features(particles PUBLIC cxx_std_11)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
@@ -19,8 +27,28 @@ list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})
 
 file(GLOB_RECURSE SAMARIUM_SOURCES "*.*pp")
 
+if(SAMARIUM_ENABLE_CUDA)
+    # set(CMAKE_CUDA_FLAGS "-O3")
+    # enable_language(CUDA)
+    set(CMAKE_CUDA_ARCHITECTURES 50)
+    file(GLOB_RECURSE CUDA_SOURCES "*.cu")
+    list(APPEND SAMARIUM_SOURCES "${CUDA_SOURCES}")
+endif()
+
+# CUDA ARCHITECTURE
+# TODO with 52, works but lots of error in calcn
+# with 50, seemingly less error?
+# with 70, doesn't work
+# https://cmake.org/cmake/help/latest/variable/CMAKE_CUDA_ARCHITECTURES.html
+# https://cmake.org/cmake/help/latest/prop_tgt/CUDA_ARCHITECTURES.html : see all, native
+# see: nvcc --list-gpu-code and nvcc --list-gpu-arch
+# https://www.techpowerup.com/gpu-specs/geforce-mx330.c3493
+# also using multiple arch's below...so chosen at runtime?
+
 add_library(samarium ${SAMARIUM_SOURCES})
 add_library(samarium::samarium ALIAS samarium)
+
+set_target_properties(samarium PROPERTIES CUDA_ARCHITECTURES "50;60;72")
 
 set_target_properties(
     samarium

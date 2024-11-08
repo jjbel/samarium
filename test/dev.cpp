@@ -6,11 +6,14 @@
  */
 
 #include "samarium/samarium.hpp"
+#include "samarium/cuda/hello.hpp"
 
 using namespace sm;
 
 auto main(int argc, char* argv[]) -> i32
 {
+    test();
+    std::abort();
     // TODO with 0.1, why does it still draw so many lines?
     const auto cell_size = 1.4F;
     // const auto cell_size = std::strtof(argv[1], nullptr);
