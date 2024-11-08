@@ -25,7 +25,7 @@ if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/conan.lock AND RUN_CONAN)
         ${DEPS_OPTION}
         -s build_type=${CMAKE_BUILD_TYPE}
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        OUTPUT_QUIET
+        # OUTPUT_QUIET
         # TODO output_quiet not working? using -vquiet
         # TODO how to silence output from individual lib files
     )
