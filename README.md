@@ -1,11 +1,13 @@
 <!-- TODO make a script to merge these into 2x2 grid, loop them -->
 
 <p align="middle">
-<img src="https://user-images.githubusercontent.com/83468982/178472984-8cd83808-bfb2-478b-8a5e-3d45782f2c7d.mp4" width="200" />
+<!-- <video src="https://user-images.githubusercontent.com/83468982/178472984-8cd83808-bfb2-478b-8a5e-3d45782f2c7d.mp4" width="200" /> -->
 
-<img src="https://user-images.githubusercontent.com/83468982/178473002-b7f896f6-d5ed-4cc5-be34-bcccab9ef11e.mp4" width="200" />
+<!-- <video src="https://user-images.githubusercontent.com/83468982/178473002-b7f896f6-d5ed-4cc5-be34-bcccab9ef11e.mp4" width="200" /> -->
 
-<img src="https://github.com/user-attachments/assets/d870c975-44d4-4624-b122-48129506bbf6" width="200" />
+<video width="200" autoplay>
+<source src="https://github.com/user-attachments/assets/d870c975-44d4-4624-b122-48129506bbf6">
+</video>
 </p>
 
 # Samarium
