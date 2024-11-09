@@ -44,4 +44,4 @@ Contents
 
     changelog
     license
-    code_structure
+    development
