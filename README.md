@@ -21,13 +21,6 @@
 ![language: C++20](https://img.shields.io/badge/language-C%2B%2B20-yellow)
 [![Latest Github Release](https://img.shields.io/github/v/tag/jjbel/samarium?label=latest%20release)](https://github.com/jjbel/samarium/tags) -->
 
-![Lines of Code](https://img.shields.io/endpoint?url=https://ghloc.vercel.app/api/jjbel/samarium/badge?filter=.hpp$,.cpp$,.glsl$&style=flat&logoColor=red&label=Lines%20of%20Code&color=red)
-![Repo Size](https://img.shields.io/github/repo-size/jjbel/samarium)
-
-![MSVC build status](https://github.com/jjbel/samarium/actions/workflows/msvc.yml/badge.svg)
-![Linux GCC build status](https://github.com/jjbel/samarium/actions/workflows/linux-gcc.yml/badge.svg)
-![Linux Clang build status](https://github.com/jjbel/samarium/actions/workflows/linux-clang.yml/badge.svg)
-
 Samarium is a 2d physics simulation and rendering library written in C++20, with a focus on high performance using GPU acceleration (CUDA and compute shaders), and by using the CPU and memory better (multithreading, data-oriented-design).
 
 I am actively working on adding 3D support and more simulation domains: chemical reactions, phase change, cloth etc.

@@ -1,3 +1,11 @@
+
+![Lines of Code](https://img.shields.io/endpoint?url=https://ghloc.vercel.app/api/jjbel/samarium/badge?filter=.hpp$,.cpp$,.glsl$&style=flat&logoColor=red&label=Lines%20of%20Code&color=red)
+![Repo Size](https://img.shields.io/github/repo-size/jjbel/samarium)
+
+![MSVC build status](https://github.com/jjbel/samarium/actions/workflows/msvc.yml/badge.svg)
+![Linux GCC build status](https://github.com/jjbel/samarium/actions/workflows/linux-gcc.yml/badge.svg)
+![Linux Clang build status](https://github.com/jjbel/samarium/actions/workflows/linux-clang.yml/badge.svg)
+
 Building
 
 CMake
