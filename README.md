@@ -29,18 +29,18 @@ I am actively working on adding 3D support and more simulation domains: chemical
 <!-- Offload more work to the GPU -->
 <!-- SIMD for increasing, CPU performance -->
 
-## Contents
+<!-- ## Contents -->
 
 <!-- TODO use vscode markdown auto TOC -->
 
-- [Examples](#examples)
-- [Quickstart](#quickstart)
-- [Prerequistes](#prerequistes)
+<!-- - [Examples](#examples) -->
+<!-- - [Quickstart](#quickstart) -->
+<!-- - [Prerequistes](#prerequistes)
 - [Installation](#installation)
 - [Example](#example)
 - [Tools](#tools)
 - [Documentation](#documentation)
-- [License](#license)
+- [License](#license) -->
 
 ## Quickstart
 
