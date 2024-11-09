@@ -1,23 +1,29 @@
 <!-- TODO make a script to merge these into 2x2 grid, loop them -->
 
-$10^4$ particles interacting gravitationally in realtime, using a [hashgrid](https://github.com/jjbel/samarium/blob/main/src/samarium/util/HashGrid.hpp)
+$10^4$ particles interacting gravitationally in realtime, using a [hashgrid](https://github.com/jjbel/samarium/blob/main/src/samarium/util/HashGrid.hpp):
+
 [](https://github.com/user-attachments/assets/b461e8b8-eac3-4cb0-b3aa-b91b147f4b81)
 
-$10^5$ particles moving in a velocity field of [perlin noise](https://github.com/jjbel/samarium/blob/main/src/samarium/util/noise.hpp)
+$10^5$ particles moving in a velocity field of [perlin noise](https://github.com/jjbel/samarium/blob/main/src/samarium/util/noise.hpp):
+
 [](https://github.com/user-attachments/assets/f8f23bc0-c454-481b-b536-9e6e7abb8bd9)
 
-Softbody, interact with a mouse
+Softbody, interact with a mouse:
+
 [](https://user-images.githubusercontent.com/83468982/178473002-b7f896f6-d5ed-4cc5-be34-bcccab9ef11e.mp4)
 
-An ideal gas's velocity distribution approaching the Maxwell-Boltzmann Distribution
+An ideal gas's velocity distribution approaching the Maxwell-Boltzmann Distribution:
+
 [](https://github.com/user-attachments/assets/1bd3aa90-80b7-486c-94df-1e03d7e276c9)
 
 ### Graphics:
 
-Animating levels of the Hilbert Curve
+Animating levels of the Hilbert Curve:
+
 [](https://user-images.githubusercontent.com/83468982/178472984-8cd83808-bfb2-478b-8a5e-3d45782f2c7d.mp4)
 
-Animating levels of the Fourier transform of a shape
+Animating levels of the Fourier transform of a shape:
+
 [](https://github.com/user-attachments/assets/d870c975-44d4-4624-b122-48129506bbf6)
 
 # Samarium
