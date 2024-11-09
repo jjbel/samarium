@@ -66,7 +66,7 @@ Install [python](https://www.python.org/downloads/) and [git](https://git-scm.co
 
 A compiler supporting C++20 is required, namely Visual C++ 2019, GCC-11, or Clang-13.
 
-To install, do the following, or **just run `boostrap.py`**
+To install, do the following, or **just run `python samarium/boostrap.py`**
 1. Install [CMake](https://cmake.org/download/) and [Conan](https://conan.io/downloads.html/)
 2. Download [the zip](https://github.com/jjbel/samarium/archive/refs/heads/main.zip) or clone the repo:
 ```sh
