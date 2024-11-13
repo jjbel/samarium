@@ -28,6 +28,8 @@ struct Stopwatch
     [[nodiscard]] auto current_fps() -> f64;
 
     void print() const;
+
+    std::string str_ms() const;
 };
 } // namespace sm
 
@@ -55,6 +57,11 @@ SM_INLINE auto Stopwatch::time() const -> Stopwatch::Duration
     const auto sec = seconds();
     reset();
     return 1.0 / sec;
+}
+
+SM_INLINE std::string Stopwatch::str_ms() const
+{
+    return fmt::format("{:.3f}ms", this->seconds() * 1000.0);
 }
 
 SM_INLINE void Stopwatch::print() const { fmt::print("{:.3}ms\n", this->seconds() * 1000.0); }

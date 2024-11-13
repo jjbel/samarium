@@ -30,7 +30,6 @@ file(GLOB_RECURSE SAMARIUM_SOURCES "*.*pp")
 if(SAMARIUM_ENABLE_CUDA)
     # set(CMAKE_CUDA_FLAGS "-O3")
     # enable_language(CUDA)
-    set(CMAKE_CUDA_ARCHITECTURES 50)
     file(GLOB_RECURSE CUDA_SOURCES "*.cu")
     list(APPEND SAMARIUM_SOURCES "${CUDA_SOURCES}")
 endif()
@@ -48,7 +47,9 @@ endif()
 add_library(samarium ${SAMARIUM_SOURCES})
 add_library(samarium::samarium ALIAS samarium)
 
-set_target_properties(samarium PROPERTIES CUDA_ARCHITECTURES "50;60;72")
+# device query says my MX330 supports 6.1
+set_target_properties(samarium PROPERTIES CUDA_ARCHITECTURES "50;60;61;70")
+# set_target_properties(samarium PROPERTIES CUDA_ARCHITECTURES "61")
 
 set_target_properties(
     samarium

@@ -5,15 +5,25 @@
  * Project homepage: https://github.com/jjbel/samarium
  */
 
-#include "samarium/samarium.hpp"
 #include "samarium/cuda/hello.hpp"
+#include "samarium/cuda/info.hpp"
+#include "samarium/samarium.hpp"
+
 
 using namespace sm;
 
 auto main(int argc, char* argv[]) -> i32
 {
-    test();
+    // cuda::print_device_info();
+    // test();
+    thrust_benchmark_1(10);
+    thrust_benchmark_1(1'000);
+    thrust_benchmark_1(10'000);
+    thrust_benchmark_1(100'000);
+    thrust_benchmark_1(1'000'000);
+    thrust_benchmark_1(10'000'000);
     std::abort();
+
     // TODO with 0.1, why does it still draw so many lines?
     const auto cell_size = 1.4F;
     // const auto cell_size = std::strtof(argv[1], nullptr);
