@@ -4,19 +4,14 @@
 
 cmake_minimum_required(VERSION 3.30)
 
+# TODO set langs list? "CXX CUDA" and "CXX;CUDA" didn't work
 if(SAMARIUM_ENABLE_CUDA)
-    set(langs "CXX CUDA")
+    project(samarium VERSION 1.1.0 LANGUAGES CXX CUDA)
+    message(STATUS "Cuda enabled.")
 else()
-    set(langs "CXX")
+    project(samarium VERSION 1.1.0 LANGUAGES CXX CUDA)
+    message(STATUS "Cuda disabled.")
 endif()
-
-project(
-    samarium
-    VERSION 1.1.0
-    DESCRIPTION "2-D physics simulation engine written in modern C++"
-    HOMEPAGE_URL "https://github.com/jjbel/samarium"
-    LANGUAGES "${langs}"
-)
 
 # why not target_compile_features(particles PUBLIC cxx_std_11)
 set(CMAKE_CXX_STANDARD 20)
