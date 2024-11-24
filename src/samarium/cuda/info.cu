@@ -37,7 +37,7 @@
 
 #include <cuda_runtime.h>
 
-#include "info.hpp"
+#include "cuda.hpp"
 
 namespace sm::cuda
 {
