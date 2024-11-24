@@ -244,7 +244,7 @@ struct Window
     [[nodiscard]] auto world_box() const -> Box2<f64>
     {
         const auto transform = gl2world();
-        return Box2{.min = transform(Vec2{-1.0, -1.0}), .max = transform(Vec2{1.0, 1.0})};
+        return Box2<f64>{.min = transform(Vec2{-1.0, -1.0}), .max = transform(Vec2{1.0, 1.0})};
     }
 
     // mouse movement in world coords
