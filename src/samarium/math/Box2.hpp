@@ -55,7 +55,7 @@ template <concepts::Number T = f64> struct Box2
     {
         const auto [x_min, x_max] = std::ranges::minmax(points, {}, &VecType::x);
         const auto [y_min, y_max] = std::ranges::minmax(points, {}, &VecType::y);
-        return Box2<f64>{{x_min.x, y_min.y}, {x_max.x, y_max.y}};
+        return Box2<T>{{x_min.x, y_min.y}, {x_max.x, y_max.y}};
     }
 
     // TODO rename this union or smthg
@@ -87,7 +87,7 @@ template <concepts::Number T = f64> struct Box2
         requires std::is_signed_v<T>
     {
         width = std::abs(width / 2); // recenter, make +ve
-        return Box2<f64>{.min{-width, -width}, .max{width, width}};
+        return Box2<T>{.min{-width, -width}, .max{width, width}};
     }
 
     [[nodiscard]] static constexpr auto find_min_max(VecType p1, VecType p2)
@@ -110,7 +110,7 @@ template <concepts::Number T = f64> struct Box2
     from_centre_width_height(VecType centre, T width, T height) noexcept
     {
         const auto vec = VecType{.x = width / static_cast<T>(2), .y = height / static_cast<T>(2)};
-        return Box2<f64>{centre - vec, centre + vec};
+        return Box2<T>{centre - vec, centre + vec};
     }
 
     [[nodiscard]] constexpr auto contains(VecType vec) const noexcept
@@ -203,7 +203,8 @@ template <concepts::Number T = f64> struct Box2
 
     [[nodiscard]] constexpr auto get_placement(Placement p)
     {
-        return map_position({static_cast<f64>(p.x) / 2.0, static_cast<f64>(p.y) / 2.0});
+        // TODO casts...
+        return map_position({static_cast<T>(p.x) / 2.0, static_cast<T>(p.y) / 2.0});
     }
 };
 } // namespace sm
