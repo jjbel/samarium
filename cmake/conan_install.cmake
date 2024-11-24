@@ -5,7 +5,7 @@
 
 # install dependencies by running 'conan install'
 
-if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/conan.lock AND RUN_CONAN)
+if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/conan_toolchain.cmake AND RUN_CONAN)
     find_program(CONAN_EXE conan REQUIRED)
 
     set(DEPS_OPTION "")
