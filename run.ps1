@@ -7,5 +7,15 @@ function Cmake-Build {
     | Out-String).replace('D:\sm\samarium\', '').replace(' [build\test\samarium_tests.vcxproj]', '')
 }
 
+Clear-Host
+
 # TODO runs even on compile failure
-Cmake-Build && .\build\test\Release\samarium_tests
+Cmake-Build
+
+# [Console]::Beep() # https://stackoverflow.com/a/74225141
+
+$Exe=".\build\test\Release\samarium_tests"
+if(!(Test-Path $Exe))
+{
+    & $Exe
+}
