@@ -92,9 +92,9 @@ struct Plot
 
     void add(const std::string& key, Vec2 point)
     {
-        traces[key].points.push_back(point.cast<f32>());
+        traces[key].points.push_back(point.template cast<f32>());
     }
-    void add(Vec2 point) { traces["default"].points.push_back(point.cast<f32>()); }
+    void add(Vec2 point) { traces["default"].points.push_back(point.template cast<f32>()); }
 
     void draw(Window& window)
     {
@@ -134,8 +134,8 @@ struct Plot
             const auto box_          = transform.apply(box);
             constexpr auto placement = Placement{PlacementX::Middle, PlacementY::Top};
             const auto position      = box.get_placement(placement);
-            text(window, title.text, position.cast<f32>(), title.scale * camera_scale_correction,
-                 title.color, placement);
+            text(window, title.text, position.template cast<f32>(),
+                 title.scale * camera_scale_correction, title.color, placement);
         }
     }
 
@@ -154,7 +154,7 @@ struct Plot
             else { box_ = Box::fit_boxes(box_, new_box); }
             flag_first = false;
         }
-        return box_.cast<f64>();
+        return box_.template cast<f64>();
     }
 };
 } // namespace sm

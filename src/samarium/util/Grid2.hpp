@@ -229,8 +229,8 @@ inline auto subdivide_box(Box2<f64> box, Dimensions rows_cols, f64 scale = 1.0)
         rows_cols,
         [box, rows_cols, scale](Indices pos)
         {
-            const auto rows_cols_f64 = rows_cols.cast<f64>();
-            const auto pos_f64       = pos.cast<f64>();
+            const auto rows_cols_f64 = rows_cols.template cast<f64>();
+            const auto pos_f64       = pos.template cast<f64>();
             const auto delta         = box.max - box.min;
             return Box2<f64>{box.min + delta / rows_cols_f64 * pos_f64,
                              box.min + delta / rows_cols_f64 * (pos_f64 + Vec2{1, 1})}

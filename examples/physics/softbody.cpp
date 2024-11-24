@@ -36,11 +36,13 @@ auto main() -> i32
     const auto get_dual_from_indices = [&](auto indices)
     {
         const auto x = interp::map_range<f64>(
-            static_cast<f64>(indices.x), Extents<u64>{0UL, params.particle_count_xy.x}.cast<f64>(),
+            static_cast<f64>(indices.x),
+            Extents<u64>{0UL, params.particle_count_xy.x}.template cast<f64>(),
             Extents<f64>{-params.softbody_area.x / 2.0, params.softbody_area.x / 2.0});
 
         const auto y = interp::map_range<f64>(
-            static_cast<f64>(indices.y), Extents<u64>{0UL, params.particle_count_xy.y}.cast<f64>(),
+            static_cast<f64>(indices.y),
+            Extents<u64>{0UL, params.particle_count_xy.y}.template cast<f64>(),
             Extents<f64>{-params.softbody_area.y / 2.0, params.softbody_area.y / 2.0});
 
         auto pos = Vec2{x, y};

@@ -42,11 +42,11 @@ class Transform
 
     [[nodiscard]] constexpr auto apply(Vec2f vec) const noexcept
     {
-        return vec * scale.cast<f32>() + pos.cast<f32>();
+        return vec * scale.template cast<f32>() + pos.template cast<f32>();
     }
     [[nodiscard]] constexpr auto operator()(Vec2f vec) const noexcept
     {
-        return vec * scale.cast<f32>() + pos.cast<f32>();
+        return vec * scale.template cast<f32>() + pos.template cast<f32>();
     }
 
     [[nodiscard]] constexpr auto apply(const Box2<f64>& bounding_box) const noexcept

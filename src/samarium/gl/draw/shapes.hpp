@@ -47,10 +47,10 @@ inline void line_segment(
     const auto thickness_vector =
         Vec2::from_polar(
             {.length = thickness / 2., .angle = line.vector().angle() + math::pi / 2.0})
-            .cast<f32>();
+            .template cast<f32>();
 
-    const auto first = line.p1.cast<f32>();
-    const auto last  = line.p2.cast<f32>();
+    const auto first = line.p1.template cast<f32>();
+    const auto last  = line.p2.template cast<f32>();
     auto points      = std::to_array<Vec2f>({first - thickness_vector, first + thickness_vector,
                                              last + thickness_vector, last - thickness_vector});
     polygon(window, points, color, transform);
@@ -101,8 +101,9 @@ inline void polyline_segments(Window& window,
     // TODO assumes pts >= 2
     for (auto i : loop::end(points.size() - 1UL))
     {
-        draw::line_segment(window, {points[i].cast<f64>(), points[i + 1UL].cast<f64>()}, color,
-                           thickness, transform);
+        draw::line_segment(window,
+                           {points[i].template cast<f64>(), points[i + 1UL].template cast<f64>()},
+                           color, thickness, transform);
     }
 }
 
@@ -116,7 +117,8 @@ inline void
 polygon_segments(Window& window, std::span<const Vec2f> points, f32 thickness, Color color)
 {
     polyline_segments(window, points, thickness, color);
-    draw::line_segment(window, {points[points.size() - 1UL].cast<f64>(), points[0].cast<f64>()},
-                       color, thickness);
+    draw::line_segment(
+        window, {points[points.size() - 1UL].template cast<f64>(), points[0].template cast<f64>()},
+        color, thickness);
 }
 } // namespace sm::draw

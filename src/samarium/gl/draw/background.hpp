@@ -55,7 +55,7 @@ void background(Window& window, const Gradient& gradient, f32 angle)
     print("1");
     // use Vec2f to preserve obtuse angles (atan2)
     angle = (Vec2f::from_polar({.length = 1.0, .angle = angle}) *
-             window.aspect_vector_max().cast<f32>())
+             window.aspect_vector_max().template cast<f32>())
                 .angle();
 
     const auto transformed_angle = angle + std::numbers::pi_v<f32> / 4;

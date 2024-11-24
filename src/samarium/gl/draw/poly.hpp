@@ -22,7 +22,7 @@ namespace sm
 inline auto points_to_f32(std::span<const Vec2> in_pts) -> std::vector<Vec2f>
 {
     auto out_pts = std::vector<Vec2f>(in_pts.size());
-    for (auto i : loop::end(in_pts.size())) { out_pts[i] = in_pts[i].cast<f32>(); }
+    for (auto i : loop::end(in_pts.size())) { out_pts[i] = in_pts[i].template cast<f32>(); }
     return out_pts;
 }
 } // namespace sm
@@ -224,7 +224,7 @@ namespace sm::draw
 //     const auto& shader = window.context.shaders.at("polyline");
 //     shader.bind();
 //     shader.set("thickness", thickness);
-//     shader.set("screen_dims", window.dims.cast<f64>());
+//     shader.set("screen_dims", window.dims.template cast<f64>());
 
 //     shader.set("view", transform);
 //     shader.set("color", color);

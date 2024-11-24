@@ -43,11 +43,11 @@ auto main() -> i32
     auto forces = VectorField{dims};
     auto rand   = RandomGenerator{1'000'000, RandomMode::Stable, 42};
 
-    const auto dims_f64 = dims.cast<f64>();
+    const auto dims_f64 = dims.template cast<f64>();
 
     // instead of doing any mapping, should change the window view
     // TODO VVIMP mapping pixel space to graph space.
-    const auto aspect_ratio_reciprocal = window.dims.cast<f64>().slope();
+    const auto aspect_ratio_reciprocal = window.dims.template cast<f64>().slope();
     const auto field_to_graph          = [dims_f64, aspect_ratio_reciprocal](Vec2 pos)
     {
         return interp::map_range(
@@ -70,7 +70,7 @@ auto main() -> i32
         for (auto [pos, force] : forces.enumerate_2d())
         {
             const auto noisy_angle =
-                noise::perlin_2d(pos.cast<f64>() +
+                noise::perlin_2d(pos.template cast<f64>() +
                                      Vec2::combine(10) * static_cast<f64>(frame_counter * 0.01),
                                  {.scale = scale, .roughness = 1.0}) *
                 math::two_pi;
@@ -86,7 +86,7 @@ auto main() -> i32
 
         for (auto [i, particle] : ranges::views::enumerate(ps))
         {
-            const auto index = particle.pos.cast<u64>();
+            const auto index = particle.pos.template cast<u64>();
             auto force       = forces.at_or(index, Vec2{0.0, 0.0});
             //     // TODO what if we zero out prev vel and let it move only due to current force
             //     // particle.vel     = Vec2{};
@@ -132,8 +132,8 @@ auto main() -> i32
         for (const auto& particle : ps)
         {
             // when vel is -ve, it gives a cool shadow effect coz of overflow!!!
-            const auto col = (particle.vel.normalized() * 255.0).cast<u8>();
-            // const auto col = (particle.vel.abs().normalized() * 255.0).cast<u8>();
+            const auto col = (particle.vel.normalized() * 255.0).template cast<u8>();
+            // const auto col = (particle.vel.abs().normalized() * 255.0).template cast<u8>();
             const auto colorr = Color{col.x, 0, col.y};
             // const auto colorr = "#ffffff"_c;
 

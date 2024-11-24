@@ -21,7 +21,7 @@ struct Turtle
         //  if window is 500x500 scale to pixel coords
         // 2.0 coz actually need to divide by 250
         // since default coords go from -1 to 1
-        this->window.view.scale = Vec2(2.0, 2.0) / config.dims.cast<f64>();
+        this->window.view.scale = Vec2(2.0, 2.0) / config.dims.template cast<f64>();
     }
 
     std::vector<Vec2f> tri()
@@ -39,7 +39,7 @@ struct Turtle
         }
 
 
-        draw::circle(this->window, {this->pos.cast<f64>(), 2}, {colors::red});
+        draw::circle(this->window, {this->pos.template cast<f64>(), 2}, {colors::red});
         // not drawing the circle gives a garbage triangle?
 
         // TOD shape color
@@ -65,7 +65,8 @@ struct Turtle
     {
         const auto old_pos = this->pos;
         this->pos += Vec2f::from_polar({distance, this->angle});
-        this->segments.push_back(LineSegment{old_pos.cast<f64>(), this->pos.cast<f64>()});
+        this->segments.push_back(
+            LineSegment{old_pos.template cast<f64>(), this->pos.template cast<f64>()});
 
         this->display();
     }

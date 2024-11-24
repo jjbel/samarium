@@ -25,7 +25,7 @@ auto main() -> i32
     // TODO with {40,30},10,2 some go out of window
 
     // default: window dims, but cud be anything
-    // const auto region  = window.dims.cast<f64>();
+    // const auto region  = window.dims.template cast<f64>();
     const auto region  = Vec2{1200, 700};
     const auto samples = 40UL;
     const auto radius  = 20.0;

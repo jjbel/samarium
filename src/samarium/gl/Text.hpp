@@ -193,7 +193,7 @@ struct Text
 
     Vec2f placement_movement(const std::string& text, f32 scale, Placement p) const
     {
-        return bounding_box(text, scale).get_placement(p).cast<f32>();
+        return bounding_box(text, scale).get_placement(p).template cast<f32>();
     }
 
     Box2<f64> bounding_box(const std::string& text, f64 scale, Placement p) const

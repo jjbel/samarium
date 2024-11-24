@@ -59,7 +59,7 @@ auto points_f64(u64 level)
     auto vec = Path(point_count(level));
     for (auto i : loop::end(vec.size()))
     {
-        const auto point = point_at(i32(i), i32(level)).cast<f64>();
+        const auto point = point_at(i32(i), i32(level)).template cast<f64>();
         vec[i]           = (point + Vec2::combine(0.5)) /
                  std::pow(2.0, static_cast<f64>(level)); // rescale to [{0, 0}, {1, 1}]
     }

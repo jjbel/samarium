@@ -226,7 +226,7 @@ struct Window
     // TODO use squash for these? or leave it expanded...
     [[nodiscard]] auto pixel2view() const -> Transform
     {
-        const auto dimsf  = dims.cast<f64>();
+        const auto dimsf  = dims.template cast<f64>();
         const auto factor = dimsf.y / dims.x;
         const auto scale  = Vec2{2.0, -2.0 * factor} / dimsf; // 2 map [0,1] to [-1,1].
         return Transform{{-1.0, factor}, scale};              // todo why +factor not -factor
@@ -397,18 +397,18 @@ SM_INLINE auto Window::is_key_pressed(Key key) const -> bool
 
 SM_INLINE auto Window::aspect_ratio() const -> f64
 {
-    const auto current_dims = dims.cast<f64>();
+    const auto current_dims = dims.template cast<f64>();
     return current_dims.x / current_dims.y;
 }
 
 SM_INLINE auto Window::aspect_vector_min() const -> Vec2
 {
-    return dims.cast<f64>() / static_cast<f64>(math::max(dims.x, dims.y));
+    return dims.template cast<f64>() / static_cast<f64>(math::max(dims.x, dims.y));
 }
 
 SM_INLINE auto Window::aspect_vector_max() const -> Vec2
 {
-    return dims.cast<f64>() / static_cast<f64>(math::min(dims.x, dims.y));
+    return dims.template cast<f64>() / static_cast<f64>(math::min(dims.x, dims.y));
 }
 
 SM_INLINE auto Window::get_image(Image& target) const -> void

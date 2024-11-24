@@ -42,8 +42,8 @@ auto main(int argc, char* argv[]) -> i32
     auto rand = RandomGenerator{};
     window.display();
     const auto box = window.world_box(); // TODO gives a square
-    for (auto& pos : ps.pos) { pos = rand.vector(box).cast<f32>() * 4.0F; }
-    // for (auto& vel : ps.vel) { vel = rand.polar_vector({0, 0.1}).cast<f32>(); }
+    for (auto& pos : ps.pos) { pos = rand.vector(box).template cast<f32>() * 4.0F; }
+    // for (auto& vel : ps.vel) { vel = rand.polar_vector({0, 0.1}).template cast<f32>(); }
     window.camera.scale /= 10.0;
 
 
@@ -64,7 +64,8 @@ auto main(int argc, char* argv[]) -> i32
 
         // const auto c = static_cast<u8>(std::abs(g) * 100);
         // const auto c = static_cast<u8>(200);
-        // draw::line_segment(window, {ps.pos[i].cast<f64>(), ps.pos[j].cast<f64>()},
+        // draw::line_segment(window, {ps.pos[i].template cast<f64>(), ps.pos[j].template
+        // cast<f64>()},
         //                    Color{c, c, c, 30}, 0.01);
 
         return (v / l) * g;
@@ -86,7 +87,7 @@ auto main(int argc, char* argv[]) -> i32
         }
         bench.add("grid draw");
 
-        const auto mouse_pos = window.pixel2world()(window.mouse.pos).cast<f32>();
+        const auto mouse_pos = window.pixel2world()(window.mouse.pos).template cast<f32>();
         // for (auto i : loop::end(ps.size()))
         // {
         //     const auto v = mouse_pos - ps.pos[i];
@@ -154,7 +155,7 @@ auto main(int argc, char* argv[]) -> i32
         ps.draw();
         bench.add("instance draw");
 
-        draw::circle(window, {sun.cast<f64>(), 0.9}, Color{255, 255, 0}, 64);
+        draw::circle(window, {sun.template cast<f64>(), 0.9}, Color{255, 255, 0}, 64);
         draw::circle(window, {{0.1, 0.2}, 0.1}, Color{0, 0, 0, 0});
 
         window.pan();
