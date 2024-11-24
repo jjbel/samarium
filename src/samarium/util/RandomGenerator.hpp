@@ -132,7 +132,7 @@ struct RandomGenerator
 #include "samarium/math/Box2.hpp"        // for Box2
 #include "samarium/math/loop.hpp"        // for start_end
 #include "samarium/math/vector_math.hpp" // for within_distance
-#include "samarium/util/Grid.hpp"        // for Grid
+#include "samarium/util/Grid2.hpp"       // for Grid2
 
 namespace sm
 {

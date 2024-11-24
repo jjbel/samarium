@@ -10,7 +10,7 @@
 #include "samarium/util/Benchmark.hpp"
 #include "samarium/util/Error.hpp"
 #include "samarium/util/FunctionRef.hpp"
-#include "samarium/util/Grid.hpp"
+#include "samarium/util/Grid2.hpp"
 #include "samarium/util/HashGrid.hpp"
 #include "samarium/util/RandomGenerator.hpp"
 #include "samarium/util/Result.hpp"

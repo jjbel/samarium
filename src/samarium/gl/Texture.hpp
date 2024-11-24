@@ -14,7 +14,7 @@
 
 #include "samarium/core/types.hpp" // for u32, i32
 #include "samarium/math/Vec2.hpp"  // for Dimensions
-#include "samarium/util/Grid.hpp"  // for Image
+#include "samarium/util/Grid2.hpp" // for Image
 
 #include "gl.hpp" // for Access
 

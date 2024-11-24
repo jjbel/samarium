@@ -58,7 +58,7 @@ auto main() -> i32
 
 
     auto particles =
-        Grid<Dual<Particle>>::generate(params.particle_count_xy, get_dual_from_indices);
+        Grid2<Dual<Particle>>::generate(params.particle_count_xy, get_dual_from_indices);
 
 
     auto springs = [&]

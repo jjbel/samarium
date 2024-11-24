@@ -35,7 +35,7 @@ namespace sm::poisson_disc
 #include "samarium/math/Box2.hpp"        // for Box2
 #include "samarium/math/loop.hpp"        // for start_end
 #include "samarium/math/vector_math.hpp" // for within_distance
-#include "samarium/util/Grid.hpp"        // for Grid
+#include "samarium/util/Grid2.hpp"       // for Grid2
 
 namespace sm::poisson_disc
 {
@@ -44,7 +44,7 @@ namespace sm::poisson_disc
                                     f64 cell_size,
                                     f64 radius,
                                     const std::vector<Vec2>& points,
-                                    const Grid<i32>& grid)
+                                    const Grid2<i32>& grid)
 {
     // TODO too many casts bw signed and unsigned
 
@@ -94,8 +94,8 @@ namespace sm::poisson_disc
     // grid[x, y] is the index of that cell's particle, in the points vector
     // we only ever push_back to points, so indices are stable
     // use ceil so to ensure the grid covers the entire region
-    auto grid = Grid<i32>{{static_cast<u64>(std::ceil(sample_region_size.x / cell_size)),
-                           static_cast<u64>(std::ceil(sample_region_size.y / cell_size))}};
+    auto grid = Grid2<i32>{{static_cast<u64>(std::ceil(sample_region_size.x / cell_size)),
+                            static_cast<u64>(std::ceil(sample_region_size.y / cell_size))}};
 
     // when we add a point, try to spawn more points around it
     // if it gets too crowded, remove it from spawn_points

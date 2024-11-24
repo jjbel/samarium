@@ -25,7 +25,7 @@
 #include "samarium/math/Transform.hpp" // for Transform
 #include "samarium/math/Vec2.hpp"      // for Dimensions, Vec2_t, Vec2
 #include "samarium/math/math.hpp"      // for min, max
-#include "samarium/util/Grid.hpp"      // for Image
+#include "samarium/util/Grid2.hpp"     // for Image
 
 #include "Mouse.hpp"    // for Mouse
 #include "keyboard.hpp" // for keyboard

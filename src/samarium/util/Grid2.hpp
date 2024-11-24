@@ -41,7 +41,7 @@ inline auto iota_view_2d(Dimensions dims)
            ranges::views::transform([dims](u64 index) { return convert_1d_to_2d(dims, index); });
 }
 
-template <typename T> class Grid
+template <typename T> class Grid2
 {
   public:
     // Container types
@@ -57,18 +57,18 @@ template <typename T> class Grid
     const Dimensions dims;
 
     // Constructors
-    explicit Grid(Dimensions dims_) : elements(dims_.x * dims_.y), dims{dims_} {}
+    explicit Grid2(Dimensions dims_) : elements(dims_.x * dims_.y), dims{dims_} {}
 
-    Grid(Dimensions dims_, T init_value) : elements(dims_.x * dims_.y, init_value), dims{dims_} {}
+    Grid2(Dimensions dims_, T init_value) : elements(dims_.x * dims_.y, init_value), dims{dims_} {}
 
-    explicit Grid(std::span<const T> span, Dimensions dims_)
+    explicit Grid2(std::span<const T> span, Dimensions dims_)
         : elements(span.begin(), span.end()), dims{dims_}
     {
     }
 
     template <typename Fn> static auto generate(Dimensions dims, Fn&& fn)
     {
-        auto grid = Grid<T>(dims);
+        auto grid = Grid2<T>(dims);
         for (auto y : loop::end(dims.y))
         {
             for (auto x : loop::end(dims.x))
@@ -99,7 +99,7 @@ template <typename T> class Grid
         if (indices.x >= dims.x || indices.y >= dims.y) [[unlikely]]
         {
             throw std::out_of_range(
-                fmt::format("sm::Grid: indices ({}, {}) out of range for dimensions ({}, {})",
+                fmt::format("sm::Grid2: indices ({}, {}) out of range for dimensions ({}, {})",
                             indices.x, indices.y, this->dims.x, this->dims.y));
         }
         else [[likely]] { return this->operator[](indices); }
@@ -110,7 +110,7 @@ template <typename T> class Grid
         if (indices.x >= dims.x || indices.y >= dims.y) [[unlikely]]
         {
             throw std::out_of_range(
-                fmt::format("sm::Grid: indices ({}, {}) out of range for dimensions ({}, {})",
+                fmt::format("sm::Grid2: indices ({}, {}) out of range for dimensions ({}, {})",
                             indices.x, indices.y, this->dims.x, this->dims.y));
         }
         else [[likely]] { return this->operator[](indices); }
@@ -121,7 +121,7 @@ template <typename T> class Grid
         if (index >= this->size()) [[unlikely]]
         {
             throw std::out_of_range(
-                fmt::format("sm::Grid: index {} out of range for size {}", index, this->size()));
+                fmt::format("sm::Grid2: index {} out of range for size {}", index, this->size()));
         }
         else [[likely]] { return this->elements[index]; }
     }
@@ -131,7 +131,7 @@ template <typename T> class Grid
         if (index >= this->size()) [[unlikely]]
         {
             throw std::out_of_range(
-                fmt::format("sm::Grid: index {} out of range for size {}", index, this->size()));
+                fmt::format("sm::Grid2: index {} out of range for size {}", index, this->size()));
         }
         else [[likely]] { return this->elements[index]; }
     }
@@ -190,7 +190,7 @@ template <typename T> class Grid
 
     [[nodiscard]] auto upscale(u64 upscale_factor) const
     {
-        auto output = Grid<T>(this->dims * upscale_factor);
+        auto output = Grid2<T>(this->dims * upscale_factor);
         for (auto y : loop::end(output.dims.y))
         {
             for (auto x : loop::end(output.dims.x))
@@ -209,12 +209,12 @@ template <typename T> class Grid
     auto byte_size() const { return size() * sizeof(T); }
 };
 
-using Image = Grid<Color>;
+using Image = Grid2<Color>;
 
 // TODO the fields should have their own transform and rounding, to make indexing easier.
 // see flow_field_noise
-using ScalarField = Grid<f64>;
-using VectorField = Grid<Vec2>;
+using ScalarField = Grid2<f64>;
+using VectorField = Grid2<Vec2>;
 
 constexpr static auto dims4K  = Dimensions{3840UL, 2160UL};
 constexpr static auto dimsFHD = Dimensions{1920UL, 1080UL};
@@ -225,16 +225,16 @@ constexpr static auto dimsP2  = Dimensions{2048UL, 1024UL};
 // TODO grid and box have opposite directions of y-axis
 inline auto subdivide_box(Box2<f64> box, Dimensions rows_cols, f64 scale = 1.0)
 {
-    return Grid<Box2<f64>>::generate(rows_cols,
-                                     [box, rows_cols, scale](Indices pos)
-                                     {
-                                         const auto rows_cols_f64 = rows_cols.cast<f64>();
-                                         const auto pos_f64       = pos.cast<f64>();
-                                         const auto delta         = box.max - box.min;
-                                         return Box2<f64>{box.min + delta / rows_cols_f64 * pos_f64,
-                                                          box.min + delta / rows_cols_f64 *
-                                                                        (pos_f64 + Vec2{1, 1})}
-                                             .scaled(scale);
-                                     });
+    return Grid2<Box2<f64>>::generate(
+        rows_cols,
+        [box, rows_cols, scale](Indices pos)
+        {
+            const auto rows_cols_f64 = rows_cols.cast<f64>();
+            const auto pos_f64       = pos.cast<f64>();
+            const auto delta         = box.max - box.min;
+            return Box2<f64>{box.min + delta / rows_cols_f64 * pos_f64,
+                             box.min + delta / rows_cols_f64 * (pos_f64 + Vec2{1, 1})}
+                .scaled(scale);
+        });
 }
 } // namespace sm

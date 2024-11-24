@@ -11,7 +11,7 @@
 #include "samarium/graphics/Gradient.hpp"
 #include "samarium/graphics/Plot.hpp"
 #include "samarium/graphics/Trail.hpp"
-#include "samarium/util/Grid.hpp" // TODO why is Grid in graphics
+#include "samarium/util/Grid2.hpp" // TODO why is Grid2 in graphics
 
 // #include "samarium/graphics/colors.hpp"
 // #include "samarium/graphics/gradients.hpp"

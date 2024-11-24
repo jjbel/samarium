@@ -12,7 +12,7 @@
 #include <string>           // for string, operator+
 
 #include "samarium/math/Vec2.hpp"   // for Dimensions
-#include "samarium/util/Grid.hpp"   // for Image
+#include "samarium/util/Grid2.hpp"  // for Image
 #include "samarium/util/format.hpp" // for date_time_str
 
 #include "Result.hpp"    // for Result
@@ -122,7 +122,7 @@ auto find(const std::string& file_name, std::initializer_list<Path> search_paths
 #include "samarium/graphics/Color.hpp" // for BGR_t, bgr
 #include "samarium/math/Extents.hpp"   // for range
 #include "samarium/math/Vec2.hpp"      // for Dimensions
-#include "samarium/util/Grid.hpp"      // for Image
+#include "samarium/util/Grid2.hpp"     // for Image
 
 #include "fpng/fpng.hpp"
 
