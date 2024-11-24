@@ -38,15 +38,15 @@ struct Placement
     PlacementY y{};
 };
 
-// use BoundingBox{{}, max}, not BoundingBox{max} for min={0, 0}
-template <concepts::Number T = f64> struct BoundingBox
+// use Box2{{}, max}, not Box2{max} for min={0, 0}
+template <concepts::Number T = f64> struct Box2
 {
     using VecType = Vec2_t<T>;
     VecType min;
     VecType max;
 
     /**
-     * @brief               Make a BoundingBox which fits a range of points
+     * @brief               Make a Box2 which fits a range of points
      *
      * @param  points       points to fit around
      */
@@ -54,14 +54,14 @@ template <concepts::Number T = f64> struct BoundingBox
     {
         const auto [x_min, x_max] = std::ranges::minmax(points, {}, &VecType::x);
         const auto [y_min, y_max] = std::ranges::minmax(points, {}, &VecType::y);
-        return BoundingBox{{x_min.x, y_min.y}, {x_max.x, y_max.y}};
+        return Box2{{x_min.x, y_min.y}, {x_max.x, y_max.y}};
     }
 
     // TODO rename this union or smthg
     // return a box which tightly encloses a and b
-    [[nodiscard]] static constexpr auto fit_boxes(BoundingBox<T> a, BoundingBox<T> b)
+    [[nodiscard]] static constexpr auto fit_boxes(Box2<T> a, Box2<T> b)
     {
-        auto box  = BoundingBox<T>{};
+        auto box  = Box2<T>{};
         box.min.x = a.min.x < b.min.x ? a.min.x : b.min.x;
         box.min.y = a.min.y < b.min.y ? a.min.y : b.min.y;
         box.max.x = a.max.x > b.max.x ? a.max.x : b.max.x;
@@ -79,20 +79,20 @@ template <concepts::Number T = f64> struct BoundingBox
     // TODO rename cast
     template <concepts::Number U> [[nodiscard]] constexpr auto cast() const
     {
-        return BoundingBox<U>{min.template cast<U>(), max.template cast<U>()};
+        return Box2<U>{min.template cast<U>(), max.template cast<U>()};
     }
 
     [[nodiscard]] static constexpr auto square(T width) noexcept
         requires std::is_signed_v<T>
     {
         width = std::abs(width / 2); // recenter, make +ve
-        return BoundingBox{.min{-width, -width}, .max{width, width}};
+        return Box2{.min{-width, -width}, .max{width, width}};
     }
 
     [[nodiscard]] static constexpr auto find_min_max(VecType p1, VecType p2)
     {
-        return BoundingBox<T>{{math::min(p1.x, p2.x), math::min(p1.y, p2.y)},
-                              {math::max(p1.x, p2.x), math::max(p1.y, p2.y)}};
+        return Box2<T>{{math::min(p1.x, p2.x), math::min(p1.y, p2.y)},
+                       {math::max(p1.x, p2.x), math::max(p1.y, p2.y)}};
     }
 
     // TODO remove validation
@@ -109,7 +109,7 @@ template <concepts::Number T = f64> struct BoundingBox
     from_centre_width_height(VecType centre, T width, T height) noexcept
     {
         const auto vec = VecType{.x = width / static_cast<T>(2), .y = height / static_cast<T>(2)};
-        return BoundingBox{centre - vec, centre + vec};
+        return Box2{centre - vec, centre + vec};
     }
 
     [[nodiscard]] constexpr auto contains(VecType vec) const noexcept
@@ -125,13 +125,13 @@ template <concepts::Number T = f64> struct BoundingBox
                        Extents<T>{min.y, max.y}.clamp(vec.y)};
     }
 
-    [[nodiscard]] constexpr auto clamped_to(BoundingBox<T> bounds) const
+    [[nodiscard]] constexpr auto clamped_to(Box2<T> bounds) const
     {
         using ext        = Extents<T>;
         const auto ext_x = ext{bounds.min.x, bounds.max.x};
         const auto ext_y = ext{bounds.min.y, bounds.max.y};
-        return BoundingBox<T>{{ext_x.clamp(min.x), ext_y.clamp(min.y)},
-                              {ext_x.clamp(max.x), ext_y.clamp(max.y)}};
+        return Box2<T>{{ext_x.clamp(min.x), ext_y.clamp(min.y)},
+                       {ext_x.clamp(max.x), ext_y.clamp(max.y)}};
     }
 
     [[nodiscard]] constexpr auto width() const { return max.x - min.x; }
@@ -140,7 +140,7 @@ template <concepts::Number T = f64> struct BoundingBox
     [[nodiscard]] constexpr auto x_range() const { return Extents<T>{min.x, max.x}; }
     [[nodiscard]] constexpr auto y_range() const { return Extents<T>{min.y, max.y}; }
 
-    [[nodiscard]] constexpr bool operator==(const BoundingBox<T>&) const = default;
+    [[nodiscard]] constexpr bool operator==(const Box2<T>&) const = default;
 
     [[nodiscard]] constexpr auto centre() const noexcept { return (min + max) / static_cast<T>(2); }
 

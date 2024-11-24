@@ -17,7 +17,7 @@
 #include "samarium/gl/draw/shapes.hpp"
 #include "samarium/graphics/Color.hpp"
 #include "samarium/gui/Window.hpp"
-#include "samarium/math/BoundingBox.hpp"
+#include "samarium/math/Box2.hpp"
 #include "samarium/math/Vec2.hpp"
 #include "samarium/util/unordered.hpp"
 
@@ -72,7 +72,7 @@ struct Plot
 
     // TODO gridlines
 
-    BoundingBox<Float> box{};
+    Box2<Float> box{};
 
     BoxStyle box_style{};
     Axis x_axis{};
@@ -141,9 +141,9 @@ struct Plot
 
   private:
     // TODO add default if no points / 1 point
-    BoundingBox<f64> bounding_box_plot_space() const
+    Box2<f64> bounding_box_plot_space() const
     {
-        using Box       = BoundingBox<f32>;
+        using Box       = Box2<f32>;
         auto box_       = Box{};
         auto flag_first = true;
         for (const auto& [key, trace] : traces)

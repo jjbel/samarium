@@ -14,11 +14,11 @@
 #include "range/v3/algorithm/generate.hpp" // for generate, generate_fn
 #include "range/v3/range/concepts.hpp"     // for random_access_range
 
-#include "samarium/core/types.hpp"       // for f64, u64
-#include "samarium/math/BoundingBox.hpp" // for BoundingBox
-#include "samarium/math/Extents.hpp"     // for Extents
-#include "samarium/math/Vec2.hpp"        // for Vec2
-#include "samarium/math/math.hpp"        // for pi
+#include "samarium/core/types.hpp"   // for f64, u64
+#include "samarium/math/Box2.hpp"    // for Box2
+#include "samarium/math/Extents.hpp" // for Extents
+#include "samarium/math/Vec2.hpp"    // for Vec2
+#include "samarium/math/math.hpp"    // for pi
 
 namespace sm
 {
@@ -85,7 +85,7 @@ struct RandomGenerator
         return static_cast<T>(extents.lerp(this->random()));
     }
 
-    [[nodiscard]] auto vector(const BoundingBox<f64>& bounding_box) noexcept -> Vec2;
+    [[nodiscard]] auto vector(const Box2<f64>& bounding_box) noexcept -> Vec2;
 
     [[nodiscard]] auto polar_vector(Extents<f64> radius_range,
                                     Extents<f64> angle_range = {0.0,
@@ -103,7 +103,7 @@ struct RandomGenerator
 
     // TODO remove this
     [[nodiscard]] auto poisson_disc_points(f64 radius,
-                                           BoundingBox<f64> sample_region,
+                                           Box2<f64> sample_region,
                                            u64 sample_count = 30UL) -> std::vector<Vec2>;
 
     [[nodiscard]] auto boolean(f64 threshold = 0.5) -> bool;
@@ -129,7 +129,7 @@ struct RandomGenerator
 
 #include "range/v3/algorithm/generate.hpp" // for generate, generate_fn
 
-#include "samarium/math/BoundingBox.hpp" // for BoundingBox
+#include "samarium/math/Box2.hpp"        // for Box2
 #include "samarium/math/loop.hpp"        // for start_end
 #include "samarium/math/vector_math.hpp" // for within_distance
 #include "samarium/util/Grid.hpp"        // for Grid
@@ -164,7 +164,7 @@ void RandomGenerator::reseed(u64 new_seed)
 
 [[nodiscard]] auto RandomGenerator::operator()() -> f64 { return this->random(); }
 
-[[nodiscard]] auto RandomGenerator::vector(const BoundingBox<f64>& bounding_box) noexcept -> Vec2
+[[nodiscard]] auto RandomGenerator::vector(const Box2<f64>& bounding_box) noexcept -> Vec2
 {
     return Vec2{this->range<f64>({bounding_box.min.x, bounding_box.max.x}),
                 this->range<f64>({bounding_box.min.y, bounding_box.max.y})};

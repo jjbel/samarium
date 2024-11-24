@@ -159,16 +159,16 @@ struct Text
     }
 
     // returns in pixels, ie not divided by pixel_height
-    BoundingBox<f64> bounding_box(const Character& c, f64 existing_advance = 0) const
+    Box2<f64> bounding_box(const Character& c, f64 existing_advance = 0) const
     {
         return {{existing_advance, static_cast<f64>(c.bearing.y) - static_cast<f64>(c.size.y)},
                 {existing_advance + static_cast<f64>(c.advance), static_cast<f64>(c.bearing.y)}};
     }
 
-    BoundingBox<f64> bounding_box(const std::string& text, f64 scale = 1.0) const
+    Box2<f64> bounding_box(const std::string& text, f64 scale = 1.0) const
     {
         auto current_advance = f32{};
-        auto box             = BoundingBox<f64>{};
+        auto box             = Box2<f64>{};
         bool first           = true;
 
         for (auto c : text)
@@ -180,7 +180,7 @@ struct Text
                 box   = ch_box;
                 first = false;
             }
-            else if (ch.size.x * ch.size.y != 0) { box = BoundingBox<f64>::fit_boxes(box, ch_box); }
+            else if (ch.size.x * ch.size.y != 0) { box = Box2<f64>::fit_boxes(box, ch_box); }
 
             current_advance += ch.advance;
         }
@@ -196,7 +196,7 @@ struct Text
         return bounding_box(text, scale).get_placement(p).cast<f32>();
     }
 
-    BoundingBox<f64> bounding_box(const std::string& text, f64 scale, Placement p) const
+    Box2<f64> bounding_box(const std::string& text, f64 scale, Placement p) const
     {
         auto box         = bounding_box(text, scale);
         const auto delta = -box.get_placement(p);

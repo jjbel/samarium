@@ -118,10 +118,10 @@ TEST_CASE("geometry")
             REQUIRE(math::almost_equal(math::area(Circle{.radius = 12.0}), 452.3893421169302));
         }
 
-        SECTION("BoundingBox")
+        SECTION("Box2")
         {
-            REQUIRE(math::area(BoundingBox<double>{}) == 0.0);
-            REQUIRE(math::area(BoundingBox<double>{{-10.0, -11.0}, {12.0, 13.0}}) == 528.0);
+            REQUIRE(math::area(Box2<double>{}) == 0.0);
+            REQUIRE(math::area(Box2<double>{{-10.0, -11.0}, {12.0, 13.0}}) == 528.0);
         }
     }
 }

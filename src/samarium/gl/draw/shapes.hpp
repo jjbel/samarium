@@ -78,19 +78,15 @@ inline void line(Window& window, const LineSegment& line_, Color color, f32 thic
     line(window, line_, color, thickness, window.world2gl());
 }
 
-inline void bounding_box(Window& window,
-                         const BoundingBox<f64>& box,
-                         Color color,
-                         f32 thickness,
-                         const glm::mat4& transform)
+inline void bounding_box(
+    Window& window, const Box2<f64>& box, Color color, f32 thickness, const glm::mat4& transform)
 {
     for (const auto& line : box.line_segments())
     {
         line_segment(window, line, color, thickness, transform);
     }
 }
-inline void
-bounding_box(Window& window, const BoundingBox<f64>& box, Color color, f32 thickness = 0.02F)
+inline void bounding_box(Window& window, const Box2<f64>& box, Color color, f32 thickness = 0.02F)
 {
     bounding_box(window, box, color, thickness, window.world2gl());
 }

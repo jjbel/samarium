@@ -13,7 +13,7 @@
 #include "samarium/util/SmallVector.hpp"  // for SmallVector
 #include "samarium/util/StaticVector.hpp" // for StaticVector
 
-#include "BoundingBox.hpp"
+#include "Box2.hpp"
 #include "Vec2.hpp" // for Vec2_t
 #include "interp.hpp"
 #include "loop.hpp" // for start_end
@@ -112,7 +112,7 @@ clamped_intersection(const LineSegment& l1, const LineSegment& l2) noexcept -> s
     return std::nullopt;
 }
 
-[[nodiscard]] inline auto intersection(const LineSegment& line_segment, const BoundingBox<f64>& box)
+[[nodiscard]] inline auto intersection(const LineSegment& line_segment, const Box2<f64>& box)
 {
     // TODO check if point is vertex of box
     auto points = StaticVector<Vec2, 4>{};
@@ -127,7 +127,7 @@ clamped_intersection(const LineSegment& l1, const LineSegment& l2) noexcept -> s
     return points;
 }
 
-template <typename T> [[nodiscard]] constexpr auto area(BoundingBox<T> bounding_box) noexcept
+template <typename T> [[nodiscard]] constexpr auto area(Box2<T> bounding_box) noexcept
 {
     return (bounding_box.max.x - bounding_box.min.x) * (bounding_box.max.y - bounding_box.min.y);
 }
@@ -137,7 +137,7 @@ template <typename T> [[nodiscard]] constexpr auto area(BoundingBox<T> bounding_
     return math::pi * circle.radius * circle.radius;
 }
 
-template <typename T> [[nodiscard]] constexpr auto abs_area(BoundingBox<T> bounding_box) noexcept
+template <typename T> [[nodiscard]] constexpr auto abs_area(Box2<T> bounding_box) noexcept
 {
     return math::abs(area(bounding_box));
 }

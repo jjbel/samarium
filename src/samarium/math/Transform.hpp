@@ -10,7 +10,7 @@
 #include "glm/ext/matrix_float4x4.hpp" // for mat4
 #include "glm/gtx/transform.hpp"
 
-#include "BoundingBox.hpp"
+#include "Box2.hpp"
 #include "samarium/math/math.hpp"
 #include "shapes.hpp"
 
@@ -26,8 +26,7 @@ class Transform
     // maybe useful for animating scaled rotations, or for vector math
     // but for drawing, most likely will be axis aligned, ie multiple of 90 degrees
 
-    [[nodiscard]] static constexpr auto map_boxes_from_to(BoundingBox<f64> from,
-                                                          BoundingBox<f64> to)
+    [[nodiscard]] static constexpr auto map_boxes_from_to(Box2<f64> from, Box2<f64> to)
     {
         // equations:
         // min1 * scale + pos = min2
@@ -50,9 +49,9 @@ class Transform
         return vec * scale.cast<f32>() + pos.cast<f32>();
     }
 
-    [[nodiscard]] constexpr auto apply(const BoundingBox<f64>& bounding_box) const noexcept
+    [[nodiscard]] constexpr auto apply(const Box2<f64>& bounding_box) const noexcept
     {
-        return BoundingBox<f64>{apply(bounding_box.min), apply(bounding_box.max)}.validated();
+        return Box2<f64>{apply(bounding_box.min), apply(bounding_box.max)}.validated();
     }
 
     [[nodiscard]] constexpr auto apply_inverse(Vec2 vec) const noexcept
@@ -60,9 +59,9 @@ class Transform
         return (vec - pos) / scale;
     }
 
-    [[nodiscard]] constexpr auto apply_inverse(const BoundingBox<f64>& bounding_box) const noexcept
+    [[nodiscard]] constexpr auto apply_inverse(const Box2<f64>& bounding_box) const noexcept
     {
-        return BoundingBox<f64>::find_min_max(
+        return Box2<f64>::find_min_max(
             this->apply_inverse(bounding_box.min),
             this->apply_inverse(
                 bounding_box.max)); // -ve sign may invalidate min, max, so recalculate it

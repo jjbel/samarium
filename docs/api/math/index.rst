@@ -11,6 +11,6 @@ Core math utilities
     math
     Vec2
     interp
-    BoundingBox
+    Box2
     sample
     SecondOrderDynamics

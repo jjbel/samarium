@@ -15,7 +15,7 @@
 
 #include "samarium/core/version.hpp"
 #include "samarium/graphics/Color.hpp"
-#include "samarium/math/BoundingBox.hpp"
+#include "samarium/math/Box2.hpp"
 #include "samarium/math/Transform.hpp"
 #include "samarium/math/Vec2.hpp"
 #include "samarium/math/complex.hpp"
@@ -93,16 +93,16 @@ template <> class formatter<sm::Color>
 };
 
 
-template <sm::concepts::Number T> class formatter<sm::BoundingBox<T>>
+template <sm::concepts::Number T> class formatter<sm::Box2<T>>
 {
   public:
     constexpr auto parse(const format_parse_context& ctx) { return ctx.begin(); }
 
-    auto format(const sm::BoundingBox<T>& p, auto& ctx) const
+    auto format(const sm::Box2<T>& p, auto& ctx) const
     {
         return fmt::format_to(ctx.out(),
                               R"(
-BoundingBox(min = {},
+Box2(min = {},
             max = {})
 )",
                               p.min, p.max);

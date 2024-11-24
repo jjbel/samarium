@@ -17,15 +17,15 @@
 #include "glm/ext/matrix_float4x4.hpp"             // for mat4
 #include "samarium/util/call_thunk/call_thunk.hpp" // for thunk
 
-#include "samarium/core/types.hpp"       // for f64, i32, u64, f32
-#include "samarium/gl/Context.hpp"       // for Context
-#include "samarium/gl/Texture.hpp"       // for Texture
-#include "samarium/gl/gl.hpp"            // for enable_debug_output, versio...
-#include "samarium/math/BoundingBox.hpp" // for BoundingBox
-#include "samarium/math/Transform.hpp"   // for Transform
-#include "samarium/math/Vec2.hpp"        // for Dimensions, Vec2_t, Vec2
-#include "samarium/math/math.hpp"        // for min, max
-#include "samarium/util/Grid.hpp"        // for Image
+#include "samarium/core/types.hpp"     // for f64, i32, u64, f32
+#include "samarium/gl/Context.hpp"     // for Context
+#include "samarium/gl/Texture.hpp"     // for Texture
+#include "samarium/gl/gl.hpp"          // for enable_debug_output, versio...
+#include "samarium/math/Box2.hpp"      // for Box2
+#include "samarium/math/Transform.hpp" // for Transform
+#include "samarium/math/Vec2.hpp"      // for Dimensions, Vec2_t, Vec2
+#include "samarium/math/math.hpp"      // for min, max
+#include "samarium/util/Grid.hpp"      // for Image
 
 #include "Mouse.hpp"    // for Mouse
 #include "keyboard.hpp" // for keyboard
@@ -194,12 +194,12 @@ struct Window
     //  * @brief               The bounds of the visible region of the window
     //  *
     //  * @tparam space
-    //  * @return BoundingBox<f64>
+    //  * @return Box2<f64>
     //  */
-    // template <Space space = Space::World> [[nodiscard]] auto viewport() const -> BoundingBox<f64>
+    // template <Space space = Space::World> [[nodiscard]] auto viewport() const -> Box2<f64>
     // {
     //     const auto ratio = aspect_ratio();
-    //     const auto box   = BoundingBox<f64>{{-ratio, -1.0}, {ratio, 1.0}};
+    //     const auto box   = Box2<f64>{{-ratio, -1.0}, {ratio, 1.0}};
 
     //     if constexpr (space == Space::World)
     //     {
@@ -241,10 +241,10 @@ struct Window
 
     [[nodiscard]] auto world2pixel() const -> Transform { return pixel2world().inverse(); }
 
-    [[nodiscard]] auto world_box() const -> BoundingBox<f64>
+    [[nodiscard]] auto world_box() const -> Box2<f64>
     {
         const auto transform = gl2world();
-        return BoundingBox{.min = transform(Vec2{-1.0, -1.0}), .max = transform(Vec2{1.0, 1.0})};
+        return Box2{.min = transform(Vec2{-1.0, -1.0}), .max = transform(Vec2{1.0, 1.0})};
     }
 
     // mouse movement in world coords

@@ -11,9 +11,9 @@
 
 #include "glad/glad.h" // for GL_FLOAT, GL_TRUE, GL_UNSIGNED_BYTE
 
-#include "samarium/core/types.hpp"       // for f32
-#include "samarium/math/BoundingBox.hpp" // for BoundingBox
-#include "samarium/util/unordered.hpp"   // for Map
+#include "samarium/core/types.hpp"     // for f32
+#include "samarium/math/Box2.hpp"      // for Box2
+#include "samarium/util/unordered.hpp" // for Map
 
 #include "Framebuffer.hpp" // for Framebuffer
 #include "Shader.hpp"      // for Shader, FragmentShader, VertexShader

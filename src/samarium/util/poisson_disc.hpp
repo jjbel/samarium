@@ -9,8 +9,8 @@
 
 #include <vector> // for vector
 
-#include "samarium/core/types.hpp"       // for f64, u64, i64, i32
-#include "samarium/math/BoundingBox.hpp" // for BoundingBox
+#include "samarium/core/types.hpp" // for f64, u64, i64, i32
+#include "samarium/math/Box2.hpp"  // for Box2
 // #include "samarium/math/Extents.hpp"     // for Extents
 #include "samarium/math/Vec2.hpp"            // for Vec2
 #include "samarium/math/math.hpp"            // for pi
@@ -25,14 +25,14 @@ namespace sm::poisson_disc
 // Their centres are 2r away, so run with 2 * radius
 [[nodiscard]] auto uniform(RandomGenerator& rng,
                            f64 radius,
-                           BoundingBox<f64> sample_region,
+                           Box2<f64> sample_region,
                            u64 sample_count) -> std::vector<Vec2>;
 } // namespace sm::poisson_disc
 
 
 #if defined(SAMARIUM_HEADER_ONLY) || defined(SAMARIUM_POISSON_DISC_IMPL)
 
-#include "samarium/math/BoundingBox.hpp" // for BoundingBox
+#include "samarium/math/Box2.hpp"        // for Box2
 #include "samarium/math/loop.hpp"        // for start_end
 #include "samarium/math/vector_math.hpp" // for within_distance
 #include "samarium/util/Grid.hpp"        // for Grid
@@ -48,7 +48,7 @@ namespace sm::poisson_disc
 {
     // TODO too many casts bw signed and unsigned
 
-    // TODO use BoundingBox
+    // TODO use Box2
     // TODO should check > radius, not > 0 ?
     if (!(candidate.x >= 0.0 && candidate.x < sample_region.x && candidate.y >= 0.0 &&
           candidate.y < sample_region.y))
@@ -84,7 +84,7 @@ namespace sm::poisson_disc
 
 [[nodiscard]] auto uniform(RandomGenerator& rng,
                            f64 radius,
-                           BoundingBox<f64> sample_region,
+                           Box2<f64> sample_region,
                            u64 sample_count) -> std::vector<Vec2>
 {
     // at most one disc can fit in one cell

@@ -1,6 +1,6 @@
 Bounding Box
 ============
 
-File: :src:`math/BoundingBox.hpp`
+File: :src:`math/Box2.hpp`
 
-.. doxygenfile:: BoundingBox.hpp
+.. doxygenfile:: Box2.hpp

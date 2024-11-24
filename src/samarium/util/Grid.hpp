@@ -19,9 +19,9 @@
 #include "range/v3/view/transform.hpp"
 #include "range/v3/view/zip.hpp"
 
-#include "samarium/graphics/Color.hpp"   // for Color
-#include "samarium/math/BoundingBox.hpp" // for BoundingBox
-#include "samarium/math/loop.hpp"        // for end
+#include "samarium/graphics/Color.hpp" // for Color
+#include "samarium/math/Box2.hpp"      // for Box2
+#include "samarium/math/loop.hpp"      // for end
 
 namespace sm
 {
@@ -166,7 +166,7 @@ template <typename T> class Grid
     auto size() const { return this->elements.size(); }
     auto empty() const { return this->elements.size() == 0; }
 
-    auto bounding_box() const { return BoundingBox<u64>{Indices{}, dims - Indices{1, 1}}; }
+    auto bounding_box() const { return Box2<u64>{Indices{}, dims - Indices{1, 1}}; }
 
     auto fill(const T& value) { this->elements.fill(value); }
 
@@ -223,18 +223,18 @@ constexpr static auto dims480 = Dimensions{640UL, 480UL};
 constexpr static auto dimsP2  = Dimensions{2048UL, 1024UL};
 
 // TODO grid and box have opposite directions of y-axis
-inline auto subdivide_box(BoundingBox<f64> box, Dimensions rows_cols, f64 scale = 1.0)
+inline auto subdivide_box(Box2<f64> box, Dimensions rows_cols, f64 scale = 1.0)
 {
-    return Grid<BoundingBox<f64>>::generate(
-        rows_cols,
-        [box, rows_cols, scale](Indices pos)
-        {
-            const auto rows_cols_f64 = rows_cols.cast<f64>();
-            const auto pos_f64       = pos.cast<f64>();
-            const auto delta         = box.max - box.min;
-            return BoundingBox<f64>{box.min + delta / rows_cols_f64 * pos_f64,
-                                    box.min + delta / rows_cols_f64 * (pos_f64 + Vec2{1, 1})}
-                .scaled(scale);
-        });
+    return Grid<Box2<f64>>::generate(rows_cols,
+                                     [box, rows_cols, scale](Indices pos)
+                                     {
+                                         const auto rows_cols_f64 = rows_cols.cast<f64>();
+                                         const auto pos_f64       = pos.cast<f64>();
+                                         const auto delta         = box.max - box.min;
+                                         return Box2<f64>{box.min + delta / rows_cols_f64 * pos_f64,
+                                                          box.min + delta / rows_cols_f64 *
+                                                                        (pos_f64 + Vec2{1, 1})}
+                                             .scaled(scale);
+                                     });
 }
 } // namespace sm
