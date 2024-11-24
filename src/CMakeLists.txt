@@ -6,11 +6,11 @@ cmake_minimum_required(VERSION 3.30)
 
 # TODO set langs list? "CXX CUDA" and "CXX;CUDA" didn't work
 if(SAMARIUM_ENABLE_CUDA)
-    project(samarium VERSION 1.1.0 LANGUAGES CXX CUDA)
     message(STATUS "Cuda enabled.")
-else()
     project(samarium VERSION 1.1.0 LANGUAGES CXX CUDA)
+else()
     message(STATUS "Cuda disabled.")
+    project(samarium VERSION 1.1.0 LANGUAGES CXX)
 endif()
 
 # why not target_compile_features(particles PUBLIC cxx_std_11)
