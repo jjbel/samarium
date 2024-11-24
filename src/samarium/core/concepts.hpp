@@ -9,7 +9,7 @@
 #include <concepts>
 #include <iterator>
 
-#include "range/v3/range/concepts.hpp"
+// #include "range/v3/range/concepts.hpp"
 
 #include "types.hpp"
 
@@ -38,12 +38,13 @@ concept Arithmetic = requires(T a, T b) {
 template <typename T, typename... U>
 concept AnyOf = (std::same_as<T, U> || ...);
 
-/**
- * @brief               Is T a range of V's
- *
- * @tparam T
- * @tparam V
- */
-template <class T, class V>
-concept Iterable = std::ranges::range<T> && std::same_as<V, std::ranges::range_value_t<T>>;
+// removing coz cuda complains about range-v3
+// /**
+//  * @brief               Is T a range of V's
+//  *
+//  * @tparam T
+//  * @tparam V
+//  */
+// template <class T, class V>
+// concept Iterable = std::ranges::range<T> && std::same_as<V, std::ranges::range_value_t<T>>;
 } // namespace sm::concepts
