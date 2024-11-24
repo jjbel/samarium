@@ -17,7 +17,7 @@
 #include "samarium/graphics/Color.hpp"
 #include "samarium/math/BoundingBox.hpp"
 #include "samarium/math/Transform.hpp"
-#include "samarium/math/Vector2.hpp"
+#include "samarium/math/Vec2.hpp"
 #include "samarium/math/complex.hpp"
 #include "samarium/math/shapes.hpp"
 #include "samarium/physics/Particle.hpp"
@@ -25,7 +25,7 @@
 
 namespace fmt
 {
-template <sm::concepts::Integral T> class formatter<sm::Vector2_t<T>>
+template <sm::concepts::Integral T> class formatter<sm::Vec2_t<T>>
 {
   public:
     // as of fmt 11, should be marked const
@@ -34,24 +34,24 @@ template <sm::concepts::Integral T> class formatter<sm::Vector2_t<T>>
 
     constexpr auto parse(const format_parse_context& ctx) { return ctx.begin(); }
 
-    constexpr auto format(sm::Vector2_t<T> p, auto& ctx) const
+    constexpr auto format(sm::Vec2_t<T> p, auto& ctx) const
     {
         return fmt::format_to(ctx.out(), "({:>3}, {:>3})", p.x, p.y);
     }
 };
 
-template <sm::concepts::FloatingPoint T> class formatter<sm::Vector2_t<T>>
+template <sm::concepts::FloatingPoint T> class formatter<sm::Vec2_t<T>>
 {
   public:
     constexpr auto parse(const format_parse_context& ctx) { return ctx.begin(); }
 
-    constexpr auto format(sm::Vector2_t<T> p, auto& ctx) const
+    constexpr auto format(sm::Vec2_t<T> p, auto& ctx) const
     {
         return fmt::format_to(ctx.out(), "({:6.3f}, {:6.3f})", p.x, p.y);
     }
 };
 
-template <typename T, typename Char> struct is_tuple_formattable<sm::Vector2_t<T>, Char>
+template <typename T, typename Char> struct is_tuple_formattable<sm::Vec2_t<T>, Char>
 {
     static constexpr auto value = false;
 };

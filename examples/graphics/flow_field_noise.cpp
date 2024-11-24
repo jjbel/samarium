@@ -48,7 +48,7 @@ auto main() -> i32
     // instead of doing any mapping, should change the window view
     // TODO VVIMP mapping pixel space to graph space.
     const auto aspect_ratio_reciprocal = window.dims.cast<f64>().slope();
-    const auto field_to_graph          = [dims_f64, aspect_ratio_reciprocal](Vector2 pos)
+    const auto field_to_graph          = [dims_f64, aspect_ratio_reciprocal](Vec2 pos)
     {
         return interp::map_range(
             pos, {{}, dims_f64},
@@ -57,7 +57,7 @@ auto main() -> i32
 
     for (auto& particle : ps)
     {
-        particle.pos    = rand.vector({.min = Vector2{0.0, 0.0}, .max = dims_f64});
+        particle.pos    = rand.vector({.min = Vec2{0.0, 0.0}, .max = dims_f64});
         particle.radius = radius;
     }
 
@@ -71,12 +71,12 @@ auto main() -> i32
         {
             const auto noisy_angle =
                 noise::perlin_2d(pos.cast<f64>() +
-                                     Vector2::combine(10) * static_cast<f64>(frame_counter * 0.01),
+                                     Vec2::combine(10) * static_cast<f64>(frame_counter * 0.01),
                                  {.scale = scale, .roughness = 1.0}) *
                 math::two_pi;
             // TODO frame_counter is always zero here, how were we using it? make flow field slowly
             // change?
-            force = Vector2::from_polar({.length = max_force, .angle = noisy_angle});
+            force = Vec2::from_polar({.length = max_force, .angle = noisy_angle});
         }
 
         bench.add("update forces");
@@ -87,9 +87,9 @@ auto main() -> i32
         for (auto [i, particle] : ranges::views::enumerate(ps))
         {
             const auto index = particle.pos.cast<u64>();
-            auto force       = forces.at_or(index, Vector2{0.0, 0.0});
+            auto force       = forces.at_or(index, Vec2{0.0, 0.0});
             //     // TODO what if we zero out prev vel and let it move only due to current force
-            //     // particle.vel     = Vector2{};
+            //     // particle.vel     = Vec2{};
 
             //     // if (math::distance(field_to_graph(particle.pos), window.mouse.pos) <=
             //     mouse_dist)

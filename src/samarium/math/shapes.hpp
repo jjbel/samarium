@@ -9,22 +9,22 @@
 
 #include "samarium/core/types.hpp" // for f64
 
-#include "Vector2.hpp" // for Vector2
+#include "Vec2.hpp" // for Vec2
 
 namespace sm
 {
 struct Circle
 {
-    Vector2 centre{};
+    Vec2 centre{};
     f64 radius{};
 
     [[nodiscard]] constexpr auto at_angle(f64 angle) const noexcept
     {
-        return centre + Vector2::from_polar({.length = radius, .angle = angle});
+        return centre + Vec2::from_polar({.length = radius, .angle = angle});
     }
 
     /* Assuming point is on Circle, move it counter-clockwise */
-    [[nodiscard]] constexpr auto move_along(Vector2 point, f64 distance) const noexcept
+    [[nodiscard]] constexpr auto move_along(Vec2 point, f64 distance) const noexcept
     {
         return centre + (point - centre).rotated(distance / this->radius);
     }
@@ -32,8 +32,8 @@ struct Circle
 
 struct LineSegment
 {
-    Vector2 p1{};
-    Vector2 p2{};
+    Vec2 p1{};
+    Vec2 p2{};
 
     struct StandardForm
     {
@@ -58,7 +58,7 @@ struct LineSegment
         return StandardForm{.a = a, .b = b, .c = c};
     }
 
-    constexpr auto translate(Vector2 amount) noexcept
+    constexpr auto translate(Vec2 amount) noexcept
     {
         this->p1 += amount;
         this->p2 += amount;

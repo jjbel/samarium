@@ -12,14 +12,14 @@
 
 #include "range/v3/algorithm/rotate.hpp" // for rotate, rotate_fn
 
-#include "samarium/core/types.hpp"   // for u64
-#include "samarium/math/Vector2.hpp" // for Vector2
+#include "samarium/core/types.hpp" // for u64
+#include "samarium/math/Vec2.hpp"  // for Vec2
 
 namespace sm
 {
 struct Trail
 {
-    std::vector<Vector2> trail;
+    std::vector<Vec2> trail;
     u64 max_length;
 
     explicit Trail(u64 length = 50) : max_length{length} { trail.reserve(length); }
@@ -39,9 +39,9 @@ struct Trail
     auto operator[](u64 index) noexcept { return trail[index]; }
     auto operator[](u64 index) const noexcept { return trail[index]; }
 
-    void push_back(Vector2 pos);
+    void push_back(Vec2 pos);
 
-    [[nodiscard]] auto span() const -> std::span<const Vector2>;
+    [[nodiscard]] auto span() const -> std::span<const Vec2>;
 };
 } // namespace sm
 
@@ -53,7 +53,7 @@ struct Trail
 
 namespace sm
 {
-void Trail::push_back(Vector2 pos)
+void Trail::push_back(Vec2 pos)
 {
     if (this->max_length > this->trail.size()) { this->trail.push_back(pos); }
     else
@@ -63,6 +63,6 @@ void Trail::push_back(Vector2 pos)
     }
 }
 
-auto Trail::span() const -> std::span<const Vector2> { return {this->trail}; }
+auto Trail::span() const -> std::span<const Vec2> { return {this->trail}; }
 } // namespace sm
 #endif

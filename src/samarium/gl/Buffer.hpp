@@ -16,7 +16,7 @@
 #include "range/v3/range/concepts.hpp" // for range
 
 #include "samarium/core/types.hpp"     // for u32
-#include "samarium/math/Vector2.hpp"   // for Vector2f
+#include "samarium/math/Vec2.hpp"      // for Vec2f
 #include "samarium/util/Error.hpp"     // for Error
 #include "samarium/util/Result.hpp"    // for Result
 #include "samarium/util/byte_size.hpp" // for byte_size

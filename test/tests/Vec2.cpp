@@ -5,7 +5,7 @@
  * Project homepage: https://github.com/jjbel/samarium
  */
 
-#include "samarium/math/Vector2.hpp"
+#include "samarium/math/Vec2.hpp"
 #include "samarium/math/vector_math.hpp"
 #include "samarium/samarium.hpp"
 
@@ -14,24 +14,24 @@
 using namespace sm;
 using namespace sm::literals;
 
-TEST_CASE("Vector2 Literals")
+TEST_CASE("Vec2 Literals")
 {
     const auto a_x = 1.0_x;
-    const auto b_x = Vector2{1.0, 0};
+    const auto b_x = Vec2{1.0, 0};
     REQUIRE(a_x == b_x);
 
     const auto a_y = 1.0_y;
-    const auto b_y = Vector2{0, 1.0};
+    const auto b_y = Vec2{0, 1.0};
     REQUIRE(a_y == b_y);
 }
 
-TEST_CASE("Vector2")
+TEST_CASE("Vec2")
 {
-    static_assert(std::is_same_v<Vector2::value_type, f64>);
+    static_assert(std::is_same_v<Vec2::value_type, f64>);
 
     SECTION("x vector")
     {
-        const auto a = Vector2{1.0, 0.0};
+        const auto a = Vec2{1.0, 0.0};
         REQUIRE(math::almost_equal(a.length(), 1.0));
         REQUIRE(math::almost_equal(a.length_sq(), 1.0));
         REQUIRE(math::almost_equal(a.angle(), 0.0));
@@ -40,7 +40,7 @@ TEST_CASE("Vector2")
 
     SECTION("xy vector")
     {
-        const auto b = Vector2{1.0, 1.0};
+        const auto b = Vec2{1.0, 1.0};
         REQUIRE(math::almost_equal(b.length(), std::sqrt(2.0)));
         REQUIRE(math::almost_equal(b.length_sq(), 2.0));
         REQUIRE(math::almost_equal(b.angle(), math::to_radians(45.0)));
@@ -49,7 +49,7 @@ TEST_CASE("Vector2")
 
     SECTION("y vector")
     {
-        const auto c = Vector2{0.0, 1.0};
+        const auto c = Vec2{0.0, 1.0};
         REQUIRE(math::almost_equal(c.length(), 1.0));
         REQUIRE(math::almost_equal(c.length_sq(), 1.0));
         REQUIRE(math::almost_equal(c.angle(), math::to_radians(90.0)));
@@ -57,7 +57,7 @@ TEST_CASE("Vector2")
 
     SECTION("origin vector")
     {
-        const auto d = Vector2{0.0, 0.0};
+        const auto d = Vec2{0.0, 0.0};
         REQUIRE(math::almost_equal(d.length(), 0.0));
         REQUIRE(math::almost_equal(d.length_sq(), 0.0));
     }
@@ -72,12 +72,12 @@ TEST_CASE("geometry")
             const auto a = math::intersection(LineSegment{{-1.0, 0.0}, {1.0, 0.0}},
                                               LineSegment{{0.0, 1.0}, {0.0, -1.0}});
             REQUIRE(a.has_value());
-            REQUIRE(*a == Vector2{});
+            REQUIRE(*a == Vec2{});
 
             const auto b = math::intersection(LineSegment{{-1.0, -1.0}, {1.0, 1.0}},
                                               LineSegment{{1.0, -1.0}, {-1.0, 1.0}});
             REQUIRE(b.has_value());
-            REQUIRE(*b == Vector2{});
+            REQUIRE(*b == Vec2{});
 
             const auto c = math::intersection(LineSegment{{}, {0.0, 1.0}},
                                               LineSegment{{1.0, 0.0}, {1.0, 1.0}});
@@ -89,12 +89,12 @@ TEST_CASE("geometry")
             const auto a = math::clamped_intersection(LineSegment{{-1.0, 0.0}, {1.0, 0.0}},
                                                       LineSegment{{0.0, 1.0}, {0.0, -1.0}});
             REQUIRE(a.has_value());
-            REQUIRE(*a == Vector2{});
+            REQUIRE(*a == Vec2{});
 
             const auto b = math::clamped_intersection(LineSegment{{-1.0, -1.0}, {1.0, 1.0}},
                                                       LineSegment{{1.0, -1.0}, {-1.0, 1.0}});
             REQUIRE(b.has_value());
-            REQUIRE(*b == Vector2{});
+            REQUIRE(*b == Vec2{});
 
             const auto c = math::clamped_intersection(LineSegment{{-1.0, -1.0}, {-0.5, -0.5}},
                                                       LineSegment{{1.0, -1.0}, {0.5, -0.5}});

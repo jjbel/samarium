@@ -24,7 +24,7 @@
 #include "samarium/gl/Texture.hpp"     // for Texture
 #include "samarium/gl/Vertex.hpp"      // for Vertex
 #include "samarium/gui/Window.hpp"     // for Window
-#include "samarium/math/Vector2.hpp"   // for Vector2_t
+#include "samarium/math/Vec2.hpp"      // for Vec2_t
 #include "samarium/util/Result.hpp"    // for Result
 #include "samarium/util/unordered.hpp" // for Map
 
@@ -75,10 +75,10 @@ namespace sm::draw
 /// Holds all state information relevant to a character as loaded using FreeType
 struct Character
 {
-    gl::Texture texture;    // glyph texture
-    Vector2_t<u32> size;    // Size of glyph
-    Vector2_t<i32> bearing; // Offset from baseline to left/top of glyph
-    f32 advance;            // Horizontal offset to advance to next glyph
+    gl::Texture texture; // glyph texture
+    Vec2_t<u32> size;    // Size of glyph
+    Vec2_t<i32> bearing; // Offset from baseline to left/top of glyph
+    f32 advance;         // Horizontal offset to advance to next glyph
 };
 
 
@@ -191,7 +191,7 @@ struct Text
         return box;
     }
 
-    Vector2f placement_movement(const std::string& text, f32 scale, Placement p) const
+    Vec2f placement_movement(const std::string& text, f32 scale, Placement p) const
     {
         return bounding_box(text, scale).get_placement(p).cast<f32>();
     }
@@ -208,7 +208,7 @@ struct Text
 
     void operator()(gl::Context& context,
                     const std::string& text,
-                    Vector2f pos,
+                    Vec2f pos,
                     f32 scale,
                     Color color,
                     const glm::mat4& transform,
@@ -217,10 +217,10 @@ struct Text
     // scale is in world space
     void operator()(Window& window,
                     const std::string& text,
-                    Vector2f pos = {},
-                    f32 scale    = 1.0,
-                    Color color  = Color{255, 255, 255},
-                    Placement p  = {PlacementX::Middle, PlacementY::Middle});
+                    Vec2f pos   = {},
+                    f32 scale   = 1.0,
+                    Color color = Color{255, 255, 255},
+                    Placement p = {PlacementX::Middle, PlacementY::Middle});
 };
 } // namespace sm::draw
 
@@ -232,7 +232,7 @@ namespace sm::draw
 {
 SM_INLINE void Text::operator()(gl::Context& context,
                                 const std::string& text,
-                                Vector2f pos,
+                                Vec2f pos,
                                 f32 scale,
                                 Color color,
                                 const glm::mat4& transform,
@@ -293,7 +293,7 @@ SM_INLINE void Text::operator()(gl::Context& context,
 }
 
 SM_INLINE void Text::operator()(
-    Window& window, const std::string& text, Vector2f pos, f32 scale, Color color, Placement p)
+    Window& window, const std::string& text, Vec2f pos, f32 scale, Color color, Placement p)
 {
     this->operator()(window.context, text, pos, scale, color, window.world2gl(), p);
 }

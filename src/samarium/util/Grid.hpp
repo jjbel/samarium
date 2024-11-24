@@ -214,7 +214,7 @@ using Image = Grid<Color>;
 // TODO the fields should have their own transform and rounding, to make indexing easier.
 // see flow_field_noise
 using ScalarField = Grid<f64>;
-using VectorField = Grid<Vector2>;
+using VectorField = Grid<Vec2>;
 
 constexpr static auto dims4K  = Dimensions{3840UL, 2160UL};
 constexpr static auto dimsFHD = Dimensions{1920UL, 1080UL};
@@ -233,7 +233,7 @@ inline auto subdivide_box(BoundingBox<f64> box, Dimensions rows_cols, f64 scale 
             const auto pos_f64       = pos.cast<f64>();
             const auto delta         = box.max - box.min;
             return BoundingBox<f64>{box.min + delta / rows_cols_f64 * pos_f64,
-                                    box.min + delta / rows_cols_f64 * (pos_f64 + Vector2{1, 1})}
+                                    box.min + delta / rows_cols_f64 * (pos_f64 + Vec2{1, 1})}
                 .scaled(scale);
         });
 }

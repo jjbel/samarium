@@ -12,16 +12,16 @@
 #include "samarium/gl/draw/vertices.hpp" // for Buffer
 #include "samarium/graphics/Color.hpp"   // for Color
 #include "samarium/gui/Window.hpp"       // for Window
-#include "samarium/math/Vector2.hpp"     // for Vector2f
+#include "samarium/math/Vec2.hpp"        // for Vec2f
 #include "samarium/math/loop.hpp"        // for start_end
 #include "samarium/math/vector_math.hpp" // for regular_polygon_points
 
 
 namespace sm
 {
-inline auto points_to_f32(std::span<const Vector2> in_pts) -> std::vector<Vector2f>
+inline auto points_to_f32(std::span<const Vec2> in_pts) -> std::vector<Vec2f>
 {
-    auto out_pts = std::vector<Vector2f>(in_pts.size());
+    auto out_pts = std::vector<Vec2f>(in_pts.size());
     for (auto i : loop::end(in_pts.size())) { out_pts[i] = in_pts[i].cast<f32>(); }
     return out_pts;
 }
@@ -38,14 +38,14 @@ constexpr auto sign_of(f32 x)
 }
 
 // which side of v1 does v0 lie on?
-constexpr auto which_side_of(Vector2f v0, Vector2f v1)
+constexpr auto which_side_of(Vec2f v0, Vec2f v1)
 {
     return detail::sign_of(v1.y * v0.x - v0.y * v1.x);
 }
 } // namespace detail
 
 // TODO cud add a bias from -1 to 1 to offset it inward or outward
-inline auto make_polyline(std::span<const Vector2f> in_pts, f32 thickness) -> std::vector<Vector2f>
+inline auto make_polyline(std::span<const Vec2f> in_pts, f32 thickness) -> std::vector<Vec2f>
 {
     // TODO perhaps almost parallel edges are a problem
 
@@ -53,7 +53,7 @@ inline auto make_polyline(std::span<const Vector2f> in_pts, f32 thickness) -> st
 
     if (count <= 2) { return {}; }
 
-    auto out_pts = std::vector<Vector2f>(count * 2);
+    auto out_pts = std::vector<Vec2f>(count * 2);
 
     auto edge  = (in_pts[1] - in_pts[0]).normalized();
     auto disp  = edge.rotated(static_cast<f32>(math::pi / 2.0)) * thickness;
@@ -66,10 +66,10 @@ inline auto make_polyline(std::span<const Vector2f> in_pts, f32 thickness) -> st
         // okay to split it up into many variables?
         const auto new_edge = (in_pts[i + 1] - in_pts[i]).normalized();
         edge                = -edge; // reversing later calcns simpler
-        const auto cos      = Vector2f::dot(edge, new_edge);
+        const auto cos      = Vec2f::dot(edge, new_edge);
         // TODO link the onenote diag here
         // GL_TRIANGLE_STRIP need the vertices to e specified in zig zag order
-        auto new_disp          = Vector2f{};
+        auto new_disp          = Vec2f{};
         constexpr auto epsilon = 1e-4F;
 
         // if antiparallel
@@ -96,10 +96,10 @@ inline auto make_polyline(std::span<const Vector2f> in_pts, f32 thickness) -> st
 }
 
 inline void polyline(Window& window,
-              std::span<const Vector2f> in_pts,
-              f32 thickness,
-              Color color,
-              const glm::mat4& transform)
+                     std::span<const Vec2f> in_pts,
+                     f32 thickness,
+                     Color color,
+                     const glm::mat4& transform)
 {
     const auto out_pts = make_polyline(in_pts, thickness);
 
@@ -114,25 +114,23 @@ inline void polyline(Window& window,
     auto& vao = window.context.vertex_arrays.at("Pos");
     window.context.set_active(vao);
     buffer.set_data(out_pts);
-    vao.bind(buffer, sizeof(Vector2f));
+    vao.bind(buffer, sizeof(Vec2f));
 
     glDrawArrays(GL_TRIANGLE_STRIP, 0, static_cast<i32>(out_pts.size()));
 }
 
-inline void polyline(Window& window, std::span<const Vector2f> in_pts, f32 thickness, Color color)
+inline void polyline(Window& window, std::span<const Vec2f> in_pts, f32 thickness, Color color)
 {
     polyline(window, in_pts, thickness, color, window.world2gl());
 }
 
-inline void polyline(Window& window, std::span<const Vector2> in_pts, f32 thickness, Color color)
+inline void polyline(Window& window, std::span<const Vec2> in_pts, f32 thickness, Color color)
 {
     polyline(window, points_to_f32(in_pts), thickness, color, window.world2gl());
 }
 
-inline void polygon(Window& window,
-                    std::span<const Vector2f> points,
-                    Color fill_color,
-                    const glm::mat4& transform)
+inline void
+polygon(Window& window, std::span<const Vec2f> points, Color fill_color, const glm::mat4& transform)
 {
     // TODO assumes clockwise/anticlockwise?
 
@@ -147,13 +145,13 @@ inline void polygon(Window& window,
     auto& vao = window.context.vertex_arrays.at("Pos");
     window.context.set_active(vao);
     buffer.set_data(points);
-    vao.bind(buffer, sizeof(Vector2f));
+    vao.bind(buffer, sizeof(Vec2f));
 
     // TODO this requires convex...we should use triangle strip...
     glDrawArrays(GL_TRIANGLE_FAN, 0, static_cast<i32>(points.size()));
 }
 
-inline void polygon(Window& window, std::span<const Vector2f> points, Color color)
+inline void polygon(Window& window, std::span<const Vec2f> points, Color color)
 {
     polygon(window, points, color, window.world2gl());
 }
@@ -173,7 +171,7 @@ inline void regular_polygon(Window& window, Circle border_circle, u32 point_coun
 
 // SHAPECOLOR stuf todo -----------------------------------------------------
 // inline void polygon(Window& window,
-//                     std::span<const Vector2f> points,
+//                     std::span<const Vec2f> points,
 //                     ShapeColor color,
 //                     const glm::mat4& transform)
 // {
@@ -184,7 +182,7 @@ inline void regular_polygon(Window& window, Circle border_circle, u32 point_coun
 
 // if (color.border_color.a != 0 && color.border_width != 0.0)
 // {
-//     auto new_points = std::vector<Vector2f>{points.begin(), points.end()};
+//     auto new_points = std::vector<Vec2f>{points.begin(), points.end()};
 //     new_points.insert(new_points.begin(), new_points.back());
 //     new_points.push_back(new_points[1]);
 //     new_points.push_back(new_points[2]);
@@ -193,7 +191,7 @@ inline void regular_polygon(Window& window, Circle border_circle, u32 point_coun
 // }
 // }
 
-// inline void polygon(Window& window, std::span<const Vector2f> points, ShapeColor color)
+// inline void polygon(Window& window, std::span<const Vec2f> points, ShapeColor color)
 // {
 //     polygon(window, points, color, window.world2gl());
 // }
@@ -218,7 +216,7 @@ inline void regular_polygon(Window& window, Circle border_circle, u32 point_coun
 namespace sm::draw
 {
 // SM_INLINE void polyline_impl(Window& window,
-//                              std::span<const Vector2f> points,
+//                              std::span<const Vec2f> points,
 //                              Color color,
 //                              f32 thickness,
 //                              const glm::mat4& transform)
@@ -239,12 +237,12 @@ namespace sm::draw
 // }
 
 // SM_INLINE void polyline(Window& window,
-//                         std::span<const Vector2f> points,
+//                         std::span<const Vec2f> points,
 //                         Color color,
 //                         f32 thickness,
 //                         const glm::mat4& transform)
 // {
-//     auto new_points = std::vector<Vector2f>{points.begin(), points.end()};
+//     auto new_points = std::vector<Vec2f>{points.begin(), points.end()};
 //     new_points.insert(new_points.begin(), 2.0F * new_points[0] - new_points[1]);
 //     const auto last = points.back();
 //     new_points.push_back(2.0F * last - new_points[new_points.size() - 2]);
@@ -252,7 +250,7 @@ namespace sm::draw
 // }
 
 // SM_INLINE void
-// polyline(Window& window, std::span<const Vector2f> points, Color color, f32 thickness)
+// polyline(Window& window, std::span<const Vec2f> points, Color color, f32 thickness)
 // {
 //     polyline(window, points, color, thickness, window.world2gl());
 // }

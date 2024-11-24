@@ -26,7 +26,7 @@ auto main() -> i32
 
     // default: window dims, but cud be anything
     // const auto region  = window.dims.cast<f64>();
-    const auto region  = Vector2{1200, 700};
+    const auto region  = Vec2{1200, 700};
     const auto samples = 40UL;
     const auto radius  = 20.0;
     auto rand          = RandomGenerator{4096, RandomMode::Stable, /*seed*/ 41};

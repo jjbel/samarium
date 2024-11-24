@@ -18,7 +18,7 @@ namespace sm
 {
 struct Mesh
 {
-    using Vertex = Vector2;
+    using Vertex = Vec2;
 
     struct Edge
     {

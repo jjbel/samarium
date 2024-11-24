@@ -33,7 +33,7 @@ No pointers RAII if needed
 no polymorphism
 minimal abstraction. simple wrappers. eg ...
 templates are useful
-operator overloading for math types (Vector2 mainly), and callables 
+operator overloading for math types (Vec2 mainly), and callables 
 sensible defaults. eg window size, escape on Esc
 
 Helper Scripts

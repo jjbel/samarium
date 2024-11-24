@@ -11,7 +11,7 @@
 #include "samarium/graphics/Color.hpp"    // for Color
 #include "samarium/graphics/Gradient.hpp" // for Gradient
 #include "samarium/gui/Window.hpp"        // for Window
-#include "samarium/math/Vector2.hpp"      // for Vector2f
+#include "samarium/math/Vec2.hpp"         // for Vec2f
 
 #include "vertices.hpp"
 
@@ -52,9 +52,9 @@ void background(Window& window, const Gradient& gradient, f32 angle)
     This is done in screenspace coordinates which distort with the screen aspect ratio, so adjust
     the angle
     */
-   print("1");
-    // use Vector2f to preserve obtuse angles (atan2)
-    angle = (Vector2f::from_polar({.length = 1.0, .angle = angle}) *
+    print("1");
+    // use Vec2f to preserve obtuse angles (atan2)
+    angle = (Vec2f::from_polar({.length = 1.0, .angle = angle}) *
              window.aspect_vector_max().cast<f32>())
                 .angle();
 
@@ -64,7 +64,7 @@ void background(Window& window, const Gradient& gradient, f32 angle)
         ranges::max(math::abs(std::sin(transformed_angle)), math::abs(std::cos(transformed_angle)));
     const auto size = gradient.colors.size();
     auto verts      = std::vector<gl::Vertex<gl::Layout::PosColor>>(size);
-   print("2");
+    print("2");
 
     for (auto i : loop::end(size))
     {
@@ -72,20 +72,20 @@ void background(Window& window, const Gradient& gradient, f32 angle)
             interp::lerp_inverse<f32>(static_cast<f32>(i), {0.0F, static_cast<f32>(size - 1)});
 
         verts[2 * i].pos =
-            Vector2f{static_cast<f32>(interp::clamped_lerp<f32>(factor, {-max, max})), max}.rotated(
+            Vec2f{static_cast<f32>(interp::clamped_lerp<f32>(factor, {-max, max})), max}.rotated(
                 angle);
 
         verts[2 * i + 1].pos =
-            Vector2f{static_cast<f32>(interp::clamped_lerp<f32>(factor, {-max, max})), -max}
-                .rotated(angle);
+            Vec2f{static_cast<f32>(interp::clamped_lerp<f32>(factor, {-max, max})), -max}.rotated(
+                angle);
 
         verts[2 * i].color     = gradient.colors[i];
         verts[2 * i + 1].color = gradient.colors[i];
     }
-   print("3");
+    print("3");
 
     vertices(window.context, verts, gl::Primitive::TriangleStrip, glm::mat4{1.0F});
-   print("4");
+    print("4");
 }
 } // namespace sm::draw
 #endif

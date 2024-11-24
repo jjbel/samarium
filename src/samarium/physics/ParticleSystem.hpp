@@ -26,7 +26,7 @@
 
 #include "samarium/core/types.hpp"       // for f64, u64, usize
 #include "samarium/math/Extents.hpp"     // for Extents, range
-#include "samarium/math/Vector2.hpp"     // for Vector2
+#include "samarium/math/Vec2.hpp"        // for Vec2
 #include "samarium/physics/Particle.hpp" // for Particle
 #include "samarium/util/HashGrid.hpp"    // for HashGrid
 #include "samarium/util/ThreadPool.hpp"  // for ThreadPool
@@ -83,12 +83,12 @@ template <typename Particle_t = Particle<f64>, u64 CellCapacity = 32> struct Par
         thread_pool.wait();
     }
 
-    void apply_force(Vector2 force) noexcept
+    void apply_force(Vec2 force) noexcept
     {
         ranges::for_each(particles, [force](Particle_t& particle) { particle.apply_force(force); });
     }
 
-    void apply_forces(std::span<Vector2> forces) noexcept
+    void apply_forces(std::span<Vec2> forces) noexcept
     {
         for (auto i : loop::end(particles.size())) { particles[i].apply_force(forces[i]); }
     }

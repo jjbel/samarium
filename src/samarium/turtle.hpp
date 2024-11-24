@@ -8,7 +8,7 @@ namespace sm
 struct Turtle
 {
   public:
-    Vector2f pos{};
+    Vec2f pos{};
     f32 angle                   = 0.0;
     static constexpr float size = 20;
     bool pen                    = true;
@@ -21,15 +21,14 @@ struct Turtle
         //  if window is 500x500 scale to pixel coords
         // 2.0 coz actually need to divide by 250
         // since default coords go from -1 to 1
-        this->window.view.scale = Vector2(2.0, 2.0) / config.dims.cast<f64>();
+        this->window.view.scale = Vec2(2.0, 2.0) / config.dims.cast<f64>();
     }
 
-    std::vector<Vector2f> tri()
+    std::vector<Vec2f> tri()
     {
         constexpr auto HALF_PI = static_cast<f32>(math::pi * 0.5);
-        const auto disp = Vector2f(size, 0).rotated(angle);
-        return {pos + disp, pos + disp.rotated(HALF_PI),
-                pos + disp.rotated(-HALF_PI)};
+        const auto disp        = Vec2f(size, 0).rotated(angle);
+        return {pos + disp, pos + disp.rotated(HALF_PI), pos + disp.rotated(-HALF_PI)};
     }
 
     void draw(f32 thickness = 3.0F)
@@ -65,7 +64,7 @@ struct Turtle
     void forward(f32 distance)
     {
         const auto old_pos = this->pos;
-        this->pos += Vector2f::from_polar({distance, this->angle});
+        this->pos += Vec2f::from_polar({distance, this->angle});
         this->segments.push_back(LineSegment{old_pos.cast<f64>(), this->pos.cast<f64>()});
 
         this->display();

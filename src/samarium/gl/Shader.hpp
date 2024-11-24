@@ -21,7 +21,7 @@
 #include "samarium/core/types.hpp"     // for u32, u64, i32, f32
 #include "samarium/graphics/Color.hpp" // for Color
 #include "samarium/math/Transform.hpp" // for Transform
-#include "samarium/math/Vector2.hpp"   // for Vector2
+#include "samarium/math/Vec2.hpp"      // for Vec2
 #include "samarium/util/Result.hpp"    // for Result
 #include "samarium/util/file.hpp"      // for read
 
@@ -182,7 +182,7 @@ struct Shader
     void set(const std::string& name, i32 value) const;
     void set(const std::string& name, f32 value) const;
     void set(const std::string& name, Color value) const;
-    void set(const std::string& name, Vector2 value) const;
+    void set(const std::string& name, Vec2 value) const;
     void set(const std::string& name, const glm::mat4& value) const;
 
     // TODO implicit cast to glm mat4 but now explicit overload, so added separate set_transform
@@ -272,7 +272,7 @@ struct ComputeShader
     void set(const std::string& name, i32 value) const;
     void set(const std::string& name, f32 value) const;
     void set(const std::string& name, Color value) const;
-    void set(const std::string& name, Vector2 value) const;
+    void set(const std::string& name, Vec2 value) const;
     void set(const std::string& name, const glm::mat4& value) const;
 
     void set(const std::string& name, const Texture& texture) const;
@@ -321,7 +321,7 @@ void Shader::set(const std::string& name, Color value) const
                 static_cast<f32>(value.a) / 255.0F);
 }
 
-void Shader::set(const std::string& name, Vector2 value) const
+void Shader::set(const std::string& name, Vec2 value) const
 {
     glUniform2f(get_uniform_location(name), static_cast<f32>(value.x), static_cast<f32>(value.y));
 }
@@ -373,7 +373,7 @@ void ComputeShader::set(const std::string& name, Color value) const
                 static_cast<f32>(value.a) / 255.0F);
 }
 
-void ComputeShader::set(const std::string& name, Vector2 value) const
+void ComputeShader::set(const std::string& name, Vec2 value) const
 {
     glUniform2f(get_uniform_location(name), static_cast<f32>(value.x), static_cast<f32>(value.y));
 }

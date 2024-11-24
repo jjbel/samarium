@@ -15,7 +15,7 @@ auto main() -> i32
 {
     auto iterations = 40UL;
 
-    const auto get_iter = [](Vector2 pos, f64 threshold, u64 max_iterations) -> std::optional<u64>
+    const auto get_iter = [](Vec2 pos, f64 threshold, u64 max_iterations) -> std::optional<u64>
     {
         auto z                 = std::complex<f64>{};
         const auto pos_complex = to_complex(pos);
@@ -30,7 +30,7 @@ auto main() -> i32
     };
 
     const auto colorise =
-        [&](Vector2 pos, auto&& gradient, f64 threshold = 42.0, u64 max_iterations = 40)
+        [&](Vec2 pos, auto&& gradient, f64 threshold = 42.0, u64 max_iterations = 40)
     {
         if (const auto iter = get_iter(pos, threshold, max_iterations); iter.has_value())
         {
@@ -40,11 +40,10 @@ auto main() -> i32
         else { return Color{9, 5, 26}; }
     };
 
-    const auto draw = [&](Vector2 pos)
-    { return colorise(pos, gradients::magma, 42.0, iterations); };
+    const auto draw = [&](Vec2 pos) { return colorise(pos, gradients::magma, 42.0, iterations); };
 
     auto app = App{{.dims = dims720}};
-    app.transform.pos += Vector2{.x = 400};
+    app.transform.pos += Vec2{.x = 400};
     app.transform.scale *= 40;
 
     const auto update = [&]
@@ -52,7 +51,7 @@ auto main() -> i32
         if (app.mouse.left) { app.transform.pos += app.mouse.current_pos - app.mouse.old_pos; }
 
         const auto scale = 1.0 + 0.1 * app.mouse.scroll_amount;
-        app.transform.scale *= Vector2::combine(scale);
+        app.transform.scale *= Vec2::combine(scale);
         const auto pos    = app.mouse.current_pos;
         app.transform.pos = pos + scale * (app.transform.pos - pos);
         iterations        = static_cast<u64>(3 * std::log(app.transform.scale.x) + 9);

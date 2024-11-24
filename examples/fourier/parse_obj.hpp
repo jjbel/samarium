@@ -6,7 +6,7 @@
 
 #include "range/v3/algorithm/starts_with.hpp"
 
-#include "samarium/math/Vector2.hpp"
+#include "samarium/math/Vec2.hpp"
 
 auto read_file(const std::filesystem::path& path)
 {
@@ -32,7 +32,7 @@ auto obj_to_pts(const std::filesystem::path& obj_file)
             ranges::to<std::vector>();
 
         // blender needs y-axis flipping?
-        return sm::Vector2{std::stod(components[0]), -std::stod(components[2])};
+        return sm::Vec2{std::stod(components[0]), -std::stod(components[2])};
     };
 
     // TODO doesn't work with range-v3?

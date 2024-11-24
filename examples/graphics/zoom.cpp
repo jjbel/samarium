@@ -13,7 +13,7 @@ auto main() -> i32
         draw::background("#07090b"_c);
 
         constexpr auto a = 0.2;
-        for (auto pos : std::vector<Vector2>{{0, 0}, {a, a}, {-a, a}, {a, -a}})
+        for (auto pos : std::vector<Vec2>{{0, 0}, {a, a}, {-a, a}, {a, -a}})
         {
             draw::circle(window, Circle{pos, 0.08}, "#ff0000"_c, 64);
         }

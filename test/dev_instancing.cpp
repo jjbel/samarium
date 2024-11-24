@@ -39,21 +39,21 @@ auto main() -> i32
     GLuint points_vertex_buffer;
     glGenBuffers(1, &points_vertex_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, points_vertex_buffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(Vector2f) * points.size(), &points[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Vec2f) * points.size(), &points[0], GL_STATIC_DRAW);
 
 
-    auto pts = std::vector<Vector2f>{{-0.4F, -0.4F}, {-0.4F, 0.4F}, {0.4F, 0.4F}, {0.4F, -0.4F}};
+    auto pts = std::vector<Vec2f>{{-0.4F, -0.4F}, {-0.4F, 0.4F}, {0.4F, 0.4F}, {0.4F, -0.4F}};
     auto particle_count = pts.size();
     unsigned int instances_buffer;
     glGenBuffers(1, &instances_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, instances_buffer);
-    glBufferData(GL_ARRAY_BUFFER, particle_count * sizeof(Vector2f), &pts[0],
+    glBufferData(GL_ARRAY_BUFFER, particle_count * sizeof(Vec2f), &pts[0],
                  GL_STATIC_DRAW /* GL_STREAM_DRAW */);
 
     // ctx.vertex_arrays.at("PosInstance").bind();
     // vertex attributes
     // glEnableVertexAttribArray(1);
-    // glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, /* 2 *  */ sizeof(Vector2f) /* or zero? */,
+    // glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, /* 2 *  */ sizeof(Vec2f) /* or zero? */,
     //                       (void*)0);
     // glVertexAttribDivisor(1, 1);
     // glBindVertexArray(0);

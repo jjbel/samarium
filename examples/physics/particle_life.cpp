@@ -14,8 +14,8 @@ static constexpr auto particle_colors = std::to_array<Color>(
 
 struct MyParticle
 {
-    Vector2 pos{};
-    Vector2 vel{};
+    Vec2 pos{};
+    Vec2 vel{};
     i32 color{};
 };
 

@@ -23,7 +23,7 @@
 #include "samarium/gl/gl.hpp"            // for enable_debug_output, versio...
 #include "samarium/math/BoundingBox.hpp" // for BoundingBox
 #include "samarium/math/Transform.hpp"   // for Transform
-#include "samarium/math/Vector2.hpp"     // for Dimensions, Vector2_t, Vector2
+#include "samarium/math/Vec2.hpp"        // for Dimensions, Vec2_t, Vec2
 #include "samarium/math/math.hpp"        // for min, max
 #include "samarium/util/Grid.hpp"        // for Image
 
@@ -177,18 +177,18 @@ struct Window
     [[nodiscard]] auto aspect_ratio() const -> f64;
 
     /**
-     * @brief               A Vector2 given by [width, height]  / max(width, height)
+     * @brief               A Vec2 given by [width, height]  / max(width, height)
      *
-     * @return Vector2
+     * @return Vec2
      */
-    [[nodiscard]] auto aspect_vector_min() const -> Vector2;
+    [[nodiscard]] auto aspect_vector_min() const -> Vec2;
 
     /**
-     * @brief               A Vector2 given by [width, height]  / min(width, height)
+     * @brief               A Vec2 given by [width, height]  / min(width, height)
      *
-     * @return Vector2
+     * @return Vec2
      */
-    [[nodiscard]] auto aspect_vector_max() const -> Vector2;
+    [[nodiscard]] auto aspect_vector_max() const -> Vec2;
 
     // /**
     //  * @brief               The bounds of the visible region of the window
@@ -228,8 +228,8 @@ struct Window
     {
         const auto dimsf  = dims.cast<f64>();
         const auto factor = dimsf.y / dims.x;
-        const auto scale  = Vector2{2.0, -2.0 * factor} / dimsf; // 2 map [0,1] to [-1,1].
-        return Transform{{-1.0, factor}, scale};                 // todo why +factor not -factor
+        const auto scale  = Vec2{2.0, -2.0 * factor} / dimsf; // 2 map [0,1] to [-1,1].
+        return Transform{{-1.0, factor}, scale};              // todo why +factor not -factor
     }
 
     [[nodiscard]] auto view2pixel() const -> Transform { return pixel2view().inverse(); }
@@ -244,8 +244,7 @@ struct Window
     [[nodiscard]] auto world_box() const -> BoundingBox<f64>
     {
         const auto transform = gl2world();
-        return BoundingBox{.min = transform(Vector2{-1.0, -1.0}),
-                           .max = transform(Vector2{1.0, 1.0})};
+        return BoundingBox{.min = transform(Vec2{-1.0, -1.0}), .max = transform(Vec2{1.0, 1.0})};
     }
 
     // mouse movement in world coords
@@ -358,8 +357,8 @@ SM_INLINE void Window::get_inputs()
     // since the view can change based on mouse movement
     // keep mouse pos in pixel coords, which are stable
     // TODO what abt when moving window
-    // mouse.pos = view_pixel_to_gl()(Vector2{xpos, ypos});
-    mouse.pos = Vector2{xpos, ypos};
+    // mouse.pos = view_pixel_to_gl()(Vec2{xpos, ypos});
+    mouse.pos = Vec2{xpos, ypos};
 
     mouse.scroll_amount = scroll_callback.holder.scroll;
 
@@ -402,12 +401,12 @@ SM_INLINE auto Window::aspect_ratio() const -> f64
     return current_dims.x / current_dims.y;
 }
 
-SM_INLINE auto Window::aspect_vector_min() const -> Vector2
+SM_INLINE auto Window::aspect_vector_min() const -> Vec2
 {
     return dims.cast<f64>() / static_cast<f64>(math::max(dims.x, dims.y));
 }
 
-SM_INLINE auto Window::aspect_vector_max() const -> Vector2
+SM_INLINE auto Window::aspect_vector_max() const -> Vec2
 {
     return dims.cast<f64>() / static_cast<f64>(math::min(dims.x, dims.y));
 }

@@ -18,7 +18,7 @@
 #include "samarium/graphics/Color.hpp"
 #include "samarium/gui/Window.hpp"
 #include "samarium/math/BoundingBox.hpp"
-#include "samarium/math/Vector2.hpp"
+#include "samarium/math/Vec2.hpp"
 #include "samarium/util/unordered.hpp"
 
 
@@ -60,7 +60,7 @@ struct Plot
         Color color{255, 100, 0};
         f32 thickness = 0.014F;
         std::string display_name{};
-        std::vector<Vector2f> points{};
+        std::vector<Vec2f> points{};
     };
 
     struct Title
@@ -90,11 +90,11 @@ struct Plot
         text = expect(draw::Text::make(font, font_pixel_height));
     }
 
-    void add(const std::string& key, Vector2 point)
+    void add(const std::string& key, Vec2 point)
     {
         traces[key].points.push_back(point.cast<f32>());
     }
-    void add(Vector2 point) { traces["default"].points.push_back(point.cast<f32>()); }
+    void add(Vec2 point) { traces["default"].points.push_back(point.cast<f32>()); }
 
     void draw(Window& window)
     {

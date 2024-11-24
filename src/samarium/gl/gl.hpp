@@ -17,7 +17,7 @@
 
 #include "samarium/core/types.hpp"     // for f32, i64, u32, i32
 #include "samarium/graphics/Color.hpp" // for Color
-#include "samarium/math/Vector2.hpp"   // for Vector2_t
+#include "samarium/math/Vec2.hpp"      // for Vec2_t
 
 namespace sm::gl
 {
@@ -25,7 +25,7 @@ inline constexpr auto version_major = 4;
 inline constexpr auto version_minor = 6;
 
 static constexpr auto unit_square =
-    std::to_array<Vector2f>({{-1.0F, -1.0F}, {-1.0F, 1.0F}, {1.0F, 1.0F}, {1.0F, -1.0F}});
+    std::to_array<Vec2f>({{-1.0F, -1.0F}, {-1.0F, 1.0F}, {1.0F, 1.0F}, {1.0F, -1.0F}});
 
 enum class BufferType
 {

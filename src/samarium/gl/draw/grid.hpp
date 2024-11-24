@@ -11,7 +11,7 @@
 
 #include "samarium/graphics/Color.hpp" // for Color
 #include "samarium/gui/Window.hpp"     // for Window
-#include "samarium/math/Vector2.hpp"   // for Vector2f
+#include "samarium/math/Vec2.hpp"      // for Vec2f
 
 namespace sm::draw
 {
@@ -44,8 +44,8 @@ namespace sm::draw
 {
 SM_INLINE void grid_lines(Window& window, const GridLines& config)
 {
-    auto [x_max, y_max] = window.view.apply_inverse(Vector2{1.0, 1.0});
-    auto [x_min, y_min] = window.view.apply_inverse(Vector2{-1.0, -1.0});
+    auto [x_max, y_max] = window.view.apply_inverse(Vec2{1.0, 1.0});
+    auto [x_min, y_min] = window.view.apply_inverse(Vec2{-1.0, -1.0});
     x_min               = math::floor_to_nearest(x_min, config.spacing);
     y_min               = math::floor_to_nearest(y_min, config.spacing);
     x_max               = math::ceil_to_nearest(x_max, config.spacing);
@@ -66,8 +66,8 @@ SM_INLINE void grid_lines(Window& window, const GridLines& config)
 
 SM_INLINE void grid_dots(Window& window, const GridDots& config)
 {
-    auto [x_max, y_max] = window.view.apply_inverse(Vector2{1.0, 1.0});
-    auto [x_min, y_min] = window.view.apply_inverse(Vector2{-1.0, -1.0});
+    auto [x_max, y_max] = window.view.apply_inverse(Vec2{1.0, 1.0});
+    auto [x_min, y_min] = window.view.apply_inverse(Vec2{-1.0, -1.0});
     x_min               = math::floor_to_nearest(x_min, config.spacing);
     y_min               = math::floor_to_nearest(y_min, config.spacing);
     x_max               = math::ceil_to_nearest(x_max, config.spacing);

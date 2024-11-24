@@ -21,9 +21,9 @@ template <u64 CellCapacity = 32> struct ParticleSystemInstanced
     // Mike Acton data oriented design https://youtu.be/rX0ItVEVjHc?t=2530
     gl::Instancer instancer;
 
-    std::vector<Vector2f>& pos;
-    std::vector<Vector2f> vel;
-    std::vector<Vector2f> acc;
+    std::vector<Vec2f>& pos;
+    std::vector<Vec2f> vel;
+    std::vector<Vec2f> acc;
 
     HashGrid<u32, CellCapacity, f32> hash_grid;
 
@@ -89,7 +89,7 @@ template <u64 CellCapacity = 32> struct ParticleSystemInstanced
             vel[i] += half_dv;
             pos[i] += vel[i] * time_delta;
             vel[i] += half_dv;
-            acc[i] = Vector2f{}; // reset acceleration}
+            acc[i] = Vec2f{}; // reset acceleration}
         }
     }
 

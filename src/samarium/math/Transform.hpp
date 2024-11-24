@@ -19,8 +19,8 @@ namespace sm
 class Transform
 {
   public:
-    Vector2 pos{};
-    Vector2 scale{1.0, 1.0};
+    Vec2 pos{};
+    Vec2 scale{1.0, 1.0};
 
     // add back rotation?
     // maybe useful for animating scaled rotations, or for vector math
@@ -38,17 +38,14 @@ class Transform
     }
 
     // TODO we shouldn't have 2 overloads doing the same thing. remove apply
-    [[nodiscard]] constexpr auto apply(Vector2 vec) const noexcept { return vec * scale + pos; }
-    [[nodiscard]] constexpr auto operator()(Vector2 vec) const noexcept
-    {
-        return vec * scale + pos;
-    }
+    [[nodiscard]] constexpr auto apply(Vec2 vec) const noexcept { return vec * scale + pos; }
+    [[nodiscard]] constexpr auto operator()(Vec2 vec) const noexcept { return vec * scale + pos; }
 
-    [[nodiscard]] constexpr auto apply(Vector2f vec) const noexcept
+    [[nodiscard]] constexpr auto apply(Vec2f vec) const noexcept
     {
         return vec * scale.cast<f32>() + pos.cast<f32>();
     }
-    [[nodiscard]] constexpr auto operator()(Vector2f vec) const noexcept
+    [[nodiscard]] constexpr auto operator()(Vec2f vec) const noexcept
     {
         return vec * scale.cast<f32>() + pos.cast<f32>();
     }
@@ -58,7 +55,7 @@ class Transform
         return BoundingBox<f64>{apply(bounding_box.min), apply(bounding_box.max)}.validated();
     }
 
-    [[nodiscard]] constexpr auto apply_inverse(Vector2 vec) const noexcept
+    [[nodiscard]] constexpr auto apply_inverse(Vec2 vec) const noexcept
     {
         return (vec - pos) / scale;
     }

@@ -11,7 +11,7 @@
 #include <array>     // for array
 
 #include "Extents.hpp" // for Extents
-#include "Vector2.hpp" // for Vector2
+#include "Vec2.hpp"    // for Vec2
 #include "loop.hpp"    // for start_end
 #include "shapes.hpp"  // for LineSegment
 
@@ -41,7 +41,7 @@ struct Placement
 // use BoundingBox{{}, max}, not BoundingBox{max} for min={0, 0}
 template <concepts::Number T = f64> struct BoundingBox
 {
-    using VecType = Vector2_t<T>;
+    using VecType = Vec2_t<T>;
     VecType min;
     VecType max;
 
@@ -185,8 +185,8 @@ template <concepts::Number T = f64> struct BoundingBox
     [[nodiscard]] constexpr auto line_segments() const noexcept
         requires concepts::FloatingPoint<T>
     {
-        const auto top_right   = Vector2{max.x, min.y};
-        const auto bottom_left = Vector2{min.x, max.y};
+        const auto top_right   = Vec2{max.x, min.y};
+        const auto bottom_left = Vec2{min.x, max.y};
         return std::array<LineSegment, 4>{
             {{min, top_right}, {top_right, max}, {max, bottom_left}, {bottom_left, min}}};
     }

@@ -17,16 +17,16 @@ using namespace sm::literals;
 struct Params
 {
     f64 time_scale                 = 1.4;
-    Vector2 gravity                = -30.0_y;
+    Vec2 gravity                   = -30.0_y;
     f64 coefficient_of_friction    = 0.95;
     f64 coefficient_of_restitution = 0.95; // bounciness
     f64 spring_stiffness           = 150.0;
     f64 spring_damping             = 55.0;
     f64 particle_mass              = 0.6;
     f64 particle_radius            = 1.6;
-    Vector2 particle_velocity{10, 20};
+    Vec2 particle_velocity{10, 20};
     Dimensions particle_count_xy{4, 4};
-    Vector2 softbody_area{25, 25};
+    Vec2 softbody_area{25, 25};
 };
 
 auto main() -> i32
@@ -43,7 +43,7 @@ auto main() -> i32
             static_cast<f64>(indices.y), Extents<u64>{0UL, params.particle_count_xy.y}.cast<f64>(),
             Extents<f64>{-params.softbody_area.y / 2.0, params.softbody_area.y / 2.0});
 
-        auto pos = Vector2{x, y};
+        auto pos = Vec2{x, y};
         pos.rotate(1);
 
         const auto particle = Particle{
@@ -112,8 +112,8 @@ auto main() -> i32
             if (math::within_distance(mouse_pos, particle->pos, particle->radius) && app.mouse.left)
             {
                 particle->pos += app.mouse.vel() / app.transform.scale;
-                particle->vel = Vector2{};
-                particle->acc = Vector2{};
+                particle->vel = Vec2{};
+                particle->acc = Vec2{};
             }
 
             particle->update(delta);

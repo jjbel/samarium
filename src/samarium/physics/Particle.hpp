@@ -7,23 +7,23 @@
 
 #pragma once
 
-#include "samarium/core/types.hpp"   // for f64
-#include "samarium/math/Vector2.hpp" // for Vector2, operator*, Vector2_t
-#include "samarium/math/shapes.hpp"  // for Circle
+#include "samarium/core/types.hpp"  // for f64
+#include "samarium/math/Vec2.hpp"   // for Vec2, operator*, Vec2_t
+#include "samarium/math/shapes.hpp" // for Circle
 
 namespace sm
 {
 template <typename Float = f64> struct Particle
 {
-    Vector2_t<Float> pos{};
-    Vector2_t<Float> vel{};
-    Vector2_t<Float> acc{};
+    Vec2_t<Float> pos{};
+    Vec2_t<Float> vel{};
+    Vec2_t<Float> acc{};
     Float radius{1};
     Float mass{1};
 
     [[nodiscard]] constexpr auto as_circle() const noexcept { return Circle{pos, radius}; }
 
-    constexpr auto apply_force(Vector2_t<Float> force) noexcept { acc += force / mass; }
+    constexpr auto apply_force(Vec2_t<Float> force) noexcept { acc += force / mass; }
 
     constexpr auto update(Float time_delta = 1.0 / 64) noexcept
     {
@@ -33,7 +33,7 @@ template <typename Float = f64> struct Particle
         vel += half_dv;
         pos += vel * time_delta;
         vel += half_dv;
-        acc = Vector2_t<Float>{}; // reset acceleration
+        acc = Vec2_t<Float>{}; // reset acceleration
     }
 
     [[nodiscard]] constexpr bool operator==(const Particle&) const = default;

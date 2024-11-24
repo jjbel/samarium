@@ -12,7 +12,7 @@
 
 #include "samarium/core/types.hpp"
 #include "samarium/gui/Window.hpp"
-#include "samarium/math/Vector2.hpp"
+#include "samarium/math/Vec2.hpp"
 #include "samarium/util/Benchmark.hpp"
 
 #include "Vertex.hpp"
@@ -24,8 +24,8 @@ struct Instancer
 {
     Window& window;
 
-    std::vector<Vector2f> geometry{};
-    std::vector<Vector2f> instances_pos{};
+    std::vector<Vec2f> geometry{};
+    std::vector<Vec2f> instances_pos{};
     u32 geometry_vb{};
     u32 instances_vb{};
 
@@ -51,9 +51,7 @@ struct Instancer
     TODO: have to set vertattrib every call?
     */
 
-    Instancer(Window& window,
-              std::span<const Vector2f> geometry,
-              std::span<const Vector2f> instances_pos)
+    Instancer(Window& window, std::span<const Vec2f> geometry, std::span<const Vec2f> instances_pos)
         : window{window}, geometry(geometry.begin(), geometry.end()),
           instances_pos(instances_pos.begin(), instances_pos.end())
     {
@@ -65,18 +63,18 @@ struct Instancer
         glEnableVertexAttribArray(0);
         glGenBuffers(1, &geometry_vb);
         glBindBuffer(GL_ARRAY_BUFFER, geometry_vb);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(Vector2f) * geometry.size(), &geometry[0],
+        glBufferData(GL_ARRAY_BUFFER, sizeof(Vec2f) * geometry.size(), &geometry[0],
                      GL_STATIC_DRAW);
 
         glGenBuffers(1, &instances_vb);
         glBindBuffer(GL_ARRAY_BUFFER, instances_vb);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(Vector2f) * instances_pos.size(), &instances_pos[0],
+        glBufferData(GL_ARRAY_BUFFER, sizeof(Vec2f) * instances_pos.size(), &instances_pos[0],
                      GL_STATIC_DRAW /* GL_STREAM_DRAW */);
 
         // ctx.vertex_arrays.at("PosInstance").bind();
         // vertex attributes
         // glEnableVertexAttribArray(1);
-        // glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, /* 2 *  */ sizeof(Vector2f) /* or zero?
+        // glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, /* 2 *  */ sizeof(Vec2f) /* or zero?
         // */,
         //                       (void*)0);
         // glVertexAttribDivisor(1, 1);
@@ -87,7 +85,7 @@ struct Instancer
     {
         bench.reset();
         glBindBuffer(GL_ARRAY_BUFFER, instances_vb);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(Vector2f) * instances_pos.size(), &instances_pos[0],
+        glBufferData(GL_ARRAY_BUFFER, sizeof(Vec2f) * instances_pos.size(), &instances_pos[0],
                      GL_STATIC_DRAW /* GL_STREAM_DRAW */);
         bench.add("update positions buffer");
 

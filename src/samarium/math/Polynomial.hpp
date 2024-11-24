@@ -8,9 +8,9 @@
 #include <array>
 #include <span>
 
-#include "samarium/core/types.hpp"   // for usize, f64
-#include "samarium/math/Vector2.hpp" // for Vector2_t
-#include "samarium/math/loop.hpp"    // for start_end
+#include "samarium/core/types.hpp" // for usize, f64
+#include "samarium/math/Vec2.hpp"  // for Vec2_t
+#include "samarium/math/loop.hpp"  // for start_end
 
 namespace sm
 {

@@ -37,7 +37,7 @@ Numbers make spirals when plotted in polar coordinates
 
 Inspired by <https://youtu.be/EK32jo7i5LQ>
 
-Hightlights: `Vector2::from_polar`, panning, zooming
+Hightlights: `Vec2::from_polar`, panning, zooming
 
 Second Order Dynamics
 ---------------------

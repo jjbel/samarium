@@ -10,7 +10,7 @@
 #include <array>
 
 #include "samarium/core/types.hpp"
-#include "samarium/math/Vector2.hpp"
+#include "samarium/math/Vec2.hpp"
 #include "samarium/math/loop.hpp" // for end
 
 namespace sm::noise
@@ -39,7 +39,7 @@ constexpr inline auto hash_array = std::array<u8, 256>{
      39,  128, 211, 118, 137, 139, 255, 114, 20,  218, 113, 154, 27,  127, 246, 250, 1,   8,   198,
      250, 209, 92,  222, 173, 21,  88,  102, 219}};
 
-auto perlin_2d(Vector2 pos, Params params = {}) -> f64;
+auto perlin_2d(Vec2 pos, Params params = {}) -> f64;
 
 auto perlin_1d(f64 pos, Params params = {}) -> f64;
 } // namespace sm::noise
@@ -88,7 +88,7 @@ auto noise2d(i32 x, i32 y)
     return hash_array[static_cast<u64>(xindex)];
 }
 
-auto single_iter_noise2d(Vector2 pos)
+auto single_iter_noise2d(Vec2 pos)
 {
     const auto x_int  = static_cast<i32>(std::floor(pos.x));
     const auto y_int  = static_cast<i32>(std::floor(pos.y));
@@ -122,9 +122,9 @@ auto perlin_1d(f64 pos, Params params) -> f64
     return result / div;
 }
 
-auto perlin_2d(Vector2 pos, Params params) -> f64
+auto perlin_2d(Vec2 pos, Params params) -> f64
 {
-    pos = (pos + Vector2{100, 100} + Vector2{200, 200} * params.seed) * params.scale / 10.0;
+    pos            = (pos + Vec2{100, 100} + Vec2{200, 200} * params.seed) * params.scale / 10.0;
     auto amplitude = 1.0;
     auto result    = 0.0;
     auto div       = 0.0;

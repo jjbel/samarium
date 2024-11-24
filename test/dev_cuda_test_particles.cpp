@@ -14,8 +14,8 @@ using namespace sm;
 auto main(int argc, char* argv[]) -> i32
 {
     auto count = 10;
-    auto pos = std::vector<Vector2f>(count);
-    auto acc = std::vector<Vector2f>(count);
+    auto pos   = std::vector<Vec2f>(count);
+    auto acc   = std::vector<Vec2f>(count);
     forces({pos, acc});
     print(pos);
     print(acc);
@@ -35,7 +35,7 @@ auto main(int argc, char* argv[]) -> i32
     const auto count         = 8000;
     const auto radius        = 0.05F;
     const auto emission_rate = 6;
-    auto sun                 = Vector2f{0, 0};
+    auto sun                 = Vec2f{0, 0};
 
     auto ps = ParticleSystemInstanced<>(window, count, cell_size, radius, Color{100, 60, 255});
 
@@ -47,7 +47,7 @@ auto main(int argc, char* argv[]) -> i32
     window.camera.scale /= 10.0;
 
 
-    const auto gravity = [](Vector2f a, Vector2f b, f32 G, f32 clamp)
+    const auto gravity = [](Vec2f a, Vec2f b, f32 G, f32 clamp)
     {
         const auto v = a - b;
         const auto l = v.length();

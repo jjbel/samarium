@@ -7,15 +7,15 @@
 
 #pragma once
 
-#include "samarium/core/types.hpp"   // for f64
-#include "samarium/math/Vector2.hpp" // for Vector2
+#include "samarium/core/types.hpp" // for f64
+#include "samarium/math/Vec2.hpp"  // for Vec2
 
 namespace sm
 {
 struct Mouse
 {
-    Vector2 pos{};
-    Vector2 old_pos{};
+    Vec2 pos{};
+    Vec2 old_pos{};
     f64 scroll_amount{};
     bool left{};
     bool middle{};

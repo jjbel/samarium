@@ -16,7 +16,7 @@ namespace sm
 {
 struct MovablePoint
 {
-    Vector2 pos{};
+    Vec2 pos{};
     Color color{255, 255, 255, 255};
     f64 major_radius = 0.8;
     f64 minor_radius = 0.4;

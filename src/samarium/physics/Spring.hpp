@@ -8,7 +8,7 @@
 #pragma once
 
 #include "samarium/core/types.hpp"       // for f64
-#include "samarium/math/Vector2.hpp"     // for Vector2_t, operator-, Vector2
+#include "samarium/math/Vec2.hpp"        // for Vec2_t, operator-, Vec2
 #include "samarium/math/vector_math.hpp" // for distance
 
 #include "Particle.hpp" // for Particle
@@ -38,7 +38,7 @@ template <typename Float = f64> struct Spring
     {
         const auto vec    = p2.pos - p1.pos;
         const auto spring = (vec.length() - rest_length) * stiffness;
-        auto damp         = Vector2::dot(vec.normalized(), p2.vel - p1.vel) * damping;
+        auto damp         = Vec2::dot(vec.normalized(), p2.vel - p1.vel) * damping;
 
         const auto force = vec.with_length(spring + damp);
 

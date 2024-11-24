@@ -17,7 +17,7 @@ auto main() -> i32
     auto watch = Stopwatch{};
 
     auto radius  = 3.0;
-    auto dynamic = SecondOrderDynamics<Vector2>{{}, 4.5, 0.5};
+    auto dynamic = SecondOrderDynamics<Vec2>{{}, 4.5, 0.5};
     auto trail   = Trail{20000};
 
     const auto update = [&](f64 dt)

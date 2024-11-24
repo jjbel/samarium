@@ -13,7 +13,7 @@
 
 #include "samarium/core/types.hpp"
 #include "samarium/math/Extents.hpp"
-#include "samarium/math/Vector2.hpp"
+#include "samarium/math/Vec2.hpp"
 #include "samarium/math/math.hpp"
 
 #include "SmallVector.hpp"
@@ -23,9 +23,9 @@ namespace sm
 {
 template <typename T, usize CellInlineCapacity = 127, typename Float = f64> struct HashGrid
 {
-    using Vector2Float = Vector2_t<Float>;
+    using Vector2Float = Vec2_t<Float>;
 
-    using Key = Vector2_t<i32>;
+    using Key = Vec2_t<i32>;
 
     // using Value    = SmallVector<T, CellInlineCapacity>;
     // TODO small vector isn't worth it?

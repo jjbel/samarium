@@ -12,7 +12,7 @@
 #include "samarium/core/types.hpp"       // for f64, u64, i64, i32
 #include "samarium/math/BoundingBox.hpp" // for BoundingBox
 // #include "samarium/math/Extents.hpp"     // for Extents
-#include "samarium/math/Vector2.hpp"         // for Vector2
+#include "samarium/math/Vec2.hpp"            // for Vec2
 #include "samarium/math/math.hpp"            // for pi
 #include "samarium/util/RandomGenerator.hpp" // for RandomGenerator
 
@@ -26,7 +26,7 @@ namespace sm::poisson_disc
 [[nodiscard]] auto uniform(RandomGenerator& rng,
                            f64 radius,
                            BoundingBox<f64> sample_region,
-                           u64 sample_count) -> std::vector<Vector2>;
+                           u64 sample_count) -> std::vector<Vec2>;
 } // namespace sm::poisson_disc
 
 
@@ -39,11 +39,11 @@ namespace sm::poisson_disc
 
 namespace sm::poisson_disc
 {
-[[nodiscard]] auto uniform_is_valid(Vector2 candidate,
-                                    Vector2 sample_region,
+[[nodiscard]] auto uniform_is_valid(Vec2 candidate,
+                                    Vec2 sample_region,
                                     f64 cell_size,
                                     f64 radius,
-                                    const std::vector<Vector2>& points,
+                                    const std::vector<Vec2>& points,
                                     const Grid<i32>& grid)
 {
     // TODO too many casts bw signed and unsigned
@@ -85,7 +85,7 @@ namespace sm::poisson_disc
 [[nodiscard]] auto uniform(RandomGenerator& rng,
                            f64 radius,
                            BoundingBox<f64> sample_region,
-                           u64 sample_count) -> std::vector<Vector2>
+                           u64 sample_count) -> std::vector<Vec2>
 {
     // at most one disc can fit in one cell
     const auto cell_size          = radius / std::numbers::sqrt2;
@@ -99,8 +99,8 @@ namespace sm::poisson_disc
 
     // when we add a point, try to spawn more points around it
     // if it gets too crowded, remove it from spawn_points
-    auto points       = std::vector<Vector2>();
-    auto spawn_points = std::vector<Vector2>();
+    auto points       = std::vector<Vec2>();
+    auto spawn_points = std::vector<Vec2>();
 
     // start spawning from the middle of the region
     spawn_points.push_back(sample_region_size / 2.0);

@@ -18,7 +18,7 @@ auto main() -> i32
 
     const auto gravity = -100.0_y;
 
-    const Vector2 anchor       = 30.0_y;
+    const Vec2 anchor          = 30.0_y;
     const auto rest_length     = 14.0;
     const auto spring_constant = 100.0;
 

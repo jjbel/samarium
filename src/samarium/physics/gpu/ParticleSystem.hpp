@@ -67,7 +67,7 @@ struct ParticleSystem
         auto& vao = window.context.vertex_arrays.at("Pos");
         window.context.set_active(vao);
         buffer.set_data(points);
-        vao.bind(buffer, sizeof(Vector2f));
+        vao.bind(buffer, sizeof(Vec2f));
 
         glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, static_cast<i32>(points.size()),
                               static_cast<i32>(particles.data.size()));

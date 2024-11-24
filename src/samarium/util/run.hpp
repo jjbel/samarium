@@ -69,7 +69,7 @@ auto zoom_pan(Window& window, f64 zoom_factor = 0.1, f64 pan_factor = 1.0)
     }
 
     const auto scale = 1.0 + zoom_factor * window.mouse.scroll_amount;
-    window.view.scale *= Vector2::combine(scale);
+    window.view.scale *= Vec2::combine(scale);
     window.view.pos = window.mouse.pos + scale * pan_factor * (window.view.pos - window.mouse.pos);
 }
 
@@ -86,7 +86,7 @@ auto zoom_pan(Window& window,
     if (zoom_condition())
     {
         const auto scale = 1.0 + zoom_factor * window.mouse.scroll_amount;
-        window.view.scale *= Vector2::combine(scale);
+        window.view.scale *= Vec2::combine(scale);
         window.view.pos =
             window.mouse.pos + scale * pan_factor * (window.view.pos - window.mouse.pos);
     }

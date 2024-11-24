@@ -10,7 +10,7 @@
 #include "samarium/math/Polynomial.hpp"
 #include "samarium/math/SecondOrderDynamics.hpp"
 #include "samarium/math/Transform.hpp"
-#include "samarium/math/Vector2.hpp"
+#include "samarium/math/Vec2.hpp"
 #include "samarium/math/complex.hpp"
 #include "samarium/math/loop.hpp"
 #include "samarium/math/math.hpp"

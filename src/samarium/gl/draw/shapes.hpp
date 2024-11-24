@@ -45,14 +45,14 @@ inline void line_segment(
     Window& window, const LineSegment& line, Color color, f32 thickness, const glm::mat4& transform)
 {
     const auto thickness_vector =
-        Vector2::from_polar(
+        Vec2::from_polar(
             {.length = thickness / 2., .angle = line.vector().angle() + math::pi / 2.0})
             .cast<f32>();
 
     const auto first = line.p1.cast<f32>();
     const auto last  = line.p2.cast<f32>();
-    auto points      = std::to_array<Vector2f>({first - thickness_vector, first + thickness_vector,
-                                                last + thickness_vector, last - thickness_vector});
+    auto points      = std::to_array<Vec2f>({first - thickness_vector, first + thickness_vector,
+                                             last + thickness_vector, last - thickness_vector});
     polygon(window, points, color, transform);
 }
 
@@ -97,7 +97,7 @@ bounding_box(Window& window, const BoundingBox<f64>& box, Color color, f32 thick
 
 // quick and dirty
 inline void polyline_segments(Window& window,
-                              std::span<const Vector2f> points,
+                              std::span<const Vec2f> points,
                               f32 thickness,
                               Color color,
                               const glm::mat4& transform)
@@ -111,13 +111,13 @@ inline void polyline_segments(Window& window,
 }
 
 inline void
-polyline_segments(Window& window, std::span<const Vector2f> points, f32 thickness, Color color)
+polyline_segments(Window& window, std::span<const Vec2f> points, f32 thickness, Color color)
 {
     polyline_segments(window, points, thickness, color, window.world2gl());
 }
 
 inline void
-polygon_segments(Window& window, std::span<const Vector2f> points, f32 thickness, Color color)
+polygon_segments(Window& window, std::span<const Vec2f> points, f32 thickness, Color color)
 {
     polyline_segments(window, points, thickness, color);
     draw::line_segment(window, {points[points.size() - 1UL].cast<f64>(), points[0].cast<f64>()},

@@ -6,7 +6,7 @@
  */
 
 #include "samarium/gl/draw.hpp"
-#include "samarium/math/Vector2.hpp"
+#include "samarium/math/Vec2.hpp"
 #include "samarium/math/shapes.hpp"
 #include "samarium/samarium.hpp"
 
@@ -44,7 +44,7 @@ auto main() -> i32
         ps.for_each(
             [&](Particle<f64>& particle)
             {
-                // particle.acc = Vector2{0, -1};
+                // particle.acc = Vec2{0, -1};
                 for (const auto& wall : viewport.line_segments())
                 {
                     phys::collide(particle, wall, dt, 0.97);

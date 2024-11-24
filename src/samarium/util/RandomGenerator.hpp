@@ -17,7 +17,7 @@
 #include "samarium/core/types.hpp"       // for f64, u64
 #include "samarium/math/BoundingBox.hpp" // for BoundingBox
 #include "samarium/math/Extents.hpp"     // for Extents
-#include "samarium/math/Vector2.hpp"     // for Vector2
+#include "samarium/math/Vec2.hpp"        // for Vec2
 #include "samarium/math/math.hpp"        // for pi
 
 namespace sm
@@ -85,11 +85,11 @@ struct RandomGenerator
         return static_cast<T>(extents.lerp(this->random()));
     }
 
-    [[nodiscard]] auto vector(const BoundingBox<f64>& bounding_box) noexcept -> Vector2;
+    [[nodiscard]] auto vector(const BoundingBox<f64>& bounding_box) noexcept -> Vec2;
 
     [[nodiscard]] auto polar_vector(Extents<f64> radius_range,
                                     Extents<f64> angle_range = {0.0,
-                                                                2 * math::pi}) noexcept -> Vector2;
+                                                                2 * math::pi}) noexcept -> Vec2;
 
     [[nodiscard]] auto choice(const ranges::range auto& iterable)
     {
@@ -104,7 +104,7 @@ struct RandomGenerator
     // TODO remove this
     [[nodiscard]] auto poisson_disc_points(f64 radius,
                                            BoundingBox<f64> sample_region,
-                                           u64 sample_count = 30UL) -> std::vector<Vector2>;
+                                           u64 sample_count = 30UL) -> std::vector<Vec2>;
 
     [[nodiscard]] auto boolean(f64 threshold = 0.5) -> bool;
 
@@ -164,17 +164,17 @@ void RandomGenerator::reseed(u64 new_seed)
 
 [[nodiscard]] auto RandomGenerator::operator()() -> f64 { return this->random(); }
 
-[[nodiscard]] auto RandomGenerator::vector(const BoundingBox<f64>& bounding_box) noexcept -> Vector2
+[[nodiscard]] auto RandomGenerator::vector(const BoundingBox<f64>& bounding_box) noexcept -> Vec2
 {
-    return Vector2{this->range<f64>({bounding_box.min.x, bounding_box.max.x}),
-                   this->range<f64>({bounding_box.min.y, bounding_box.max.y})};
+    return Vec2{this->range<f64>({bounding_box.min.x, bounding_box.max.x}),
+                this->range<f64>({bounding_box.min.y, bounding_box.max.y})};
 }
 
 [[nodiscard]] auto RandomGenerator::polar_vector(Extents<f64> radius_range,
-                                                 Extents<f64> angle_range) noexcept -> Vector2
+                                                 Extents<f64> angle_range) noexcept -> Vec2
 {
-    return Vector2::from_polar({.length = this->range<f64>({radius_range.min, radius_range.max}),
-                                .angle  = this->range<f64>({angle_range.min, angle_range.max})});
+    return Vec2::from_polar({.length = this->range<f64>({radius_range.min, radius_range.max}),
+                             .angle  = this->range<f64>({angle_range.min, angle_range.max})});
 }
 
 [[nodiscard]] auto RandomGenerator::boolean(f64 threshold) -> bool

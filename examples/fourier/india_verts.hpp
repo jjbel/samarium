@@ -2,11 +2,11 @@
 
 #include <vector>
 
-#include "samarium/math/Vector2.hpp"
+#include "samarium/math/Vec2.hpp"
 
 auto india_pts()
 {
-    return std::vector<sm::Vector2>{
+    return std::vector<sm::Vec2>{
 
         {-1.750890, -0.143767}, {-1.718331, -0.266768}, {-1.686676, -0.426550},
         {-1.653514, -0.590854}, {-1.615528, -0.780783}, {-1.584778, -0.921873},

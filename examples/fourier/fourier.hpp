@@ -52,7 +52,7 @@ auto coefficients(ShapeFn shape, u64 count, u64 integration_steps)
 
 auto shape_vertices(ShapeFn shape, u64 integration_steps)
 {
-    auto vec = std::vector<Vector2>();
+    auto vec = std::vector<Vec2>();
     vec.reserve(integration_steps);
     for (auto i : math::sample<f64, complex>(shape, 0.0, 1.0, integration_steps))
     {
@@ -63,7 +63,7 @@ auto shape_vertices(ShapeFn shape, u64 integration_steps)
 
 struct ShapeFnFromPts
 {
-    std::span<const Vector2> points;
+    std::span<const Vec2> points;
 
     auto operator()(f64 t) const
     {
@@ -71,7 +71,7 @@ struct ShapeFnFromPts
         t *= points.size() - 1;
         const auto index  = static_cast<u64>(std::floor(t));
         const auto factor = math::mod(t, 1.0);
-        return to_complex(interp::lerp<Vector2>(factor, {points[index], points[index]}));
+        return to_complex(interp::lerp<Vec2>(factor, {points[index], points[index]}));
     }
 };
 
@@ -91,7 +91,7 @@ auto square(f64 t)
     else if (t < 0.75) { out = mapper(0.5, 0.75, -1.0, 1.0, -1.0, -1.0); }
     else { out = mapper(0.75, 1.0, -1.0, -1.0, 1.0, -1.0); }
 
-    return to_complex(from_complex(out).rotated(1) * Vector2{1.0, 1.6} + Vector2{0.0, 0.5}) +
+    return to_complex(from_complex(out).rotated(1) * Vec2{1.0, 1.6} + Vec2{0.0, 0.5}) +
            complex{0.3, -0.4}; // rotate, scale to make it interesting
 }
 } // namespace sm

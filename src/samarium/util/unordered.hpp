@@ -9,7 +9,7 @@
 
 #include "ankerl/unordered_dense.h"
 
-#include "samarium/math/Vector2.hpp"
+#include "samarium/math/Vec2.hpp"
 
 namespace sm
 {
@@ -30,13 +30,13 @@ using Set = ankerl::unordered_dense::set<Key, Hash, KeyEqual, AllocatorOrContain
 } // namespace sm
 
 // TODO for other types?
-template <typename T> struct ankerl::unordered_dense::hash<sm::Vector2_t<T>>
+template <typename T> struct ankerl::unordered_dense::hash<sm::Vec2_t<T>>
 {
     using is_avalanching = void;
 
-    [[nodiscard]] auto operator()(const sm::Vector2_t<T>& vec) const noexcept -> uint64_t
+    [[nodiscard]] auto operator()(const sm::Vec2_t<T>& vec) const noexcept -> uint64_t
     {
-        static_assert(std::has_unique_object_representations_v<sm::Vector2_t<T>>);
+        static_assert(std::has_unique_object_representations_v<sm::Vec2_t<T>>);
         return ankerl::unordered_dense::detail::wyhash::hash(&vec, sizeof(vec));
     }
 };

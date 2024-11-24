@@ -19,12 +19,12 @@ auto main() -> i32
     {
         const auto boxes = subdivide_box(window.world_box(), grid_dims, 0.97);
         plot.box         = boxes[{0, 1}];
-        plot.add("x", Vector2{frame_counter / 1000.0,
-                              noise::perlin_1d(frame_counter / 1000.0, {100.0}) - 0.5});
-        plot.add("y", Vector2{frame_counter / 1000.0,
-                              noise::perlin_1d(frame_counter / 1000.0 + 100.0, {100.0}) - 0.5});
-        plot.add("z", Vector2{frame_counter / 1000.0,
-                              noise::perlin_1d(frame_counter / 1000.0 + 200.0, {100.0}) - 0.5});
+        plot.add("x", Vec2{frame_counter / 1000.0,
+                           noise::perlin_1d(frame_counter / 1000.0, {100.0}) - 0.5});
+        plot.add("y", Vec2{frame_counter / 1000.0,
+                           noise::perlin_1d(frame_counter / 1000.0 + 100.0, {100.0}) - 0.5});
+        plot.add("z", Vec2{frame_counter / 1000.0,
+                           noise::perlin_1d(frame_counter / 1000.0 + 200.0, {100.0}) - 0.5});
 
         draw::background(colors::black);
         plot.draw(window);

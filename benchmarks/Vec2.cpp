@@ -7,7 +7,7 @@
 
 #include "benchmark/benchmark.h"
 
-#include "samarium/math/Vector2.hpp"
+#include "samarium/math/Vec2.hpp"
 #include "samarium/math/math.hpp"
 #include "samarium/util/RandomGenerator.hpp"
 
@@ -15,7 +15,7 @@ using namespace sm;
 
 static void Vector2_length(benchmark::State& state)
 {
-    auto vec  = Vector2{1.0, 0.0};
+    auto vec  = Vec2{1.0, 0.0};
     auto rand = RandomGenerator{};
 
     for (auto _ : state) { benchmark::DoNotOptimize(vec.length()); }
@@ -24,7 +24,7 @@ static void Vector2_length(benchmark::State& state)
 
 static void Vector2_angle(benchmark::State& state)
 {
-    auto vec  = Vector2{1.0, 0.0};
+    auto vec  = Vec2{1.0, 0.0};
     auto rand = RandomGenerator{};
 
     for (auto _ : state) { benchmark::DoNotOptimize(vec.angle()); }
@@ -33,7 +33,7 @@ static void Vector2_angle(benchmark::State& state)
 
 static void Vector2_rotate(benchmark::State& state)
 {
-    auto vec  = Vector2{1.0, 0.0};
+    auto vec  = Vec2{1.0, 0.0};
     auto rand = RandomGenerator{};
 
     for (auto _ : state)
@@ -45,7 +45,7 @@ static void Vector2_rotate(benchmark::State& state)
 
 static void Vector2_set_angle(benchmark::State& state)
 {
-    auto vec  = Vector2{1.0, 0.0};
+    auto vec  = Vec2{1.0, 0.0};
     auto rand = RandomGenerator{};
 
     for (auto _ : state)

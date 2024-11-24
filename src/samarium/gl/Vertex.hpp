@@ -11,7 +11,7 @@
 
 #include "glad/glad.h"
 
-#include "samarium/math/Vector2.hpp" // for Vector2_t
+#include "samarium/math/Vec2.hpp" // for Vec2_t
 
 #include "Buffer.hpp"
 #include "gl.hpp"
@@ -72,26 +72,26 @@ enum class Layout
 
 template <Layout mode> struct Vertex
 {
-    Vector2f pos{};
+    Vec2f pos{};
 };
 
 template <> struct Vertex<Layout::PosColor>
 {
-    Vector2f pos{};
+    Vec2f pos{};
     Color color{};
 };
 
 template <> struct Vertex<Layout::PosTex>
 {
-    Vector2f pos{};
-    Vector2f tex_coord{};
+    Vec2f pos{};
+    Vec2f tex_coord{};
 };
 
 template <> struct Vertex<Layout::PosColorTex>
 {
-    Vector2f pos{};
+    Vec2f pos{};
     Color color{};
-    Vector2f tex_coord{};
+    Vec2f tex_coord{};
 };
 } // namespace sm::gl
 
