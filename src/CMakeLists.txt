@@ -30,8 +30,9 @@ file(GLOB_RECURSE SAMARIUM_SOURCES "*.*pp")
 if(SAMARIUM_ENABLE_CUDA)
     # set(CMAKE_CUDA_FLAGS "-O3")
     # enable_language(CUDA)
-    file(GLOB_RECURSE CUDA_SOURCES "*.cu")
+    file(GLOB_RECURSE CUDA_SOURCES "*.cu*")
     list(APPEND SAMARIUM_SOURCES "${CUDA_SOURCES}")
+    set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -diag-suppress 27")
 endif()
 
 # CUDA ARCHITECTURE
