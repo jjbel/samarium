@@ -5,9 +5,9 @@
 cmake_minimum_required(VERSION 3.30)
 
 if(SAMARIUM_ENABLE_CUDA)
-    set(langs "CXX")
-else()
     set(langs "CXX CUDA")
+else()
+    set(langs "CXX")
 endif()
 
 project(
@@ -48,9 +48,11 @@ endif()
 add_library(samarium ${SAMARIUM_SOURCES})
 add_library(samarium::samarium ALIAS samarium)
 
-# device query says my MX330 supports 6.1
-set_target_properties(samarium PROPERTIES CUDA_ARCHITECTURES "50;60;61;70")
-# set_target_properties(samarium PROPERTIES CUDA_ARCHITECTURES "61")
+if(SAMARIUM_ENABLE_CUDA)
+    # device query says my MX330 supports 6.1
+    set_target_properties(samarium PROPERTIES CUDA_ARCHITECTURES "50;60;61;70")
+    # set_target_properties(samarium PROPERTIES CUDA_ARCHITECTURES "61")
+endif()
 
 set_target_properties(
     samarium
