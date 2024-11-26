@@ -1,3 +1,4 @@
+
 #pragma once
 
 #include <span>
@@ -16,6 +17,8 @@ struct ForcesSettings
     u64 count;
     std::span<Vec2f> pos;
     std::span<Vec2f> acc;
+    f32* pos_dev; // TODO shd be ptr to ptr to be persistent
+    f32* acc_dev;
     f32 strength = 0.0006F;
     // f32 min_distance = 0.01F;
     f32 max_force = 1.0F;
