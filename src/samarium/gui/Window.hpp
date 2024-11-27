@@ -249,6 +249,9 @@ struct Window
         return Box2<f64>{.min = transform(Vec2{-1.0, -1.0}), .max = transform(Vec2{1.0, 1.0})};
     }
 
+    auto mouse_pos() const { return pixel2world()(mouse.pos); }
+    auto mouse_old_pos() const { return pixel2world()(mouse.old_pos); }
+
     // mouse movement in world coords
     auto mouse_delta() const
     {
