@@ -241,6 +241,7 @@ struct Window
 
     [[nodiscard]] auto world2pixel() const -> Transform { return pixel2world().inverse(); }
 
+    // TODO gives square...shd do .scaled_y(aspect_ratio())
     [[nodiscard]] auto world_box() const -> Box2<f64>
     {
         const auto transform = gl2world();
@@ -256,17 +257,22 @@ struct Window
         return pos - old_pos;
     }
 
-    auto pan(f64 scale = 1.0)
+    void pan(const std::invocable auto& condition, f64 scale = 1.0)
     {
         const auto transform = pixel2world();
         const auto pos       = transform(mouse.pos);
         const auto old_pos   = transform(mouse.old_pos);
-        if (mouse.left)
+        if (condition())
         {
-            // TODO why do we hv to mult by scale
-            // TODO why multiply by camera.scale here but not in mouse_delta
+            // mult by scale coz camera.pos is applied after mult'ing camera.scale
+            // so camera.pos is in view coords
             camera.pos += scale * camera.scale * (pos - old_pos);
         }
+    }
+
+    void pan(f64 scale = 1.0)
+    {
+        pan([&] { return mouse.left; }, scale);
     }
 
     // camera.scale  multiplied by (1 + strength)
@@ -348,6 +354,7 @@ SM_INLINE void Window::get_inputs()
 
     mouse.left    = glfwGetMouseButton(handle.get(), GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
     mouse.right   = glfwGetMouseButton(handle.get(), GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS;
+    mouse.middle  = glfwGetMouseButton(handle.get(), GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS;
     mouse.old_pos = mouse.pos;
 
     auto xpos = 0.0;
