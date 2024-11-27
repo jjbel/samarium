@@ -1,174 +1,188 @@
-#include "samarium/cuda/cuda.hpp"
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2022-2024 Jai Bellare
+ * See <https://opensource.org/licenses/MIT/> or LICENSE.md
+ * Project homepage: https://github.com/jjbel/samarium
+ */
+
+#include "samarium/graphics/colors.hpp"
 #include "samarium/samarium.hpp"
 
+#include "range/v3/view/concat.hpp"
 
 using namespace sm;
+using namespace sm::literals;
 
-auto main(int argc, char* argv[]) -> i32
+// !!!!! EDIT THIS !!!!!
+struct Params
 {
-    const auto cell_size = 1.4F;
-    // std::strtof(argv[1], nullptr);
+    f64 time_scale                 = 1.4;
+    Vec2 gravity                   = -30.0_y;
+    f64 coefficient_of_friction    = 0.95;
+    f64 coefficient_of_restitution = 1.0; // bounciness
+    f64 spring_stiffness           = 150.0;
+    f64 spring_damping             = 55.0;
+    f64 particle_mass              = 0.6;
+    f64 particle_radius            = 1.6;
+    Vec2 initial_vel{8, -15};
+    Dimensions particle_count_xy{5, 5};
+    Vec2 softbody_area{20, 20};
+};
 
-    auto window = Window{{.dims = {1000, 1000}}};
-    auto bench  = Benchmark{};
+// TODO use instanced rendering
+template <typename T> struct Dual
+{
+    T prev{};
+    T now{};
 
-    // TODO at 2000, start shooting off
-    // keep it fixed time. if fps too low, not enough substeps
-    const auto count         = 9'000ULL;
-    const auto radius        = 0.3F;
-    const auto emission_rate = 6;
-    auto sun                 = Vec2f{0, 0};
-    const auto grid_color    = Color{255, 255, 255, 90};
-    // const auto particle_color = Color{100, 60, 255};
-    const auto particle_color = Color{252, 157, 30};
+    T& operator->() { return now; }
+};
 
-    auto ps = ParticleSystemInstanced<>(window, count, cell_size, radius, particle_color);
+auto main() -> i32
+{
+    const auto params = Params{};
 
-    auto rand = RandomGenerator{};
-    window.display();
-    const auto box = window.world_box(); // TODO gives a square
-
-    for (auto& pos : ps.pos)
+    const auto get_dual_from_indices = [&](auto indices)
     {
-        // pos = rand.vector(box).template cast<f32>() * 4.0F;
-        pos = rand.polar_vector({0.0, box.max.y}).cast<f32>() +
-              rand.polar_vector({0.0, 1}).cast<f32>();
-    }
+        const auto x = interp::map_range<f64>(
+            static_cast<f64>(indices.x),
+            Extents<u64>{0UL, params.particle_count_xy.x}.template as<f64>(),
+            Extents<f64>{-params.softbody_area.x / 2.0, params.softbody_area.x / 2.0});
 
-    window.camera.scale /= 30.0;
+        const auto y = interp::map_range<f64>(
+            static_cast<f64>(indices.y),
+            Extents<u64>{0UL, params.particle_count_xy.y}.template as<f64>(),
+            Extents<f64>{-params.softbody_area.y / 2.0, params.softbody_area.y / 2.0});
 
-    // for (auto& vel : ps.vel) { vel = rand.polar_vector({0, 0.1}).template cast<f32>(); }
+        auto pos = Vec2{x, y};
+        pos.rotate(1);
 
-    const auto gravity = [](Vec2f a, Vec2f b, f32 G, f32 clamp)
-    {
-        const auto v = a - b;
-        const auto l = v.length();
-        // gravity:
-        auto g = G / (l * l);
-        g      = std::min(g, clamp); // clamp the repulsion
+        const auto particle =
+            Particle{pos, params.initial_vel, {}, params.particle_radius, params.particle_mass};
 
-        // lennard-jones:
-        // const auto r0 = 3 * radius;
-        // auto g        = 0.1F * (6 * math::power<6>(r0) / math::power<7>(l) -
-        //                   12 * math::power<12>(r0) / math::power<13>(l));
-        // g             = std::max(g, -0.1F); // clamp the repulsion
-        // nice: if u clamp a lot: only attraction: clumping
+        auto dual = Dual<Particle<f64>>();
+        dual.prev = particle;
+        dual.now  = particle;
 
-        // const auto c = static_cast<u8>(std::abs(g) * 100);
-        // const auto c = static_cast<u8>(200);
-        // draw::line_segment(window, {ps.pos[i].template cast<f64>(), ps.pos[j].template
-        // cast<f64>()},
-        //                    Color{c, c, c, 30}, 0.01);
-
-        return (v / l) * g;
+        return dual;
     };
 
-    auto image = Image{window.dims};
 
-    auto frame      = 0;
-    const auto draw = [&]
+    auto particles =
+        Grid2<Dual<Particle<f64>>>::generate(params.particle_count_xy, get_dual_from_indices);
+
+
+    auto springs = [&]
     {
-        draw::background(Color{255, 255, 255});
-        // draw::background(Color{});
+        std::vector<Spring<f64>> temp;
+        temp.reserve(params.particle_count_xy.x * params.particle_count_xy.y * 4UL);
 
-        bench.add("bg, display");
-
-        // const auto box = window.world_box();
-        // for (auto i : loop::start_end(-100, 100))
-        // {
-        //     draw::line_segment(window, {{i * cell_size, box.min.y}, {i * cell_size, box.max.y}},
-        //                        grid_color, 0.05F);
-        //     draw::line_segment(window, {{box.min.x, i * cell_size}, {box.max.x, i * cell_size}},
-        //                        grid_color, 0.05F);
-        // }
-        // bench.add("grid draw");
-
-        const auto mouse_pos = window.pixel2world()(window.mouse.pos).template cast<f32>();
-        // for (auto i : loop::end(ps.size()))
-        // {
-        //     const auto v = mouse_pos - ps.pos[i];
-        //     const auto l = v.length();
-        //     ps.acc[i]    = v * 0.005F / (l * l * l);
-        // }
-
-        // for (auto i : loop::end(emission_rate))
-        // {
-        //     // ps.pos.push_back({rand.range<f32>({-4, -3.5}), 4.0F});
-        //     ps.pos.push_back(
-        //         {rand.range<f32>({mouse_pos.x - 0.3F, mouse_pos.x + 0.3F}), mouse_pos.y});
-
-        //     ps.vel.push_back({rand.range<f32>({-0.01F, 0.01F}), rand.range<f32>({-3.6F,
-        //     -4.0F})}); ps.acc.push_back({});
-        // }
-        bench.add("emitter");
-
-
-        ps.rehash();
-        bench.add("rehash");
-
-        for (auto i : loop::end(ps.size())) { ps.acc[i] -= gravity(ps.pos[i], sun, 36.0F, 30.0F); }
-        bench.add("sun");
-
-        // auto c = 0;
-        // for (auto i : loop::end(ps.size()))
-        // {
-        //     for (auto j : ps.hash_grid.neighbors(ps.pos[i])) // +1 ?
-        //     {
-        //         // TODO cud also find for each particle independently, then add up
-        //         // twice the looping, but paralellizable
-        //         // remember: check i == j, or add a little to l in gravity
-        //         if (i >= j) { continue; }
-        //         // if (i == j) { continue; }
-        //         const auto f = gravity(ps.pos[i], ps.pos[j], 0.0006F, 1.0F);
-        //         ps.acc[i] -= f;
-        //         ps.acc[j] += f;
-        //         // c++;
-        //     }
-        // }
-
-        // 38.6 fps vs
-        cuda::forces({count, ps.pos, ps.acc, nullptr, nullptr, 0.022F, 1.0F});
-
-        bench.add("forces");
-
-        if (frame % 20 == 0)
+        for (auto i : loop::end(params.particle_count_xy.y))
         {
-            // print(c, "/", ps.size() * ps.size() / 2, "   ", ps.size());
-            ps.hash_grid.print_occupancy();
+            for (auto j : loop::end(params.particle_count_xy.x))
+            {
+                if (j != 0) { temp.emplace_back(particles[{j, i}].now, particles[{j - 1, i}].now); }
+                if (i != 0) { temp.emplace_back(particles[{j, i}].now, particles[{j, i - 1}].now); }
+                if (i != 0 && j != 0)
+                {
+                    temp.emplace_back(particles[{j, i}].now, particles[{j - 1, i - 1}].now,
+                                      params.spring_stiffness, params.spring_damping);
+                }
+                if (i != 0 && j != params.particle_count_xy.x - 1)
+                {
+                    temp.emplace_back(particles[{j, i}].now, particles[{j + 1, i - 1}].now,
+                                      params.spring_stiffness, params.spring_damping);
+                }
+            }
         }
 
-        // if (frame > 10000)
-        // {
-        //     ps.pos.erase(ps.pos.begin(), ps.pos.begin() + emission_rate);
-        //     ps.vel.erase(ps.vel.begin(), ps.vel.begin() + emission_rate);
-        //     ps.acc.erase(ps.acc.begin(), ps.acc.begin() + emission_rate);
-        // }
+        return temp;
+    }();
 
-        bench.add("trimming");
+    auto window = Window{{.dims{1800, 900}}};
+    window.camera.scale /= 70;
+    window.display(); // to fix world_box?
+    const auto viewport_box = window.world_box().line_segments();
+    const auto walls        = std::to_array({LineSegment{{-19, -18}, {19, -25}}});
+    const auto colliders    = ranges::views::concat(viewport_box, walls);
 
-        // ps.self_collision();
-        // bench.add("coll");
+    auto watch = Stopwatch{};
 
-        ps.update(1.0F / 100.0F);
-        bench.add("update");
+    const auto update = [&](f64 delta)
+    {
+        delta *= params.time_scale;
 
-        ps.draw();
-        bench.add("instance draw");
+        // TODO why auto&& was here
+        for (auto& spring : springs) { spring.update(); }
 
-        // draw::circle(window, {sun.template cast<f64>(), 0.9}, Color{255, 255, 0}, 64);
-        draw::circle(window, {{0.1, 0.2}, 0.1}, Color{0, 0, 0, 0});
+        for (auto& particle : particles)
+        {
+            particle.now.apply_force(particle.now.mass * params.gravity);
 
-        window.pan();
-        window.zoom_to_cursor();
-        bench.add_frame();
-        frame++;
+            const auto mouse_pos     = window.mouse_pos();
+            const auto mouse_pos_old = window.mouse_old_pos();
 
-        window.get_image(image);
-        file::write(file::pam, image, fmt::format("./exports/{:05}.pam", frame));
+            if (window.mouse.left &&
+                math::within_distance(mouse_pos, particle.now.pos,
+                                      particle.now.radius)) // or same for old pos
+            {
+                particle.now.vel = Vec2{};
+                particle.now.acc = Vec2{};
 
-        // if (frame > 54) { window.close(); }
+                // TODO gives wrong with (too much) and without (too small) window.camera.scale.
+                particle.now.pos += /* window.camera.scale * */ (mouse_pos - mouse_pos_old);
+                // particle.now.acc += /* window.camera.scale * */ 0.01 * (mouse_pos -
+                // mouse_pos_old);
+            }
+
+            particle.now.update(delta);
+
+            // for (auto&& other_particle : particles)
+            // {
+            //     phys::collide(particle.now, other_particle.now);
+            // }
+
+            // TODO particles sometimes disappear, maybe coz NaN
+            for (const auto& wall : colliders)
+            {
+                phys::collide(particle.now, wall, delta, params.coefficient_of_restitution,
+                              params.coefficient_of_friction);
+            }
+        }
     };
-    run(window, draw);
 
-    bench.print();
+    const auto draw = [&]
+    {
+        // drawing mouse later so do bg last
+        draw::background("#16161c"_c);
+
+        for (const auto& ls : colliders) { draw::line_segment(window, ls, colors::white, 0.25); }
+
+        for (const auto& spring : springs)
+        {
+            draw::line_segment(window, LineSegment{spring.p1.pos, spring.p2.pos},
+                               colors::white.with_multiplied_alpha(0.5), 0.25);
+        }
+
+        for (auto& particle : particles)
+        {
+            draw::circle(window, {particle.now.pos, particle.now.radius}, colors::red);
+            particle.prev = particle.now;
+        }
+
+        if (window.mouse.left)
+        {
+            draw::circle(window, {window.mouse_pos(), 1.0}, Color{132, 30, 252});
+        }
+
+        // print("Framerate:", std::round(1.0 / watch.seconds()));
+        watch.reset();
+        window.pan([&] { return window.mouse.middle; });
+        window.zoom_to_cursor();
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(16));
+    };
+
+    // TODO many substeps needed else blows up
+    run(window, update, draw, 32ULL);
 }
