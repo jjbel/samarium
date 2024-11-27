@@ -64,8 +64,11 @@ template <typename Float = f64>
 }
 
 template <typename Float = f64>
-void collide(
-    Particle<Float>& current, const LineSegment& l, f64 dt, f64 damping = 1.0, f64 friction = 1.0)
+void collide(Particle<Float>& current,
+             const LineSegment& l,
+             f64 dt,
+             f64 coefff_of_rest = 1.0,
+             f64 friction       = 1.0)
 {
     const auto old_pos       = current.pos - current.vel * dt;
     const auto vec           = l.vector();
@@ -91,7 +94,7 @@ void collide(
 
     current.vel.rotate(-vec.angle());
     current.vel.x *= friction;
-    current.vel.y *= damping;
+    current.vel.y *= coefff_of_rest;
     current.vel.rotate(vec.angle());
 }
 } // namespace sm::phys
