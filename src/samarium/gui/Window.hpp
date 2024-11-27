@@ -241,7 +241,8 @@ struct Window
 
     [[nodiscard]] auto world2pixel() const -> Transform { return pixel2world().inverse(); }
 
-    // TODO gives square...shd do .scaled_y(aspect_ratio())
+    // TODO gives square...shd do .scaled_y(aspect_ratio()) NO
+    // works if display is called once initially
     [[nodiscard]] auto world_box() const -> Box2<f64>
     {
         const auto transform = gl2world();
