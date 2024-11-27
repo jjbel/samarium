@@ -7,35 +7,37 @@ using namespace sm;
 auto main(int argc, char* argv[]) -> i32
 {
     const auto cell_size = 1.4F;
-    // const auto cell_size = std::strtof(argv[1], nullptr);
-    // print(cell_size);
-    // std::abort();
+    // std::strtof(argv[1], nullptr);
 
-    auto window = Window{{.dims = {1920, 1080}}};
+    auto window = Window{{.dims = {1000, 1000}}};
     auto bench  = Benchmark{};
 
     // TODO at 2000, start shooting off
     // keep it fixed time. if fps too low, not enough substeps
-    const auto count         = 10'000ULL;
-    const auto radius        = 0.05F;
+    const auto count         = 9'000ULL;
+    const auto radius        = 0.3F;
     const auto emission_rate = 6;
     auto sun                 = Vec2f{0, 0};
+    const auto grid_color    = Color{255, 255, 255, 90};
+    // const auto particle_color = Color{100, 60, 255};
+    const auto particle_color = Color{252, 157, 30};
 
-    auto ps = ParticleSystemInstanced<>(window, count, cell_size, radius, Color{100, 60, 255});
+    auto ps = ParticleSystemInstanced<>(window, count, cell_size, radius, particle_color);
 
     auto rand = RandomGenerator{};
     window.display();
     const auto box = window.world_box(); // TODO gives a square
 
-    for (auto& pos : ps.pos) { pos = rand.vector(box).template cast<f32>() * 4.0F;
-    pos = rand.polar_vector({0.0, box.max.y}).cast<f32>();
-     }
+    for (auto& pos : ps.pos)
+    {
+        // pos = rand.vector(box).template cast<f32>() * 4.0F;
+        pos = rand.polar_vector({0.0, box.max.y}).cast<f32>() +
+              rand.polar_vector({0.0, 1}).cast<f32>();
+    }
 
+    window.camera.scale /= 30.0;
 
-    
     // for (auto& vel : ps.vel) { vel = rand.polar_vector({0, 0.1}).template cast<f32>(); }
-    window.camera.scale /= 10.0;
-
 
     const auto gravity = [](Vec2f a, Vec2f b, f32 G, f32 clamp)
     {
@@ -61,21 +63,25 @@ auto main(int argc, char* argv[]) -> i32
         return (v / l) * g;
     };
 
+    auto image = Image{window.dims};
+
     auto frame      = 0;
     const auto draw = [&]
     {
-        draw::background(Color{});
+        draw::background(Color{255, 255, 255});
+        // draw::background(Color{});
+
         bench.add("bg, display");
 
-        const auto box = window.world_box();
-        for (auto i : loop::start_end(-100, 100))
-        {
-            draw::line_segment(window, {{i * cell_size, box.min.y}, {i * cell_size, box.max.y}},
-                               Color{255, 255, 255, 90}, 0.05F);
-            draw::line_segment(window, {{box.min.x, i * cell_size}, {box.max.x, i * cell_size}},
-                               Color{255, 255, 255, 90}, 0.05F);
-        }
-        bench.add("grid draw");
+        // const auto box = window.world_box();
+        // for (auto i : loop::start_end(-100, 100))
+        // {
+        //     draw::line_segment(window, {{i * cell_size, box.min.y}, {i * cell_size, box.max.y}},
+        //                        grid_color, 0.05F);
+        //     draw::line_segment(window, {{box.min.x, i * cell_size}, {box.max.x, i * cell_size}},
+        //                        grid_color, 0.05F);
+        // }
+        // bench.add("grid draw");
 
         const auto mouse_pos = window.pixel2world()(window.mouse.pos).template cast<f32>();
         // for (auto i : loop::end(ps.size()))
@@ -100,8 +106,8 @@ auto main(int argc, char* argv[]) -> i32
         ps.rehash();
         bench.add("rehash");
 
-        for (auto i : loop::end(ps.size())) { ps.acc[i] -= gravity(ps.pos[i], sun, 36.0F, 30.0F);
-        } bench.add("sun");
+        for (auto i : loop::end(ps.size())) { ps.acc[i] -= gravity(ps.pos[i], sun, 36.0F, 30.0F); }
+        bench.add("sun");
 
         // auto c = 0;
         // for (auto i : loop::end(ps.size()))
@@ -120,8 +126,8 @@ auto main(int argc, char* argv[]) -> i32
         //     }
         // }
 
-        // 38.6 fps vs 
-        cuda::forces({count, ps.pos, ps.acc, nullptr, nullptr, 0.008F, 1.0F});
+        // 38.6 fps vs
+        cuda::forces({count, ps.pos, ps.acc, nullptr, nullptr, 0.022F, 1.0F});
 
         bench.add("forces");
 
@@ -149,16 +155,20 @@ auto main(int argc, char* argv[]) -> i32
         ps.draw();
         bench.add("instance draw");
 
-        draw::circle(window, {sun.template cast<f64>(), 0.9}, Color{255, 255, 0}, 64);
+        // draw::circle(window, {sun.template cast<f64>(), 0.9}, Color{255, 255, 0}, 64);
         draw::circle(window, {{0.1, 0.2}, 0.1}, Color{0, 0, 0, 0});
 
         window.pan();
         window.zoom_to_cursor();
         bench.add_frame();
         frame++;
+
+        window.get_image(image);
+        file::write(file::pam, image, fmt::format("./exports/{:05}.pam", frame));
+
+        // if (frame > 54) { window.close(); }
     };
     run(window, draw);
 
     bench.print();
-    // ps.instancer.bench.print();
 }
