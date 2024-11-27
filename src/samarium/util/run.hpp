@@ -39,23 +39,51 @@ auto run(Window& window, const std::invocable auto& update)
  * accordingly
  */
 auto run(Window& window,
-         const std::invocable auto& update,
-         const std::invocable auto& draw,
+         const auto& update, // std::invocable<void(f64)> ?
+         const auto& draw,
          u64 substeps = 1)
 {
     auto watch = Stopwatch{};
+    auto dt    = 0.0;
+    while (window.is_open())
+    {
+        dt = watch.seconds();
+        // clamp dt so if there s a big lag it doesnt explode
+        watch.reset();
+
+        for (auto i : loop::end(substeps))
+        {
+            // TODO is this correct dt?
+            // https://youtu.be/yGhfUcPjXuE?t=333 use diff bw n-1 and n-2
+            update(dt / substeps);
+            // std::ignore = i;
+        }
+        draw();
+        window.display();
+    }
+}
+
+/**
+ * @brief               call update  -> call draw -> display the window
+ *
+ * @param  window       Window to display
+ * @param  update       Callable which updates the state of objects
+ * @param  draw         Callable which draws objects
+ * @param  substeps
+ * @param  dt           Fixed time to assume bewteen frames
+ */
+auto run(Window& window, const auto& update, const auto& draw, u64 substeps, f64 dt)
+{
     while (window.is_open())
     {
         for (auto i : loop::end(substeps))
         {
-            // TODO should give update the correct dt
-            update();
-            watch.reset();
-
-            std::ignore = i;
+            // TODO is this correct dt?
+            // https://youtu.be/yGhfUcPjXuE?t=333 use diff bw n-1 and n-2
+            update(dt / substeps);
+            // std::ignore = i;
         }
         draw();
-
         window.display();
     }
 }
