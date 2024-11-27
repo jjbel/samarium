@@ -20,6 +20,7 @@
 
 namespace sm::gl
 {
+// TODO this is InstancerPos, implement InstancerPosColor
 struct Instancer
 {
     Window& window;
