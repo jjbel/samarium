@@ -22,6 +22,7 @@ struct ForcesSettings
     f32 strength = 0.0006F;
     // f32 min_distance = 0.01F;
     f32 max_force = 1.0F;
+    f32 r_max_sq = 9.0F;
 };
 
 void forces(const ForcesSettings& settings);
