@@ -19,3 +19,4 @@ if(!(Test-Path $Exe))
 {
     & $Exe
 }
+# maybe delete the exe so doesn't run if failed
