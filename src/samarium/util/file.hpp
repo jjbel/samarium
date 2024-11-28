@@ -57,6 +57,7 @@ auto read([[maybe_unused]] Text tag, const Path& file_path) -> Result<std::strin
 // assume file exists and is regular
 auto read_unsafe([[maybe_unused]] Text tag, const Path& file_path) -> std::string;
 
+// TODO rename to read_str
 auto read(const Path& file_path) -> Result<std::string>;
 
 auto read_image(const Path& file_path) -> Result<Image>;
