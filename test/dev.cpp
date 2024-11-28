@@ -124,7 +124,7 @@ auto main() -> i32
 
             if (window.mouse.left &&
                 math::within_distance(mouse_pos, particle.now.pos,
-                                      particle.now.radius)) // or same for old pos
+                                      3 * particle.now.radius)) // or same for old pos
             {
                 particle.now.vel = Vec2{};
                 particle.now.acc = Vec2{};
@@ -156,12 +156,15 @@ auto main() -> i32
         // drawing mouse later so do bg last
         draw::background("#16161c"_c);
 
-        for (const auto& ls : colliders) { draw::line_segment(window, ls, colors::white, 0.25); }
+        for (const auto& ls : colliders) { draw::line_segment(window, ls, colors::white, 0.45); }
 
         for (const auto& spring : springs)
         {
-            draw::line_segment(window, LineSegment{spring.p1.pos, spring.p2.pos},
-                               colors::white.with_multiplied_alpha(0.5), 0.25);
+            if (spring.active)
+            {
+                draw::line_segment(window, LineSegment{spring.p1.pos, spring.p2.pos},
+                                   colors::white.with_multiplied_alpha(0.5), 0.25);
+            }
         }
 
         for (auto& particle : particles)
