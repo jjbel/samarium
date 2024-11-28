@@ -75,7 +75,6 @@ struct Fluid
                                   (1 + 4 * a);
                 }
             }
-            // TODO adds lines at the border??
             set_bnd(b, x);
         }
     }
@@ -106,7 +105,7 @@ struct Fluid
     void update()
     {
         add_sources(dens.host, s.host);
-        diffuse(2, dens.host, dens_prev.host, diffusion);
+        diffuse(0, dens.host, dens_prev.host, diffusion);
         swap_prev();
     }
 };
