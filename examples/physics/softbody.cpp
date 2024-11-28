@@ -19,14 +19,23 @@ struct Params
     f64 time_scale                 = 1.4;
     Vec2 gravity                   = -30.0_y;
     f64 coefficient_of_friction    = 0.95;
-    f64 coefficient_of_restitution = 0.95; // bounciness
+    f64 coefficient_of_restitution = 1.0; // bounciness
     f64 spring_stiffness           = 150.0;
     f64 spring_damping             = 55.0;
     f64 particle_mass              = 0.6;
     f64 particle_radius            = 1.6;
-    Vec2 particle_velocity{10, 20};
-    Dimensions particle_count_xy{4, 4};
-    Vec2 softbody_area{25, 25};
+    Vec2 initial_vel{8, -15};
+    Dimensions particle_count_xy{5, 5};
+    Vec2 softbody_area{20, 20};
+};
+
+// TODO use instanced rendering
+template <typename T> struct Dual
+{
+    T prev{};
+    T now{};
+
+    T& operator->() { return now; }
 };
 
 auto main() -> i32
@@ -37,21 +46,21 @@ auto main() -> i32
     {
         const auto x = interp::map_range<f64>(
             static_cast<f64>(indices.x),
-            Extents<u64>{0UL, params.particle_count_xy.x}.template cast<f64>(),
+            Extents<u64>{0UL, params.particle_count_xy.x}.template as<f64>(),
             Extents<f64>{-params.softbody_area.x / 2.0, params.softbody_area.x / 2.0});
 
         const auto y = interp::map_range<f64>(
             static_cast<f64>(indices.y),
-            Extents<u64>{0UL, params.particle_count_xy.y}.template cast<f64>(),
+            Extents<u64>{0UL, params.particle_count_xy.y}.template as<f64>(),
             Extents<f64>{-params.softbody_area.y / 2.0, params.softbody_area.y / 2.0});
 
         auto pos = Vec2{x, y};
         pos.rotate(1);
 
-        const auto particle = Particle{
-            pos, params.particle_velocity, {}, params.particle_radius, params.particle_mass};
+        const auto particle =
+            Particle{pos, params.initial_vel, {}, params.particle_radius, params.particle_mass};
 
-        auto dual = Dual<Particle>();
+        auto dual = Dual<Particle<f64>>();
         dual.prev = particle;
         dual.now  = particle;
 
@@ -60,12 +69,12 @@ auto main() -> i32
 
 
     auto particles =
-        Grid2<Dual<Particle>>::generate(params.particle_count_xy, get_dual_from_indices);
+        Grid2<Dual<Particle<f64>>>::generate(params.particle_count_xy, get_dual_from_indices);
 
 
     auto springs = [&]
     {
-        std::vector<Spring> temp;
+        std::vector<Spring<f64>> temp;
         temp.reserve(params.particle_count_xy.x * params.particle_count_xy.y * 4UL);
 
         for (auto i : loop::end(params.particle_count_xy.y))
@@ -90,42 +99,51 @@ auto main() -> i32
         return temp;
     }();
 
-    auto app = App{{.dims{1600, 800}}};
-    app.transform.scale *= 1.4;
-    const auto viewport_box = app.viewport_box();
-
-    const auto walls     = std::to_array({LineSegment{{-19, 20}, {19, 14}}});
-    const auto colliders = ranges::views::concat(viewport_box, walls);
+    auto window = Window{{.dims{1800, 900}}};
+    window.camera.scale /= 70;
+    window.display(); // to fix world_box?
+    const auto viewport_box = window.world_box().line_segments();
+    const auto walls        = std::to_array({LineSegment{{-19, -18}, {19, -25}}});
+    const auto colliders    = ranges::views::concat(viewport_box, walls);
 
     auto watch = Stopwatch{};
 
-    const auto update = [&](auto delta)
+    const auto update = [&](f64 delta)
     {
         delta *= params.time_scale;
 
-        for (auto&& spring : springs) { spring.update(); }
+        // TODO why auto&& was here
+        for (auto& spring : springs) { spring.update(); }
 
-        for (auto&& particle : particles)
+        for (auto& particle : particles)
         {
-            const auto mouse_pos = app.transform.apply_inverse(app.mouse.current_pos);
+            particle.now.apply_force(particle.now.mass * params.gravity);
 
-            particle->apply_force(particle->mass * params.gravity);
+            const auto mouse_pos     = window.mouse_pos();
+            const auto mouse_pos_old = window.mouse_old_pos();
 
-            if (math::within_distance(mouse_pos, particle->pos, particle->radius) && app.mouse.left)
+            if (window.mouse.left &&
+                math::within_distance(mouse_pos, particle.now.pos,
+                                      3 * particle.now.radius)) // or same for old pos
             {
-                particle->pos += app.mouse.vel() / app.transform.scale;
-                particle->vel = Vec2{};
-                particle->acc = Vec2{};
+                particle.now.vel = Vec2{};
+                particle.now.acc = Vec2{};
+
+                // TODO gives wrong with (too much) and without (too small) window.camera.scale.
+                particle.now.pos += /* window.camera.scale * */ (mouse_pos - mouse_pos_old);
+                // particle.now.acc += /* window.camera.scale * */ 0.01 * (mouse_pos -
+                // mouse_pos_old);
             }
 
-            particle->update(delta);
+            particle.now.update(delta);
 
-            for (auto&& other_particle : particles)
-            {
-                phys::collide(particle.now, other_particle.now);
-            }
+            // for (auto&& other_particle : particles)
+            // {
+            //     phys::collide(particle.now, other_particle.now);
+            // }
 
-            for (auto&& wall : colliders)
+            // TODO particles sometimes disappear, maybe coz NaN
+            for (const auto& wall : colliders)
             {
                 phys::collide(particle.now, wall, delta, params.coefficient_of_restitution,
                               params.coefficient_of_friction);
@@ -135,25 +153,39 @@ auto main() -> i32
 
     const auto draw = [&]
     {
+        // drawing mouse later so do bg last
         draw::background("#16161c"_c);
 
-        for (const auto& ls : colliders) { app.draw_line_segment(ls, colors::white, 0.1); }
+        for (const auto& ls : colliders) { draw::line_segment(window, ls, colors::white, 0.45); }
 
         for (const auto& spring : springs)
         {
-            app.draw_line_segment(LineSegment{spring.p1.pos, spring.p2.pos},
-                                  colors::white.with_multiplied_alpha(0.5), 0.1);
+            if (spring.active)
+            {
+                draw::line_segment(window, LineSegment{spring.p1.pos, spring.p2.pos},
+                                   colors::white.with_multiplied_alpha(0.5), 0.25);
+            }
         }
 
         for (auto& particle : particles)
         {
-            app.draw(particle.now, {.fill_color = colors::red});
+            draw::circle(window, {particle.now.pos, particle.now.radius}, colors::red);
             particle.prev = particle.now;
         }
 
-        print("Framerate:", std::round(1.0 / watch.seconds()));
+        if (window.mouse.left)
+        {
+            draw::circle(window, {window.mouse_pos(), 1.0}, Color{132, 30, 252});
+        }
+
+        // print("Framerate:", std::round(1.0 / watch.seconds()));
         watch.reset();
+        window.pan([&] { return window.mouse.middle; });
+        window.zoom_to_cursor();
+
+        // std::this_thread::sleep_for(std::chrono::milliseconds(16));
     };
 
-    app.run(update, draw, 32);
+    // TODO many substeps needed else blows up
+    run(window, update, draw, 32ULL);
 }
