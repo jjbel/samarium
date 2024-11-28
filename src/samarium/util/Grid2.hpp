@@ -204,6 +204,7 @@ template <typename T> class Grid2
 
     auto enumerate_1d() { return ranges::views::enumerate(elements); }
 
+    // TODO how to iterate with auto&
     auto enumerate_2d() { return ranges::views::zip(iota_view_2d(dims), elements); }
 
     auto byte_size() const { return size() * sizeof(T); }
