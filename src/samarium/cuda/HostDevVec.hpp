@@ -12,10 +12,10 @@ struct HostDevVec
 
     u64 byte_size() const;
 
-    // void malloc_host() { host = (float*)malloc(byte_size()); }
+    void malloc_host();
     void malloc_dev();
 
-    // void free_host() { free(host); }
+    void free_host();
     void free_dev();
 
     void host2dev();
