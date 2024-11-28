@@ -17,14 +17,37 @@ using namespace sm::literals;
 
 struct Fluid
 {
-    u64 N = 20;
-    u64 size() const { return (N + 2) * (N + 2); }
+    const u64 N  = 20;
+    const f32 dt = 0.1F;
 
     cuda::HostDevVec u         = cuda::HostDevVec(size());
     cuda::HostDevVec v         = cuda::HostDevVec(size());
     cuda::HostDevVec u_prev    = cuda::HostDevVec(size());
     cuda::HostDevVec dens      = cuda::HostDevVec(size());
     cuda::HostDevVec dens_prev = cuda::HostDevVec(size());
+    cuda::HostDevVec s         = cuda::HostDevVec(size());
+
+    Fluid(u64 N = 20, f32 dt = 0.1F) : N{N}, dt{dt}
+    {
+        u.malloc_host();
+        v.malloc_host();
+        u_prev.malloc_host();
+        dens.malloc_host();
+        dens_prev.malloc_host();
+        s.malloc_host();
+    }
+
+    u64 size() const { return (N + 2) * (N + 2); }
+
+    ~Fluid()
+    {
+        u.free_host();
+        v.free_host();
+        u_prev.free_host();
+        dens.free_host();
+        dens_prev.free_host();
+        s.free_host();
+    }
 };
 
 auto main() -> i32
@@ -83,8 +106,15 @@ auto main() -> i32
 
         for (const auto& [pos, _] : image.enumerate_2d())
         {
-            const auto c =
-                static_cast<u8>(static_cast<f32>((pos.x + frame_counter) % dims.x) / dims.x * 255);
+            fluid.dens.host[IX(pos.x, pos.y)] =
+                std::sin(static_cast<f32>(pos.x + pos.y) / 2.0F + 0.5F);
+        }
+
+        for (const auto& [pos, _] : image.enumerate_2d())
+        {
+            // const auto c =
+            // static_cast<u8>(static_cast<f32>((pos.x + frame_counter) % dims.x) / dims.x * 255);
+            const auto c = static_cast<u8>(fluid.dens.host[IX(pos.x, pos.y)] * 255);
             image[pos].r = c;
             image[pos].g = c;
             image[pos].b = c;
