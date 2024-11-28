@@ -50,6 +50,7 @@ struct Texture
                      Filter min_filter = Filter::None,
                      Filter mag_filter = Filter::None);
 
+    // TODO swap order of last 3 params
     explicit Texture(ImageFormat format,
                      Dimensions dims,
                      Wrap mode         = Wrap::None,
