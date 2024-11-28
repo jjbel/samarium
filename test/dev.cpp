@@ -42,6 +42,15 @@ struct Fluid
         dens.malloc_host();
         dens_prev.malloc_host();
         s.malloc_host();
+
+        for (u64 i = 0; i < size; i++)
+        {
+            u.host[i]      = 0;
+            v.host[i]      = 0;
+            u_prev.host[i] = 0;
+            v_prev.host[i] = 0;
+            s.host[i]      = 0;
+        }
     }
 
     ~Fluid()
@@ -79,6 +88,36 @@ struct Fluid
         }
     }
 
+    void advect(int b, float* d, float* d0, float* u, float* v)
+    {
+        int i, j, i0, j0, i1, j1;
+        float x, y, s0, t0, s1, t1;
+        const f32 dt0 = dt * N;
+        for (i = 1; i <= N; i++)
+        {
+            for (j = 1; j <= N; j++)
+            {
+                x = i - dt0 * u[IX(i, j)];
+                y = j - dt0 * v[IX(i, j)];
+                if (x < 0.5) x = 0.5;
+                if (x > N + 0.5) x = N + 0.5;
+                i0 = (int)x;
+                i1 = i0 + 1;
+                if (y < 0.5) y = 0.5;
+                if (y > N + 0.5) y = N + 0.5;
+                j0          = (int)y;
+                j1          = j0 + 1;
+                s1          = x - i0;
+                s0          = 1 - s1;
+                t1          = y - j0;
+                t0          = 1 - t1;
+                d[IX(i, j)] = s0 * (t0 * d0[IX(i0, j0)] + t1 * d0[IX(i0, j1)]) +
+                              s1 * (t0 * d0[IX(i1, j0)] + t1 * d0[IX(i1, j1)]);
+            }
+        }
+        set_bnd(b, d);
+    }
+
     void set_bnd(int b, f32* x)
     {
         for (u64 i = 1; i <= N; i++)
@@ -95,24 +134,19 @@ struct Fluid
         x[IX(N + 1, N + 1)] = 0.5F * (x[IX(N, N + 1)] + x[IX(N + 1, N)]);
     }
 
-    void swap_prev()
-    {
-        std::memcpy(u_prev.host, u.host, byte_size);
-        std::memcpy(v_prev.host, v.host, byte_size);
-        std::memcpy(dens_prev.host, dens.host, byte_size);
-    }
-
     void update()
     {
         add_sources(dens.host, s.host);
+        std::swap(dens.host, dens_prev.host);
         diffuse(0, dens.host, dens_prev.host, diffusion);
-        swap_prev();
+        std::swap(dens.host, dens_prev.host);
+        advect(0, dens.host, dens_prev.host, u.host, v.host);
     }
 };
 
 auto main() -> i32
 {
-    const auto N    = 20;
+    const auto N    = 50;
     const auto dims = Dimensions{N + 2, N + 2};
     auto window     = Window{{.dims{700, 700}}};
     window.display(); // to fix world_box?
@@ -133,10 +167,11 @@ auto main() -> i32
     {
         // fluid.dens.host[IX(pos.x, pos.y)] = std::sin(static_cast<f32>(pos.x + pos.y) / 2.0F +
         // 0.5F);
-        fluid.dens.host[IX(pos.x, pos.y)] =
-            math::distance(pos.template cast<f64>(), Vec2{10, 10}) < 4;
-        fluid.dens_prev.host[IX(pos.x, pos.y)] =
-            math::distance(pos.template cast<f64>(), Vec2{10, 10}) < 4;
+        const auto index       = IX(pos.x, pos.y);
+        fluid.dens.host[index] = math::distance(pos.template cast<f64>(), Vec2{N / 2, N / 2}) < 10;
+        fluid.dens_prev.host[index] =
+            math::distance(pos.template cast<f64>(), Vec2{N / 2, N / 2}) < 10;
+        fluid.v.host[index] = (pos.x < N / 2) * 0.01F;
     }
 
 
