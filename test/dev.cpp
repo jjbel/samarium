@@ -17,36 +17,97 @@ using namespace sm::literals;
 
 struct Fluid
 {
-    const u64 N  = 20;
-    const f32 dt = 0.1F;
+    const u64 N;
+    const f32 dt;
+    const u64 size;
+    const u64 byte_size;
 
-    cuda::HostDevVec u         = cuda::HostDevVec(size());
-    cuda::HostDevVec v         = cuda::HostDevVec(size());
-    cuda::HostDevVec u_prev    = cuda::HostDevVec(size());
-    cuda::HostDevVec dens      = cuda::HostDevVec(size());
-    cuda::HostDevVec dens_prev = cuda::HostDevVec(size());
-    cuda::HostDevVec s         = cuda::HostDevVec(size());
+    const f64 diffusion = 0.001F;
 
-    Fluid(u64 N = 20, f32 dt = 0.1F) : N{N}, dt{dt}
+    cuda::HostDevVec u         = cuda::HostDevVec(size);
+    cuda::HostDevVec v         = cuda::HostDevVec(size);
+    cuda::HostDevVec u_prev    = cuda::HostDevVec(size);
+    cuda::HostDevVec v_prev    = cuda::HostDevVec(size);
+    cuda::HostDevVec dens      = cuda::HostDevVec(size);
+    cuda::HostDevVec dens_prev = cuda::HostDevVec(size);
+    cuda::HostDevVec s         = cuda::HostDevVec(size);
+
+    Fluid(u64 N = 20, f32 dt = 0.1F)
+        : N{N}, dt{dt}, size{(N + 2) * (N + 2)}, byte_size{size * sizeof(f32)}
     {
         u.malloc_host();
         v.malloc_host();
         u_prev.malloc_host();
+        v_prev.malloc_host();
         dens.malloc_host();
         dens_prev.malloc_host();
         s.malloc_host();
     }
-
-    u64 size() const { return (N + 2) * (N + 2); }
 
     ~Fluid()
     {
         u.free_host();
         v.free_host();
         u_prev.free_host();
+        v_prev.free_host();
         dens.free_host();
         dens_prev.free_host();
         s.free_host();
+    }
+
+    void add_sources(f32* dest, f32* source)
+    {
+        for (u64 i = 0; i < size; i++) { dest[i] += dt * source[i]; }
+    }
+
+    void diffuse(int b, float* x, float* x0, float diff)
+    {
+        const float a = dt * diff * N * N;
+
+        for (u64 k = 0; k < 20; k++)
+        {
+            for (u64 i = 1; i <= N; i++)
+            {
+                for (u64 j = 1; j <= N; j++)
+                {
+                    x[IX(i, j)] = (x0[IX(i, j)] + a * (x[IX(i - 1, j)] + x[IX(i + 1, j)] +
+                                                       x[IX(i, j - 1)] + x[IX(i, j + 1)])) /
+                                  (1 + 4 * a);
+                }
+            }
+            // TODO adds lines at the border??
+            set_bnd(b, x);
+        }
+    }
+
+    void set_bnd(int b, f32* x)
+    {
+        for (u64 i = 1; i <= N; i++)
+        {
+            x[IX(0, i)]     = b == 1 ? -x[IX(1, i)] : x[IX(1, i)];
+            x[IX(N + 1, i)] = b == 1 ? -x[IX(N, i)] : x[IX(N, i)];
+            x[IX(i, 0)]     = b == 2 ? -x[IX(i, 1)] : x[IX(i, 1)];
+            x[IX(i, N + 1)] = b == 2 ? -x[IX(i, N)] : x[IX(i, N)];
+        }
+
+        x[IX(0, 0)]         = 0.5F * (x[IX(1, 0)] + x[IX(0, 1)]);
+        x[IX(0, N + 1)]     = 0.5F * (x[IX(1, N + 1)] + x[IX(0, N)]);
+        x[IX(N + 1, 0)]     = 0.5F * (x[IX(N, 0)] + x[IX(N + 1, 1)]);
+        x[IX(N + 1, N + 1)] = 0.5F * (x[IX(N, N + 1)] + x[IX(N + 1, N)]);
+    }
+
+    void swap_prev()
+    {
+        std::memcpy(u_prev.host, u.host, byte_size);
+        std::memcpy(v_prev.host, v.host, byte_size);
+        std::memcpy(dens_prev.host, dens.host, byte_size);
+    }
+
+    void update()
+    {
+        add_sources(dens.host, s.host);
+        diffuse(2, dens.host, dens_prev.host, diffusion);
+        swap_prev();
     }
 };
 
@@ -68,6 +129,16 @@ auto main() -> i32
 
     auto texture = gl::Texture{gl::ImageFormat::RGBA8, dims, gl::Texture::Wrap::None,
                                gl::Texture::Filter::None, gl::Texture::Filter::Nearest};
+
+    for (const auto& [pos, _] : image.enumerate_2d())
+    {
+        // fluid.dens.host[IX(pos.x, pos.y)] = std::sin(static_cast<f32>(pos.x + pos.y) / 2.0F +
+        // 0.5F);
+        fluid.dens.host[IX(pos.x, pos.y)] =
+            math::distance(pos.template cast<f64>(), Vec2{10, 10}) < 4;
+        fluid.dens_prev.host[IX(pos.x, pos.y)] =
+            math::distance(pos.template cast<f64>(), Vec2{10, 10}) < 4;
+    }
 
 
     const auto draw_tex = [&]
@@ -104,11 +175,7 @@ auto main() -> i32
         // drawing mouse later so do bg last
         draw::background("#16161c"_c);
 
-        for (const auto& [pos, _] : image.enumerate_2d())
-        {
-            fluid.dens.host[IX(pos.x, pos.y)] =
-                std::sin(static_cast<f32>(pos.x + pos.y) / 2.0F + 0.5F);
-        }
+        fluid.update();
 
         for (const auto& [pos, _] : image.enumerate_2d())
         {
