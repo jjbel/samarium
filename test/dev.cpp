@@ -5,150 +5,75 @@
  * Project homepage: https://github.com/jjbel/samarium
  */
 
-#include "samarium/graphics/colors.hpp"
+// #include "samarium/graphics/colors.hpp"
+#include "samarium/cuda/HostDevVec.hpp"
 #include "samarium/samarium.hpp"
 
-#include "range/v3/view/concat.hpp"
 
 using namespace sm;
 using namespace sm::literals;
 
-// !!!!! EDIT THIS !!!!!
-struct Params
-{
-    f64 time_scale                 = 1.4;
-    Vec2 gravity                   = -30.0_y;
-    f64 coefficient_of_friction    = 0.95;
-    f64 coefficient_of_restitution = 1.0; // bounciness
-    f64 spring_stiffness           = 150.0;
-    f64 spring_damping             = 55.0;
-    f64 particle_mass              = 0.6;
-    f64 particle_radius            = 1.6;
-    Vec2 initial_vel{8, -15};
-    Dimensions particle_count_xy{5, 5};
-    Vec2 softbody_area{20, 20};
-};
+#define IX(i, j) ((i) + (N + 2) * (j))
 
-// TODO use instanced rendering
-template <typename T> struct Dual
+struct Fluid
 {
-    T prev{};
-    T now{};
+    u64 N = 20;
+    u64 size() const { return (N + 2) * (N + 2); }
 
-    T& operator->() { return now; }
+    cuda::HostDevVec u         = cuda::HostDevVec(size());
+    cuda::HostDevVec v         = cuda::HostDevVec(size());
+    cuda::HostDevVec u_prev    = cuda::HostDevVec(size());
+    cuda::HostDevVec dens      = cuda::HostDevVec(size());
+    cuda::HostDevVec dens_prev = cuda::HostDevVec(size());
 };
 
 auto main() -> i32
 {
-    const auto params = Params{};
-
-    const auto get_dual_from_indices = [&](auto indices)
-    {
-        const auto x = interp::map_range<f64>(
-            static_cast<f64>(indices.x),
-            Extents<u64>{0UL, params.particle_count_xy.x}.template as<f64>(),
-            Extents<f64>{-params.softbody_area.x / 2.0, params.softbody_area.x / 2.0});
-
-        const auto y = interp::map_range<f64>(
-            static_cast<f64>(indices.y),
-            Extents<u64>{0UL, params.particle_count_xy.y}.template as<f64>(),
-            Extents<f64>{-params.softbody_area.y / 2.0, params.softbody_area.y / 2.0});
-
-        auto pos = Vec2{x, y};
-        pos.rotate(1);
-
-        const auto particle =
-            Particle{pos, params.initial_vel, {}, params.particle_radius, params.particle_mass};
-
-        auto dual = Dual<Particle<f64>>();
-        dual.prev = particle;
-        dual.now  = particle;
-
-        return dual;
-    };
-
-
-    auto particles =
-        Grid2<Dual<Particle<f64>>>::generate(params.particle_count_xy, get_dual_from_indices);
-
-
-    auto springs = [&]
-    {
-        std::vector<Spring<f64>> temp;
-        temp.reserve(params.particle_count_xy.x * params.particle_count_xy.y * 4UL);
-
-        for (auto i : loop::end(params.particle_count_xy.y))
-        {
-            for (auto j : loop::end(params.particle_count_xy.x))
-            {
-                if (j != 0) { temp.emplace_back(particles[{j, i}].now, particles[{j - 1, i}].now); }
-                if (i != 0) { temp.emplace_back(particles[{j, i}].now, particles[{j, i - 1}].now); }
-                if (i != 0 && j != 0)
-                {
-                    temp.emplace_back(particles[{j, i}].now, particles[{j - 1, i - 1}].now,
-                                      params.spring_stiffness, params.spring_damping);
-                }
-                if (i != 0 && j != params.particle_count_xy.x - 1)
-                {
-                    temp.emplace_back(particles[{j, i}].now, particles[{j + 1, i - 1}].now,
-                                      params.spring_stiffness, params.spring_damping);
-                }
-            }
-        }
-
-        return temp;
-    }();
-
-    auto window = Window{{.dims{1800, 900}}};
-    window.camera.scale /= 70;
+    const auto N    = 20;
+    const auto dims = Dimensions{N + 2, N + 2};
+    auto window     = Window{{.dims{700, 700}}};
     window.display(); // to fix world_box?
-    const auto viewport_box = window.world_box().line_segments();
-    const auto walls        = std::to_array({LineSegment{{-19, -18}, {19, -25}}});
-    const auto colliders    = ranges::views::concat(viewport_box, walls);
+    const auto viewport_box = window.world_box();
 
-    auto watch = Stopwatch{};
+    auto watch         = Stopwatch{};
+    auto frame_counter = 0;
 
-    const auto update = [&](f64 delta)
+    auto fluid = Fluid(N);
+
+    // auto image = expect(file::read_image("D:\\sm\\india-map-2019.jpg"));
+    auto image = Image{dims};
+
+    auto texture = gl::Texture{gl::ImageFormat::RGBA8, dims, gl::Texture::Wrap::None,
+                               gl::Texture::Filter::None, gl::Texture::Filter::Nearest};
+
+
+    const auto draw_tex = [&]
     {
-        delta *= params.time_scale;
+        texture.set_data(image, dims);
+        using Vert                        = gl::Vertex<gl::Layout::PosTex>;
+        static constexpr auto buffer_data = std::to_array<Vert>({{{-1, -1}, {0, 0}},
+                                                                 {{1, 1}, {1, 1}},
+                                                                 {{-1, 1}, {0, 1}},
 
-        // TODO why auto&& was here
-        for (auto& spring : springs) { spring.update(); }
+                                                                 {{-1, -1}, {0, 0}},
+                                                                 {{1, -1}, {1, 0}},
+                                                                 {{1, 1}, {1, 1}}});
 
-        for (auto& particle : particles)
-        {
-            particle.now.apply_force(particle.now.mass * params.gravity);
+        auto& ctx          = window.context;
+        const auto& shader = ctx.shaders.at("PosTex");
+        ctx.set_active(shader);
+        shader.set("view", glm::mat4{1.0F});
 
-            const auto mouse_pos     = window.mouse_pos();
-            const auto mouse_pos_old = window.mouse_old_pos();
+        texture.bind();
 
-            if (window.mouse.left &&
-                math::within_distance(mouse_pos, particle.now.pos,
-                                      3 * particle.now.radius)) // or same for old pos
-            {
-                particle.now.vel = Vec2{};
-                particle.now.acc = Vec2{};
+        auto& vao = ctx.vertex_arrays.at("PosTex");
+        ctx.set_active(vao);
 
-                // TODO gives wrong with (too much) and without (too small) window.camera.scale.
-                particle.now.pos += /* window.camera.scale * */ (mouse_pos - mouse_pos_old);
-                // particle.now.acc += /* window.camera.scale * */ 0.01 * (mouse_pos -
-                // mouse_pos_old);
-            }
+        const auto& buffer = ctx.vertex_buffers.at("default");
+        buffer.set_data(buffer_data);
+        vao.bind(buffer, sizeof(Vert));
 
-            particle.now.update(delta);
-
-            // for (auto&& other_particle : particles)
-            // {
-            //     phys::collide(particle.now, other_particle.now);
-            // }
-
-            // TODO particles sometimes disappear, maybe coz NaN
-            for (const auto& wall : colliders)
-            {
-                phys::collide(particle.now, wall, delta, params.coefficient_of_restitution,
-                              params.coefficient_of_friction);
-            }
-        }
+        glDrawArrays(GL_TRIANGLES, 0, static_cast<i32>(buffer_data.size()));
     };
 
     const auto draw = [&]
@@ -156,36 +81,29 @@ auto main() -> i32
         // drawing mouse later so do bg last
         draw::background("#16161c"_c);
 
-        for (const auto& ls : colliders) { draw::line_segment(window, ls, colors::white, 0.45); }
-
-        for (const auto& spring : springs)
+        for (const auto& [pos, _] : image.enumerate_2d())
         {
-            if (spring.active)
-            {
-                draw::line_segment(window, LineSegment{spring.p1.pos, spring.p2.pos},
-                                   colors::white.with_multiplied_alpha(0.5), 0.25);
-            }
+            const auto c =
+                static_cast<u8>(static_cast<f32>((pos.x + frame_counter) % dims.x) / dims.x * 255);
+            image[pos].r = c;
+            image[pos].g = c;
+            image[pos].b = c;
         }
 
-        for (auto& particle : particles)
-        {
-            draw::circle(window, {particle.now.pos, particle.now.radius}, colors::red);
-            particle.prev = particle.now;
-        }
+        draw_tex();
 
         if (window.mouse.left)
         {
-            draw::circle(window, {window.mouse_pos(), 1.0}, Color{132, 30, 252});
+            draw::circle(window, {window.mouse_pos(), .08}, Color{132, 30, 252});
         }
 
-        // print("Framerate:", std::round(1.0 / watch.seconds()));
         watch.reset();
         window.pan([&] { return window.mouse.middle; });
         window.zoom_to_cursor();
 
         std::this_thread::sleep_for(std::chrono::milliseconds(16));
+        frame_counter++;
     };
 
-    // TODO many substeps needed else blows up
-    run(window, update, draw, 32ULL);
+    run(window, draw);
 }
