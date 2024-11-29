@@ -2,7 +2,9 @@ from subprocess import run, Popen, PIPE
 from sys import stdout as sys_stdout
 from os import name
 from pathlib import Path
+from time import time
 
+CONFIGURE_COMMAND = ["cmake", "--preset=win"]
 BUILD_COMMAND = ["cmake", "--build", "--preset=win"]
 RUN_COMMAND = ".\\build\\test\\Release\\samarium_tests.exe"
 
@@ -83,14 +85,26 @@ def build():
     return proc.wait()  # wait, and return returncode
 
 
+def timed_build():
+    start = time()
+    returncode = build()
+    end = time()
+    print(f"Built in {end - start:.2f}s")
+    return returncode
+
+
 def run_exe():
     if Path(RUN_COMMAND).exists():
         run(RUN_COMMAND)
 
 
 def main():
+    if not Path("build").exists():
+        run(CONFIGURE_COMMAND, check=True)
+
     run("cls" if name == "nt" else "clear", shell=True)
-    if build() == 0:
+
+    if timed_build() == 0:
         run_exe()
 
 
