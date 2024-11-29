@@ -235,8 +235,9 @@ f64 get_time(u64 count, bool use_gpu)
 
 auto main(int argc, char* argv[]) -> i32
 {
-    for (auto i : {2000, 4000, 8000, 16000, 32000})
-    {
-        print(i, get_time(i, true), get_time(i, false));
-    }
+    // for (auto i : {2000, 4000, 8000, 16000, 32000})
+    // {
+    //     print(i, get_time(i, true), get_time(i, false));
+    // }
+    get_time(10'000, true);
 }
