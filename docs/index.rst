@@ -12,6 +12,9 @@ Contents
 --------
 
 ..  toctree::
+    poster
+
+..  toctree::
     :caption: Links
 
     Symbol Index <https://jjbel.github.io/samarium/genindex>
