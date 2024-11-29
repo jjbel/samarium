@@ -16,16 +16,16 @@ using namespace sm::literals;
 // !!!!! EDIT THIS !!!!!
 struct Params
 {
-    f64 time_scale                 = 1.4;
+    f64 time_scale                 = 1.0;
     Vec2 gravity                   = -30.0_y;
     f64 coefficient_of_friction    = 0.95;
     f64 coefficient_of_restitution = 1.0; // bounciness
     f64 spring_stiffness           = 150.0;
     f64 spring_damping             = 55.0;
     f64 particle_mass              = 0.6;
-    f64 particle_radius            = 1.6;
+    f64 particle_radius            = 1.3;
     Vec2 initial_vel{8, -15};
-    Dimensions particle_count_xy{5, 5};
+    Dimensions particle_count_xy{6, 6};
     Vec2 softbody_area{20, 20};
 };
 
@@ -71,7 +71,6 @@ auto main() -> i32
     auto particles =
         Grid2<Dual<Particle<f64>>>::generate(params.particle_count_xy, get_dual_from_indices);
 
-
     auto springs = [&]
     {
         std::vector<Spring<f64>> temp;
@@ -81,9 +80,9 @@ auto main() -> i32
         {
             for (auto j : loop::end(params.particle_count_xy.x))
             {
-                if (j != 0) { temp.emplace_back(particles[{j, i}].now, particles[{j - 1, i}].now); }
-                if (i != 0) { temp.emplace_back(particles[{j, i}].now, particles[{j, i - 1}].now); }
-                if (i != 0 && j != 0)
+                if (j != 0) { temp.emplace_back(particles[{j, i}].now, particles[{j - 1,
+                i}].now); } if (i != 0) { temp.emplace_back(particles[{j, i}].now, particles[{j,
+                i - 1}].now); } if (i != 0 && j != 0)
                 {
                     temp.emplace_back(particles[{j, i}].now, particles[{j - 1, i - 1}].now,
                                       params.spring_stiffness, params.spring_damping);
@@ -99,6 +98,19 @@ auto main() -> i32
         return temp;
     }();
 
+    // auto particles = std::vector<Dual<Particle<f64>>>(16);
+    // auto springs   = std::vector<Spring<f64>>();
+
+    // for (auto i : loop::end(particles.size()))
+    // {
+    //     for (auto j : loop::end(particles.size()))
+    //     {
+    //         if (i >= j) { continue; }
+    //         if(math::distance(particles[i].now.pos, particles[i].prev.pos) < )
+    //         springs.push_back(particles[i], particles[j]);
+    //     }
+    // }
+
     auto window = Window{{.dims{1800, 900}}};
     window.camera.scale /= 70;
     window.display(); // to fix world_box?
@@ -107,14 +119,16 @@ auto main() -> i32
     const auto colliders    = ranges::views::concat(viewport_box, walls);
 
     auto watch = Stopwatch{};
+    auto bench = Benchmark{};
 
     const auto update = [&](f64 delta)
     {
         delta *= params.time_scale;
 
         // TODO why auto&& was here
+        bench.reset();
         for (auto& spring : springs) { spring.update(); }
-
+        bench.add("spring");
         for (auto& particle : particles)
         {
             particle.now.apply_force(particle.now.mass * params.gravity);
@@ -149,21 +163,22 @@ auto main() -> i32
                               params.coefficient_of_friction);
             }
         }
+        bench.add("update");
     };
 
     const auto draw = [&]
     {
         // drawing mouse later so do bg last
-        draw::background("#16161c"_c);
+        draw::background("#ffffff"_c);
 
-        for (const auto& ls : colliders) { draw::line_segment(window, ls, colors::white, 0.45); }
+        for (const auto& ls : colliders) { draw::line_segment(window, ls, colors::black, 0.65); }
 
         for (const auto& spring : springs)
         {
             if (spring.active)
             {
                 draw::line_segment(window, LineSegment{spring.p1.pos, spring.p2.pos},
-                                   colors::white.with_multiplied_alpha(0.5), 0.25);
+                                   colors::black.with_multiplied_alpha(0.5), 0.55);
             }
         }
 
@@ -182,10 +197,12 @@ auto main() -> i32
         watch.reset();
         window.pan([&] { return window.mouse.middle; });
         window.zoom_to_cursor();
-
+        bench.add_frame();
         // std::this_thread::sleep_for(std::chrono::milliseconds(16));
+        // TODO add a fn target_fps which just delays
     };
 
     // TODO many substeps needed else blows up
     run(window, update, draw, 32ULL);
+    bench.print();
 }

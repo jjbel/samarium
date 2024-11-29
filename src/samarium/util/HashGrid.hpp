@@ -40,8 +40,15 @@ template <typename T, usize CellInlineCapacity = 127, typename Float = f64> stru
 
     auto to_coords(Vector2Float pos) const
     {
-        return Key::make(math::floor_to_nearest(pos.x, spacing),
-                         math::floor_to_nearest(pos.y, spacing));
+        // TODO weird?? try plotting gridlines and printing to_coords(mouse.pos)
+        // floor_to_nearest causing slowdown??
+        // return Key::make(math::floor_to_nearest(pos.x, spacing),
+        //                  math::floor_to_nearest(pos.y, spacing));
+        // but now some oddities in plotting: static_cast in make is fast, but round sopp for -ve
+        // values
+        return Key::make(pos.x / spacing, pos.y / spacing);
+        // return Key::make(std::abs(pos.x / spacing), std::abs(pos.y / spacing)) *
+        //        Key::make(std::sign(pos.x / spacing), std::sign(pos.y / spacing));
     }
 
     auto insert(Vector2Float pos, T value) { map[to_coords(pos)].push_back(value); }

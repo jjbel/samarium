@@ -52,9 +52,9 @@ struct Benchmark
 
     void print();
 
-  private:
-    [[nodiscard]] auto get_stats(std::vector<Float>& data) -> Stats;
+    [[nodiscard]] auto get_stats(std::vector<Float>& data) const -> Stats;
 
+  private:
     [[nodiscard]] auto get_max_key_size() -> u64;
 };
 } // namespace sm
@@ -102,7 +102,7 @@ SM_INLINE auto Benchmark::time() const -> Benchmark::Duration
 
 [[nodiscard]] SM_INLINE auto Benchmark::seconds() const -> Float { return this->time().count(); }
 
-[[nodiscard]] SM_INLINE auto Benchmark::get_stats(std::vector<Float>& data) -> Stats
+[[nodiscard]] SM_INLINE auto Benchmark::get_stats(std::vector<Float>& data) const -> Stats
 {
     ranges::actions::sort(data);
     const auto mean = math::mean<Float>(data);

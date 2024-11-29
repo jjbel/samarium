@@ -4,7 +4,8 @@
 
 using namespace sm;
 
-auto main(int argc, char* argv[]) -> i32
+
+f64 get_time(u64 count, bool use_gpu)
 {
     const auto cell_size = 1.4F;
     // std::strtof(argv[1], nullptr);
@@ -14,7 +15,7 @@ auto main(int argc, char* argv[]) -> i32
 
     // TODO at 2000, start shooting off
     // keep it fixed time. if fps too low, not enough substeps
-    const auto count         = 9'000ULL;
+    // const auto count         = 9'000ULL;
     const auto radius        = 0.3F;
     const auto emission_rate = 6;
     auto sun                 = Vec2f{0, 0};
@@ -103,31 +104,33 @@ auto main(int argc, char* argv[]) -> i32
         bench.add("emitter");
 
 
-        ps.rehash();
+        // ps.rehash();
         bench.add("rehash");
 
         for (auto i : loop::end(ps.size())) { ps.acc[i] -= gravity(ps.pos[i], sun, 36.0F, 30.0F); }
         bench.add("sun");
 
-        // auto c = 0;
-        // for (auto i : loop::end(ps.size()))
-        // {
-        //     for (auto j : ps.hash_grid.neighbors(ps.pos[i])) // +1 ?
-        //     {
-        //         // TODO cud also find for each particle independently, then add up
-        //         // twice the looping, but paralellizable
-        //         // remember: check i == j, or add a little to l in gravity
-        //         if (i >= j) { continue; }
-        //         // if (i == j) { continue; }
-        //         const auto f = gravity(ps.pos[i], ps.pos[j], 0.0006F, 1.0F);
-        //         ps.acc[i] -= f;
-        //         ps.acc[j] += f;
-        //         // c++;
-        //     }
-        // }
-
-        // 38.6 fps vs
-        cuda::forces({count, ps.pos, ps.acc, nullptr, nullptr, 0.022F, 1.0F});
+        if (use_gpu) { cuda::forces({count, ps.pos, ps.acc, nullptr, nullptr, 0.022F, 1.0F}); }
+        else
+        {
+            auto c = 0;
+            for (auto i : loop::end(ps.size()))
+            {
+                for (auto j : loop::end(ps.size())) // +1 ?
+                // for (auto j : ps.hash_grid.neighbors(ps.pos[i])) // +1 ?
+                {
+                    // TODO cud also find for each particle independently, then add up
+                    // twice the looping, but paralellizable
+                    // remember: check i == j, or add a little to l in gravity
+                    if (i >= j) { continue; }
+                    // if (i == j) { continue; }
+                    const auto f = gravity(ps.pos[i], ps.pos[j], 0.0006F, 1.0F);
+                    ps.acc[i] -= f;
+                    ps.acc[j] += f;
+                    // c++;
+                }
+            }
+        }
 
         bench.add("forces");
 
@@ -163,12 +166,21 @@ auto main(int argc, char* argv[]) -> i32
         bench.add_frame();
         frame++;
 
-        window.get_image(image);
-        file::write(file::pam, image, fmt::format("./exports/{:05}.pam", frame));
+        // window.get_image(image);
+        // file::write(file::pam, image, fmt::format("./exports/{:05}.pam", frame));
 
-        // if (frame > 54) { window.close(); }
+        if (frame > 100) { window.close(); }
     };
     run(window, draw);
 
-    bench.print();
+    // bench.print();
+    return bench.get_stats(bench.times["forces"]).median;
+}
+
+auto main(int argc, char* argv[]) -> i32
+{
+    for (auto i : {512, 16384, 32768})
+    {
+        print(i, get_time(i, true), get_time(i, false));
+    }
 }
