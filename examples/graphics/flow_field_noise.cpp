@@ -64,7 +64,7 @@ auto main() -> i32
 
     auto bench = Benchmark{};
 
-    const auto update = [&]
+    const auto update = [&](f64 _)
     {
         bench.reset();
         for (auto [pos, force] : forces.enumerate_2d())
