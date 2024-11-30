@@ -40,7 +40,7 @@ struct VertexShader
 
     [[nodiscard]] static auto from_file(const std::filesystem::path& path)
     {
-        return expect(make(*file::read(path)));
+        return expect(make(*file::read_str(path)));
     }
 
     [[nodiscard]] static auto make(std::string source) -> Result<VertexShader>
@@ -100,7 +100,7 @@ struct FragmentShader
 
     static auto from_file(const std::filesystem::path& path)
     {
-        return FragmentShader(*file::read(path));
+        return FragmentShader(*file::read_str(path));
     }
 
     static inline auto make(std::string source) -> Result<FragmentShader>
