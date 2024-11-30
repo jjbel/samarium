@@ -22,12 +22,6 @@ namespace sm::file
 {
 using Path = std::filesystem::path;
 
-struct Text
-{
-};
-
-static constexpr auto text = Text{};
-
 struct Targa
 {
 };
@@ -52,20 +46,18 @@ struct Bmp
 
 static constexpr auto bmp = Bmp{};
 
-auto read([[maybe_unused]] Text tag, const Path& file_path) -> Result<std::string>;
+auto read_str(const Path& file_path) -> Result<std::string>;
 
 // assume file exists and is regular
-auto read_unsafe([[maybe_unused]] Text tag, const Path& file_path) -> std::string;
-
-// TODO rename to read_str
-auto read(const Path& file_path) -> Result<std::string>;
+auto read_str_unsafe(const Path& file_path) -> std::string;
 
 auto read_image(const Path& file_path) -> Result<Image>;
-
 
 void write([[maybe_unused]] Targa tag,
            const Image& image,
            const Path& file_path = date_time_str() + ".tga");
+
+// TODO instead of tags, make individual functions, which is sane, and then maybe have a template
 
 /**
  * @brief               Write image to file_path in the NetBPM PAM format
@@ -129,7 +121,7 @@ auto find(const std::string& file_name, std::initializer_list<Path> search_paths
 
 namespace sm::file
 {
-SM_INLINE auto read([[maybe_unused]] Text tag, const Path& file_path) -> Result<std::string>
+SM_INLINE auto read_str(const Path& file_path) -> Result<std::string>
 {
     if (!std::filesystem::exists(file_path))
     {
@@ -145,7 +137,7 @@ SM_INLINE auto read([[maybe_unused]] Text tag, const Path& file_path) -> Result<
 }
 
 // https://insanecoding.blogspot.com/2011/11/how-to-read-in-file-in-c.html
-SM_INLINE auto read_unsafe([[maybe_unused]] Text tag, const Path& file_path) -> std::string
+SM_INLINE auto read_str_unsafe(const Path& file_path) -> std::string
 {
     std::ifstream in(file_path, std::ios::in | std::ios::binary);
     if (!in)
@@ -161,11 +153,6 @@ SM_INLINE auto read_unsafe([[maybe_unused]] Text tag, const Path& file_path) -> 
     in.read(&contents[0], contents.size());
     in.close();
     return contents;
-}
-
-SM_INLINE auto read(const Path& file_path) -> Result<std::string>
-{
-    return read(Text{}, file_path);
 }
 
 SM_INLINE auto read_image(const Path& file_path) -> Result<Image>
