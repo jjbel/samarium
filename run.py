@@ -14,6 +14,7 @@ IGNORE_LINE_SUBSTRS = [
     "samarium.vcxproj -> ",
     "samarium_tests.vcxproj -> ",
     "NVIDIA GPU Computing Toolkit",  # cuda compilation
+    "Building Custom Rule",
 ]
 
 REMOVE_SUBSTRS = [
