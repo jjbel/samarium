@@ -5,7 +5,7 @@
 from os import chdir
 from pathlib import Path
 from scripts.bootstrap import install_conan
-from subprocess import run
+from subprocess import run, PIPE
 
 install_conan.main()
 
