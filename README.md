@@ -1,3 +1,5 @@
+## See installation instructions below
+
 <!-- TODO make a script to merge these into 2x2 grid, loop them -->
 
 $10^4$ particles interacting gravitationally in realtime, using a [hashgrid](https://github.com/jjbel/samarium/blob/main/src/samarium/util/HashGrid.hpp):
@@ -33,7 +35,6 @@ Animating levels of the Fourier transform of a shape:
 [![Clang](https://github.com/jjbel/samarium/actions/workflows/clang.yml/badge.svg)](https://github.com/jjbel/samarium/actions/workflows/clang.yml)
 [![MSVC](https://github.com/jjbel/samarium/actions/workflows/msvc.yml/badge.svg)](https://github.com/jjbel/samarium/actions/workflows/msvc.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=jjbel_samarium&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=jjbel_samarium) -->
-
 
 <!-- [![MIT License](https://img.shields.io/badge/license-MIT-yellow)](https://github.com/jjbel/samarium/blob/main/LICENSE.md) -->
 
@@ -84,15 +85,19 @@ python samarium/bootstrap.py
 
 Install [python](https://www.python.org/downloads/) and [git](https://git-scm.com/docs/).
 
-A compiler supporting C++20 is required, namely Visual C++ 2019, GCC-11, or Clang-13.
+A compiler supporting C++20 is required, namely [Visual C++ 2019 on Windows](https://visualstudio.microsoft.com/downloads/), or GCC-11/Clang-13 on Linux.
 
 To install, do the following, or **just run `python samarium/boostrap.py`**
+
 1. Install [CMake](https://cmake.org/download/) and [Conan](https://conan.io/downloads.html/)
 2. Download [the zip](https://github.com/jjbel/samarium/archive/refs/heads/main.zip) or clone the repo:
+
 ```sh
 git clone https://github.com/jjbel/samarium.git
 ```
+
 3. build the library for your machine:
+
 ```sh
 conan create ./samarium/ -b missing
 ```
@@ -137,6 +142,7 @@ Samarium is distributed under the [MIT License](LICENSE.md).
 ## Libraries Used
 
 Many thanks to the following wonderful libraries:
+
 1. [GLFW](https://www.glfw.org/), [glad](https://github.com/Dav1dde/glad) and [glm](https://github.com/g-truc/glm) for OpenGL support
 2. [fmtlib](https://github.com/fmtlib/fmt) to completely replace `iostream`
 3. [range-v3](https://github.com/ericniebler/range-v3)
