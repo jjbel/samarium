@@ -8,6 +8,8 @@ Real Time Simulation - Poster
 .. image:: media/poster.jpg
 
 GET THE CODE HERE: https://github.com/jjbel/samarium
+specifically, see the gravity hashgrid example:
+Run the program: `build\examples\Release\gravity.exe`
 
 Problem
 ------------------------
