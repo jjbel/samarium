@@ -26,4 +26,13 @@ Why is Real Time needed?
 Why GPUs are a Solution
 ------------------------
 The CPU (central processing unit) is the primary computing device. It consists of 2 to 12 cores, where each core runs a given task concurrently with the other cores. Multiple cores allows running different programs, or multiple instances of the same program.
-CPU cores are general purpose: they are meant for mathe
+CPU cores are general purpose: they are meant for math calculation, as well as working with files, network etc
+
+Hashgrids
+---------
+
+To find the forces of gravity among n particles, we would have to go through :math:`n^2` pairs of particles. For 1000 particles, this is 1 million checks, which is very slow.
+Since gravity falls off as :math:`\frac{1}{r^2}`, we make the following approximation:
+Ignore gravity between particles further than :math:`d` distance away. Smaller :math:`d` results in faster but less accurate simulation.
+Then, we split space into a grid of squares of side :math:`s` where :math:`s` is proportional to :math:`d`.
+We make a list of which particles are in which square. Then we only check for gravity between particles in neighbouring squares. Specifically for a given particle P, check for gravity in the particles 3x3 block centered at P's square.
