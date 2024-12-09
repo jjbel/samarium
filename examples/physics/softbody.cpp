@@ -19,13 +19,13 @@ struct Params
     f64 time_scale                 = 1.0;
     Vec2 gravity                   = -30.0_y;
     f64 coefficient_of_friction    = 0.95;
-    f64 coefficient_of_restitution = 1.0; // bounciness
+    f64 coefficient_of_restitution = 0.95; // bounciness
     f64 spring_stiffness           = 150.0;
     f64 spring_damping             = 55.0;
     f64 particle_mass              = 0.6;
     f64 particle_radius            = 1.3;
     Vec2 initial_vel{8, -15};
-    Dimensions particle_count_xy{6, 6};
+    Dimensions particle_count_xy{4, 4};
     Vec2 softbody_area{20, 20};
 };
 

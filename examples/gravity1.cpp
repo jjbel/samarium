@@ -13,7 +13,8 @@
 using namespace sm;
 
 // auto main(int argc, char* argv[]) -> i32
-f64 get_time(u64 count, bool use_gpu)
+// f64 get_time(u64 count, bool use_gpu)
+auto main(int argc, char* argv[]) -> i32
 {
     // TODO with 0.1, why does it still draw so many lines?
     const auto cell_size = 0.3F;
@@ -27,10 +28,11 @@ f64 get_time(u64 count, bool use_gpu)
 
     // TODO at 2000, start shooting off
     // keep it fixed time. if fps too low, not enough substeps
-    // const auto count         = 10000;
+    const auto count         = 10;
     const auto radius        = 0.02F;
     const auto emission_rate = 6;
     auto sun                 = Vec2f{0, 0};
+    bool use_gpu             = true;
 
     auto ps = ParticleSystemInstanced<>(window, count, cell_size, radius, Color{100, 60, 255});
 
@@ -91,7 +93,7 @@ f64 get_time(u64 count, bool use_gpu)
         }
 
         // for (auto i : loop::start_end(static_cast<u64>(box.min.x / cell_size - 1),
-        //                               (static_cast<u64>(box.max.x / cell_size + 1))))
+        //   (static_cast<u64>(box.max.x / cell_size + 1))))
         // for (auto i : loop::start_end(-100, 100))
         // {
         //     for (auto j : loop::start_end(-100, 100))
@@ -103,22 +105,21 @@ f64 get_time(u64 count, bool use_gpu)
         //         // TODO why into 4
         //         const auto w     = cell_size;
         //         const auto verts = std::array<Vec2f, 4>{
-        //             Vec2f{i * w, j * w}, Vec2f{i * w, (j + 1) * w}, Vec2f{(i + 1) * w, (j + 1) *
-        //             w}, Vec2f{(i + 1) * w, j * w}};
+        //             Vec2f{i * w, j * w}, Vec2f{i * w, (j + 1) * w}, Vec2f{(i + 1) * w, (j + 1) * w},
+        //             Vec2f{(i + 1) * w, j * w}};
         //         // if (i == 0 && j == 0)
         //         // {
-        //         //     print(ps.hash_grid.to_coords(verts[0]), ps.hash_grid.to_coords(verts[2]));
+        //         //     print(ps.hash_grid.to_coords(verts[0]),
+        //         //     ps.hash_grid.to_coords(verts[2]));
         //         // }
         //         // const auto gradient = Gradient{Color{9, 2, 52}, Color{97, 16, 131},
         //         //                                Color{229, 126, 23}, Color{255, 254, 41}};
         //         const auto gradient = gradients::magma;
         //         draw::polygon(
         //             window, verts,
-        //             gradient(std::min(static_cast<f64>(it->second.size()) /
-        //             current_max_occ, 1.0)));
-        //         // draw::polygon(window, verts, gradients::viridis(std::log(1 +
-        //         it->second.size())
-        //         // / 5.4));
+        //             gradient(std::min(static_cast<f64>(it->second.size()) / current_max_occ, 1.0)));
+        //         draw::polygon(window, verts,
+        //                       gradients::viridis(std::log(1 + it->second.size()) / 5.4));
         //         max_occ = std::max(max_occ, it->second.size());
         //     }
         // }
@@ -127,7 +128,7 @@ f64 get_time(u64 count, bool use_gpu)
 
         auto mouse_pos = window.pixel2world()(window.mouse.pos).cast<f32>();
         // print(ps.hash_grid.to_coords(mouse_pos));
-        mouse_pos = Vec2f{2.88F, 0.3F};
+        // mouse_pos = Vec2f{2.88F, 0.3F};
         // print(mouse_pos);
         // for (auto i : loop::end(ps.size()))
         // {
@@ -136,108 +137,112 @@ f64 get_time(u64 count, bool use_gpu)
         //     ps.acc[i]    = v * 0.005F / (l * l * l);
         // }
 
-        // for (auto i : loop::end(emission_rate))
-        // {
-        //     // ps.pos.push_back({rand.range<f32>({-4, -3.5}), 4.0F});
-        //     ps.pos.push_back(
-        //         {rand.range<f32>({mouse_pos.x - 0.3F, mouse_pos.x + 0.3F}), mouse_pos.y});
+        for (auto i : loop::end(emission_rate))
+        {
+            // ps.pos.push_back({rand.range<f32>({-4, -3.5}), 4.0F});
+            ps.pos.push_back(
+                {rand.range<f32>({mouse_pos.x - 0.3F, mouse_pos.x + 0.3F}), mouse_pos.y});
 
-        //     ps.vel.push_back({rand.range<f32>({-0.001F, 0.001F}),
-        //     rand.range<f32>({3.9F, 4.0F})}); ps.acc.push_back({});
-        // }
+            ps.vel.push_back({rand.range<f32>({-0.001F, 0.001F}), rand.range<f32>({3.9F, 4.0F})});
+            ps.acc.push_back({});
+        }
         bench.add("emitter");
 
         ps.rehash();
         bench.add("rehash");
 
-        // for (auto i : loop::end(ps.size())) { ps.acc[i] -= gravity(ps.pos[i], sun, 36.0F, 30.0F);
-        // } bench.add("sun");
-
-        // auto c = 0;
-
-        if (use_gpu)
+        for (auto i : loop::end(ps.size()))
         {
-            for (auto i : loop::end(ps.size()))
+            // ps.acc[i] -= gravity(ps.pos[i], sun, 36.0F, 30.0F);
+            // } bench.add("sun");
+
+            // auto c = 0;
+
+            if (use_gpu)
             {
-                for (auto j : ps.hash_grid.neighbors(ps.pos[i]))
+                for (auto i : loop::end(ps.size()))
                 {
-                    if (i >= j) { continue; }
-                    const auto f = gravity(ps.pos[i], ps.pos[j], 0.0006F, 1.0F);
-                    ps.acc[i] -= f;
-                    ps.acc[j] += f;
+                    for (auto j : ps.hash_grid.neighbors(ps.pos[i]))
+                    {
+                        if (i >= j) { continue; }
+                        const auto f = gravity(ps.pos[i], ps.pos[j], 0.0006F, 1.0F);
+                        ps.acc[i] -= f;
+                        ps.acc[j] += f;
+                    }
                 }
             }
-        }
-        else
-        {
-            for (auto i : loop::end(ps.size()))
+            else
             {
-                for (auto j : loop::end(ps.size()))
+                for (auto i : loop::end(ps.size()))
                 {
-                    if (i >= j) { continue; }
-                    const auto f = gravity(ps.pos[i], ps.pos[j], 0.0006F, 1.0F);
-                    ps.acc[i] -= f;
-                    ps.acc[j] += f;
+                    for (auto j : loop::end(ps.size()))
+                    {
+                        if (i >= j) { continue; }
+                        const auto f = gravity(ps.pos[i], ps.pos[j], 0.0006F, 1.0F);
+                        ps.acc[i] -= f;
+                        ps.acc[j] += f;
+                    }
                 }
             }
-        }
-        // TODO cud also find for each particle independently, then add up
-        // twice the looping, but paralellizable
-        // remember: check i == j, or add a little to l in gravity
-        bench.add("forces");
+            // TODO cud also find for each particle independently, then add up
+            // twice the looping, but paralellizable
+            // remember: check i == j, or add a little to l in gravity
+            bench.add("forces");
 
-        if (frame % 20 == 0)
-        {
-            // print(c, "/", ps.size() * ps.size() / 2, "   ", ps.size());
-            ps.hash_grid.print_occupancy();
-        }
+            if (frame % 20 == 0)
+            {
+                // print(c, "/", ps.size() * ps.size() / 2, "   ", ps.size());
+                // ps.hash_grid.print_occupancy();
+            }
 
-        if (frame > 50) { window.close(); }
+            // if (frame > 50) { window.close(); }
 
-        // if (frame > 1000)
-        // {
-        //     ps.pos.erase(ps.pos.begin(), ps.pos.begin() + emission_rate);
-        //     ps.vel.erase(ps.vel.begin(), ps.vel.begin() + emission_rate);
-        //     ps.acc.erase(ps.acc.begin(), ps.acc.begin() + emission_rate);
-        // }
+            if (frame > 1000)
+            {
+                ps.pos.erase(ps.pos.begin(), ps.pos.begin() + emission_rate);
+                ps.vel.erase(ps.vel.begin(), ps.vel.begin() + emission_rate);
+                ps.acc.erase(ps.acc.begin(), ps.acc.begin() + emission_rate);
+            }
 
-        bench.add("trimming");
+            bench.add("trimming");
 
-        // ps.self_collision();
-        // bench.add("coll");
+            // ps.self_collision();
+            // bench.add("coll");
 
-        ps.update(1.0F / 100.0F);
-        bench.add("update");
+            ps.update(1.0F / 200.0F);
+            bench.add("update");
 
-        ps.draw();
-        bench.add("instance draw");
+            ps.draw();
+            bench.add("instance draw");
 
-        draw::circle(window, {{0.1, 0.2}, 0.1}, Color{0, 0, 0, 0});
-        draw::circle(window, {sun.cast<f64>(), .2}, Color{255, 255, 0}, 64);
+            draw::circle(window, {{0.1, 0.2}, 0.9}, Color{0, 0, 0, 0});
+            draw::circle(window, {sun.cast<f64>(), .2}, Color{255, 255, 0}, 64);
 
-        window.pan();
-        window.zoom_to_cursor();
-        // std::this_thread::sleep_for(std::chrono::milliseconds(16));
-        bench.add_frame();
-        frame++;
+            window.pan();
+            window.zoom_to_cursor();
+            // std::this_thread::sleep_for(std::chrono::milliseconds(16));
+            bench.add_frame();
+            frame++;
 
-        if (window.is_key_pressed(Key::Enter))
-        {
-            file::write(file::targa, window.get_image(), fmt::format("./exports/{:05}.tga", frame));
+            // if (window.is_key_pressed(Key::Enter))
+            // {
+            //     file::write(file::targa, window.get_image(),
+            //                 fmt::format("./exports/{:05}.tga", frame));
+            // }
         }
     };
     run(window, draw);
 
     // bench.print();
     // ps.instancer.bench.print();
-    return bench.get_stats(bench.times["forces"]).median;
+    // return bench.get_stats(bench.times["forces"]).median;
 }
 
-auto main(int argc, char* argv[]) -> i32
-{
-    // for (auto i : {2000, 4000, 8000, 16000, 32000})
-    // {
-    //     print(i, get_time(i, true), get_time(i, false));
-    // }
-    get_time(10'000, true);
-}
+// auto main(int argc, char* argv[]) -> i32
+// {
+// for (auto i : {2000, 4000, 8000, 16000, 32000})
+// {
+//     print(i, get_time(i, true), get_time(i, false));
+// }
+// get_time(10'000, true);
+// }

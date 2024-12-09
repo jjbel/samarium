@@ -22,7 +22,7 @@ struct Fluid
     const u64 size;
     const u64 byte_size;
 
-    const f64 diffusion = 0.0001F;
+    const f64 diffusion = 0.01F;
     const f64 visc      = 0.001F;
 
     cuda::HostDevVec u         = cuda::HostDevVec(size);
@@ -134,9 +134,9 @@ struct Fluid
 
         std::swap(u_prev.host, u.host);
         std::swap(v_prev.host, v.host);
-        diffuse(1, u.host, u_prev.host, visc);
-        diffuse(2, v.host, v_prev.host, visc);
-        project(N, u.host, v.host, u_prev.host, v_prev.host);
+        // diffuse(1, u.host, u_prev.host, visc);
+        // diffuse(2, v.host, v_prev.host, visc);
+        // project(N, u.host, v.host, u_prev.host, v_prev.host);
         std::swap(u_prev.host, u.host);
         std::swap(v_prev.host, v.host);
 
@@ -207,12 +207,12 @@ struct Fluid
 
     void dens_step()
     {
-        print(dens.host[23]);
-        add_source(dens.host, dens_prev.host);
-        print(dens_prev.host[23]);
-        // std::swap(dens.host, dens_prev.host);
-        // diffuse(0, dens.host, dens_prev.host, diffusion);
-        // std::swap(dens.host, dens_prev.host);
+        // print(dens.host[23]);
+        // add_source(dens.host, dens_prev.host);
+        // print(dens_prev.host[23]);
+        std::swap(dens.host, dens_prev.host);
+        diffuse(0, dens.host, dens_prev.host, diffusion);
+        std::swap(dens.host, dens_prev.host);
         // advect(0, dens.host, dens_prev.host, u.host, v.host);
     }
 
