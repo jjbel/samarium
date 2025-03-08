@@ -1,6 +1,6 @@
 # General ignore
 .ignore/
-.ignore*
+.ig*
 
 # build artifacts
 bin/
