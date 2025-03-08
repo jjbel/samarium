@@ -27,6 +27,10 @@ namespace sm
 {
 constexpr auto convert_1d_to_2d(Dimensions dims, u64 index)
 {
+    // https://stackoverflow.com/a/63750693
+    // check speedup of:
+    // const auto y = index / dims.x
+    // return Indices{index - y, y};
     return Indices{index % dims.x, index / dims.x};
 }
 

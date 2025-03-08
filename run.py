@@ -6,8 +6,8 @@ from time import time
 
 CONFIGURE_COMMAND = ["cmake", "--preset=win"]
 BUILD_COMMAND = ["cmake", "--build", "--preset=win"]
-# RUN_COMMAND = ".\\build\\test\\Release\\samarium_tests.exe"
-RUN_COMMAND = ".\\build\\examples\\Release\\gravity.exe"
+RUN_COMMAND = ".\\build\\test\\Release\\samarium_tests.exe"
+# RUN_COMMAND = ".\\build\\examples\\Release\\gravity.exe"
 
 IGNORE_LINE_SUBSTRS = [
     "MSBuild",

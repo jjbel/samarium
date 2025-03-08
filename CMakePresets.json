@@ -37,7 +37,7 @@
             "description": "Windows Dev",
             "inherits": "default",
             "cacheVariables": {
-                "BUILD_EXAMPLES": true,
+                "BUILD_EXAMPLES": false,
                 "BUILD_BENCHMARKS": false,
                 "SAMARIUM_HEADER_ONLY": false,
                 "SAMARIUM_ENABLE_CUDA": true
