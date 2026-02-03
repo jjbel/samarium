@@ -1,0 +1,131 @@
+{
+ "graph_lock": {
+  "nodes": {
+   "0": {
+    "ref": "samarium/1.0.2",
+    "options": "build_tests=False\nfPIC=True\nheader_only=False\nshared=False\nfmt:fPIC=True\nfmt:header_only=False\nfmt:shared=False\nfmt:with_fmt_alias=False\nfmt:with_os_api=True\nfreetype:fPIC=True\nfreetype:shared=False\nfreetype:subpixel=False\nfreetype:with_brotli=False\nfreetype:with_bzip2=False\nfreetype:with_png=False\nfreetype:with_zlib=False\nglad:extensions=''\nglad:fPIC=True\nglad:gl_profile=core\nglad:gl_version=4.6\nglad:gles1_version=None\nglad:gles2_version=None\nglad:glsc2_version=None\nglad:no_loader=False\nglad:shared=False\nglad:spec=gl\nglfw:fPIC=True\nglfw:shared=False\nglfw:vulkan_static=False\nstb:with_deprecated=True",
+    "requires": [
+     "1",
+     "2",
+     "3",
+     "4",
+     "5",
+     "6",
+     "7",
+     "8",
+     "9",
+     "12",
+     "13",
+     "14"
+    ],
+    "path": "conanfile.py",
+    "context": "host"
+   },
+   "1": {
+    "ref": "fmt/9.1.0",
+    "options": "fPIC=True\nheader_only=False\nshared=False\nwith_fmt_alias=False\nwith_os_api=True",
+    "package_id": "300cb578a6fb15627a390ac70b832e82fd040283",
+    "prev": "0",
+    "context": "host"
+   },
+   "2": {
+    "ref": "range-v3/0.12.0",
+    "options": "",
+    "package_id": "5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9",
+    "prev": "0",
+    "context": "host"
+   },
+   "3": {
+    "ref": "stb/cci.20220909",
+    "options": "with_deprecated=True",
+    "package_id": "5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9",
+    "prev": "0",
+    "context": "host"
+   },
+   "4": {
+    "ref": "tl-expected/20190710",
+    "options": "",
+    "package_id": "5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9",
+    "prev": "0",
+    "context": "host"
+   },
+   "5": {
+    "ref": "tl-function-ref/1.0.0",
+    "options": "",
+    "package_id": "5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9",
+    "prev": "0",
+    "context": "host"
+   },
+   "6": {
+    "ref": "bshoshany-thread-pool/3.3.0",
+    "options": "",
+    "package_id": "5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9",
+    "prev": "0",
+    "context": "host"
+   },
+   "7": {
+    "ref": "unordered_dense/2.0.1",
+    "options": "",
+    "package_id": "5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9",
+    "prev": "0",
+    "context": "host"
+   },
+   "8": {
+    "ref": "svector/1.0.2",
+    "options": "",
+    "package_id": "5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9",
+    "prev": "0",
+    "context": "host"
+   },
+   "9": {
+    "ref": "glfw/3.3.8",
+    "options": "fPIC=True\nshared=False\nvulkan_static=False",
+    "package_id": "512bb29988f40138a14eb398f896585a5af5ec83",
+    "prev": "0",
+    "requires": [
+     "10",
+     "11"
+    ],
+    "context": "host"
+   },
+   "10": {
+    "ref": "opengl/system",
+    "options": "",
+    "package_id": "5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9",
+    "prev": "0",
+    "context": "host"
+   },
+   "11": {
+    "ref": "xorg/system",
+    "options": "",
+    "package_id": "5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9",
+    "prev": "0",
+    "context": "host"
+   },
+   "12": {
+    "ref": "glm/cci.20220420",
+    "options": "",
+    "package_id": "5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9",
+    "prev": "0",
+    "context": "host"
+   },
+   "13": {
+    "ref": "glad/0.1.36",
+    "options": "extensions=''\nfPIC=True\ngl_profile=core\ngl_version=4.6\ngles1_version=None\ngles2_version=None\nglsc2_version=None\nno_loader=False\nshared=False\nspec=gl",
+    "package_id": "f0bc8573e232b90f79c4548ab27767b1051799e9",
+    "prev": "0",
+    "context": "host"
+   },
+   "14": {
+    "ref": "freetype/2.12.1",
+    "options": "fPIC=True\nshared=False\nsubpixel=False\nwith_brotli=False\nwith_bzip2=False\nwith_png=False\nwith_zlib=False",
+    "package_id": "2a19826344ff00be1c04403f2f8e7008ed3a7cc6",
+    "prev": "0",
+    "context": "host"
+   }
+  },
+  "revisions_enabled": false
+ },
+ "version": "0.4",
+ "profile_host": "[settings]\narch=x86_64\narch_build=x86_64\nbuild_type=Release\ncompiler=gcc\ncompiler.libcxx=libstdc++11\ncompiler.version=12\nos=Linux\nos_build=Linux\n[options]\n[build_requires]\n[env]\n"
+}

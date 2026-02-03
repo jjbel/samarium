@@ -1,0 +1,89 @@
+[settings]
+    arch=x86_64
+    build_type=Release
+    compiler=gcc
+    compiler.libcxx=libstdc++11
+    compiler.version=12
+    os=Linux
+
+[requires]
+    bshoshany-thread-pool/3.Y.Z
+    fmt/9.Y.Z
+    freetype/2.Y.Z
+    glad/0.1.36
+    glfw/3.Y.Z
+    glm/cci.20220420
+    range-v3/0.12.0
+    stb/cci.20220909
+    svector/1.Y.Z
+    tl-expected/20190710.Y.Z
+    tl-function-ref/1.Y.Z
+    unordered_dense/2.Y.Z
+
+[options]
+    build_tests=False
+    fPIC=True
+    header_only=False
+    shared=False
+
+[full_settings]
+    arch=x86_64
+    build_type=Release
+    compiler=gcc
+    compiler.libcxx=libstdc++11
+    compiler.version=12
+    os=Linux
+
+[full_requires]
+    bshoshany-thread-pool/3.3.0:5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9
+    fmt/9.1.0:300cb578a6fb15627a390ac70b832e82fd040283
+    freetype/2.12.1:2a19826344ff00be1c04403f2f8e7008ed3a7cc6
+    glad/0.1.36:f0bc8573e232b90f79c4548ab27767b1051799e9
+    glfw/3.3.8:512bb29988f40138a14eb398f896585a5af5ec83
+    glm/cci.20220420:5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9
+    opengl/system:5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9
+    range-v3/0.12.0:5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9
+    stb/cci.20220909:5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9
+    svector/1.0.2:5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9
+    tl-expected/20190710:5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9
+    tl-function-ref/1.0.0:5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9
+    unordered_dense/2.0.1:5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9
+    xorg/system:5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9
+
+[full_options]
+    build_tests=False
+    fPIC=True
+    header_only=False
+    shared=False
+    fmt:fPIC=True
+    fmt:header_only=False
+    fmt:shared=False
+    fmt:with_fmt_alias=False
+    fmt:with_os_api=True
+    freetype:fPIC=True
+    freetype:shared=False
+    freetype:subpixel=False
+    freetype:with_brotli=False
+    freetype:with_bzip2=False
+    freetype:with_png=False
+    freetype:with_zlib=False
+    glad:extensions=''
+    glad:fPIC=True
+    glad:gl_profile=core
+    glad:gl_version=4.6
+    glad:gles1_version=None
+    glad:gles2_version=None
+    glad:glsc2_version=None
+    glad:no_loader=False
+    glad:shared=False
+    glad:spec=gl
+    glfw:fPIC=True
+    glfw:shared=False
+    glfw:vulkan_static=False
+    stb:with_deprecated=True
+
+[recipe_hash]
+
+
+[env]
+
