@@ -1,8 +1,8 @@
 /*
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2022 Jai Bellare
+ * Copyright (c) 2022-2024 Jai Bellare
  * See <https://opensource.org/licenses/MIT/> or LICENSE.md
- * Project homepage: https://github.com/strangeQuark1041/samarium
+ * Project homepage: https://github.com/jjbel/samarium
  */
 
 #pragma once
@@ -13,10 +13,10 @@
 
 #include "glad/glad.h"
 #include "range/v3/algorithm/fill.hpp" // for fill
-#include "range/v3/range_concepts.hpp" // for range
+#include "range/v3/range/concepts.hpp" // for range
 
 #include "samarium/core/types.hpp"     // for u32
-#include "samarium/math/Vector2.hpp"   // for Vector2f
+#include "samarium/math/Vec2.hpp"      // for Vec2f
 #include "samarium/util/Error.hpp"     // for Error
 #include "samarium/util/Result.hpp"    // for Result
 #include "samarium/util/byte_size.hpp" // for byte_size
@@ -70,6 +70,10 @@ template <BufferType type> struct Buffer
         }
         else { throw Error{"Binding points can only be used for ShaderStorage objects"}; }
     }
+
+    // TODO use ranges::range concept for array
+    // in 2 places below
+    // removed coz range header deprecated
 
     void set_data(const ranges::range auto& array, Usage usage = Usage::StaticDraw) const
     {

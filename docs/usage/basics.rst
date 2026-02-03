@@ -19,9 +19,9 @@ Basics
         f32 this_is_a_float = 3.14F;
         i32 this_is_an_int = 42;
 
-        // A Vector2 is a pair of f64's: an x and y coordinate
-        // it is an alias for Vector2_t<f64>
-        print("A Vector2:", Vector2{.x = 5, .y = -3});
+        // A Vec2 is a pair of f64's: an x and y coordinate
+        // it is an alias for Vec2_t<f64>
+        print("A Vec2:", Vec2{.x = 5, .y = -3});
 
         // A Color is 4 u8's: red, green blue, and alpha
         print("A Color:  ", Color{.r = 5, .g = 200, .b = 255});

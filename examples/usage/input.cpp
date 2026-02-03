@@ -1,8 +1,8 @@
 /*
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2022 Jai Bellare
+ * Copyright (c) 2022-2024 Jai Bellare
  * See <https://opensource.org/licenses/MIT/> or LICENSE.md
- * Project homepage: https://github.com/strangeQuark1041/samarium
+ * Project homepage: https://github.com/jjbel/samarium
  */
 
 #include "samarium/samarium.hpp"
@@ -20,10 +20,10 @@ auto main() -> i32
     while (window.is_open())
     {
         draw::background("#1c151b"_c);
-        draw::circle(window, {{0.2, 0.3}, 0.4}, {.fill_color = "#fa2844"_c});
+        draw::circle(window, {{0.2, 0.3}, 0.4}, "#fa2844"_c);
         watch.reset();
 
-        if (Window::resized) { print("Resized"); }
+        // TODO: no way of detecting resized?
         if (window.mouse.left) { print("Left"); }
         if (window.mouse.right) { print("Right"); }
         if (window.is_key_pressed(Key::Space)) { print("Space"); }

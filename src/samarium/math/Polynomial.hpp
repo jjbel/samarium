@@ -1,16 +1,16 @@
 /*
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2022 Jai Bellare
+ * Copyright (c) 2022-2024 Jai Bellare
  * See <https://opensource.org/licenses/MIT/> or LICENSE.md
- * Project homepage: https://github.com/strangeQuark1041/samarium
+ * Project homepage: https://github.com/jjbel/samarium
  */
 
 #include <array>
 #include <span>
 
-#include "samarium/core/types.hpp"   // for usize, f64
-#include "samarium/math/Vector2.hpp" // for Vector2_t
-#include "samarium/math/loop.hpp"    // for start_end
+#include "samarium/core/types.hpp" // for usize, f64
+#include "samarium/math/Vec2.hpp"  // for Vec2_t
+#include "samarium/math/loop.hpp"  // for start_end
 
 namespace sm
 {
@@ -43,8 +43,8 @@ template <typename... Ts> [[nodiscard]] constexpr auto make_polynomial(Ts... coe
 }
 
 template <usize Degree, typename T = f64>
-[[nodiscard]] constexpr auto polynomial_from_roots(std::span<T, Degree> roots, T coeff = T{1.0})
-    -> Polynomial<Degree, T>
+[[nodiscard]] constexpr auto polynomial_from_roots(std::span<T, Degree> roots,
+                                                   T coeff = T{1.0}) -> Polynomial<Degree, T>
 {
     if constexpr (Degree == 1) { return {{-coeff * roots[0], coeff}}; }
     if constexpr (Degree == 2)

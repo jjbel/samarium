@@ -1,8 +1,8 @@
 /*
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2022 Jai Bellare
+ * Copyright (c) 2022-2024 Jai Bellare
  * See <https://opensource.org/licenses/MIT/> or LICENSE.md
- * Project homepage: https://github.com/strangeQuark1041/samarium
+ * Project homepage: https://github.com/jjbel/samarium
  */
 
 #pragma once
@@ -11,7 +11,7 @@
 
 #include "glad/glad.h"
 
-#include "samarium/math/Vector2.hpp" // for Vector2_t
+#include "samarium/math/Vec2.hpp" // for Vec2_t
 
 #include "Buffer.hpp"
 #include "gl.hpp"
@@ -72,26 +72,26 @@ enum class Layout
 
 template <Layout mode> struct Vertex
 {
-    Vector2_t<f32> pos{};
+    Vec2f pos{};
 };
 
 template <> struct Vertex<Layout::PosColor>
 {
-    Vector2_t<f32> pos{};
+    Vec2f pos{};
     Color color{};
 };
 
 template <> struct Vertex<Layout::PosTex>
 {
-    Vector2_t<f32> pos{};
-    Vector2_t<f32> tex_coord{};
+    Vec2f pos{};
+    Vec2f tex_coord{};
 };
 
 template <> struct Vertex<Layout::PosColorTex>
 {
-    Vector2_t<f32> pos{};
+    Vec2f pos{};
     Color color{};
-    Vector2_t<f32> tex_coord{};
+    Vec2f tex_coord{};
 };
 } // namespace sm::gl
 

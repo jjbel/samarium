@@ -14,8 +14,8 @@ static constexpr auto particle_colors = std::to_array<Color>(
 
 struct MyParticle
 {
-    Vector2 pos{};
-    Vector2 vel{};
+    Vec2 pos{};
+    Vec2 vel{};
     i32 color{};
 };
 
@@ -25,7 +25,7 @@ struct Interaction
     f64 equilibrium_length{1.0 / 2.0};
     f64 repulsion{2.0};
 
-    Grid<f64> peaks{{3, 3}, 1.0};
+    Grid2<f64> peaks{{3, 3}, 1.0};
 
     auto force(i32 on, i32 due_to, f64 distance)
     {

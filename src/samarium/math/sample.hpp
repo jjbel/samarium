@@ -1,8 +1,8 @@
 /*
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2022 Jai Bellare
+ * Copyright (c) 2022-2024 Jai Bellare
  * See <https://opensource.org/licenses/MIT/> or LICENSE.md
- * Project homepage: https://github.com/strangeQuark1041/samarium
+ * Project homepage: https://github.com/jjbel/samarium
  */
 
 #pragma once
@@ -32,7 +32,7 @@ auto sample(FunctionRef<Output(Input)> function, Input from, Input to, u64 steps
     auto vec             = std::vector<Output>(steps);
     const auto step_size = (to - from) / static_cast<Input>(steps);
 
-    for (auto i : loop::end(steps)) { vec[i] = function(static_cast<Input>(i) * step_size); }
+    for (auto i : loop::end(steps)) { vec[i] = function(from + static_cast<Input>(i) * step_size); }
 
     return vec;
 }

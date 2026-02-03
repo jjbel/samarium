@@ -93,6 +93,8 @@ struct argument_info
 #ifdef USE_CPP11
     template <typename T> void init()
     {
+// TODO condition is constant
+#pragma warning(suppress : 4127)
         if (std::is_pointer<T>::value || std::is_reference<T>::value) _size = sizeof(intptr_t);
         else
             _size = sizeof(T);

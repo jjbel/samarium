@@ -1,35 +1,38 @@
 /*
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2022 Jai Bellare
+ * Copyright (c) 2022-2024 Jai Bellare
  * See <https://opensource.org/licenses/MIT/> or LICENSE.md
- * Project homepage: https://github.com/strangeQuark1041/samarium
+ * Project homepage: https://github.com/jjbel/samarium
  */
 
 #pragma once
 
 #include <chrono> // for duration
 
-#include "fmt/core.h" // for print
-
-#include "samarium/core/types.hpp"
+#include "samarium/core/types.hpp" // for f64
 
 namespace sm
 {
 struct Stopwatch
 {
-    using Duration_t = std::chrono::duration<f64>;
+    using Duration = std::chrono::duration<f64>;
 
     std::chrono::steady_clock::time_point start{std::chrono::steady_clock::now()};
 
     void reset();
 
-    [[nodiscard]] auto time() const -> Duration_t;
+    [[nodiscard]] auto time() const -> Duration;
 
     [[nodiscard]] auto seconds() const -> f64;
 
     [[nodiscard]] auto current_fps() -> f64;
 
     void print() const;
+    void print(const std::string& msg) const;
+    void print_reset();
+    void print_reset(const std::string& msg);
+
+    std::string str_ms() const;
 };
 } // namespace sm
 
@@ -44,10 +47,10 @@ namespace sm
 {
 SM_INLINE void Stopwatch::reset() { start = std::chrono::steady_clock::now(); }
 
-SM_INLINE auto Stopwatch::time() const -> Stopwatch::Duration_t
+SM_INLINE auto Stopwatch::time() const -> Stopwatch::Duration
 {
     const auto finish = std::chrono::steady_clock::now();
-    return std::chrono::duration_cast<Duration_t>(finish - start);
+    return std::chrono::duration_cast<Duration>(finish - start);
 }
 
 [[nodiscard]] SM_INLINE auto Stopwatch::seconds() const -> f64 { return this->time().count(); }
@@ -59,7 +62,29 @@ SM_INLINE auto Stopwatch::time() const -> Stopwatch::Duration_t
     return 1.0 / sec;
 }
 
-SM_INLINE void Stopwatch::print() const { fmt::print("{:.3}ms\n", this->time().count() * 1000.0); }
+SM_INLINE std::string Stopwatch::str_ms() const
+{
+    return fmt::format("{:.3f}ms", this->seconds() * 1000.0);
+}
+
+SM_INLINE void Stopwatch::print() const { fmt::print("{:.3}ms\n", this->seconds() * 1000.0); }
+
+SM_INLINE void Stopwatch::print(const std::string& msg) const
+{
+    fmt::print("{}: {:.3}ms\n", msg, this->seconds() * 1000.0);
+}
+
+SM_INLINE void Stopwatch::print_reset()
+{
+    print();
+    reset();
+}
+
+SM_INLINE void Stopwatch::print_reset(const std::string& msg)
+{
+    print(msg);
+    reset();
+}
 }; // namespace sm
 
 #endif

@@ -3,14 +3,14 @@
 from conan import ConanFile
 from conan.tools.cmake import CMake, cmake_layout
 
-required_conan_version = ">=1.55.0"
+required_conan_version = ">=2.6.0"
 
 
 class SamariumConan(ConanFile):
     name = "samarium"
-    version = "1.0.2"
+    version = "1.1.0"
     description = "2-D physics simulation library"
-    homepage = "https://strangequark1041.github.io/samarium/"
+    homepage = "https://jjbel.github.io/samarium/"
     url = "https://github.com/conan-io/conan-center-index/"
     license = "MIT"
     topics = ("cpp20", "physics", "2d", "simulation")
@@ -34,22 +34,22 @@ class SamariumConan(ConanFile):
 
     def requirements(self):
         deps = [
-            "fmt/9.1.0",
+            "fmt/11.0.2",
             "range-v3/0.12.0",
-            "stb/cci.20220909",
+            "stb/cci.20240531",
             "tl-expected/20190710",
             "tl-function-ref/1.0.0",
-            "bshoshany-thread-pool/3.3.0",
-            "unordered_dense/2.0.1",
-            "svector/1.0.2",
-            "glfw/3.3.8",
-            "glm/cci.20220420",
+            "bshoshany-thread-pool/4.1.0",
+            "unordered_dense/4.4.0",
+            "svector/1.0.3",
+            "glfw/3.4",
+            "glm/cci.20230113",
             "glad/0.1.36",
-            "freetype/2.12.1",
+            "freetype/2.13.2",
         ]
 
         if self.options.build_tests:
-            deps += ["catch2/3.2.0", "benchmark/1.7.1"]
+            deps += ["catch2/3.7.0", "benchmark/1.9.0"]
 
         for dep in deps:
             self.requires(dep)

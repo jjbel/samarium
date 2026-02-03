@@ -1,8 +1,8 @@
 /*
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2022 Jai Bellare
+ * Copyright (c) 2022-2024 Jai Bellare
  * See <https://opensource.org/licenses/MIT/> or LICENSE.md
- * Project homepage: https://github.com/strangeQuark1041/samarium
+ * Project homepage: https://github.com/jjbel/samarium
  */
 
 #pragma once
@@ -20,9 +20,11 @@
 
 #include "samarium/core/types.hpp"     // for u32, u64, i32, f32
 #include "samarium/graphics/Color.hpp" // for Color
-#include "samarium/math/Vector2.hpp"   // for Vector2
+#include "samarium/math/Transform.hpp" // for Transform
+#include "samarium/math/Vec2.hpp"      // for Vec2
 #include "samarium/util/Result.hpp"    // for Result
 #include "samarium/util/file.hpp"      // for read
+
 
 #include "Texture.hpp"
 
@@ -38,7 +40,7 @@ struct VertexShader
 
     [[nodiscard]] static auto from_file(const std::filesystem::path& path)
     {
-        return expect(make(*file::read(path)));
+        return expect(make(*file::read_str(path)));
     }
 
     [[nodiscard]] static auto make(std::string source) -> Result<VertexShader>
@@ -98,7 +100,7 @@ struct FragmentShader
 
     static auto from_file(const std::filesystem::path& path)
     {
-        return FragmentShader(*file::read(path));
+        return FragmentShader(*file::read_str(path));
     }
 
     static inline auto make(std::string source) -> Result<FragmentShader>
@@ -180,8 +182,11 @@ struct Shader
     void set(const std::string& name, i32 value) const;
     void set(const std::string& name, f32 value) const;
     void set(const std::string& name, Color value) const;
-    void set(const std::string& name, Vector2 value) const;
+    void set(const std::string& name, Vec2 value) const;
     void set(const std::string& name, const glm::mat4& value) const;
+
+    // TODO implicit cast to glm mat4 but now explicit overload, so added separate set_transform
+    void set_transform(const std::string& name, const Transform& value) const;
 
     void bind() const { glUseProgram(handle); }
 
@@ -209,9 +214,10 @@ struct ComputeShader
         return *this;
     }
 
-    static inline auto
-    make(std::string source, i32 local_size_x = 1, i32 local_size_y = 1, i32 local_size_z = 1)
-        -> Result<ComputeShader>
+    static inline auto make(std::string source,
+                            i32 local_size_x = 1,
+                            i32 local_size_y = 1,
+                            i32 local_size_z = 1) -> Result<ComputeShader>
     {
         auto program_handle = glCreateShader(GL_COMPUTE_SHADER);
         source = fmt::format("#version 460 core\nlayout(local_size_x = {}, local_size_y = {}, "
@@ -251,6 +257,10 @@ struct ComputeShader
         auto result = make(source);
         if (result) { *this = std::move(*result); }
         else { throw Error{result.error()}; }
+        // TODO use local_sizes?
+        (void)local_size_x;
+        (void)local_size_y;
+        (void)local_size_z;
     }
 
     void bind();
@@ -262,8 +272,9 @@ struct ComputeShader
     void set(const std::string& name, i32 value) const;
     void set(const std::string& name, f32 value) const;
     void set(const std::string& name, Color value) const;
-    void set(const std::string& name, Vector2 value) const;
+    void set(const std::string& name, Vec2 value) const;
     void set(const std::string& name, const glm::mat4& value) const;
+
     void set(const std::string& name, const Texture& texture) const;
 
     ~ComputeShader() { glDeleteProgram(handle); }
@@ -310,7 +321,7 @@ void Shader::set(const std::string& name, Color value) const
                 static_cast<f32>(value.a) / 255.0F);
 }
 
-void Shader::set(const std::string& name, Vector2 value) const
+void Shader::set(const std::string& name, Vec2 value) const
 {
     glUniform2f(get_uniform_location(name), static_cast<f32>(value.x), static_cast<f32>(value.y));
 }
@@ -318,6 +329,13 @@ void Shader::set(const std::string& name, Vector2 value) const
 void Shader::set(const std::string& name, const glm::mat4& value) const
 {
     glUniformMatrix4fv(get_uniform_location(name), 1, GL_FALSE, glm::value_ptr(value));
+}
+
+void Shader::set_transform(const std::string& name, const Transform& value) const
+{
+    glUniform4f(get_uniform_location(name), static_cast<f32>(value.pos.x),
+                static_cast<f32>(value.pos.y), static_cast<f32>(value.scale.x),
+                static_cast<f32>(value.scale.y));
 }
 
 void ComputeShader::bind() { glUseProgram(handle); }
@@ -355,7 +373,7 @@ void ComputeShader::set(const std::string& name, Color value) const
                 static_cast<f32>(value.a) / 255.0F);
 }
 
-void ComputeShader::set(const std::string& name, Vector2 value) const
+void ComputeShader::set(const std::string& name, Vec2 value) const
 {
     glUniform2f(get_uniform_location(name), static_cast<f32>(value.x), static_cast<f32>(value.y));
 }

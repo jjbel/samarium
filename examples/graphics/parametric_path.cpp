@@ -15,7 +15,7 @@ struct ParametricFunction
 
     constexpr auto operator()(f64 t) const
     {
-        return scale * Vector2{std::sin(f_x * t + math::pi * delta), std::sin(f_y * t)};
+        return scale * Vec2{std::sin(f_x * t + math::pi * delta), std::sin(f_y * t)};
     }
 };
 
@@ -30,7 +30,7 @@ struct ParametricFunction
 
 //     constexpr auto operator()(f64 t) const
 //     {
-//         return scale * Vector2{std::cos(a * t) - math::power<3>(std::cos(b * t)),
+//         return scale * Vec2{std::cos(a * t) - math::power<3>(std::cos(b * t)),
 //                                std::sin(c * t) - math::power<3>(std::sin(d * t))};
 //     }
 // };

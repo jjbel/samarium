@@ -1,5 +1,5 @@
 {
-    "version": 3,
+    "version": 6,
     "cmakeMinimumRequired": {
         "major": 3,
         "minor": 20,
@@ -18,14 +18,29 @@
                 "CMAKE_COLOR_DIAGNOSTICS": true,
                 "CMAKE_COMPILE_WARNING_AS_ERROR": false,
                 "SAMARIUM_HEADER_ONLY": false,
-                "BUILD_UNIT_TESTS": false,
+                "RUN_CONAN": true,
                 "BUILD_EXAMPLES": true,
+                "BUILD_UNIT_TESTS": false,
                 "BUILD_BENCHMARKS": false,
                 "BUILD_DOCS": false,
-                "BUILD_DOCS_TARGET": true,
+                "BUILD_DOCS_TARGET": false,
                 "USE_WARNINGS": true,
-                "USE_CCACHE": true,
-                "USE_UBSAN": false
+                "USE_CCACHE": false,
+                "USE_UBSAN": false,
+                "RUN_AFTER_BUILD": "",
+                "RUN_AFTER_BUILD_DEPENDS": ""
+            }
+        },
+        {
+            "name": "win",
+            "displayName": "Windows Dev",
+            "description": "Windows Dev",
+            "inherits": "default",
+            "cacheVariables": {
+                "BUILD_EXAMPLES": false,
+                "BUILD_BENCHMARKS": false,
+                "SAMARIUM_HEADER_ONLY": false,
+                "SAMARIUM_ENABLE_CUDA": true
             }
         },
         {
@@ -33,7 +48,7 @@
             "inherits": "default",
             "cacheVariables": {
                 "BUILD_UNIT_TESTS": true,
-                "BUILD_EXAMPLES": false,
+                "BUILD_EXAMPLES": true,
                 "RUN_CONAN": true
             }
         },
@@ -102,6 +117,12 @@
             "name": "default",
             "configurePreset": "default",
             "configuration": "Release"
+        },
+        {
+            "name": "win",
+            "configurePreset": "win",
+            "configuration": "Release",
+            "jobs": 8
         },
         {
             "name": "dev",

@@ -9,5 +9,5 @@ Various utilities
     :maxdepth: 1
 
     run
-    Grid
+    Grid2
     file

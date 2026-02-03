@@ -15,7 +15,7 @@ Additions
 #.  ``App``: add ``GridLines``, ``GridDots``
 #.  ``App``: add ``zoom_pan()``
 #.  ``collision``: inter-particle collison with distance threshold
-#.  ``BoundingBox``: add ``set_*``
+#.  ``Box2``: add ``set_*``
 #. ``file``: new ``read()`` and ``write()``
 #. add ``SecondOrderDynamics``
 #. ``math.hpp``: add ``wrap_max``, ``wrap_min_max``, ``{round,ceil,floor}_to_nearest``

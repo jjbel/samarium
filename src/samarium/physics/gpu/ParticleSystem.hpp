@@ -1,8 +1,8 @@
 /*
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2022 Jai Bellare
+ * Copyright (c) 2022-2024 Jai Bellare
  * See <https://opensource.org/licenses/MIT/> or LICENSE.md
- * Project homepage: https://github.com/strangeQuark1041/samarium
+ * Project homepage: https://github.com/jjbel/samarium
  */
 
 #include <span> // for span
@@ -38,7 +38,7 @@ struct ParticleSystem
                             const Particle<f32>& default_particle = {},
                             i32 compute_shader_local_size         = 16)
         : particles{size, default_particle}, shader_local_size{compute_shader_local_size},
-          shaders{.update{Shaders::update_src, shader_local_size}}
+          shaders{.update = gl::ComputeShader(Shaders::update_src, shader_local_size)}
     {
     }
 
@@ -67,7 +67,7 @@ struct ParticleSystem
         auto& vao = window.context.vertex_arrays.at("Pos");
         window.context.set_active(vao);
         buffer.set_data(points);
-        vao.bind(buffer, sizeof(Vector2_t<f32>));
+        vao.bind(buffer, sizeof(Vec2f));
 
         glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, static_cast<i32>(points.size()),
                               static_cast<i32>(particles.data.size()));

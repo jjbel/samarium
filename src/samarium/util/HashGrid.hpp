@@ -1,8 +1,8 @@
 /*
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2022 Jai Bellare
+ * Copyright (c) 2022-2024 Jai Bellare
  * See <https://opensource.org/licenses/MIT/> or LICENSE.md
- * Project homepage: https://github.com/strangeQuark1041/samarium
+ * Project homepage: https://github.com/jjbel/samarium
  */
 
 #pragma once
@@ -13,7 +13,7 @@
 
 #include "samarium/core/types.hpp"
 #include "samarium/math/Extents.hpp"
-#include "samarium/math/Vector2.hpp"
+#include "samarium/math/Vec2.hpp"
 #include "samarium/math/math.hpp"
 
 #include "SmallVector.hpp"
@@ -21,40 +21,55 @@
 
 namespace sm
 {
-template <typename T, usize CellInlineCapacity = 127> struct HashGrid
+template <typename T, usize CellInlineCapacity = 127, typename Float = f64> struct HashGrid
 {
-    using Key       = Vector2_t<i32>;
-    using Container = Map<Key, SmallVector<T, CellInlineCapacity>>;
+    using Vector2Float = Vec2_t<Float>;
+
+    using Key = Vec2_t<i32>;
+
+    // using Value    = SmallVector<T, CellInlineCapacity>;
+    // TODO small vector isn't worth it?
+    using Value = std::vector<T>;
+
+    using Container = Map<Key, Value>;
 
     Container map{};
-    const f64 spacing;
+    const Float spacing;
 
-    explicit HashGrid(f64 spacing_ = 1.0) : spacing{spacing_} {}
+    explicit HashGrid(Float spacing_ = 1.0F) : spacing{spacing_} {}
 
-    auto to_coords(Vector2 pos) const
+    auto to_coords(Vector2Float pos) const
     {
-        return Key::make(math::floor_to_nearest(pos.x, spacing),
-                         math::floor_to_nearest(pos.y, spacing));
+        // TODO weird?? try plotting gridlines and printing to_coords(mouse.pos)
+        // floor_to_nearest causing slowdown??
+        // return Key::make(math::floor_to_nearest(pos.x, spacing),
+        //                  math::floor_to_nearest(pos.y, spacing));
+        // but now some oddities in plotting: static_cast in make is fast, but round sopp for -ve
+        // values
+        return Key::make(pos.x / spacing, pos.y / spacing);
+        // return Key::make(std::abs(pos.x / spacing), std::abs(pos.y / spacing)) *
+        //        Key::make(std::sign(pos.x / spacing), std::sign(pos.y / spacing));
     }
 
-    auto insert(Vector2 pos, T value) { map[to_coords(pos)].push_back(value); }
+    auto insert(Vector2Float pos, T value) { map[to_coords(pos)].push_back(value); }
 
-    auto cell_containing(Vector2 pos) -> typename Container::iterator
+    auto cell_containing(Vector2Float pos) -> typename Container::iterator
     {
         return map.find(to_coords(pos));
     }
 
-    auto cell_containing(Vector2 pos) const -> typename Container::const_iterator
+    auto cell_containing(Vector2Float pos) const -> typename Container::const_iterator
     {
         return map.find(to_coords(pos));
     }
 
-    auto neighbors(Vector2 pos) const
+    auto neighbors(Vector2Float pos) const
     {
-        constexpr auto offsets = std::to_array<Vector2>(
+        constexpr auto offsets = std::to_array<Vector2Float>(
             {{0, 0}, {-1, -1}, {-1, 0}, {-1, 1}, {0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}});
 
-        auto out = SmallVector<T, math::min(CellInlineCapacity * offsets.size(), u64(127))>();
+        auto out = std::vector<T>();
+        // auto out = SmallVector<T, math::min(CellInlineCapacity * offsets.size(), u64(127))>();
 
         for (auto offset : offsets)
         {
@@ -64,6 +79,23 @@ template <typename T, usize CellInlineCapacity = 127> struct HashGrid
         }
 
         return out;
+    }
+
+    auto print_occupancy()
+    {
+        // u64 min_occ = CellInlineCapacity;
+        // u64 max_occ = 0;
+        // u64 total   = 0;
+        // for (const auto& [key, vec] : map)
+        // {
+        //     min_occ = std::min(min_occ, vec.size());
+        //     max_occ = std::max(max_occ, vec.size());
+        //     total += vec.size();
+        // }
+        // fmt::print("min_cc: {} max_occ: {} | total size: {} total inline capacity: {}\n",
+        // min_occ,
+        //            max_occ, total, CellInlineCapacity * map.size());
+        // TODO not giving correct values
     }
 };
 } // namespace sm

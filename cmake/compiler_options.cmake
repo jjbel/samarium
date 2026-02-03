@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: MIT
-# Copyright (c) 2022 Jai Bellare
+# Copyright (c) 2022-2024 Jai Bellare
 # See <https://opensource.org/licenses/MIT/> or LICENSE.md
-# Project homepage: <https://github.com/strangeQuark1041/samarium>
+# Project homepage: <https://github.com/jjbel/samarium>
 
 # from:
 # https://github.com/cpp-best-practices/cpp_starter_project/blob/master/cmake/CompilerWarnings.cmake
@@ -15,6 +15,8 @@ cmake_minimum_required(VERSION 3.15)
 function(set_compiler_options)
     set(MSVC_OPTIONS
         /std:c++latest # https://github.com/microsoft/STL/issues/1814#issuecomment-845572895
+        # TODO set optimization level?
+        # /O2
         /W4 # Baseline reasonable warnings
         /w14242 # 'identifier': conversion from 'type1' to 'type1', possible loss of data
         /w14254 # 'operator': conversion from 'type1:field_bits' to 'type2:field_bits',

@@ -1,8 +1,8 @@
 /*
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2022 Jai Bellare
+ * Copyright (c) 2022-2024 Jai Bellare
  * See <https://opensource.org/licenses/MIT/> or LICENSE.md
- * Project homepage: https://github.com/strangeQuark1041/samarium
+ * Project homepage: https://github.com/jjbel/samarium
  */
 
 #pragma once
@@ -11,7 +11,7 @@
 #include <type_traits> // for std::is_invocable_v
 
 #include "samarium/graphics/Color.hpp"
-#include "samarium/math/Vector2.hpp"
+#include "samarium/math/Vec2.hpp"
 
 #include "Extents.hpp"
 
@@ -325,7 +325,7 @@ namespace sm::interp
 // }
 
 /**
- * @brief               Check if a value is within asome Extents
+ * @brief               Check if a value is within some Extents
  *
  * @param  value        Input value
  * @param  range_       Input range
@@ -391,11 +391,11 @@ template <typename T> [[nodiscard]] constexpr auto clamped_lerp(f64 factor, Exte
  * @param  center
  * @param  factor
  */
-[[nodiscard]] constexpr auto lerp_rotate(Vector2 from, Vector2 to, Vector2 center, f64 factor)
+[[nodiscard]] constexpr auto lerp_rotate(Vec2 from, Vec2 to, Vec2 center, f64 factor)
 {
     const auto radius = lerp<f64>(factor, {(from - center).length(), (to - center).length()});
     const auto angle  = lerp<f64>(factor, {from.angle(), to.angle()});
-    return center + Vector2::from_polar({radius, angle});
+    return center + Vec2::from_polar({radius, angle});
 }
 
 /**
@@ -405,13 +405,12 @@ template <typename T> [[nodiscard]] constexpr auto clamped_lerp(f64 factor, Exte
  * @param  center
  * @param  factor
  */
-[[nodiscard]] constexpr auto
-clamped_lerp_rotate(Vector2 from, Vector2 to, Vector2 center, f64 factor)
+[[nodiscard]] constexpr auto clamped_lerp_rotate(Vec2 from, Vec2 to, Vec2 center, f64 factor)
 {
     factor            = clamp(factor, {0.0, 1.0});
     const auto radius = lerp<f64>(factor, {(from - center).length(), (to - center).length()});
     const auto angle  = lerp<f64>(factor, {from.angle(), to.angle()});
-    return center + Vector2::from_polar({radius, angle});
+    return center + Vec2::from_polar({radius, angle});
 }
 
 /**
@@ -493,7 +492,7 @@ template <typename T, typename Output = T>
  * @brief             Interpolate between points
  *
  * @param  points     Input points
- * @return Vector2
+ * @return Vec2
  */
 template <typename T> auto lerp_points(const T& points)
 {

@@ -1,8 +1,8 @@
 /*
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2022 Jai Bellare
+ * Copyright (c) 2022-2024 Jai Bellare
  * See <https://opensource.org/licenses/MIT/> or LICENSE.md
- * Project homepage: https://github.com/strangeQuark1041/samarium
+ * Project homepage: https://github.com/jjbel/samarium
  */
 
 #pragma once
@@ -17,7 +17,7 @@
 
 #include "samarium/core/types.hpp"     // for f32, i64, u32, i32
 #include "samarium/graphics/Color.hpp" // for Color
-#include "samarium/math/Vector2.hpp"   // for Vector2_t
+#include "samarium/math/Vec2.hpp"      // for Vec2_t
 
 namespace sm::gl
 {
@@ -25,7 +25,7 @@ inline constexpr auto version_major = 4;
 inline constexpr auto version_minor = 6;
 
 static constexpr auto unit_square =
-    std::to_array<Vector2f>({{-1.0F, -1.0F}, {-1.0F, 1.0F}, {1.0F, 1.0F}, {1.0F, -1.0F}});
+    std::to_array<Vec2f>({{-1.0F, -1.0F}, {-1.0F, 1.0F}, {1.0F, 1.0F}, {1.0F, -1.0F}});
 
 enum class BufferType
 {
@@ -68,9 +68,12 @@ enum class Primitive
 };
 
 // https://www.khronos.org/opengl/wiki/Image_Format
+// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glTexImage2D.xhtml
 enum class ImageFormat
 {
     RGBA8   = GL_RGBA8,
+    RGB8    = GL_RGB8,
+    R8      = GL_R8,
     R32F    = GL_R32F,
     RG32F   = GL_RG32F,
     RGB32F  = GL_RGB32F,
@@ -90,6 +93,14 @@ struct FormatAndType
         {
         case RGBA8:
             format = GL_RGBA;
+            type   = GL_UNSIGNED_BYTE;
+            break;
+        case RGB8:
+            format = GL_RGB;
+            type   = GL_UNSIGNED_BYTE;
+            break;
+        case R8:
+            format = GL_RED;
             type   = GL_UNSIGNED_BYTE;
             break;
         case R32F:

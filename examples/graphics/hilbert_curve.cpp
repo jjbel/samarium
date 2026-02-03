@@ -1,8 +1,8 @@
 /*
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2022 Jai Bellare
+ * Copyright (c) 2022-2024 Jai Bellare
  * See <https://opensource.org/licenses/MIT/> or LICENSE.md
- * Project homepage: https://github.com/strangeQuark1041/samarium
+ * Project homepage: https://github.com/jjbel/samarium
  */
 
 #include "samarium/graphics/colors.hpp"
@@ -20,8 +20,8 @@ static constexpr auto duration     = 100UL;
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-using IntegerPair = Vector2_t<i32>;
-using Path        = std::vector<Vector2>;
+using IntegerPair = Vec2_t<i32>;
+using Path        = std::vector<Vec2>;
 
 auto point_at(i32 index, i32 level)
 {
@@ -59,8 +59,8 @@ auto points_f64(u64 level)
     auto vec = Path(point_count(level));
     for (auto i : loop::end(vec.size()))
     {
-        const auto point = point_at(i32(i), i32(level)).cast<f64>();
-        vec[i]           = (point + Vector2::combine(0.5)) /
+        const auto point = point_at(i32(i), i32(level)).template cast<f64>();
+        vec[i]           = (point + Vec2::combine(0.5)) /
                  std::pow(2.0, static_cast<f64>(level)); // rescale to [{0, 0}, {1, 1}]
     }
     return vec;
@@ -122,7 +122,7 @@ auto main() -> i32
 
     const auto draw = [&]
     {
-        app.fill("#0b0c17"_c);
+        draw::background("#0b0c17"_c);
 
         if (app.frame_counter != 0 && app.frame_counter % duration == 0)
         {
@@ -136,10 +136,10 @@ auto main() -> i32
         {
             path[i] = interp::lerp(
                 interp::ease(lerp_factor, 3),
-                Extents<Vector2>{levels[current_iter][i], levels[(current_iter + 1UL) % order][i]});
+                Extents<Vec2>{levels[current_iter][i], levels[(current_iter + 1UL) % order][i]});
         }
 
-        const auto mapper = [&](Vector2 vec) { return vec * static_cast<f64>(window_width); };
+        const auto mapper = [&](Vec2 vec) { return vec * static_cast<f64>(window_width); };
 
         for (auto i : loop::end(path.size() - 1))
         {

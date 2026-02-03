@@ -13,8 +13,8 @@ from os import chdir
 project = "Samarium"
 copyright = "2022, Jai Bellare"
 author = "Jai Bellare"
-version = "1.0.2"
-release = "1.0.2"
+version = "1.1.0"
+release = "1.1.0"
 
 extensions = [
     "breathe",
@@ -24,8 +24,9 @@ extensions = [
     "sphinx_copybutton",
     "sphinxext.opengraph",
     "sphinx.ext.extlinks",
+    "sphinx.ext.graphviz",
     "sphinxcontrib.asciinema",
-    "sphinx.ext.graphviz"
+    "sphinxcontrib.video"
 ]
 
 HEAD_REF = run(
@@ -34,11 +35,11 @@ HEAD_REF = run(
 
 extlinks = {
     "github": (
-        f"https://github.com/strangeQuark1041/samarium/blob/{HEAD_REF}/%s",
+        f"https://github.com/jjbel/samarium/blob/{HEAD_REF}/%s",
         "%s",
     ),
     "src": (
-        f"https://github.com/strangeQuark1041/samarium/blob/{HEAD_REF}/src/samarium/%s",
+        f"https://github.com/jjbel/samarium/blob/{HEAD_REF}/src/samarium/%s",
         "samarium/%s",
     ),
 }
@@ -50,7 +51,7 @@ exclude_patterns = ["build", "Thumbs.db", ".DS_Store"]
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = "furo"
-html_title = "samarium docs"
+html_title = "Samarium Docs"
 
 html_static_path = ["_static"]
 
@@ -73,7 +74,7 @@ html_theme_options = {
     "footer_icons": [
         {
             "name": "GitHub",
-            "url": "https://github.com/strangeQuark1041/samarium",
+            "url": "https://github.com/jjbel/samarium",
             "html": Path('_static/github-logo.svg').read_text(),
             "class": "",
         },
@@ -103,7 +104,7 @@ mathjax3_config = {
     }
 }
 
-ogp_site_url = "https://strangequark1041.github.io/samarium/"
+ogp_site_url = "https://jjbel.github.io/samarium/"
 ogp_site_name = "Samarium Docs"
 
 run(["doxygen", "Doxyfile.cfg"], check=True)

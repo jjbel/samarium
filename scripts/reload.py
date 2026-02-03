@@ -41,7 +41,7 @@ def run_all():
 
 
 def clear_screen():
-    run('cls' if name == 'nt' else 'clear')
+    run('cls' if name == 'nt' else 'clear', shell=True)
 
 
 options_path = Path(__file__).parent / 'reload.json'

@@ -1,8 +1,8 @@
 /*
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2022 Jai Bellare
+ * Copyright (c) 2022-2024 Jai Bellare
  * See <https://opensource.org/licenses/MIT/> or LICENSE.md
- * Project homepage: https://github.com/strangeQuark1041/samarium
+ * Project homepage: https://github.com/jjbel/samarium
  */
 
 // Based on: https://youtu.be/EK32jo7i5LQ
@@ -29,9 +29,9 @@ auto main() -> i32
     auto app = App{{.dims = {1000, 1000}}};
     app.transform.scale /= scale; // zoom out
 
-    const auto count = i32(app.transform.apply_inverse(Vector2{})
-                               .length()); // roughly ensure numbers fill up screen by getting
-                                           // distance from centre to corner
+    const auto count = i32(
+        app.transform.apply_inverse(Vec2{}).length()); // roughly ensure numbers fill up screen by
+                                                       // getting distance from centre to corner
 
     print("Count: ", count);
     auto numbers = std::vector<i32>();
@@ -43,20 +43,20 @@ auto main() -> i32
 
     const auto draw = [&]
     {
-        app.fill("#06060c"_c);
+        draw::background("#06060c"_c);
         if (app.mouse.left)
         {
             app.transform.pos += app.mouse.current_pos - app.mouse.old_pos;
         } // translate
 
         const auto factor = 1.0 + 0.1 * app.mouse.scroll_amount;
-        app.transform.scale *= Vector2::combine(factor);
+        app.transform.scale *= Vec2::combine(factor);
         app.transform.pos =
             app.mouse.current_pos + factor * (app.transform.pos - app.mouse.current_pos);
 
         for (auto i : numbers)
         {
-            app.draw(Circle{.centre = Vector2::from_polar({f64(i), f64(i)}),
+            app.draw(Circle{.centre = Vec2::from_polar({f64(i), f64(i)}),
                             .radius = 4.0 / std::sqrt(app.transform.scale.x)},
                      {.fill_color = colors::aquamarine});
         }

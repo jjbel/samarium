@@ -1,8 +1,8 @@
 /*
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2022 Jai Bellare
+ * Copyright (c) 2022-2024 Jai Bellare
  * See <https://opensource.org/licenses/MIT/> or LICENSE.md
- * Project homepage: https://github.com/strangeQuark1041/samarium
+ * Project homepage: https://github.com/jjbel/samarium
  */
 
 #pragma once
@@ -11,9 +11,9 @@
 #include <initializer_list> // for initializer_list
 #include <string>           // for string, operator+
 
-#include "samarium/math/Vector2.hpp" // for Dimensions
-#include "samarium/util/Grid.hpp"    // for Image
-#include "samarium/util/format.hpp"  // for date_time_str
+#include "samarium/math/Vec2.hpp"   // for Dimensions
+#include "samarium/util/Grid2.hpp"  // for Image
+#include "samarium/util/format.hpp" // for date_time_str
 
 #include "Result.hpp"    // for Result
 #include "fpng/fpng.hpp" // for fpng_encode_image_to_file
@@ -21,12 +21,6 @@
 namespace sm::file
 {
 using Path = std::filesystem::path;
-
-struct Text
-{
-};
-
-static constexpr auto text = Text{};
 
 struct Targa
 {
@@ -52,16 +46,18 @@ struct Bmp
 
 static constexpr auto bmp = Bmp{};
 
-auto read([[maybe_unused]] Text tag, const Path& file_path) -> Result<std::string>;
+auto read_str(const Path& file_path) -> Result<std::string>;
 
-auto read(const Path& file_path) -> Result<std::string>;
+// assume file exists and is regular
+auto read_str_unsafe(const Path& file_path) -> std::string;
 
 auto read_image(const Path& file_path) -> Result<Image>;
-
 
 void write([[maybe_unused]] Targa tag,
            const Image& image,
            const Path& file_path = date_time_str() + ".tga");
+
+// TODO instead of tags, make individual functions, which is sane, and then maybe have a template
 
 /**
  * @brief               Write image to file_path in the NetBPM PAM format
@@ -86,8 +82,8 @@ void write([[maybe_unused]] Bmp tag,
            const Image& image,
            const Path& file_path = date_time_str() + ".bmp");
 
-auto find(const std::string& file_name, const Path& directory = std::filesystem::current_path())
-    -> Result<Path>;
+auto find(const std::string& file_name,
+          const Path& directory = std::filesystem::current_path()) -> Result<Path>;
 
 auto find(const std::string& file_name, std::span<Path> search_paths) -> Result<Path>;
 
@@ -118,14 +114,14 @@ auto find(const std::string& file_name, std::initializer_list<Path> search_paths
 #include "samarium/core/types.hpp"     // for u8
 #include "samarium/graphics/Color.hpp" // for BGR_t, bgr
 #include "samarium/math/Extents.hpp"   // for range
-#include "samarium/math/Vector2.hpp"   // for Dimensions
-#include "samarium/util/Grid.hpp"      // for Image
+#include "samarium/math/Vec2.hpp"      // for Dimensions
+#include "samarium/util/Grid2.hpp"     // for Image
 
 #include "fpng/fpng.hpp"
 
 namespace sm::file
 {
-SM_INLINE auto read([[maybe_unused]] Text tag, const Path& file_path) -> Result<std::string>
+SM_INLINE auto read_str(const Path& file_path) -> Result<std::string>
 {
     if (!std::filesystem::exists(file_path))
     {
@@ -140,9 +136,23 @@ SM_INLINE auto read([[maybe_unused]] Text tag, const Path& file_path) -> Result<
     return {std::string(std::istreambuf_iterator<char>{ifs}, {})};
 }
 
-SM_INLINE auto read(const Path& file_path) -> Result<std::string>
+// https://insanecoding.blogspot.com/2011/11/how-to-read-in-file-in-c.html
+SM_INLINE auto read_str_unsafe(const Path& file_path) -> std::string
 {
-    return read(Text{}, file_path);
+    std::ifstream in(file_path, std::ios::in | std::ios::binary);
+    if (!in)
+    {
+        // throw(errno);
+        return "";
+    }
+
+    std::string contents;
+    in.seekg(0, std::ios::end);
+    contents.resize(in.tellg());
+    in.seekg(0, std::ios::beg);
+    in.read(&contents[0], contents.size());
+    in.close();
+    return contents;
 }
 
 SM_INLINE auto read_image(const Path& file_path) -> Result<Image>
@@ -281,8 +291,8 @@ SM_INLINE auto find(const std::string& file_name, std::span<Path> search_paths) 
     return make_unexpected(fmt::format("File not found: '{}'", file_name));
 }
 
-SM_INLINE auto find(const std::string& file_name, std::initializer_list<Path> search_paths)
-    -> Result<Path>
+SM_INLINE auto find(const std::string& file_name,
+                    std::initializer_list<Path> search_paths) -> Result<Path>
 {
     for (const auto& path : search_paths)
     {

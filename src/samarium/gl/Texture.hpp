@@ -1,8 +1,8 @@
 /*
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2022 Jai Bellare
+ * Copyright (c) 2022-2024 Jai Bellare
  * See <https://opensource.org/licenses/MIT/> or LICENSE.md
- * Project homepage: https://github.com/strangeQuark1041/samarium
+ * Project homepage: https://github.com/jjbel/samarium
  */
 
 #pragma once
@@ -12,9 +12,9 @@
 
 #include "glad/glad.h" // for GLenum, GL_RGBA8, glDeleteTex...
 
-#include "samarium/core/types.hpp"   // for u32, i32
-#include "samarium/math/Vector2.hpp" // for Dimensions
-#include "samarium/util/Grid.hpp"    // for Image
+#include "samarium/core/types.hpp" // for u32, i32
+#include "samarium/math/Vec2.hpp"  // for Dimensions
+#include "samarium/util/Grid2.hpp" // for Image
 
 #include "gl.hpp" // for Access
 
@@ -50,6 +50,7 @@ struct Texture
                      Filter min_filter = Filter::None,
                      Filter mag_filter = Filter::None);
 
+    // TODO swap order of last 3 params
     explicit Texture(ImageFormat format,
                      Dimensions dims,
                      Wrap mode         = Wrap::None,

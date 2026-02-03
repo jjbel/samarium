@@ -1,8 +1,8 @@
 /*
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2022 Jai Bellare
+ * Copyright (c) 2022-2024 Jai Bellare
  * See <https://opensource.org/licenses/MIT/> or LICENSE.md
- * Project homepage: https://github.com/strangeQuark1041/samarium
+ * Project homepage: https://github.com/jjbel/samarium
  */
 
 #pragma once
@@ -10,7 +10,7 @@
 #include <optional> // for optional, nullopt
 
 #include "samarium/core/types.hpp"       // for f64
-#include "samarium/math/Vector2.hpp"     // for Vector2_t, operator+, opera...
+#include "samarium/math/Vec2.hpp"        // for Vec2_t, operator+, opera...
 #include "samarium/math/shapes.hpp"      // for LineSegment
 #include "samarium/math/vector_math.hpp" // for distance, clamped_intersection
 
@@ -38,10 +38,10 @@ solve_collision(f64& vel_left, f64& vel_right, f64 mass_left, f64 mass_right, f6
 template <typename Float = f64>
 [[maybe_unused]] auto collide(Particle<Float>& p1, Particle<Float>& p2, f64 damping = 1.0) -> bool
 {
-    // https://strangequark1041.github.io/samarium/physics/two-Particle<Float>-collision
+    // https://jjbel.github.io/samarium/physics/two-particle-collision
     if (!did_collide(p1, p2)) { return false; }
 
-    const auto angle_of_impact = Vector2::angle_between(p1.pos, p2.pos);
+    const auto angle_of_impact = Vec2::angle_between(p1.pos, p2.pos);
 
     // ensure p1 is on the left
     const auto swap_left_right =
@@ -64,8 +64,11 @@ template <typename Float = f64>
 }
 
 template <typename Float = f64>
-void collide(
-    Particle<Float>& current, const LineSegment& l, f64 dt, f64 damping = 1.0, f64 friction = 1.0)
+void collide(Particle<Float>& current,
+             const LineSegment& l,
+             f64 dt,
+             f64 coefff_of_rest = 1.0,
+             f64 friction       = 1.0)
 {
     const auto old_pos       = current.pos - current.vel * dt;
     const auto vec           = l.vector();
@@ -91,7 +94,7 @@ void collide(
 
     current.vel.rotate(-vec.angle());
     current.vel.x *= friction;
-    current.vel.y *= damping;
+    current.vel.y *= coefff_of_rest;
     current.vel.rotate(vec.angle());
 }
 } // namespace sm::phys

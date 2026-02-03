@@ -1,8 +1,8 @@
 /*
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2022 Jai Bellare
+ * Copyright (c) 2022-2024 Jai Bellare
  * See <https://opensource.org/licenses/MIT/> or LICENSE.md
- * Project homepage: https://github.com/strangeQuark1041/samarium
+ * Project homepage: https://github.com/jjbel/samarium
  */
 
 #include "samarium/graphics/colors.hpp"
@@ -20,7 +20,7 @@ constexpr auto class_size      = 4.0;
 constexpr auto max_graph_speed = 60.0;
 constexpr auto graph_width     = 80.0;
 constexpr auto graph_height    = 40.0;
-constexpr auto graph_centre    = Vector2{-37.5, 0.0};
+constexpr auto graph_centre    = Vec2{-37.5, 0.0};
 
 auto main() -> i32
 {
@@ -76,11 +76,11 @@ auto main() -> i32
             frequencies.at(static_cast<u64>(speed / class_size)) += 1.0;
         }
 
-        app.fill("#131417"_c);
+        draw::background("#131417"_c);
         app.draw(App::GridLines{});
         for (const auto& i : particles) { app.draw(i, {.fill_color = "#fc0330"_c}); }
 
-        auto points              = std::vector<Vector2>(frequencies.size());
+        auto points              = std::vector<Vec2>(frequencies.size());
         const auto max_frequency = ranges::max(frequencies);
         for (auto [i, frequency] : ranges::views::enumerate(frequencies))
         {
@@ -88,7 +88,7 @@ auto main() -> i32
                                                   {-graph_width / 2.0, graph_width / 2.0});
             const auto y = interp::map_range<f64>(frequency, {0.0, max_frequency},
                                                   {-graph_height / 2.0, graph_height / 2.0});
-            points[i]    = Vector2{x, y} + graph_centre;
+            points[i]    = Vec2{x, y} + graph_centre;
         }
         app.draw_polyline(points, "#6179ff"_c, 0.2);
 

@@ -6,27 +6,27 @@
 Samarium Docs
 =============
 
-.. include:: build-status.rst
-
 Samarium is a 2d physics and rendering engine, written in modern C++20
 
 Contents
 --------
 
 ..  toctree::
+    poster
+
+..  toctree::
     :caption: Links
 
-    Symbol Index <https://strangequark1041.github.io/samarium/genindex>
-    Search <https://strangequark1041.github.io/samarium/search>
-    Github <https://github.com/strangeQuark1041/samarium>
-    Releases <https://github.com/strangeQuark1041/samarium/releases>
+    Symbol Index <https://jjbel.github.io/samarium/genindex>
+    Github <https://github.com/jjbel/samarium>
 
 ..  toctree::
     :caption: Usage
 
     installation
+    examples/index
     usage/basics.rst
-    examples
+    usage/coordinate_systems.rst
 
 .. toctree::
     :caption: Physics
@@ -47,3 +47,4 @@ Contents
 
     changelog
     license
+    development

@@ -1,8 +1,8 @@
 /*
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2022 Jai Bellare
+ * Copyright (c) 2022-2024 Jai Bellare
  * See <https://opensource.org/licenses/MIT/> or LICENSE.md
- * Project homepage: https://github.com/strangeQuark1041/samarium
+ * Project homepage: https://github.com/jjbel/samarium
  */
 
 #pragma once
@@ -124,7 +124,7 @@ template <concepts::Number T> [[nodiscard]] constexpr auto abs(T x) noexcept
 template <typename T>
 [[nodiscard]] constexpr auto sign(T x, std::false_type /* is_signed */) noexcept -> i32
 {
-    return T(0) < x;
+    return T{} < x;
 }
 
 /**
@@ -137,7 +137,7 @@ template <typename T>
 template <typename T>
 [[nodiscard]] constexpr auto sign(T x, std::true_type /* is_signed */) noexcept -> i32
 {
-    return (T(0) < x) - (x < T(0));
+    return (T{} < x) - (x < T{});
 }
 
 /**

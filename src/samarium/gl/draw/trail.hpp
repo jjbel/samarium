@@ -1,8 +1,8 @@
 /*
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2022 Jai Bellare
+ * Copyright (c) 2022-2024 Jai Bellare
  * See <https://opensource.org/licenses/MIT/> or LICENSE.md
- * Project homepage: https://github.com/strangeQuark1041/samarium
+ * Project homepage: https://github.com/jjbel/samarium
  */
 
 #pragma once
@@ -30,12 +30,9 @@ namespace sm::draw
 {
 SM_INLINE void trail(Window& window, const Trail& trail, Color color, f32 thickness)
 {
+    // TODO check < 2 in polyline or not?
     if (trail.size() < 2) { return; }
-    const auto points = trail.trail |
-                        ranges::views::transform([](Vector2 vec) { return vec.cast<f32>(); }) |
-                        ranges::to<std::vector>;
-
-    polyline(window, points, color, thickness);
+    polyline(window, trail.trail, thickness, color);
 }
 
 // SM_INLINE void

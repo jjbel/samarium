@@ -1,14 +1,14 @@
 /*
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2022 Jai Bellare
+ * Copyright (c) 2022-2024 Jai Bellare
  * See <https://opensource.org/licenses/MIT/> or LICENSE.md
- * Project homepage: https://github.com/strangeQuark1041/samarium
+ * Project homepage: https://github.com/jjbel/samarium
  */
 
 #pragma once
 
 #include "samarium/core/types.hpp"       // for f64
-#include "samarium/math/Vector2.hpp"     // for Vector2_t, operator-, Vector2
+#include "samarium/math/Vec2.hpp"        // for Vec2_t, operator-, Vec2
 #include "samarium/math/vector_math.hpp" // for distance
 
 #include "Particle.hpp" // for Particle
@@ -23,12 +23,19 @@ template <typename Float = f64> struct Spring
     const f64 stiffness;
     const f64 damping;
 
+    // TODO implement this as a filter on spring vector, not here
+    // TODO doesn't work, explodes
+    // TODO add a max_force to prevent explosions
+    const f64 break_stretch;
+    bool active = true;
+
     Spring(Particle<Float>& particle1,
            Particle<Float>& particle2,
-           f64 stiffness_ = 100.0,
-           f64 damping_   = 10.0) noexcept
+           f64 stiffness_    = 100.0,
+           f64 damping_      = 10.0,
+           f64 break_stretch = 200000.0) noexcept
         : p1{particle1}, p2{particle2}, rest_length{math::distance(particle1.pos, particle2.pos)},
-          stiffness{stiffness_}, damping{damping_}
+          stiffness{stiffness_}, damping{damping_}, break_stretch{break_stretch}
     {
     }
 
@@ -36,9 +43,17 @@ template <typename Float = f64> struct Spring
 
     void update() noexcept
     {
-        const auto vec    = p2.pos - p1.pos;
-        const auto spring = (vec.length() - rest_length) * stiffness;
-        auto damp         = Vector2::dot(vec.normalized(), p2.vel - p1.vel) * damping;
+        // if (!active) { return; }
+        const auto vec = p2.pos - p1.pos;
+        const auto dx  = vec.length() - rest_length;
+        // print(std::abs(dx) / rest_length);
+        if (std::abs(dx) / rest_length > break_stretch)
+        {
+            active = false;
+            // return;
+        }
+        const auto spring = dx * stiffness;
+        auto damp         = Vec2::dot(vec.normalized(), p2.vel - p1.vel) * damping;
 
         const auto force = vec.with_length(spring + damp);
 

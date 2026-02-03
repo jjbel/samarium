@@ -1,8 +1,8 @@
 /*
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2022 Jai Bellare
+ * Copyright (c) 2022-2024 Jai Bellare
  * See <https://opensource.org/licenses/MIT/> or LICENSE.md
- * Project homepage: https://github.com/strangeQuark1041/samarium
+ * Project homepage: https://github.com/jjbel/samarium
  */
 
 #pragma once
@@ -39,24 +39,56 @@ auto run(Window& window, const std::invocable auto& update)
  * accordingly
  */
 auto run(Window& window,
-         const std::invocable auto& update,
-         const std::invocable auto& draw,
+         const auto& update, // std::invocable<void(f64)> ?
+         const auto& draw,
          u64 substeps = 1)
 {
     auto watch = Stopwatch{};
+    auto dt    = 0.0;
     while (window.is_open())
     {
+        dt = watch.seconds();
+        // clamp dt so if there s a big lag it doesnt explode
+        watch.reset();
+
         for (auto i : loop::end(substeps))
         {
-            update();
-            watch.reset();
+            // TODO is this correct dt?
+            // https://youtu.be/yGhfUcPjXuE?t=333 use diff bw n-1 and n-2
+            update(dt / substeps);
+            // std::ignore = i;
         }
         draw();
-
         window.display();
     }
 }
 
+/**
+ * @brief               call update  -> call draw -> display the window
+ *
+ * @param  window       Window to display
+ * @param  update       Callable which updates the state of objects
+ * @param  draw         Callable which draws objects
+ * @param  substeps
+ * @param  dt           Fixed time to assume bewteen frames
+ */
+auto run(Window& window, const auto& update, const auto& draw, u64 substeps, f64 dt)
+{
+    while (window.is_open())
+    {
+        for (auto i : loop::end(substeps))
+        {
+            // TODO is this correct dt?
+            // https://youtu.be/yGhfUcPjXuE?t=333 use diff bw n-1 and n-2
+            update(dt / substeps);
+            // std::ignore = i;
+        }
+        draw();
+        window.display();
+    }
+}
+
+// TODO deprecate
 auto zoom_pan(Window& window, f64 zoom_factor = 0.1, f64 pan_factor = 1.0)
 {
     if (window.mouse.left)
@@ -65,7 +97,7 @@ auto zoom_pan(Window& window, f64 zoom_factor = 0.1, f64 pan_factor = 1.0)
     }
 
     const auto scale = 1.0 + zoom_factor * window.mouse.scroll_amount;
-    window.view.scale *= Vector2::combine(scale);
+    window.view.scale *= Vec2::combine(scale);
     window.view.pos = window.mouse.pos + scale * pan_factor * (window.view.pos - window.mouse.pos);
 }
 
@@ -82,7 +114,7 @@ auto zoom_pan(Window& window,
     if (zoom_condition())
     {
         const auto scale = 1.0 + zoom_factor * window.mouse.scroll_amount;
-        window.view.scale *= Vector2::combine(scale);
+        window.view.scale *= Vec2::combine(scale);
         window.view.pos =
             window.mouse.pos + scale * pan_factor * (window.view.pos - window.mouse.pos);
     }

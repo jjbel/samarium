@@ -1,101 +1,156 @@
-# Samarium
+## See installation instructions below
 
-[![GCC](https://github.com/strangeQuark1041/samarium/actions/workflows/gcc.yml/badge.svg)](https://github.com/strangeQuark1041/samarium/actions/workflows/gcc.yml)
-[![Clang](https://github.com/strangeQuark1041/samarium/actions/workflows/clang.yml/badge.svg)](https://github.com/strangeQuark1041/samarium/actions/workflows/clang.yml)
-[![MSVC](https://github.com/strangeQuark1041/samarium/actions/workflows/msvc.yml/badge.svg)](https://github.com/strangeQuark1041/samarium/actions/workflows/msvc.yml)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=strangeQuark1041_samarium&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=strangeQuark1041_samarium)
+<!-- TODO make a script to merge these into 2x2 grid, loop them -->
 
-![Lines of Code](https://img.shields.io/tokei/lines/github/strangeQuark1041/samarium)
-![Repo Size](https://img.shields.io/github/repo-size/strangeQuark1041/samarium)
-[![MIT License](https://img.shields.io/badge/license-MIT-yellow)](https://github.com/strangeQuark1041/samarium/blob/main/LICENSE.md)
-![language: C++20](https://img.shields.io/badge/language-C%2B%2B20-yellow)
-[![Latest Github Release](https://img.shields.io/github/v/tag/strangeQuark1041/samarium?label=latest%20release)](https://github.com/strangeQuark1041/samarium/tags)
+$10^4$ particles interacting gravitationally in realtime, using a [hashgrid](https://github.com/jjbel/samarium/blob/main/src/samarium/util/HashGrid.hpp):
 
-Samarium is a 2d physics simulation library written in modern C++20.
+[](https://github.com/user-attachments/assets/b461e8b8-eac3-4cb0-b3aa-b91b147f4b81)
 
-## Contents
+$10^5$ particles moving in a velocity field of [perlin noise](https://github.com/jjbel/samarium/blob/main/src/samarium/util/noise.hpp):
 
-- [Samarium](#samarium)
-  - [Contents](#contents)
-  - [Samples](#samples)
-  - [Quickstart](#quickstart)
-  - [Prerequistes](#prerequistes)
-  - [Installation](#installation)
-  - [Example](#example)
-  - [Tools](#tools)
-  - [Documentation](#documentation)
-  - [License](#license)
+[](https://github.com/user-attachments/assets/f8f23bc0-c454-481b-b536-9e6e7abb8bd9)
 
-## Samples
+Softbody, interact with a mouse:
+
+[](https://user-images.githubusercontent.com/83468982/178473002-b7f896f6-d5ed-4cc5-be34-bcccab9ef11e.mp4)
+
+An ideal gas's velocity distribution approaching the Maxwell-Boltzmann Distribution:
+
+[](https://github.com/user-attachments/assets/1bd3aa90-80b7-486c-94df-1e03d7e276c9)
+
+### Graphics:
+
+Animating levels of the Hilbert Curve:
 
 [](https://user-images.githubusercontent.com/83468982/178472984-8cd83808-bfb2-478b-8a5e-3d45782f2c7d.mp4)
 
-[](https://user-images.githubusercontent.com/83468982/178473002-b7f896f6-d5ed-4cc5-be34-bcccab9ef11e.mp4)
+Animating levels of the Fourier transform of a shape:
+
+[](https://github.com/user-attachments/assets/d870c975-44d4-4624-b122-48129506bbf6)
+
+# Samarium
+
+<!--
+[![GCC](https://github.com/jjbel/samarium/actions/workflows/gcc.yml/badge.svg)](https://github.com/jjbel/samarium/actions/workflows/gcc.yml)
+[![Clang](https://github.com/jjbel/samarium/actions/workflows/clang.yml/badge.svg)](https://github.com/jjbel/samarium/actions/workflows/clang.yml)
+[![MSVC](https://github.com/jjbel/samarium/actions/workflows/msvc.yml/badge.svg)](https://github.com/jjbel/samarium/actions/workflows/msvc.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=jjbel_samarium&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=jjbel_samarium) -->
+
+<!-- [![MIT License](https://img.shields.io/badge/license-MIT-yellow)](https://github.com/jjbel/samarium/blob/main/LICENSE.md) -->
+
+<!--
+![language: C++20](https://img.shields.io/badge/language-C%2B%2B20-yellow)
+[![Latest Github Release](https://img.shields.io/github/v/tag/jjbel/samarium?label=latest%20release)](https://github.com/jjbel/samarium/tags) -->
+
+Samarium is a 2d physics simulation and rendering library written in C++20, with a focus on high performance using GPU acceleration (CUDA and compute shaders), and by using the CPU and memory better (multithreading, data-oriented-design).
+
+I am actively working on adding 3D support and more simulation domains: chemical reactions, phase change, cloth etc.
+
+<!-- Rendering is done directly with OpenGL. -->
+<!-- Offload more work to the GPU -->
+<!-- SIMD for increasing, CPU performance -->
+
+<!-- ## Contents -->
+
+<!-- TODO use vscode markdown auto TOC -->
+
+<!-- - [Examples](#examples) -->
+<!-- - [Quickstart](#quickstart) -->
+<!-- - [Prerequistes](#prerequistes)
+- [Installation](#installation)
+- [Example](#example)
+- [Tools](#tools)
+- [Documentation](#documentation)
+- [License](#license) -->
 
 ## Quickstart
 
 ```sh
-git clone --depth 1 https://github.com/strangeQuark1041/samarium.git
-python scripts/bootstrap.py
+git clone --depth 1 https://github.com/jjbel/samarium.git
+python samarium/bootstrap.py
 ```
 
-## Prerequistes
-
-| Dependency | URL | Documentation |
-| ---        | --- | --- |
-| git        | <https://git-scm.com/downloads/> | <https://git-scm.com/docs/> |
-| cmake      | <https://cmake.org/download/> | <https://cmake.org/cmake/help/latest/> |
-| conan      | <https://conan.io/downloads.html/> | <https://docs.conan.io/en/latest/> |
-
-A compiler supporting C++20 is required, namely GCC-11, Clang-13, or Visual C++ 2019
+<!-- TODO make sure bootstrap works -->
+<!-- TODO make it easy to run examples, easier than copy pasting the code into a source file? -->
 
 ## Installation
+
+<!-- | Dependency | URL                                 | Documentation               |
+| ---------- | ----------------------------------- | --------------------------- |
+| python     | <https://www.python.org/downloads/> |                             |
+| git        | <https://git-scm.com/downloads/>    | <https://git-scm.com/docs/> | -->
+
+<!-- | cmake      | <https://cmake.org/download/>       | <https://cmake.org/cmake/help/latest/> | -->
+<!-- | conan      | <https://conan.io/downloads.html/> | <https://docs.conan.io/en/latest/> | -->
+
+Install [python](https://www.python.org/downloads/) and [git](https://git-scm.com/docs/).
+
+A compiler supporting C++20 is required, namely [Visual C++ 2019 on Windows](https://visualstudio.microsoft.com/downloads/), or GCC-11/Clang-13 on Linux.
+
+To install, do the following, or **just run `python samarium/boostrap.py`**
+
+1. Install [CMake](https://cmake.org/download/) and [Conan](https://conan.io/downloads.html/)
+2. Download [the zip](https://github.com/jjbel/samarium/archive/refs/heads/main.zip) or clone the repo:
+
+```sh
+git clone https://github.com/jjbel/samarium.git
+```
+
+3. build the library for your machine:
+
+```sh
+conan create ./samarium/ -b missing
+```
+
+<!-- ## Installation
 
 To install the library locally:
 
 ```
-conan download samarium/1.0.2@
+conan download samarium/1.1.0@
 ```
 
 or for the latest version
 
 ```sh
-git clone --depth 1 https://github.com/strangeQuark1041/samarium.git
+git clone --depth 1 https://github.com/jjbel/samarium.git
 conan create ./samarium/ -b missing
-```
+``` -->
 
-## Example
+<!-- ## Example -->
 
 For a fully-featured and self-contained example, run:
 
+<!-- is depth 1 rly faster? -->
+
 ```sh
-git clone --depth 1 https://github.com/strangeQuark1041/samarium_example.git .
+git clone --depth 1 https://github.com/jjbel/samarium_example.git .
 cmake --preset default
 cmake --build --preset default
 ```
 
-## Tools
-
-For the optimal developing experience, use [VSCode](https://code.visualstudio.com) using the following extensions and tools
-
-1. [C++ Extension Pack](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools-extension-pack)
-2. [Clang Format](https://clang.llvm.org/docs/ClangFormat.html)
-3. [CMake Format](https://github.com/cheshirekow/cmake_format) and the corresponding [extension](https://marketplace.visualstudio.com/items?itemName=cheshirekow.cmake-format)
-4. [SonarLint](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarlint-vscode)
-5. [C++ Advanced Lint](https://marketplace.visualstudio.com/items?itemName=jbenden.c-cpp-flylint)
+### Now try the `examples/` directory!
 
 ## Documentation
 
-Documentation is located at [Github Pages](https://strangequark1041.github.io/samarium/)
+View the docs at [Github Pages: https://jjbel.github.io/samarium/](https://jjbel.github.io/samarium/)
 
 ## License
 
 Samarium is distributed under the [MIT License](LICENSE.md).
 
-Libraries used:
+## Libraries Used
 
-1. [fmtlib](https://github.com/fmtlib/fmt)
-2. [range-v3](https://github.com/ericniebler/range-v3)
-3. [BS::thread_pool](https://github.com/bshoshany/thread-pool)
-4. [PCG RNG](https://www.pcg-random.org/)
-5. [tl::function_ref](https://github.com/TartanLlama/function_ref)
+Many thanks to the following wonderful libraries:
+
+1. [GLFW](https://www.glfw.org/), [glad](https://github.com/Dav1dde/glad) and [glm](https://github.com/g-truc/glm) for OpenGL support
+2. [fmtlib](https://github.com/fmtlib/fmt) to completely replace `iostream`
+3. [range-v3](https://github.com/ericniebler/range-v3)
+4. [BS::thread_pool](https://github.com/bshoshany/thread-pool)
+5. [PCG RNG](https://www.pcg-random.org/) for simple and fast randomness
+6. [tl::function_ref](https://github.com/TartanLlama/function_ref) and [tl::expected](https://github.com/TartanLlama/expected)
+7. [znone/call_thunk](https://github.com/znone/call_thunk) for using with GLFW's C callback
+8. [itlib-static-vector](https://github.com/iboB/itlib)
+9. [unordered-dense](https://github.com/martinus/unordered_dense) for faster `unordered_map`
+10. [stb](https://github.com/nothings/stb) for image reading and writing
+11. [FreeType](http://freetype.org/) for text rendering

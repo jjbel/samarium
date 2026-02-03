@@ -1,8 +1,8 @@
 /*
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2022 Jai Bellare
+ * Copyright (c) 2022-2024 Jai Bellare
  * See <https://opensource.org/licenses/MIT/> or LICENSE.md
- * Project homepage: https://github.com/strangeQuark1041/samarium
+ * Project homepage: https://github.com/jjbel/samarium
  */
 
 #include "samarium/graphics/colors.hpp"
@@ -17,7 +17,7 @@ auto main() -> i32
     auto watch = Stopwatch{};
 
     auto radius  = 3.0;
-    auto dynamic = SecondOrderDynamics<Vector2>{{}, 4.5, 0.5};
+    auto dynamic = SecondOrderDynamics<Vec2>{{}, 4.5, 0.5};
     auto trail   = Trail{20000};
 
     const auto update = [&](f64 dt)
@@ -31,7 +31,7 @@ auto main() -> i32
 
     const auto draw = [&]
     {
-        app.fill("#0D0D13"_c);
+        draw::background("#0D0D13"_c);
         app.draw(trail, "#BBD4FF"_c, 0.3, 1.0);
         app.draw(Circle{dynamic.value, radius}, {.fill_color = colors::red});
     };

@@ -1,0 +1,307 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2022-2024 Jai Bellare
+ * See <https://opensource.org/licenses/MIT/> or LICENSE.md
+ * Project homepage: https://github.com/jjbel/samarium
+ */
+
+#pragma once
+
+#include "samarium/core/concepts.hpp" // for concepts
+#include "samarium/core/types.hpp"    // for u64, f64
+
+#include "Extents.hpp"
+#include "math.hpp"
+
+namespace sm
+{
+
+/**
+ * Represents a canonical Euclidean vector, ie an arrow in space
+ * @tparam T type of x and y, required to be integral or floating point
+ *
+ * @code
+ * auto vec = Vec2{.x = 42, .y = -3.1415};
+ * @endcode
+ */
+template <typename T> struct Vec2_t
+{
+    using value_type = T;
+
+    T x{};
+    T y{};
+
+    struct Polar
+    {
+        T length{};
+        T angle{};
+    };
+
+    [[nodiscard]] constexpr auto length() const noexcept { return std::sqrt(x * x + y * y); }
+
+    [[nodiscard]] constexpr auto length_sq() const noexcept { return x * x + y * y; }
+
+    [[nodiscard]] constexpr auto angle() const noexcept { return std::atan2(y, x); }
+
+    [[nodiscard]] constexpr auto slope() const noexcept { return y / x; }
+
+    [[nodiscard]] static constexpr auto combine(T value) { return Vec2_t{.x = value, .y = value}; }
+
+    [[nodiscard]] static constexpr auto make(auto x_coord, auto y_coord)
+    {
+        return Vec2_t<T>{static_cast<T>(x_coord), static_cast<T>(y_coord)};
+    }
+
+    [[nodiscard]] static constexpr auto from_polar(Polar polar) noexcept
+        requires concepts::FloatingPoint<T>
+    {
+        // TODO direct sin cos instruction? or not needed
+        return Vec2_t{polar.length * std::cos(polar.angle), polar.length * std::sin(polar.angle)};
+    }
+
+    [[nodiscard]] constexpr auto to_polar() const noexcept
+    {
+        return Polar{this->length(), this->angle()};
+    }
+
+    constexpr auto normalize() noexcept
+    {
+        const auto length_ = this->length();
+        x /= length_;
+        y /= length_;
+    }
+
+    [[nodiscard]] constexpr auto normalized() const noexcept
+    {
+        auto vec = *this;
+        vec.normalize();
+        return vec;
+    }
+
+    constexpr auto set_length(T new_length) noexcept
+    {
+        const auto factor = new_length / this->length();
+        x *= factor;
+        y *= factor;
+    }
+
+    constexpr auto set_angle(T new_angle) noexcept
+    {
+        *this = from_polar({.length = this->length(), .angle = new_angle});
+    }
+
+    [[nodiscard]] constexpr auto with_length(T new_length) const noexcept
+    {
+        const auto factor = new_length / this->length();
+        return Vec2_t<T>{x * factor, y * factor};
+    }
+
+    [[nodiscard]] constexpr auto with_angle(T new_angle) const noexcept
+    {
+        return from_polar({.length = this->length(), .angle = new_angle});
+    }
+
+    [[nodiscard]] constexpr auto operator-() const noexcept { return Vec2_t<T>{-x, -y}; }
+
+    constexpr auto operator+=(const Vec2_t& rhs) noexcept
+    {
+        this->x += rhs.x;
+        this->y += rhs.y;
+        return *this;
+    }
+
+    constexpr auto operator-=(const Vec2_t& rhs) noexcept
+    {
+        this->x -= rhs.x;
+        this->y -= rhs.y;
+        return *this;
+    }
+
+    constexpr auto operator*=(const Vec2_t& rhs) noexcept
+    {
+        this->x *= rhs.x;
+        this->y *= rhs.y;
+        return *this;
+    }
+
+    constexpr auto operator*=(T rhs) noexcept
+    {
+        this->x *= rhs;
+        this->y *= rhs;
+        return *this;
+    }
+
+    constexpr auto operator/=(const Vec2_t& rhs) noexcept
+    {
+        this->x /= rhs.x;
+        this->y /= rhs.y;
+        return *this;
+    }
+
+    constexpr auto operator/=(T rhs) noexcept
+    {
+        this->x /= rhs;
+        this->y /= rhs;
+        return *this;
+    }
+
+    template <typename U> [[nodiscard]] constexpr auto cast() const noexcept
+    {
+        return Vec2_t<U>{static_cast<U>(this->x), static_cast<U>(this->y)};
+    }
+
+    template <typename U> [[nodiscard]] explicit constexpr operator Vec2_t<U>() const noexcept
+    {
+        return Vec2_t<U>{static_cast<U>(this->x), static_cast<U>(this->y)};
+    }
+
+    [[nodiscard]] static constexpr auto dot(Vec2_t<T> p1, Vec2_t<T> p2) noexcept
+    {
+        return p1.x * p2.x + p1.y * p2.y;
+    }
+
+    [[nodiscard]] static constexpr auto cross(Vec2_t<T> p1, Vec2_t<T> p2) noexcept
+    {
+        return p1.x * p2.y - p1.y * p2.x;
+    }
+
+    [[nodiscard]] constexpr auto abs() const noexcept { return Vec2_t{std::abs(x), std::abs(y)}; }
+
+    [[nodiscard]] static constexpr auto angle_between(Vec2_t<T> from, Vec2_t<T> to) noexcept
+    {
+        // speed: compare this with to.angle() - from.angle()
+        return std::acos(Vec2_t<T>::dot(from, to) / (from.length() * to.length()));
+    }
+
+    [[nodiscard]] static constexpr auto angle_between_signed(Vec2_t<T> from, Vec2_t<T> to) noexcept
+    {
+        // speed: compare this with
+        return to.angle() - from.angle();
+    }
+
+    constexpr void rotate(T angle) noexcept
+        requires concepts::FloatingPoint<T>
+    {
+        *this = this->rotated(angle);
+    }
+
+    [[nodiscard]] constexpr auto rotated(T angle) const noexcept
+        requires concepts::FloatingPoint<T>
+    {
+        const auto cos = std::cos(angle);
+        const auto sin = std::sin(angle);
+        return Vec2_t{x * cos - y * sin, x * sin + y * cos};
+    }
+
+    constexpr void rotate_about(T angle, Vec2_t<T> pivot) noexcept
+        requires concepts::FloatingPoint<T>
+    {
+        *this = (*this - pivot).rotated(angle) + pivot;
+    }
+
+    [[nodiscard]] constexpr auto rotated_about(T angle, Vec2_t<T> pivot) const noexcept
+        requires concepts::FloatingPoint<T>
+    {
+        auto temp = *this;
+        temp.rotate_about(angle, pivot);
+        return temp;
+    }
+
+    constexpr void reflect(Vec2_t<T> vec) noexcept { this->rotate(2 * angle_between(*this, vec)); }
+
+    constexpr auto clamp_length(Extents<T> extents) noexcept
+    {
+        this->set_length(extents.clamp(this->length()));
+    }
+
+    template <typename U> [[nodiscard]] constexpr auto clamped_to(Vec2_t<U> box) const
+    {
+        return Vec2_t<T>{
+            math::min(math::max(this->x, static_cast<T>(0)), static_cast<T>(box.x)),
+            math::min(math::max(this->y, static_cast<T>(0)), static_cast<T>(box.y)),
+        };
+    }
+
+    [[nodiscard]] constexpr auto is_zero() const noexcept
+    {
+        if (concepts::FloatingPoint<T>) { return math::almost_equal(this->length_sq(), 0.0); }
+        return x == 0 && y == 0;
+    }
+
+    [[nodiscard]] constexpr auto negated() const noexcept { return Vec2_t<T>{-x, -y}; }
+
+    [[nodiscard]] constexpr auto xy_swapped() const noexcept { return Vec2_t<T>{y, x}; }
+
+    [[nodiscard]] constexpr auto operator<=>(const Vec2_t<T>&) const = default;
+};
+
+template <typename T>
+[[nodiscard]] constexpr auto operator+(Vec2_t<T> lhs, const Vec2_t<T>& rhs) noexcept
+{
+    lhs += rhs;
+    return lhs;
+}
+
+template <typename T>
+[[nodiscard]] constexpr auto operator-(Vec2_t<T> lhs, const Vec2_t<T>& rhs) noexcept
+{
+    lhs -= rhs;
+    return lhs;
+}
+
+template <typename T>
+[[nodiscard]] constexpr auto operator*(Vec2_t<T> lhs, const Vec2_t<T>& rhs) noexcept
+{
+    lhs *= rhs;
+    return lhs;
+}
+
+template <typename T> [[nodiscard]] constexpr auto operator*(Vec2_t<T> lhs, T rhs) noexcept
+{
+    lhs *= rhs;
+    return lhs;
+}
+
+template <typename T> [[nodiscard]] constexpr auto operator*(T lhs, Vec2_t<T> rhs) noexcept
+{
+    rhs *= lhs;
+    return rhs;
+}
+
+template <typename T>
+[[nodiscard]] constexpr auto operator/(Vec2_t<T> lhs, const Vec2_t<T>& rhs) noexcept
+{
+    lhs /= rhs;
+    return lhs;
+}
+
+template <typename T> [[nodiscard]] constexpr auto operator/(Vec2_t<T> lhs, T rhs) noexcept
+{
+    lhs /= rhs;
+    return lhs;
+}
+
+// scalar / vector
+// TODO implement /= also?
+template <typename T> [[nodiscard]] constexpr auto operator/(T lhs, Vec2_t<T> rhs) noexcept
+{
+    return Vec2_t<T>{lhs / rhs.x, lhs / rhs.y};
+}
+
+using Vec2       = Vec2_t<f64>;
+using Vec2f      = Vec2_t<f32>;
+using Indices    = Vec2_t<u64>;
+using Dimensions = Vec2_t<u64>;
+
+namespace literals
+{
+consteval auto operator"" _x(long double x_coord) noexcept
+{
+    return Vec2{static_cast<f64>(x_coord), 0.0};
+}
+consteval auto operator"" _y(long double y_coord) noexcept
+{
+    return Vec2{0.0, static_cast<f64>(y_coord)};
+}
+} // namespace literals
+} // namespace sm

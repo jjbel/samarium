@@ -9,8 +9,8 @@ Core math utilities
     :maxdepth: 1
 
     math
-    Vector2
+    Vec2
     interp
-    BoundingBox
+    Box2
     sample
     SecondOrderDynamics

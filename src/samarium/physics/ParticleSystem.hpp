@@ -1,8 +1,8 @@
 /*
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2022 Jai Bellare
+ * Copyright (c) 2022-2024 Jai Bellare
  * See <https://opensource.org/licenses/MIT/> or LICENSE.md
- * Project homepage: https://github.com/strangeQuark1041/samarium
+ * Project homepage: https://github.com/jjbel/samarium
  */
 
 #pragma once
@@ -12,7 +12,7 @@
 #include <span>   // for span
 #include <vector> // for vector
 
-#include "BS_thread_pool.hpp"                         // for multi_future
+// #include "BS_thread_pool.hpp"                         // for multi_future TODO needed? iwyu...
 #include "range/v3/algorithm/for_each.hpp"            // for for_each
 #include "range/v3/algorithm/sort.hpp"                // for sort
 #include "range/v3/functional/identity.hpp"           // for identity
@@ -26,7 +26,7 @@
 
 #include "samarium/core/types.hpp"       // for f64, u64, usize
 #include "samarium/math/Extents.hpp"     // for Extents, range
-#include "samarium/math/Vector2.hpp"     // for Vector2
+#include "samarium/math/Vec2.hpp"        // for Vec2
 #include "samarium/physics/Particle.hpp" // for Particle
 #include "samarium/util/HashGrid.hpp"    // for HashGrid
 #include "samarium/util/ThreadPool.hpp"  // for ThreadPool
@@ -46,6 +46,7 @@ template <typename Particle_t = Particle<f64>, u64 CellCapacity = 32> struct Par
      *
      * @param  size
      * @param  default_particle
+     * @param  cell_size
      */
     explicit ParticleSystem(u64 size                           = 100UL,
                             const Particle_t& default_particle = {},
@@ -78,16 +79,16 @@ template <typename Particle_t = Particle<f64>, u64 CellCapacity = 32> struct Par
             for (auto i : loop::end(min, max)) { particles[i].update(time_delta); }
         };
 
-        thread_pool.parallelize_loop(0UL, particles.size(), job, thread_pool.get_thread_count())
-            .wait();
+        thread_pool.detach_loop(0UL, particles.size(), job, thread_pool.get_thread_count());
+        thread_pool.wait();
     }
 
-    void apply_force(Vector2 force) noexcept
+    void apply_force(Vec2 force) noexcept
     {
         ranges::for_each(particles, [force](Particle_t& particle) { particle.apply_force(force); });
     }
 
-    void apply_forces(std::span<Vector2> forces) noexcept
+    void apply_forces(std::span<Vec2> forces) noexcept
     {
         for (auto i : loop::end(particles.size())) { particles[i].apply_force(forces[i]); }
     }
@@ -99,11 +100,13 @@ template <typename Particle_t = Particle<f64>, u64 CellCapacity = 32> struct Par
      *
      * @tparam CellCapacity Max particles in one cell of the hash grid
      * @param  damping      Coefficient of restitution
-     * @param  cell_size    Size of cell of hash grid
      * @return Dimensions   [collisions, pairs checked]
      */
     [[maybe_unused]] auto self_collision(f64 damping = 1.0)
     {
+        // TODO hash grid cell size param?
+        // @param  cell_size    Size of cell of hash grid
+
         hash_grid.map.clear();
         hash_grid.map.reserve(particles.size());
         for (auto i : loop::end(particles.size())) { hash_grid.insert(particles[i].pos, i); }

@@ -1,8 +1,8 @@
 /*
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2022 Jai Bellare
+ * Copyright (c) 2022-2024 Jai Bellare
  * See <https://opensource.org/licenses/MIT/> or LICENSE.md
- * Project homepage: https://github.com/strangeQuark1041/samarium
+ * Project homepage: https://github.com/jjbel/samarium
  */
 
 #pragma once
@@ -16,7 +16,7 @@ namespace sm
 {
 struct MovablePoint
 {
-    Vector2 pos{};
+    Vec2 pos{};
     Color color{255, 255, 255, 255};
     f64 major_radius = 0.8;
     f64 minor_radius = 0.4;
@@ -25,8 +25,8 @@ struct MovablePoint
 
     void draw(Window& window) const
     {
-        draw::circle(window, {pos, major_radius}, {.fill_color = color.with_multiplied_alpha(0.4)});
-        draw::circle(window, {pos, minor_radius}, {.fill_color = color});
+        draw::circle(window, {pos, major_radius}, color.with_multiplied_alpha(0.4));
+        draw::circle(window, {pos, minor_radius}, color);
     }
 
     void update(const Mouse& mouse)

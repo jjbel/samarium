@@ -1,16 +1,19 @@
-# SPDX-License-Identifier: MIT Copyright (c) 2022 Jai Bellare See
+# SPDX-License-Identifier: MIT Copyright (c) 2022-2024 Jai Bellare See
 # <https://opensource.org/licenses/MIT/> or LICENSE.md Project homepage:
-# <https://github.com/strangeQuark1041/samarium>
+# <https://github.com/jjbel/samarium>
 
-cmake_minimum_required(VERSION 3.15)
-project(
-    samarium
-    VERSION 1.0.2
-    DESCRIPTION "2-D physics simulation engine written in modern C++"
-    HOMEPAGE_URL "https://github.com/strangeQuark1041/samarium"
-    LANGUAGES CXX
-)
+cmake_minimum_required(VERSION 3.30)
 
+# TODO set langs list? "CXX CUDA" and "CXX;CUDA" didn't work
+if(SAMARIUM_ENABLE_CUDA)
+    message(STATUS "Cuda enabled.")
+    project(samarium VERSION 1.1.0 LANGUAGES CXX CUDA)
+else()
+    message(STATUS "Cuda disabled.")
+    project(samarium VERSION 1.1.0 LANGUAGES CXX)
+endif()
+
+# why not target_compile_features(particles PUBLIC cxx_std_11)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
@@ -19,8 +22,32 @@ list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})
 
 file(GLOB_RECURSE SAMARIUM_SOURCES "*.*pp")
 
+if(SAMARIUM_ENABLE_CUDA)
+    # set(CMAKE_CUDA_FLAGS "-O3")
+    # enable_language(CUDA)
+    file(GLOB_RECURSE CUDA_SOURCES "*.cu*")
+    list(APPEND SAMARIUM_SOURCES "${CUDA_SOURCES}")
+    set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -diag-suppress 27")
+endif()
+
+# CUDA ARCHITECTURE
+# TODO with 52, works but lots of error in calcn
+# with 50, seemingly less error?
+# with 70, doesn't work
+# https://cmake.org/cmake/help/latest/variable/CMAKE_CUDA_ARCHITECTURES.html
+# https://cmake.org/cmake/help/latest/prop_tgt/CUDA_ARCHITECTURES.html : see all, native
+# see: nvcc --list-gpu-code and nvcc --list-gpu-arch
+# https://www.techpowerup.com/gpu-specs/geforce-mx330.c3493
+# also using multiple arch's below...so chosen at runtime?
+
 add_library(samarium ${SAMARIUM_SOURCES})
 add_library(samarium::samarium ALIAS samarium)
+
+if(SAMARIUM_ENABLE_CUDA)
+    # device query says my MX330 supports 6.1
+    set_target_properties(samarium PROPERTIES CUDA_ARCHITECTURES "50;60;61;70")
+    # set_target_properties(samarium PROPERTIES CUDA_ARCHITECTURES "61")
+endif()
 
 set_target_properties(
     samarium
@@ -49,7 +76,8 @@ if(USE_WARNINGS)
 endif()
 
 if(MSVC)
-    set(FPNG_OPTIONS "/w")
+    # TODO Not needed to ignore warning?
+    # set(FPNG_OPTIONS "/w")
 else()
     set(FPNG_OPTIONS "-fno-strict-aliasing;-msse4.1;-mpclmul;-w")
 endif()

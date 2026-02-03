@@ -1,8 +1,8 @@
 /*
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2022 Jai Bellare
+ * Copyright (c) 2022-2024 Jai Bellare
  * See <https://opensource.org/licenses/MIT/> or LICENSE.md
- * Project homepage: https://github.com/strangeQuark1041/samarium
+ * Project homepage: https://github.com/jjbel/samarium
  */
 
 #pragma once
@@ -14,10 +14,11 @@
 #include "samarium/gl/gl.hpp"          // for Primitive
 #include "samarium/graphics/Color.hpp" // for Color
 #include "samarium/gui/Window.hpp"     // for Window
-#include "samarium/math/Vector2.hpp"   // for Vector2f
+#include "samarium/math/Vec2.hpp"      // for Vec2f
 
 namespace sm::draw
 {
+// TODO too many overloads?
 void vertices(gl::Context& context,
               std::span<const gl::Vertex<gl::Layout::Pos>> verts,
               Color color,
@@ -29,14 +30,11 @@ void vertices(Window& window,
               gl::Primitive primitive);
 
 void vertices(gl::Context& context,
-              std::span<const Vector2f> verts,
+              std::span<const Vec2f> verts,
               Color color,
               gl::Primitive primitive,
               const glm::mat4& transform);
-void vertices(Window& window,
-              std::span<const Vector2f> verts,
-              Color color,
-              gl::Primitive primitive);
+void vertices(Window& window, std::span<const Vec2f> verts, Color color, gl::Primitive primitive);
 
 void vertices(gl::Context& context,
               std::span<const gl::Vertex<gl::Layout::PosColor>> verts,
@@ -84,7 +82,7 @@ SM_INLINE void vertices(Window& window,
 }
 
 SM_INLINE void vertices(gl::Context& context,
-                        std::span<const Vector2f> verts,
+                        std::span<const Vec2f> verts,
                         Color color,
                         gl::Primitive primitive,
                         const glm::mat4& transform)
@@ -105,7 +103,7 @@ SM_INLINE void vertices(gl::Context& context,
 }
 
 SM_INLINE void
-vertices(Window& window, std::span<const Vector2f> verts, Color color, gl::Primitive primitive)
+vertices(Window& window, std::span<const Vec2f> verts, Color color, gl::Primitive primitive)
 {
     vertices(window.context, verts, color, primitive, window.view);
 }

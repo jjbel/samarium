@@ -1,8 +1,8 @@
 /*
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2022 Jai Bellare
+ * Copyright (c) 2022-2024 Jai Bellare
  * See <https://opensource.org/licenses/MIT/> or LICENSE.md
- * Project homepage: https://github.com/strangeQuark1041/samarium
+ * Project homepage: https://github.com/jjbel/samarium
  */
 
 #pragma once
@@ -11,9 +11,9 @@
 
 #include "glad/glad.h" // for GL_FLOAT, GL_TRUE, GL_UNSIGNED_BYTE
 
-#include "samarium/core/types.hpp"       // for f32
-#include "samarium/math/BoundingBox.hpp" // for BoundingBox
-#include "samarium/util/unordered.hpp"   // for Map
+#include "samarium/core/types.hpp"     // for f32
+#include "samarium/math/Box2.hpp"      // for Box2
+#include "samarium/util/unordered.hpp" // for Map
 
 #include "Framebuffer.hpp" // for Framebuffer
 #include "Shader.hpp"      // for Shader, FragmentShader, VertexShader
@@ -97,6 +97,12 @@ SM_INLINE Context::Context(Dimensions dims)
 #include "shaders/PosColorTex.vert.glsl"
     );
 
+    // for instancing
+    vert_sources.emplace("PosInstance",
+#include "shaders/PosInstance.vert.glsl"
+    );
+
+    // frag sources:
     frag_sources.emplace("Pos",
 #include "shaders/Pos.frag.glsl"
     );
@@ -128,6 +134,11 @@ SM_INLINE Context::Context(Dimensions dims)
 
     shaders.emplace("text", Shader{expect(VertexShader::make(vert_sources.at("PosTex"))),
                                    expect(FragmentShader::make(frag_sources.at("text")))});
+
+    // for instancing
+    shaders.emplace("PosInstance",
+                    Shader{expect(VertexShader::make(vert_sources.at("PosInstance"))),
+                           expect(FragmentShader::make(frag_sources.at("Pos")))});
 
     vert_sources.emplace("polyline",
 #include "shaders/polyline.vert.glsl"
